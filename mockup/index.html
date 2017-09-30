@@ -3,14 +3,52 @@
 <head>
     <link rel="stylesheet/less" type="text/css" href="style.less" />
     <script src="less.js" type="text/javascript"></script>
+    <script src="tabs.js" type="text/javascript"></script>
 </head>
 <body>
+    
+
+<!-- tab information gotten from https://www.w3schools.com/howto/howto_js_tabs.asp !-->
+
+
     <div id = "the-key-heading">
         The Key
     </div>
-    <div id = "tab-bar">
-        this is the bar with tabs in it
-    </div>
 
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'London')">London</button>
+  <button class="tablinks" onclick="openCity(event, 'Paris')">Paris</button>
+  <button class="tablinks" onclick="openCity(event, 'Tokyo')">Tokyo</button>
+</div>
+
+<div id="Home" class="tabcontent">
+  <h3>Home</h3>
+  <p>London is the capital city of England.</p>
+</div>
+
+<div id="Data" class="tabcontent">
+  <h3>Data</h3>
+  <p>Paris is the capital of France.</p> 
+</div>
+
+<div id="Incident" class="tabcontent">
+  <h3>Incident</h3>
+  <p>Tokyo is the capital of Japan.</p>
+</div>
+
+<div id="Student Profiles" class="tabcontent">
+  <h3>Student Profiles</h3>
+  <p>Tokyo is the capital of Japan.</p>
+</div>
+
+<div id="Staff Schedules" class="tabcontent">
+  <h3>Staff Schedules</h3>
+  <p>Tokyo is the capital of Japan.</p>
+</div>
+
+<div id="Edit Attendance Sheets" class="tabcontent">
+  <h3>Staff Schedules</h3>
+  <p>Tokyo is the capital of Japan.</p>
+</div>
 </body>
 </html>

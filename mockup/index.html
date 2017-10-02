@@ -16,12 +16,18 @@
     </div>
 
 <div class="tab">
-<button class "tablinks" onclick = "openCity(event, 'Home')" id = "defaultOpen"> Home </button>
-<button class "tablinks" onclick = "openCity(event, 'Data')"> Data </button>
-<button class "tablinks" onclick = "openCity(event, 'Incident')"> Incident </button>
-<button class "tablinks" onclick = "openCity(event, 'Student Profiles')"> Student Profiles</button>
-<button class "tablinks" onclick = "openCity(event, 'Staff Schedules')"> Staff Schedules</button>
-<button class "tablinks" onclick = "openCity(event, 'Edit Attendance Sheets')"> Edit Attendance Sheets </button>
+<button class = "tablinks" onclick = "openTab(event, 'Home')" id = "defaultOpen" class = " active"> Home </button>
+<!--
+<script>
+    // Get the element with id="defaultOpen" and click on it
+    document.getElementById("defaultOpen").click();
+</script>
+--!>
+<button class = "tablinks" onclick = "openTab(event, 'Data')"> Data </button>
+<button class = "tablinks" onclick = "openTab(event, 'Incident')"> Incident </button>
+<button class = "tablinks" onclick = "openTab(event, 'Student Profiles')"> Student Profiles</button>
+<button class = "tablinks" onclick = "openTab(event, 'Staff Schedules')"> Staff Schedules</button>
+<button class = "tablinks" onclick = "openTab(event, 'Edit Attendance Sheets')"> Edit Attendance Sheets </button>
 </div>
 
 <div id="Home" class="tabcontent">

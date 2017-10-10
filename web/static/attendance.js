@@ -12,14 +12,10 @@ function sendSubmitForm()  {
     //
     var xhr = new XMLHttpRequest();
     var url = "137.22.166.165/addText/";
+//    url = "http://127.0.0.1:5000/addText/";
     xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-type", "application/json");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var json = JSON.parse(xhr.responseText);
-            console.log(json.email + ", " + json.password);
-        }
-    };
+    xhr.setRequestHeader("attendance-json", "application/json");
+    
     var data = JSON.stringify({"text": theirText});
     xhr.send(data);
 }

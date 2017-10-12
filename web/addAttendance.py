@@ -12,8 +12,11 @@ def addAttendee(someJSON):
     print(convertedJSON["text"])
     conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
     cur = conn.cursor()
-    #cur.execute("DROP TABLE IF EXISTS testAttendance;")
+    cur.execute("DROP TABLE IF EXISTS testAttendance;")
     cur.execute("CREATE TABLE testAttendance (myText text);")
+    conn.commit()
+    cur.close()
+    conn.close()
 
 
 

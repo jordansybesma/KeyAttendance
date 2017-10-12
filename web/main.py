@@ -1,5 +1,9 @@
 import flask 
 from flask import request
+import json
+import psycopg2
+import sys
+
 
 #flask automatically serves everything in the static folder for us, which is really nice
 app = flask.Flask(__name__)
@@ -20,5 +24,20 @@ def foo():
         
     
 
+def addAttendee(someJSON):
+    convertedJSON = json.loads(someJSON)
+    print(convertedJSON["text"])
+    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
+    cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS testAttendance;")
+    cur.execute("CREATE TABLE testAttendance (myText text);")
+    cur.execute("INSERT INTO testAttendance (myText) VALUES (%s)", (convertedJSON["text"],))
+    conn.commit()
+    cur.close()
+    conn.close()
+
 if __name__ == "__main__":
     app.run()
+#sample function to make attendance sheet in database
+if __name__ == '__main__':
+    addAttendee('{"text": "AAAAAAAAHHH"}')

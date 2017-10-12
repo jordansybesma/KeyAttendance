@@ -14,7 +14,7 @@ def addAttendee(someJSON):
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS testAttendance;")
     cur.execute("CREATE TABLE testAttendance (myText text);")
-    cur.execute("INSERT INTO testAttendance (text) VALUES (%s)", ("AAAAAAHH",))
+    cur.execute("INSERT INTO testAttendance (myText) VALUES (%s)", ("AAAAAAHH",))
     conn.commit()
     cur.close()
     conn.close()

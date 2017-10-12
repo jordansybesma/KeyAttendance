@@ -10,7 +10,12 @@ import sys
 def addAttendee(someJSON):
     convertedJSON = json.loads(someJSON)
     print(convertedJSON["text"])
-    
+    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
+    cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS testAttendance;")
+    cur.execute("CREATE TABLE testAttendance (myText text);")
+
+
 
 
 

@@ -25,4 +25,4 @@ def addAttendee(someJSON):
 
 
 if __name__ == '__main__':
-    addAttendee('{"text": "AAAAAAAAHHH"}')
+    addAttendee('{"text": "AAAAAAAAGGGHHHHH"}')

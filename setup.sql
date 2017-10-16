@@ -5,5 +5,5 @@ create table testStudents (
     primary key(firstName, lastName)
 );
 
-insert into teststudents values ('John', 'Snow', 1);
+insert into teststudents values ('John', 'Snow');
 select * from teststudents where firstName = 'John'

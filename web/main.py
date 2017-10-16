@@ -21,23 +21,30 @@ def foo():
         f = request.data
         print(f)
     return "hi front-end!"
-        
-    
 
-def addAttendee(someJSON):
-    convertedJSON = json.loads(someJSON)
-    print(convertedJSON["text"])
-    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
-    cur = conn.cursor()
-    cur.execute("DROP TABLE IF EXISTS testAttendance;")
-    cur.execute("CREATE TABLE testAttendance (myText text);")
-    cur.execute("INSERT INTO testAttendance (myText) VALUES (%s)", (convertedJSON["text"],))
-    conn.commit()
-    cur.close()
-    conn.close()
+"""
+{
+    firstName : "Jack",
+    lastName : "Wines"
+}
+"""
+@app.route('/addStudent/', methods=['POST'])
+def addAttendee():
+    firstName = request.form.get('firstName')
+    lastName  = request.form.get( 'lastName')
+    print(firstName, lastName)
+    
+    with conn = psycopg2.connect("dbname=compsTestDB user=ubuntu"):
+        with cur = conn.cursor():
+            cur.execute("DROP TABLE IF EXISTS testAttendance;")
+            cur.execute("CREATE TABLE testAttendance (myText text);")
+            cur.execute("INSERT INTO testAttendance (myText) VALUES (%s)", (convertedJSON["text"],))
+            conn.commit()
+    return "Hello frontend!"
+
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host= '0.0.0.0')
 #sample function to make attendance sheet in database
 if __name__ == '__main__':
     addAttendee('{"text": "AAAAAAAAHHH"}')

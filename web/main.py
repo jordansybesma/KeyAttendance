@@ -34,11 +34,9 @@ def addAttendee():
     lastName  = request.form.get( 'lastName')
     print(firstName, lastName)
     
-    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu"):
-    cur = conn.cursor():
-    cur.execute("DROP TABLE IF EXISTS testAttendance;")
-    cur.execute("CREATE TABLE testAttendance (myText text);")
-    cur.execute("INSERT INTO testAttendance (myText) VALUES (%s)", (convertedJSON["text"],))
+    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
+    cur = conn.cursor()
+    cur.execute("INSERT INTO testStudents VALUES (%s, %s)", firstName, lastName)
     conn.commit()
     cur.close()
     con.close()

@@ -36,11 +36,11 @@ def addAttendee():
     
     conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
     cur = conn.cursor()
-    cur.execute("INSERT INTO testStudents VALUES (%s, %s)", firstName, lastName)
+    cur.execute("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     conn.commit()
     cur.close()
-    con.close()
-    return "Hello frontend!"
+    conn.close()
+    return "\nHello frontend!\n"
 
 
 if __name__ == "__main__":

@@ -50,7 +50,7 @@ def autofill(partialString):
     conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
     cur = conn.cursor()
     
-    q = lower(partialString)
+    q = partialString.lower
     query = "SELECT * FROM testStudents WHERE firstname LIKE %" + q + "% OR lastname LIKE %" + q + "%;"
     cur.execute(query)
     databaseResult = databaseCursor.fetchall()

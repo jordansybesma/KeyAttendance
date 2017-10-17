@@ -43,7 +43,7 @@ def addAttendee(firstName):
     return "\nHello frontend:)\n"
 
 
-@app.route('/addStudent/<partialString>')
+@app.route('/autofill/<partialString>')
 def autofill(partialString):
     print(partialString)
     

@@ -61,7 +61,6 @@ def autofill(partialString):
     conn.close()
     return suggestions
 
-def autofill(cur, conn, partialString):
 
 
 if __name__ == "__main__":

@@ -64,8 +64,5 @@ def autofill(partialString):
 
 
 if __name__ == "__main__":
-    app.run(host= '0.0.0.0')
-#sample function to make attendance sheet in database
-if __name__ == '__main__':
-    addAttendee('{"text": "AAAAAAAAHHH"}')
+    app.run()
 

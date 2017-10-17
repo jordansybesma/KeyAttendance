@@ -10,7 +10,7 @@ app = flask.Flask(__name__)
 
 @app.route('/')
 def send_index():
-    return "use /static/index.html instead"
+    return flask.redirect("static/index.html", code=302)
     # this works, but then the app fails to get the other things in the static folder :(
     #return flask.current_app.send_static_file('index.html')
 
@@ -22,6 +22,21 @@ def foo():
         print(f)
     return "hi front-end!"
 
+def executeSingleQuery(query, params = [], fetch = False):
+    print(query, params)
+    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
+    cur = conn.cursor()
+    if len(params) == 0:
+        cur.execute(query)
+    else:
+        cur.execute(query, params)
+    conn.commit()
+    result = cur.fetchall() if fetch else  None
+    cur.close()
+    conn.close()
+    return result
+
+
 """
 {
     firstName : "Jack",
@@ -29,36 +44,21 @@ def foo():
 }
 """
 @app.route('/addStudent/', methods = ["POST"])
-def addAttendee(firstName):
+def addAttendee():
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
-    print(firstName, lastName)
-    
-    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
-    cur = conn.cursor()
-    cur.execute("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
-    conn.commit()
-    cur.close()
-    conn.close()
+    executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
 
-
+"""
+    Literally just takes a string. Compares both first and last name.
+"""
 @app.route('/autofill/<partialString>')
 def autofill(partialString):
-    print(partialString)
-    
-    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
-    cur = conn.cursor()
-    
     q = partialString.lower()
     query = "SELECT * FROM testStudents WHERE firstname LIKE '%" + q + "%' OR lastname LIKE '%" + q + "%';"
-    cur.execute(query)
-    databaseResult = cur.fetchall()
+    databaseResult = executeSingleQuery(query, fetch = True)
     suggestions = json.dumps(databaseResult[:10])
-    
-    conn.commit()
-    cur.close()
-    conn.close()
     return suggestions
 
 
@@ -68,3 +68,4 @@ if __name__ == "__main__":
 #sample function to make attendance sheet in database
 if __name__ == '__main__':
     addAttendee('{"text": "AAAAAAAAHHH"}')
+

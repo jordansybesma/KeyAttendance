@@ -28,30 +28,41 @@ def foo():
     lastName : "Wines"
 }
 """
-@app.route('/addStudent/')
-def addAttendee():
+@app.route('/addStudent/<firstName>/<lastName>')
+def addAttendee(firstName):
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
     print(firstName, lastName)
     
     conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
     cur = conn.cursor()
-    suggestions = autofill(cur, conn, userStr)
     cur.execute("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
+    conn.commit()
+    cur.close()
+    conn.close()
+    return "\nHello frontend:)\n"
+
+
+@app.route('/addStudent/<partialString>')
+def autofill(partialString):
+    print(partialString)
+    
+    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
+    cur = conn.cursor()
+    
+    q = lower(partialString)
+    query = "SELECT * FROM testStudents WHERE firstname LIKE %" + q + "% OR lastname LIKE %" + q + "%;"
+    cur.execute(query)
+    databaseResult = databaseCursor.fetchall()
+    suggestions = json.dumps(databaseResult[:10])
+    
     conn.commit()
     cur.close()
     conn.close()
     return suggestions
 
-
 def autofill(cur, conn, partialString):
-    q = lower(partialString)
-    query = "SELECT * FROM testStudents WHERE firstname LIKE %" + q + "% OR lastname LIKE %" + q + "%;"
-    cur.execute(query)
-#    conn.commit()
-    databaseResult = databaseCursor.fetchall()
-#    databaseResult.sort()
-    return json.dumps(databaseResult[:10])
+
 
 if __name__ == "__main__":
     app.run(host= '0.0.0.0')

@@ -51,9 +51,9 @@ def autofill(partialString):
     cur = conn.cursor()
     
     q = partialString.lower()
-    query = "SELECT * FROM testStudents WHERE firstname LIKE %" + q + "% OR lastname LIKE %" + q + "%;"
+    query = "SELECT * FROM testStudents WHERE firstname LIKE '%" + q + "%' OR lastname LIKE '%" + q + "%';"
     cur.execute(query)
-    databaseResult = databaseCursor.fetchall()
+    databaseResult = cur.fetchall()
     suggestions = json.dumps(databaseResult[:10])
     
     conn.commit()

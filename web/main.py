@@ -28,7 +28,7 @@ def foo():
     lastName : "Wines"
 }
 """
-@app.route('/addStudent/<firstName>/<lastName>')
+@app.route('/addStudent/', methods = ["POST"])
 def addAttendee(firstName):
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
@@ -50,7 +50,7 @@ def autofill(partialString):
     conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
     cur = conn.cursor()
     
-    q = partialString.lower
+    q = partialString.lower()
     query = "SELECT * FROM testStudents WHERE firstname LIKE %" + q + "% OR lastname LIKE %" + q + "%;"
     cur.execute(query)
     databaseResult = databaseCursor.fetchall()

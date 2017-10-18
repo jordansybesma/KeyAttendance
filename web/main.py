@@ -64,5 +64,5 @@ def autofill(partialString):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')
 

@@ -6,6 +6,14 @@
     <script src="less.js" type="text/javascript"></script>
     <script src="tabs.js" type="text/javascript"></script>
     <script src="attendance.js" type="text/javascript"></script>
+    <script>
+    function handle(e){
+        if(e.keyCode === 13){
+            e.preventDefault(); // Ensure it is only this code that rusn
+            onAddRow();
+        }
+    }
+    </script>
 </head>
 <body>
     
@@ -58,8 +66,20 @@
 </div>
 
 <div id="Data" class="tabcontent">
-  <h3>Data</h3>
-  <p>Data</p> 
+<h2> Attendance Sheet 10/19/2017 </h4>
+<aside>
+<form id="nameEnter" >
+            <input onkeypress="handle(event)" id="keyword" type="text" placeholder="Name" required>
+            <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
+</form></aside>
+
+  <table id="Attendance-Table" style="width:100%">
+  <tr>
+    <th>Name</th>
+    <th>Health</th> 
+    <th>Food</th>
+  </tr>
+</table>
 </div>
 
 <div id="Incident" class="tabcontent">

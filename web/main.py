@@ -55,10 +55,12 @@ def addNewStudent():
 def addAttendant():
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
+    activityNames = ["art", "madeFood", "recievedFood", "leadership", "exercise", "mentalHealth", "volunteering", "oneOnOne", "comments"]
+    activities = [request.form.get(activityName) for activityName in activityNames]
     id = request.form.get('id')
     if id != "":
         executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
-        [id, art, madeFood, recievedFood, leadership, exercise, mentalHealth, volunteering, oneOnOne, comments])
+        [id] + activities)
         return "true"
     else: 
         query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"

@@ -68,8 +68,7 @@ def addAttendant():
         #more than one "same name" student is available, return students
         if len(databaseResult) > 1:
             return json.dumps(databaseResult[:10])
-        else: 
-            len(databaseResult) == 0:
+        elif len(databaseResult) == 0:
             return "false"
             
         

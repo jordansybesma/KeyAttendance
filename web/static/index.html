@@ -16,7 +16,7 @@
     </script>
 </head>
 <body>
-    
+
 
 <!-- tab information gotten from https://www.w3schools.com/howto/howto_js_tabs.asp !-->
 
@@ -69,14 +69,14 @@
 <h2> Attendance Sheet 10/19/2017 </h4>
 <aside>
 <form id="nameEnter" >
-            <input onkeypress="handle(event)" id="keyword" type="text" placeholder="Name" required>
+            <input onkeypress="showSuggestions(this.value)" id="keyword" type="text" placeholder="Name" required>
             <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
 </form></aside>
 
   <table id="Attendance-Table" style="width:100%">
   <tr>
     <th>Name</th>
-    <th>Health</th> 
+    <th>Health</th>
     <th>Food</th>
   </tr>
 </table>

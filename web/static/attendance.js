@@ -14,6 +14,11 @@ function sendSubmitForm()  {
 
     console.log('theirText:' + sendRequest(true, theirText, "attendance-json", "application/json", "/addText"));
 }
+
+function showSuggestions(curText) {
+    ourJson = sendRequest(false, "", "", "", "/autofill/" + curText);
+}
+
 function onAddRow() {
     var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keyword').value;
@@ -28,6 +33,5 @@ function onAddRow() {
     cell2.innerHTML = str;
     cell3.innerHTML = str;
     }
-    
-}
 
+}

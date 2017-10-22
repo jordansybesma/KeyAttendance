@@ -43,12 +43,34 @@ def executeSingleQuery(query, params = [], fetch = False):
     lastName : "Wines"
 }
 """
-@app.route('/addStudent/', methods = ["POST"])
-def addAttendee():
+@app.route('/addNewStudent/', methods = ["POST"])
+def addNewStudent():
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
+    
+
+@app.route('/addAttendant/', methods = ["POST"])    
+def addAttendant():
+    firstName = request.form.get('firstName')
+    lastName  = request.form.get( 'lastName')
+    id = request.form.get('id')
+    if id != "":
+        executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+        [id, art, madeFood, recievedFood, leadership, exercise, mentalHealth, volunteering, oneOnOne, comments])
+        return "true"
+    else: 
+        query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
+        databaseResult = executeSingleQuery(query, fetch = True)
+        #more than one "same name" student is available, return students
+        if len(databaseResult) > 1:
+            return json.dumps(databaseResult[:10])
+        else: 
+            len(databaseResult) == 0:
+            return "false"
+            
+        
 
 """
     Literally just takes a string. Compares both first and last name.
@@ -56,7 +78,7 @@ def addAttendee():
 @app.route('/autofill/<partialString>')
 def autofill(partialString):
     q = partialString.lower()
-    query = "SELECT * FROM testStudents WHERE firstname LIKE '%" + q + "%' OR lastname LIKE '%" + q + "%';"
+    query = "SELECT * FROM testStudents WHERE firstName LIKE '%" + q + "%' OR lastName LIKE '%" + q + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     suggestions = json.dumps(databaseResult[:10])
     return suggestions

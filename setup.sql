@@ -11,12 +11,12 @@ INSERT INTO teststudents VALUES('John', 'Snow');
 
 DROP TABLE IF EXISTS dailyAttendance;
 CREATE TABLE dailyAttendance (
-	id SERIAL, 
+    id SERIAL,
     art BOOL,
     madeFood BOOL,
     receivedFood BOOL,
     leadership BOOL,
-    excercise BOOL,
+    exercise BOOL,
     mentalHealth BOOL,
     volunteering BOOL,
     oneOnOne BOOL,

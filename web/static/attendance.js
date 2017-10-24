@@ -47,7 +47,14 @@ function showSuggestions(curText) {
 
 }
 
-
+function handleAddBox(e, curText) {
+  if(e.keyCode === 13){
+      onAddRow();
+}
+  else {
+    showSuggestions(curText);
+  }
+}
 
 
 function onAddRow() {

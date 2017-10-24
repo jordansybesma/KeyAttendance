@@ -68,7 +68,7 @@
 <div id="Data" class="tabcontent">
 <h2> Attendance Sheet 10/19/2017 </h4>
 <aside>
-    <input list="suggestedStudents" name="nameEnter" onkeyup="showSuggestions(this.value)" id="keyword" type="text" placeholder="Name" required /></label>
+    <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(e, this.value)" id="keyword" type="text" placeholder="Name" required /></label>
     <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
     <datalist id="suggestedStudents">
     </datalist>

@@ -8,6 +8,21 @@ function sendRequest(isPost, data, header, value, urlAddOn)  {
     return xhr.responseText;
 }
 
+function getRequest(url, callbackState, callback)  {
+    xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.open('get', url);
+
+    xmlHttpRequest.onreadystatechange = function() {
+        if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200)  {
+                if(callbackState == null)  {
+                    callback(xmlHttpRequest.responseText);
+                } else  {
+                    callback(callbackState, xmlHttpRequest.responseText);
+                }
+           }
+       };
+    xmlHttpRequest.send(null);
+}
 
 function sendSubmitForm()  {
     theirText = document.getElementById("someRandoText").value

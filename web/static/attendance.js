@@ -4,6 +4,7 @@ function sendRequest(isPost, data, header, value, urlAddOn)  {
     // xhr.setRequestHeader(header, value);
     // var data = JSON.stringify({"text": theirText});
     xhr.send(data);
+    alert(xhr.responseText);
     return xhr.responseText;
 }
 
@@ -18,7 +19,7 @@ function sendSubmitForm()  {
 function showSuggestions(curText) {
     newJson = sendRequest(false, "", "", "", "/autofill/" + curText);
 
-    alert(JSON.stringify(newJson));
+    // alert(JSON.stringify(newJson));
 
     ourJson = '[{"name" : "Ashwin", "age" : "20"},{"name" : "Abhinandan", "age" : "20"}]';
     var list = document.getElementById("suggestedStudents");

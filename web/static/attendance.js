@@ -60,7 +60,15 @@ function handleAddBox(e, curText) {
 function onAddRow() {
     var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keyword').value;
-    if (keywordElement != ""){
+    var optionFound = false;
+    datalist = document.getElementById("suggestedStudents");
+    for (var j = 0; j < datalist.options.length; j++){
+      if (keywordElement == datalist.options[j].value){
+        optionFound= true;
+        break;
+      }
+    }
+    if (optionFound){
     document.getElementById("keyword").value = "";
     var row = table.insertRow(1);
     var cell1 = row.insertCell(0);
@@ -70,6 +78,8 @@ function onAddRow() {
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;
     cell3.innerHTML = str;
-    }
+  } else {
+    alert("Please enter an existing student");
+  }
 
 }

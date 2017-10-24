@@ -4,7 +4,7 @@ function sendRequest(isPost, data, header, value, urlAddOn)  {
     // xhr.setRequestHeader(header, value);
     // var data = JSON.stringify({"text": theirText});
     xhr.send(data);
-    alert(xhr.responseText);
+    alert(urlAddOn + xhr.responseText);
     return xhr.responseText;
 }
 

@@ -17,7 +17,8 @@ function sendSubmitForm()  {
 
 function showSuggestions(curText) {
 
-    //ourJson = sendRequest(false, "", "", "", "/autofill/" + curText);
+    newJson = sendRequest(false, "", "", "", "/autofill/" + curText);
+    alert(newJson);
     ourJson = '[{"name" : "Ashwin", "age" : "20"},{"name" : "Abhinandan", "age" : "20"}]';
     var list = document.getElementById("suggestedStudents");
     var myData = JSON.parse(ourJson);

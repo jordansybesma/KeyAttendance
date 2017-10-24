@@ -1,9 +1,10 @@
 function sendRequest(isPost, data, header, value, urlAddOn)  {
     var xhr = new XMLHttpRequest();
     xhr.open(isPost? "POST": "GET", urlAddOn, true);
-    xhr.setRequestHeader(header, value);
-    var data = JSON.stringify({"text": theirText});
+    // xhr.setRequestHeader(header, value);
+    // var data = JSON.stringify({"text": theirText});
     xhr.send(data);
+    alert(urlAddOn + xhr.responseText);
     return xhr.responseText;
 }
 
@@ -16,8 +17,21 @@ function sendSubmitForm()  {
 }
 
 function showSuggestions(curText) {
-    ourJson = sendRequest(false, "", "", "", "/autofill/" + curText);
+    newJson = sendRequest(false, "", "", "", "/autofill/" + curText);
+
+    // alert(JSON.stringify(newJson));
+
+    ourJson = '[{"name" : "Ashwin", "age" : "20"},{"name" : "Abhinandan", "age" : "20"}]';
+    var list = document.getElementById("suggestedStudents");
+    var myData = JSON.parse(ourJson);
+    inner = "";
+    for (i in myData) {
+      inner += "<option>" + myData[i].name + "</option>\n";
+    }
+    list.innerHTML = inner;
 }
+
+
 
 function onAddRow() {
     var table = document.getElementById("Attendance-Table");

@@ -31,19 +31,22 @@ function sendSubmitForm()  {
     console.log('theirText:' + sendRequest(true, theirText, "attendance-json", "application/json", "/addText"));
 }
 
+function modifyAutofillList(_ , studentNames) {
+  alert(studentNames);
+  ourJson = '[{"name" : "Ashwin", "age" : "20"},{"name" : "Abhinandan", "age" : "20"}]';
+  var list = document.getElementById("suggestedStudents");
+  var myData = JSON.parse(ourJson);
+  inner = "";
+  for (i in myData) {
+    inner += "<option>" + myData[i].name + "</option>\n";
+  }
+  list.innerHTML = inner;
+}
+
 function showSuggestions(curText) {
-    newJson = sendRequest(false, "", "", "", "/autofill/" + curText);
+    getRequest("http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/autofill/" + curText, "", modifyAutofillList);
 
-    // alert(JSON.stringify(newJson));
 
-    ourJson = '[{"name" : "Ashwin", "age" : "20"},{"name" : "Abhinandan", "age" : "20"}]';
-    var list = document.getElementById("suggestedStudents");
-    var myData = JSON.parse(ourJson);
-    inner = "";
-    for (i in myData) {
-      inner += "<option>" + myData[i].name + "</option>\n";
-    }
-    list.innerHTML = inner;
 }
 
 

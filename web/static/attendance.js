@@ -20,7 +20,6 @@ function showSuggestions(curText) {
     //ourJson = sendRequest(false, "", "", "", "/autofill/" + curText);
     ourJson = '[{"name" : "Ashwin", "age" : "20"},{"name" : "Abhinandan", "age" : "20"}]';
     var list = document.getElementById("suggestedStudents");
-    list.innerHTML = "";
     var myData = JSON.parse(ourJson);
     inner = "";
     for (i in myData) {

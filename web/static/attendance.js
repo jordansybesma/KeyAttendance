@@ -53,7 +53,7 @@ function onAddRow() {
     var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keyword').value;
     if (keywordElement != ""){
-    document.getElementById("keyword").reset();
+    //document.getElementById("keyword").reset();
     var row = table.insertRow(1);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);

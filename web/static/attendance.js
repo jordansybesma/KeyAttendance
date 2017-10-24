@@ -2,7 +2,7 @@ function sendRequest(isPost, data, header, value, urlAddOn)  {
     var xhr = new XMLHttpRequest();
     xhr.open(isPost? "POST": "GET", urlAddOn, true);
     // xhr.setRequestHeader(header, value);
-    var data = JSON.stringify({"text": theirText});
+    // var data = JSON.stringify({"text": theirText});
     xhr.send(data);
     return xhr.responseText;
 }
@@ -16,7 +16,6 @@ function sendSubmitForm()  {
 }
 
 function showSuggestions(curText) {
-    alert(curText);
     newJson = sendRequest(false, "", "", "", "/autofill/" + curText);
 
     ourJson = '[{"name" : "Ashwin", "age" : "20"},{"name" : "Abhinandan", "age" : "20"}]';

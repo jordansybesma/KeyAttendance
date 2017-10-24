@@ -46,6 +46,12 @@ function showSuggestions(curText) {
 
 
 }
+document.getElementById("keyword").addEventListener("keyup", function(event) {
+event.preventDefault();
+if (event.keyCode === 13) {
+    onAddRow();
+  }
+});
 
 
 

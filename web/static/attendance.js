@@ -35,10 +35,10 @@ function modifyAutofillList(_ , studentNames) {
   alert(studentNames);
   ourJson = '[{"name" : "Ashwin", "age" : "20"},{"name" : "Abhinandan", "age" : "20"}]';
   var list = document.getElementById("suggestedStudents");
-  var myData = JSON.parse(ourJson);
+  var myData = JSON.parse(studentNames);
   inner = "";
   for (i in myData) {
-    inner += "<option>" + myData[i].name + "</option>\n";
+    inner += "<option>" + myData[i][0] + " " + myData[i][1] + "</option>\n";
   }
   list.innerHTML = inner;
 }

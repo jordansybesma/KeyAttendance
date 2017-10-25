@@ -35,6 +35,7 @@ function addNewStudent() {
         "oneOnOne": "FALSE",
         "comments": "FALSE"
     };
+    data = JSON.stringify(data);
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
     closeAddStudent();

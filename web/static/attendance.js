@@ -56,7 +56,7 @@ function addAttendant(data) {
     xhttp.open("POST", url);
     xhttp.send(data);
     //alert(urlAddOn + xhr.responseText);
-    return xhr.responseText;
+    return xhttp.responseText;
 }
 
 function getRequest(url, callbackState, callback)  {

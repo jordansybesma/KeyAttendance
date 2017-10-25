@@ -8,8 +8,8 @@ function closeAddStudent() {
 }
 function addNewStudent() {
 
-    var first = document.getElementById("newStudentFirst");
-    var last = document.getElementById("newStudentLast");
+    var first = document.getElementById("newStudentFirst").value;
+    var last = document.getElementById("newStudentLast").value;
     if (first == "") {
         alert("Please enter a first name");
         return;
@@ -19,6 +19,7 @@ function addNewStudent() {
         return;
     }
     alert(first + " " + last);
+    closeAddStudent();
 }
 
 function sendRequest(isPost, data, header, value, urlAddOn) {

@@ -81,11 +81,16 @@
             <h2>Add Student</h2>
         </div>
         <div class="modal-body">
-            <p>Some text in the Modal Body</p>
-            <p>Some other text...</p>
+            <form>
+                First name:<br>
+                <input type="text" name="firstname" id="newStudentFirst"><br>
+                Last name:<br>
+                <input type="text" name="lastname" id="newStudentLast">
+                </form>
         </div>
         <div class="modal-footer">
-            <h3>Modal Footer</h3>
+            <input type="button" onclick="closeAddStudent()" class="close" value="Cancel" />
+            <input type="button" onclick="addNewStudent()" id="submitStudent" value="Submit" />
         </div>
     </div>
 

@@ -19,6 +19,7 @@ function addNewStudent() {
         return;
     }
     alert(first + " " + last);
+    data = { 'firstName': first, 'lastName': last };
     closeAddStudent();
 }
 

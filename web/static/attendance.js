@@ -1,7 +1,8 @@
 
-var span = document.getElementsByClassName("close")[0];
 
-span.onclick = function () {
+
+function closeAddStudent() {
+    var span = document.getElementsByClassName("close")[0];
     var popUp = document.getElementById('studentDiv');
     popUp.style.display = "none";
 }

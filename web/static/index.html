@@ -67,12 +67,27 @@
 
 <div id="Data" class="tabcontent">
 <h2> Attendance Sheet 10/19/2017 </h4>
+    
 <aside>
     <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required /></label>
     <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
     <datalist id="suggestedStudents">
     </datalist>
 </aside>
+  <button id="addStudent" onclick="openAddStudent()">Add Student</button>
+    <div id ="studentDiv" class="addStudentContent">
+        <div class="addStudentHeader">
+            <span class="close">&times;</span>
+            <h2>Add Student</h2>
+        </div>
+        <div class="modal-body">
+            <p>Some text in the Modal Body</p>
+            <p>Some other text...</p>
+        </div>
+        <div class="modal-footer">
+            <h3>Modal Footer</h3>
+        </div>
+    </div>
 
   <table id="Attendance-Table" style="width:100%">
   <tr>

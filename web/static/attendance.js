@@ -1,4 +1,12 @@
-function sendRequest(isPost, data, header, value, urlAddOn)  {
+
+var span = document.getElementsByClassName("close")[0];
+
+span.onclick = function () {
+    var popUp = document.getElementById('studentDiv');
+    popUp.style.display = "none";
+}
+
+function sendRequest(isPost, data, header, value, urlAddOn) {
     var xhr = new XMLHttpRequest();
     xhr.open(isPost? "POST": "GET", urlAddOn, true);
     // xhr.setRequestHeader(header, value);
@@ -60,6 +68,10 @@ function checkBox(checkbox, keyword) {
     //alert(keyword + ' is ' + val);
     var str = "got here " + checkbox.value + " " + keyword;
     alert(str);
+}
+function openAddStudent() {
+    var popUp = document.getElementById('studentDiv');
+    popUp.style.display = "block";
 }
 
 function onAddRow() {

@@ -4,6 +4,8 @@
 function closeAddStudent() {
     var span = document.getElementById("close");
     var popUp = document.getElementById('studentDiv');
+    document.getElementById("newStudentFirst").value = "";
+    document.getElementById("newStudentLast").value = "";
     popUp.style.display = "none";
 }
 function addNewStudent() {
@@ -19,8 +21,24 @@ function addNewStudent() {
         return;
     }
     alert(first + " " + last);
-    data = { 'firstName': first, 'lastName': last };
+    data = {
+        "id": "",
+        "firstName": first,
+        "lastName": last,
+        "art": "FALSE",
+        "madeFood": "FALSE",
+        "recievedFood": "FALSE",
+        "leadership": "FALSE",
+        "exercise": "FALSE",
+        "mentalHealth": "FALSE",
+        "volunteering": "FALSE",
+        "oneOnOne": "FALSE",
+        "comments": "FALSE"
+    };
+    document.getElementById("newStudentFirst").value = "";
+    document.getElementById("newStudentLast").value = "";
     closeAddStudent();
+    var response = addAttendant(data);
 }
 
 function sendRequest(isPost, data, header, value, urlAddOn) {
@@ -28,6 +46,14 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
     xhr.open(isPost? "POST": "GET", urlAddOn, true);
     // xhr.setRequestHeader(header, value);
     // var data = JSON.stringify({"text": theirText});
+    xhr.send(data);
+    alert(urlAddOn + xhr.responseText);
+    return xhr.responseText;
+}
+function addAttendant(data) {
+    var xhttp = new XMLHttpRequest();
+    url = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/"
+    xhttp.open("POST", url);
     xhr.send(data);
     alert(urlAddOn + xhr.responseText);
     return xhr.responseText;

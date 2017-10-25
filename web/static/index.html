@@ -68,10 +68,11 @@
 <div id="Data" class="tabcontent">
 <h2> Attendance Sheet 10/19/2017 </h4>
 <aside>
-<form id="nameEnter" >
-            <input onkeypress="showSuggestions(this.value)" id="keyword" type="text" placeholder="Name" required>
-            <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
-</form></aside>
+    <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required /></label>
+    <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
+    <datalist id="suggestedStudents">
+    </datalist>
+</aside>
 
   <table id="Attendance-Table" style="width:100%">
   <tr>

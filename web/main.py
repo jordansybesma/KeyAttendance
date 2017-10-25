@@ -51,6 +51,11 @@ def addNewStudent():
     return "\nHello frontend:)\n"
     
 
+@app.route('/getAttendance')
+def getAttendance():
+    return json.dumps(executeSingleQuery("SELECT * FROM testattendance",
+        fetch = True))
+
 @app.route('/addAttendant/', methods = ["POST"])    
 def addAttendant():
     firstName = request.form.get('firstName')

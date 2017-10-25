@@ -55,7 +55,7 @@ function addAttendant(data) {
     url = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/"
     xhttp.open("POST", url);
     xhttp.send(data);
-    alert(urlAddOn + xhr.responseText);
+    //alert(urlAddOn + xhr.responseText);
     return xhr.responseText;
 }
 

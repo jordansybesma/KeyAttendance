@@ -6,6 +6,20 @@ function closeAddStudent() {
     var popUp = document.getElementById('studentDiv');
     popUp.style.display = "none";
 }
+function addNewStudent() {
+
+    var first = document.getElementById("newStudentFirst");
+    var last = document.getElementById("newStudentLast");
+    if (first == "") {
+        alert("Please enter a first name");
+        return;
+    }
+    if (last == "") {
+        alert("Please enter a last name");
+        return;
+    }
+    alert(first + " " + last);
+}
 
 function sendRequest(isPost, data, header, value, urlAddOn) {
     var xhr = new XMLHttpRequest();
@@ -93,7 +107,6 @@ function onAddRow() {
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
     str = "<form> <input type=\"checkbox\" onclick=\"checkBox(this, \'" + keywordElement + "\')\"></form>";
-    alert(str);
 
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;

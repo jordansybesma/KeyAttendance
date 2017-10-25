@@ -62,6 +62,7 @@ def addAttendant():
     lastName  = request.form.get( 'lastName')
     activityNames = ["art", "madeFood", "recievedFood", "leadership", "exercise", "mentalHealth", "volunteering", "oneOnOne", "comments"]
     activities = [request.form.get(activityName) for activityName in activityNames]
+    print(firstName,lastName, activityNames)
     id = request.form.get('id')
     if id != "":
         executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 

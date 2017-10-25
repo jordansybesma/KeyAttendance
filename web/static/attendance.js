@@ -22,7 +22,7 @@ function addNewStudent() {
     }
     alert(first + " " + last);
     data = {
-        "id": "",
+        "id": "3",
         "firstName": first,
         "lastName": last,
         "art": "FALSE",

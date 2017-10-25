@@ -80,6 +80,7 @@ function onAddRow() {
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
     str = "<form> <input type=\"checkbox\" onclick=\"checkBox(this, " + keywordElement + ")\"></form>";
+    display(str);
 
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;

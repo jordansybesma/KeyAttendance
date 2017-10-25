@@ -77,7 +77,6 @@
   <button id="addStudent" onclick="openAddStudent()">Add Student</button>
     <div id ="studentDiv" class="addStudentContent">
         <div class="addStudentHeader">
-            <span class="close" onclick="closeAddStudent()">&times;</span>
             <h2>Add Student</h2>
         </div>
         <div class="modal-body">
@@ -89,7 +88,7 @@
                 </form>
         </div>
         <div class="modal-footer">
-            <input type="button" onclick="closeAddStudent()" class="close" value="Cancel" />
+            <input type="button" onclick="closeAddStudent()" id="close" value="Cancel" />
             <input type="button" onclick="addNewStudent()" id="submitStudent" value="Submit" />
         </div>
     </div>

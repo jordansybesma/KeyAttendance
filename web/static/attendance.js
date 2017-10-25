@@ -2,7 +2,7 @@
 
 
 function closeAddStudent() {
-    var span = document.getElementsByClassName("close")[0];
+    var span = document.getElementById("close");
     var popUp = document.getElementById('studentDiv');
     popUp.style.display = "none";
 }

@@ -54,7 +54,7 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
 function addAttendant(data) {
     var xhttp = new XMLHttpRequest();
     url = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/"
-    xhttp.open("POST", url);
+    xhttp.open("POST", url, true);
     xhttp.send(data);
     //alert(urlAddOn + xhr.responseText);
     return xhttp.responseText;

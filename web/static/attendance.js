@@ -55,10 +55,11 @@ function handleAddBox(e, curText) {
     showSuggestions(curText);
   }
 }
-function checkBox(keyword, checkbox) {
+function checkBox(checkbox) {
     //var val = checkbox.value;
     //alert(keyword + ' is ' + val);
-    alert("got here");
+    var str = "got here " + checkbox.value;
+    alert(str);
 }
 
 function onAddRow() {
@@ -78,7 +79,7 @@ function onAddRow() {
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
-    str = '<form> <input type="checkbox" onclick="checkBox()"></form>';
+    str = '<form> <input type="checkbox" onclick="checkBox(this)"></form>';
 
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;

@@ -116,7 +116,7 @@ def getStudentID(string):
     nameList = string.split()
     first = nameList[0].upper()
     last = nameList[1].upper()
-    query = "SELECT id FROM testStudents WHERE UPPER(firstName) LIKE '%" + first + "%' AND UPPER(lastName) LIKE '%" + last + "%';"
+    query = "SELECT id FROM teststudents WHERE UPPER(firstname) LIKE '%" + first + "%' AND UPPER(lastname) LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     return databaseResult;
 

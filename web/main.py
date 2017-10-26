@@ -109,7 +109,14 @@ def studentProfile(string):
     ##suggestions = json.dumps(databaseResult[:10])
     return databaseResult
 
-
+@app.route('/getID/<string>')
+def getStudentID(string):
+    nameList = string.split()
+    first = nameList[0]
+    last = nameList[1]
+    query = "SELECT id FROM testStudents WHERE firstName =" + first + "%' AND lastName =" + last + ";"
+    databaseResult = executeSingleQuery(query, fetch = True)
+    return databaseResult;
 
 if __name__ == "__main__":
     app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')

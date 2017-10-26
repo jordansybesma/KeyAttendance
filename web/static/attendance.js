@@ -94,6 +94,7 @@ function modifyAutofillList(_ , studentNames) {
   list.innerHTML = inner;
 }
 function showProfile(_, studentInfo) {
+    alert("got to showProfile")
     var popUp = document.getElementById('studentInfo');
     popUp.style.display = "block";
     document.getElementById("testContent").value = "got here";

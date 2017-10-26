@@ -1,4 +1,4 @@
-import flask 
+import flask
 from flask import request
 import json
 import psycopg2
@@ -49,14 +49,14 @@ def addNewStudent():
     lastName  = request.form.get( 'lastName')
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
-    
+
 
 @app.route('/getAttendance')
 def getAttendance():
     return json.dumps(executeSingleQuery("SELECT * FROM testattendance",
         fetch = True))
 
-@app.route('/addAttendant/', methods = ["POST"])    
+@app.route('/addAttendant/', methods = ["POST"])
 def addAttendant():
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
@@ -64,10 +64,10 @@ def addAttendant():
     activities = [request.form.get(activityName) for activityName in activityNames]
     id = request.form.get('id')
     if id != "":
-        executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+        executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         [id] + activities)
         return "true"
-    else: 
+    else:
         query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
         databaseResult = executeSingleQuery(query, fetch = True)
         #more than one "same name" student is available, return students
@@ -75,8 +75,8 @@ def addAttendant():
             return json.dumps(databaseResult[:10])
         elif len(databaseResult) == 0:
             return "false"
-            
-        
+
+
 
 """
     Literally just takes a string. Compares both first and last name.
@@ -113,10 +113,9 @@ def getStudentID(string):
     nameList = string.split()
     first = nameList[0]
     last = nameList[1]
-    query = "SELECT id FROM testStudents WHERE firstName ='" + first + "' AND lastName ='" + last + "';"
+    query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + first + "%' AND lastName LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     return databaseResult;
 
 if __name__ == "__main__":
     app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')
-

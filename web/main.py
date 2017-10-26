@@ -114,7 +114,7 @@ def getStudentID(string):
     nameList = string.split()
     first = nameList[0]
     last = nameList[1]
-    query = "SELECT id FROM testStudents WHERE firstName =" + first + " AND lastName =" + last + ";"
+    query = "SELECT id FROM testStudents WHERE firstName ='" + first + "' AND lastName ='" + last + "';"
     databaseResult = executeSingleQuery(query, fetch = True)
     return databaseResult;
 

@@ -111,9 +111,9 @@ def studentProfile(string):
 @app.route('/getID/<string>')
 def getStudentID(string):
     nameList = string.split()
-    first = nameList[0]
-    last = nameList[1]
-    query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + first + "%' AND lastName LIKE '%" + last + "%';"
+    first = nameList[0].upper()
+    last = nameList[1].upper()
+    query = "SELECT id FROM testStudents WHERE UPPER(firstName) LIKE '%" + first + "%' AND UPPER(lastName) LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     return databaseResult;
 

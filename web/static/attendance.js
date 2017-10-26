@@ -93,6 +93,11 @@ function modifyAutofillList(_ , studentNames) {
   }
   list.innerHTML = inner;
 }
+function showProfile(_, studentInfo) {
+    var popUp = document.getElementById('studentInfo');
+    popUp.style.display = "block";
+    document.getElementById("testContent").value = "got here";
+}
 
 function showSuggestions(curText) {
     getRequest("http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/autofill/" + curText, "", modifyAutofillList);
@@ -131,6 +136,7 @@ function showStudentProfile() {
         }
     }
     if (optionFound) {
+        getRequest("http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/showStudent/" + keywordElement, "", showProfile);
 
 
     }

@@ -120,7 +120,7 @@ def studentProfile(string):
 #     databaseResult = executeSingleQuery(query, fetch = True)
 #     return databaseResult;
 
-@app.route('getID/<string>')
+@app.route('/getID/<string>')
 def getStudentID(string):
     return autofill(string)
 

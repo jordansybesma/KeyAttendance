@@ -51,6 +51,8 @@ def addNewStudent():
     return "\nHello frontend:)\n"
 
 
+# strictly test for now
+# going to get today's data later
 @app.route('/getAttendance')
 def getAttendance():
     return json.dumps(executeSingleQuery("SELECT * FROM testattendance",
@@ -61,6 +63,7 @@ def addAttendant():
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
     activityNames = ["art", "madeFood", "recievedFood", "leadership", "exercise", "mentalHealth", "volunteering", "oneOnOne", "comments"]
+    print(request)
     activities = [request.form.get(activityName) for activityName in activityNames]
     print(firstName,lastName, activityNames)
     id = request.form.get('id')

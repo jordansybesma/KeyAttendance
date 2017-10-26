@@ -61,9 +61,11 @@ function addAttendant(data) {
     return xhttp.responseText;
 }
 
-function getRequest(url, callbackState, callback)  {
+function getRequest(url, callbackState, callback) {
+    alert("got to call back function")
     xmlHttpRequest = new XMLHttpRequest();
     xmlHttpRequest.open('get', url);
+    alert("inside callback function")
 
     xmlHttpRequest.onreadystatechange = function() {
         if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200)  {
@@ -73,7 +75,8 @@ function getRequest(url, callbackState, callback)  {
                     callback(callbackState, xmlHttpRequest.responseText);
                 }
            }
-       };
+    };
+    alert("about to finish callback fuction")
     xmlHttpRequest.send(null);
 }
 

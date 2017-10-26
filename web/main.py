@@ -83,8 +83,14 @@ def addAttendant():
 """
 @app.route('/autofill/<partialString>')
 def autofill(partialString):
-    q = partialString.lower()
-    query = "SELECT * FROM testStudents WHERE firstName LIKE '%" + q + "%' OR lastName LIKE '%" + q + "%';"
+    nameList = partialString.split()
+    if (len(nameList) > 1):
+        first = nameList[0].upper()
+        last = nameList[1].upper()
+        query = "SELECT * FROM testStudents WHERE UPPER(firstName) LIKE '%" + first + "%' OR UPPER(lastName) LIKE '%" + last + "%';"
+    else:
+        q = partialString.upper()
+        query = "SELECT * FROM testStudents WHERE UPPER(firstName) LIKE '%" + q + "%' OR UPPER(lastName) LIKE '%" + q + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     suggestions = json.dumps(databaseResult[:10])
     return suggestions
@@ -92,7 +98,7 @@ def autofill(partialString):
 @app.route('/studentProfile/<string>')
 def studentProfile(string):
     #q = partialString.lower()
-    nameList = str.split()
+    nameList = string.split()
     first = nameList[0]
     last = nameList[1]
     query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + first + "%' OR lastName LIKE '%" + last + "%';"

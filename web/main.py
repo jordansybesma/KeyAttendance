@@ -1,4 +1,4 @@
-import flask 
+import flask
 from flask import request
 import json
 import psycopg2
@@ -49,7 +49,7 @@ def addNewStudent():
     lastName  = request.form.get( 'lastName')
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
-    
+
 
 # strictly test for now
 # going to get today's data later
@@ -58,7 +58,7 @@ def getAttendance():
     return json.dumps(executeSingleQuery("SELECT * FROM testattendance",
         fetch = True))
 
-@app.route('/addAttendant/', methods = ["POST"])    
+@app.route('/addAttendant/', methods = ["POST"])
 def addAttendant():
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
@@ -67,10 +67,10 @@ def addAttendant():
     activities = [request.form.get(activityName) for activityName in activityNames]
     id = request.form.get('id')
     if id != "":
-        executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", 
+        executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         [id] + activities)
         return "true"
-    else: 
+    else:
         query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
         databaseResult = executeSingleQuery(query, fetch = True)
         #more than one "same name" student is available, return students
@@ -78,22 +78,47 @@ def addAttendant():
             return json.dumps(databaseResult[:10])
         elif len(databaseResult) == 0:
             return "false"
-            
-        
+
+
 
 """
     Literally just takes a string. Compares both first and last name.
 """
 @app.route('/autofill/<partialString>')
 def autofill(partialString):
-    q = partialString.lower()
-    query = "SELECT * FROM testStudents WHERE firstName LIKE '%" + q + "%' OR lastName LIKE '%" + q + "%';"
+    nameList = partialString.split()
+    if (len(nameList) > 1):
+        first = nameList[0].upper()
+        last = nameList[1].upper()
+        query = "SELECT * FROM testStudents WHERE UPPER(firstName) LIKE '%" + first + "%' OR UPPER(lastName) LIKE '%" + last + "%';"
+    else:
+        q = partialString.upper()
+        query = "SELECT * FROM testStudents WHERE UPPER(firstName) LIKE '%" + q + "%' OR UPPER(lastName) LIKE '%" + q + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     suggestions = json.dumps(databaseResult[:10])
     return suggestions
 
+@app.route('/studentProfile/<string>')
+def studentProfile(string):
+    #q = partialString.lower()
+    nameList = string.split()
+    first = nameList[0]
+    last = nameList[1]
+    query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + first + "%' OR lastName LIKE '%" + last + "%';"
+    databaseResult = executeSingleQuery(query, fetch = True)
+    #query = "SELECT * FROM testStudents WHERE firstName LIKE '%" + q + "%' OR lastName LIKE '%" + q + "%';"
+    #databaseResult = executeSingleQuery(query, fetch = True)
+    ##suggestions = json.dumps(databaseResult[:10])
+    return databaseResult
 
+@app.route('/getID/<string>')
+def getStudentID(string):
+    nameList = string.split()
+    first = nameList[0]
+    last = nameList[1]
+    query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + first + "%' AND lastName LIKE '%" + last + "%';"
+    databaseResult = executeSingleQuery(query, fetch = True)
+    return databaseResult;
 
 if __name__ == "__main__":
     app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')
-

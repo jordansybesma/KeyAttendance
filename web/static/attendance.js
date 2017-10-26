@@ -4,6 +4,8 @@
 function closeAddStudent() {
     var span = document.getElementById("close");
     var popUp = document.getElementById('studentDiv');
+    document.getElementById("newStudentFirst").value = "";
+    document.getElementById("newStudentLast").value = "";
     popUp.style.display = "none";
 }
 function addNewStudent() {
@@ -19,8 +21,26 @@ function addNewStudent() {
         return;
     }
     alert(first + " " + last);
-    data = { 'firstName': first, 'lastName': last };
+    data = {
+        "id": "3",
+        "firstName": first,
+        "lastName": last,
+        "art": "FALSE",
+        "madeFood": "FALSE",
+        "recievedFood": "FALSE",
+        "leadership": "FALSE",
+        "exercise": "FALSE",
+        "mentalHealth": "FALSE",
+        "volunteering": "FALSE",
+        "oneOnOne": "FALSE",
+        "comments": "FALSE"
+    };
+    data = JSON.stringify(data);
+    console.log(data);
+    document.getElementById("newStudentFirst").value = "";
+    document.getElementById("newStudentLast").value = "";
     closeAddStudent();
+    var response = addAttendant(data);
 }
 
 function sendRequest(isPost, data, header, value, urlAddOn) {
@@ -32,8 +52,16 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
     alert(urlAddOn + xhr.responseText);
     return xhr.responseText;
 }
+function addAttendant(data) {
+    var xhttp = new XMLHttpRequest();
+    url = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/"
+    xhttp.open("POST", url, true);
+    xhttp.send(data);
+    //alert(urlAddOn + xhr.responseText);
+    return xhttp.responseText;
+}
 
-function getRequest(url, callbackState, callback)  {
+function getRequest(url, callbackState, callback) {
     xmlHttpRequest = new XMLHttpRequest();
     xmlHttpRequest.open('get', url);
 
@@ -45,7 +73,7 @@ function getRequest(url, callbackState, callback)  {
                     callback(callbackState, xmlHttpRequest.responseText);
                 }
            }
-       };
+    };
     xmlHttpRequest.send(null);
 }
 
@@ -65,6 +93,15 @@ function modifyAutofillList(_ , studentNames) {
   }
   list.innerHTML = inner;
 }
+function showProfile(_, studentInfo) {
+    alert("got to showProfile")
+    var popUp = document.getElementById('studentInfo');
+    popUp.style.display = "block";
+    document.getElementById("testContent").value = "got here";
+    alert(JSON.stringify(studentInfo))
+
+}
+
 
 function showSuggestions(curText) {
     getRequest("http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/autofill/" + curText, "", modifyAutofillList);
@@ -89,6 +126,28 @@ function checkBox(checkbox, keyword) {
 function openAddStudent() {
     var popUp = document.getElementById('studentDiv');
     popUp.style.display = "block";
+}
+
+function showStudentProfile() {
+    alert("got here")
+    //var table = document.getElementById("Attendance-Table");
+    var keywordElement = document.getElementById('keywordStudentSearch').value;
+    var optionFound = false;
+    datalist = document.getElementById("suggestedStudents");
+    for (var j = 0; j < datalist.options.length; j++){
+        if (keywordElement == datalist.options[j].value){
+            optionFound= true;
+            break;
+        }
+    }
+    if (optionFound) {
+        alert("option found")
+        alert(keywordElement)
+        getRequest("http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/getID/" + keywordElement, "", showProfile);
+
+
+    }
+
 }
 
 function onAddRow() {

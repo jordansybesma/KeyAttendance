@@ -128,8 +128,9 @@ function openAddStudent() {
 }
 
 function showStudentProfile() {
-    var table = document.getElementById("Attendance-Table");
-    var keywordElement = document.getElementById('keyword').value;
+    alert("got here")
+    //var table = document.getElementById("Attendance-Table");
+    var keywordElement = document.getElementById('keywordStudentSearch').value;
     var optionFound = false;
     datalist = document.getElementById("suggestedStudents");
     for (var j = 0; j < datalist.options.length; j++){
@@ -139,6 +140,7 @@ function showStudentProfile() {
         }
     }
     if (optionFound) {
+        alert("option found")
         getRequest("http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/getID/" + keywordElement, "", showProfile);
 
 

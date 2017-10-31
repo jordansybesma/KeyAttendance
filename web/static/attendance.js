@@ -54,15 +54,16 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
 }
 function addAttendant(data) {
     var xhttp = new XMLHttpRequest();
-    url = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/"
+    url = window.location.origin + "/addAttendant/";
     xhttp.open("POST", url, true);
     xhttp.send(data);
     //alert(urlAddOn + xhr.responseText);
     return xhttp.responseText;
 }
 
-function getRequest(url, callbackState, callback) {
+function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest = new XMLHttpRequest();
+    url = window.location.origin + urlAddon;
     xmlHttpRequest.open('get', url);
 
     xmlHttpRequest.onreadystatechange = function() {
@@ -104,9 +105,7 @@ function showProfile(_, studentInfo) {
 
 
 function showSuggestions(curText) {
-    getRequest("http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/autofill/" + curText, "", modifyAutofillList);
-
-
+    getRequest("/autofill/" + curText, "", modifyAutofillList);
 }
 
 function handleAddBox(e, curText) {

@@ -21,4 +21,8 @@ CREATE TABLE dailyAttendance (
     volunteering BOOL,
     oneOnOne BOOL,
     comments TEXT
+
+--     timeIn TIME
+--     timeOut TIME
+
 );

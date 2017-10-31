@@ -3,6 +3,7 @@ from flask import request
 import json
 import psycopg2
 import sys
+import datetime
 
 
 #flask automatically serves everything in the static folder for us, which is really nice
@@ -65,13 +66,19 @@ def addAttendant():
     activities = [request.form.get(activityName) for activityName in activityNames]
     id = request.form.get('id')
     if id != "":
+        # time = datetime.datetime.now().time()
+        # activities = activities.append(time, None)
+
+        # add two more %s's for timeIn and timeOut. You won't.
         executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         [id] + activities)
         return "true"
     else:
         query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
         databaseResult = executeSingleQuery(query, fetch = True)
-        #more than one "same name" student is available, return students
+
+# If more than one "same name" student is available, return students
+
         if len(databaseResult) > 1:
             return json.dumps(databaseResult[:10])
         elif len(databaseResult) == 0:
@@ -98,16 +105,13 @@ def autofill(partialString):
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):
-    #q = partialString.lower()
     nameList = string.split()
     first = nameList[0]
     last = nameList[1]
     query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + first + "%' OR lastName LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
-    #query = "SELECT * FROM testStudents WHERE firstName LIKE '%" + q + "%' OR lastName LIKE '%" + q + "%';"
-    #databaseResult = executeSingleQuery(query, fetch = True)
-    ##suggestions = json.dumps(databaseResult[:10])
-    return databaseResult
+    suggestions = json.dumps(databaseResult)
+    return suggestions
 
 # @app.route('/getID/<string>')
 # def getStudentID(string):

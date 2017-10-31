@@ -98,7 +98,11 @@ function showProfile(_, studentInfo) {
     alert("got to showProfile")
     var popUp = document.getElementById('studentInfo');
     popUp.style.display = "block";
+<<<<<<< HEAD
+    document.getElementById("studentProfileText").innerHTML = JSON.stringify(studentInfo);
+=======
     document.getElementById("testContent").value = JSON.stringify(studentInfo);
+>>>>>>> 021bfc1263c21d207e5d2cf81177d091dc743ec4
     alert(JSON.stringify(studentInfo))
 
 }
@@ -116,6 +120,18 @@ function handleAddBox(e, curText) {
     showSuggestions(curText);
   }
 }
+
+function handleProfileBox(e, curText) {
+  alert(e.keyCode);
+  if(e.keyCode === 13){
+      showStudentProfile();
+}
+  else {
+    showSuggestions(curText);
+  }
+}
+
+
 function checkBox(checkbox, keyword) {
     //var val = checkbox.value;
     //alert(keyword + ' is ' + val);
@@ -178,6 +194,7 @@ function onAddRow() {
 }
 
 function displayAttendanceTable(table_name) {
+    alert("got here");
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
@@ -189,7 +206,7 @@ function displayAttendanceList() {
     /*var list = document.getElementById("attendanceList");
     var attendance_names = '{"atten", "atten1", "atten2"}';
     var myData = JSON.parse(attendance_names);
-    
+
     for (i in myData) {
         var a = document.createElement('a');
         var entry = document.createElement('li');
@@ -201,8 +218,8 @@ function displayAttendanceList() {
     var list = document.getElementById("attendanceList");
     var attendance_name = 'Attendance Table';
     //var myData = JSON.parse(attendance_names);
-    
-    
+
+
         var a = document.createElement('a');
         var entry = document.createElement('li');
         var linkText = document.createTextNode(attendance_name);
@@ -213,6 +230,7 @@ function displayAttendanceList() {
         a.onclick = "displayAttendanceTable(" + attendance_name + ")";
         entry.appendChild(a);
         list.appendChild(entry);
+        return false;
     //<a onclick="jsfunction()" href="#">
 
 

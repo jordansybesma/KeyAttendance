@@ -118,7 +118,8 @@ function handleAddBox(e, curText) {
   }
 }
 
-function handeProfileBox(e, curText) {
+function handleProfileBox(e, curText) {
+  alert("handleProfileBox");
   if(e.keyCode === 13){
       showStudentProfile();
 }

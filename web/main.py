@@ -108,9 +108,9 @@ def autofill(partialString):
 def studentProfile(string):
     #q = partialString.lower()
     nameList = string.split()
-    first = nameList[0].upper()
-    last = nameList[1].upper()
-    query = "SELECT id FROM testStudents WHERE UPPER(firstName) LIKE '%" + first + "%' OR UPPER(lastName) LIKE '%" + last + "%';"
+    first = nameList[0]
+    last = nameList[1]
+    query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + first + "%' OR lastName LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     #query = "SELECT * FROM testStudents WHERE firstName LIKE '%" + q + "%' OR lastName LIKE '%" + q + "%';"
     #databaseResult = executeSingleQuery(query, fetch = True)

@@ -215,6 +215,7 @@ function displayAttendanceList() {
         a.onclick = "displayAttendanceTable(" + attendance_name + ")";
         entry.appendChild(a);
         list.appendChild(entry);
+        return false;
     //<a onclick="jsfunction()" href="#">
 
 

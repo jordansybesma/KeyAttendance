@@ -179,6 +179,7 @@ function onAddRow() {
 }
 
 function displayAttendanceTable(table_name) {
+    alert("got here");
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');

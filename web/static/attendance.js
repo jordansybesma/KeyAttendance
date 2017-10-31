@@ -101,8 +101,6 @@ function showProfile(_, studentInfo) {
 
     document.getElementById("studentProfileText").innerHTML = JSON.stringify(studentInfo);
 
-    document.getElementById("testContent").value = JSON.stringify(studentInfo);
-
     alert(JSON.stringify(studentInfo))
 
 }
@@ -122,7 +120,6 @@ function handleAddBox(e, curText) {
 }
 
 function handleProfileBox(e, curText) {
-  alert(e.keyCode);
   if(e.keyCode === 13){
       showStudentProfile();
 }

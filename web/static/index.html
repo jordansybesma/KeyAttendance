@@ -65,41 +65,51 @@
     </div>
 </div>
 
-<div id="Data" class="tabcontent">
+<div id="Data" class="tabcontent" onclick="displayAttendanceList()">
+
+<div id="attendanceListDiv">
+    <ul id="attendanceList">
+        
+    </ul>
+</div>
+
+<div id="attendanceDiv">
+
 <h2> Attendance Sheet 10/19/2017 </h4>
 
-<aside>
-    <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required /></label>
-    <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
-    <datalist id="suggestedStudents">
-    </datalist>
-</aside>
-  <button id="addStudent" onclick="openAddStudent()">Add Student</button>
-    <div id ="studentDiv" class="addStudentContent">
-        <div class="addStudentHeader">
-            <h2 id="popUpHeader">Add Student</h2>
-        </div>
-        <div class="modal-body">
-            <form>
-                First name:<br>
-                <input type="text" name="firstname" id="newStudentFirst"><br>
-                Last name:<br>
-                <input type="text" name="lastname" id="newStudentLast">
+    <div>
+        <aside>
+            <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required /></label>
+            <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
+            <datalist id="suggestedStudents"></datalist>
+        </aside>
+        <button id="addStudent" onclick="openAddStudent()">Add New Student</button>
+        <div id="studentDiv" class="addStudentContent">
+            <div class="addStudentHeader">
+                <h2 id="popUpHeader">Add Student</h2>
+            </div>
+            <div class="modal-body">
+                <form>
+                    First name:<br>
+                    <input type="text" name="firstname" id="newStudentFirst"><br>
+                    Last name:<br>
+                    <input type="text" name="lastname" id="newStudentLast">
                 </form>
+            </div>
+            <div class="modal-footer">
+                <input type="button" onclick="closeAddStudent()" id="close" value="Cancel" />
+                <input type="button" onclick="addNewStudent()" id="submitStudent" value="Submit" />
+            </div>
         </div>
-        <div class="modal-footer">
-            <input type="button" onclick="closeAddStudent()" id="close" value="Cancel" />
-            <input type="button" onclick="addNewStudent()" id="submitStudent" value="Submit" />
-        </div>
+
+        <table id="Attendance-Table" style="width:100%">
+            <tr>
+                <th>Name</th>
+                <th>Health</th>
+                <th>Food</th>
+
+        </table>
     </div>
-
-  <table id="Attendance-Table" style="width:100%">
-  <tr>
-    <th>Name</th>
-    <th>Health</th>
-    <th>Food</th>
-
-</table>
 </div>
 
 <div id="Incident" class="tabcontent">

@@ -105,16 +105,13 @@ def autofill(partialString):
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):
-    #q = partialString.lower()
     nameList = string.split()
     first = nameList[0]
     last = nameList[1]
     query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + first + "%' OR lastName LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
-    #query = "SELECT * FROM testStudents WHERE firstName LIKE '%" + q + "%' OR lastName LIKE '%" + q + "%';"
-    #databaseResult = executeSingleQuery(query, fetch = True)
-    ##suggestions = json.dumps(databaseResult[:10])
-    return databaseResult
+    suggestions = json.dumps(databaseResult)
+    return suggestions
 
 # @app.route('/getID/<string>')
 # def getStudentID(string):

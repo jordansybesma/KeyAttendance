@@ -105,9 +105,9 @@ def autofill(partialString):
 def studentProfile(string):
     #q = partialString.lower()
     nameList = string.split()
-    first = nameList[0]
-    last = nameList[1]
-    query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + first + "%' OR lastName LIKE '%" + last + "%';"
+    first = nameList[0].upper()
+    last = nameList[1].upper()
+    query = "SELECT id FROM testStudents WHERE UPPER(firstName) LIKE '%" + first + "%' OR UPPER(lastName) LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     #query = "SELECT * FROM testStudents WHERE firstName LIKE '%" + q + "%' OR lastName LIKE '%" + q + "%';"
     #databaseResult = executeSingleQuery(query, fetch = True)
@@ -128,7 +128,8 @@ def getStudentID(string):
     return autofill(string)
 
 if __name__ == "__main__":
-    if len(sys.args) > 1 and sys.args[1] == "local":
-        app.run()
-    else:
-        app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')
+    app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')
+    # if len(sys.args) > 1 and sys.args[1] == "local":
+    #     #app.run()
+    # else:
+    #     app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')

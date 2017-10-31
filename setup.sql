@@ -20,7 +20,9 @@ CREATE TABLE dailyAttendance (
     mentalHealth BOOL,
     volunteering BOOL,
     oneOnOne BOOL,
-    comments TEXT,
-    timeIn TIME,
-    timeOut TIME
+    comments TEXT
+
+--     timeIn TIME
+--     timeOut TIME
+
 );

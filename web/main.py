@@ -111,10 +111,11 @@ def studentProfile(string):
     last = nameList[1].upper()
     query = "SELECT id FROM testStudents WHERE UPPER(firstName) LIKE '%" + first + "%' OR UPPER(lastName) LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
+
     #query = "SELECT * FROM testStudents WHERE firstName LIKE '%" + q + "%' OR lastName LIKE '%" + q + "%';"
-    #databaseResult = executeSingleQuery(query, fetch = True)
-    ##suggestions = json.dumps(databaseResult[:10])
-    return databaseResult
+    databaseResult = executeSingleQuery(query, fetch = True)
+    suggestions = json.dumps(databaseResult)
+    return suggestions
 
 # @app.route('/getID/<string>')
 # def getStudentID(string):

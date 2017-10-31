@@ -101,8 +101,6 @@ function showProfile(_, studentInfo) {
 
     document.getElementById("studentProfileText").innerHTML = JSON.stringify(studentInfo);
 
-    document.getElementById("testContent").value = JSON.stringify(studentInfo);
-
     alert(JSON.stringify(studentInfo))
 
 }

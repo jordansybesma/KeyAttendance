@@ -213,7 +213,7 @@ function displayAttendanceList() {
         a.href = "#";
         a.onclick = "displayAttendanceTable(" + attendance_name + ")";
         entry.appendChild(linkText);
-        list.appendChild(entry);
+        list.appendChild(a);
     //<a onclick="jsfunction()" href="#">
 
 

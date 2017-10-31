@@ -122,7 +122,6 @@ function handleAddBox(e, curText) {
 }
 
 function handleProfileBox(e, curText) {
-  alert(e.keyCode);
   if(e.keyCode === 13){
       showStudentProfile();
 }

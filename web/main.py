@@ -85,7 +85,13 @@ def addAttendant():
         elif len(databaseResult) == 0:
             return "false"
 
-
+@app.route('/download/<table>')
+def downloadAttendanceSheet(table):
+    tableName = table
+    query = "COPY " + tableName + " TO stdout DELIMITER ',' CSV HEADER;"
+    databaseResult = executeSingleQuery(query, fetch = True)
+    result = json.dumps(databaseResult)
+    return result
 
 """
     Literally just takes a string. Compares both first and last name.
@@ -111,8 +117,8 @@ def studentProfile(string):
     last = nameList[1]
     query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + first + "%' OR lastName LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
-    suggestions = json.dumps(databaseResult)
-    return suggestions
+    result = json.dumps(databaseResult)
+    return result
 
 # @app.route('/getID/<string>')
 # def getStudentID(string):

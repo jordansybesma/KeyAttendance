@@ -54,15 +54,16 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
 }
 function addAttendant(data) {
     var xhttp = new XMLHttpRequest();
-    url = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/"
+    url = window.location.origin + "/addAttendant/";
     xhttp.open("POST", url, true);
     xhttp.send(data);
     //alert(urlAddOn + xhr.responseText);
     return xhttp.responseText;
 }
 
-function getRequest(url, callbackState, callback) {
+function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest = new XMLHttpRequest();
+    url = window.location.origin + urlAddon;
     xmlHttpRequest.open('get', url);
 
     xmlHttpRequest.onreadystatechange = function() {
@@ -97,16 +98,18 @@ function showProfile(_, studentInfo) {
     alert("got to showProfile")
     var popUp = document.getElementById('studentInfo');
     popUp.style.display = "block";
+<<<<<<< HEAD
     document.getElementById("studentProfileText").innerHTML = JSON.stringify(studentInfo);
+=======
+    document.getElementById("testContent").value = JSON.stringify(studentInfo);
+>>>>>>> 021bfc1263c21d207e5d2cf81177d091dc743ec4
     alert(JSON.stringify(studentInfo))
 
 }
 
 
 function showSuggestions(curText) {
-    getRequest("http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/autofill/" + curText, "", modifyAutofillList);
-
-
+    getRequest("/autofill/" + curText, "", modifyAutofillList);
 }
 
 function handleAddBox(e, curText) {
@@ -198,10 +201,11 @@ function displayAttendanceTable(table_name) {
 }
 
 function displayAttendanceList() {
+    alert("got here");
     /*var list = document.getElementById("attendanceList");
     var attendance_names = '{"atten", "atten1", "atten2"}';
     var myData = JSON.parse(attendance_names);
-    
+
     for (i in myData) {
         var a = document.createElement('a');
         var entry = document.createElement('li');
@@ -213,14 +217,19 @@ function displayAttendanceList() {
     var list = document.getElementById("attendanceList");
     var attendance_name = 'Attendance Table';
     //var myData = JSON.parse(attendance_names);
-    
-    
+
+
         var a = document.createElement('a');
         var entry = document.createElement('li');
+        var linkText = document.createTextNode(attendance_name);
+        //linkText.onclick = "displayAttendanceTable(" + attendance_name + ")";
+        a.appendChild(linkText);
         a.title = attendance_name;
-        a.href = "displayAttendanceTable(" + attendance_name + ")";
+        a.href = "#";
+        a.onclick = "displayAttendanceTable(" + attendance_name + ")";
         entry.appendChild(a);
         list.appendChild(entry);
+    //<a onclick="jsfunction()" href="#">
 
 
     //var firstname = document.getElementById('firstname').value;

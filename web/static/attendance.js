@@ -206,6 +206,8 @@ function displayAttendanceList() {
     
         var a = document.createElement('a');
         var entry = document.createElement('li');
+        var linkText = document.createTextNode(attendance_name);
+        a.appendChild(linkText);
         a.title = attendance_name;
         a.href = "displayAttendanceTable(" + attendance_name + ")";
         entry.appendChild(a);

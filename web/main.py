@@ -66,9 +66,11 @@ def addAttendant():
     activities = [request.form.get(activityName) for activityName in activityNames]
     id = request.form.get('id')
     if id != "":
-        time = datetime.datetime.now().time()
-        activities = activities.append(time, None)
-        executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        # time = datetime.datetime.now().time()
+        # activities = activities.append(time, None)
+
+        # add two more %s's for timeIn and timeOut. You won't.
+        executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         [id] + activities)
         return "true"
     else:

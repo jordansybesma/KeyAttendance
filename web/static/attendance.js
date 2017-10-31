@@ -117,6 +117,17 @@ function handleAddBox(e, curText) {
     showSuggestions(curText);
   }
 }
+
+function handeProfileBox(e, curText) {
+  if(e.keyCode === 13){
+      showStudentProfile();
+}
+  else {
+    showSuggestions(curText);
+  }
+}
+
+
 function checkBox(checkbox, keyword) {
     //var val = checkbox.value;
     //alert(keyword + ' is ' + val);

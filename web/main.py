@@ -11,8 +11,6 @@ app = flask.Flask(__name__)
 @app.route('/')
 def send_index():
     return flask.redirect("static/index.html", code=302)
-    # this works, but then the app fails to get the other things in the static folder :(
-    #return flask.current_app.send_static_file('index.html')
 
 @app.route('/addText/', methods=['POST'])
 def foo():
@@ -60,10 +58,10 @@ def getAttendance():
 
 @app.route('/addAttendant/', methods = ["POST"])
 def addAttendant():
+    print(json.decode(request.data))
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
     activityNames = ["art", "madeFood", "recievedFood", "leadership", "exercise", "mentalHealth", "volunteering", "oneOnOne", "comments"]
-    print(request)
     activities = [request.form.get(activityName) for activityName in activityNames]
     print(firstName,lastName, activityNames)
     id = request.form.get('id')
@@ -123,7 +121,10 @@ def studentProfile(string):
 
 @app.route('/getID/<string>')
 def getStudentID(string):
-    return autofill(string)["id"]
+    return autofill(string)
 
 if __name__ == "__main__":
-    app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')
+    if len(sys.args) > 1 and sys.args[1] == "local":
+        app.run()
+    else:
+        app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')

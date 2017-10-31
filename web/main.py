@@ -127,8 +127,7 @@ def getStudentID(string):
     return autofill(string)
 
 if __name__ == "__main__":
-    app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')
-    # if len(sys.args) > 1 and sys.args[1] == "local":
-    #     #app.run()
-    # else:
-    #     app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')
+    if len(sys.argv) > 1 and sys.argv[1] == "local":
+        app.run()
+    else:
+        app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')

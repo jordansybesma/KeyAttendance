@@ -177,3 +177,42 @@ function onAddRow() {
   }
 
 }
+
+function displayAttendanceTable(table_name) {
+    var popUp = document.getElementById('attendanceDiv');
+    popUp.style.display = "block";
+    var list = document.getElementById('attendanceListDiv');
+    list.style.display = "none";
+}
+
+function displayAttendanceList() {
+    /*var list = document.getElementById("attendanceList");
+    var attendance_names = '{"atten", "atten1", "atten2"}';
+    var myData = JSON.parse(attendance_names);
+    
+    for (i in myData) {
+        var a = document.createElement('a');
+        var entry = document.createElement('li');
+        a.title = myData[i][0];
+        a.href = "displayAttendanceTable(" + myData[i][0] + ")";
+        entry.appendChild(a);
+        list.appendChild(entry);
+    }*/
+    var list = document.getElementById("attendanceList");
+    var attendance_name = 'Attendance Table';
+    //var myData = JSON.parse(attendance_names);
+    
+    
+        var a = document.createElement('a');
+        var entry = document.createElement('li');
+        a.title = attendance_name;
+        a.href = "displayAttendanceTable(" + attendance_name + ")";
+        entry.appendChild(a);
+        list.appendChild(entry);
+
+
+    //var firstname = document.getElementById('firstname').value;
+    //var entry = document.createElement('li');
+    //entry.appendChild(document.createTextNode(firstname));
+    //list.appendChild(entry);
+}

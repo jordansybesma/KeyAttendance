@@ -31,7 +31,7 @@
 <button class = "tablinks" onclick = "openTab(event, 'Incident')"> Incident </button>
 <button class = "tablinks" onclick = "openTab(event, 'Student Profiles')"> Student Profiles</button>
 <button class = "tablinks" onclick = "openTab(event, 'Staff Schedules')"> Staff Schedules</button>
-<button class = "tablinks" onclick = "openTab(event, 'Edit Attendance Sheets')"> Edit Attendance Sheets </button>
+<button class = "tablinks" onclick = "openTab(event, 'Edit Attendance Sheets'); displayAttendanceList();"> Edit Attendance Sheets </button>
 </div>
 
 <div id="Home" class="tabcontent">
@@ -65,9 +65,10 @@
     </div>
 </div>
 
-<div id="Data" class="tabcontent" onclick="displayAttendanceList()">
+<div id="Data" class="tabcontent" >
 
 <div id="attendanceListDiv">
+    <h2> Attendance!!!!! </h2>
     <ul id="attendanceList">
         
     </ul>
@@ -120,11 +121,11 @@
 <div id="Student Profiles" class="tabcontent">
   <h3>Student Profiles</h3>
     <form>
-        <input list="suggestedStudents" name="nameEnter" onkeyup="handleProfileBox(event, this.value)" id="keywordStudentSearch" type="text" placeholder="Name" required /></label>
+        <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keywordStudentSearch" type="text" placeholder="Name" required /></label>
         <input onclick="showStudentProfile()" id="searchbutton" type="button" value="Submit">
     </form>
     <div id="studentInfo">
-        <p id="studentProfileText" >HELLO!!!!!
+        <p id="testContent" text="test!!!!">
 
 
         </p>

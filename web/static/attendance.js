@@ -97,7 +97,7 @@ function showProfile(_, studentInfo) {
     alert("got to showProfile")
     var popUp = document.getElementById('studentInfo');
     popUp.style.display = "block";
-    document.getElementById("studentProfileText").value = JSON.stringify(studentInfo);
+    document.getElementById("testContent").value = JSON.stringify(studentInfo);
     alert(JSON.stringify(studentInfo))
 
 }
@@ -117,19 +117,6 @@ function handleAddBox(e, curText) {
     showSuggestions(curText);
   }
 }
-
-function handleProfileBox(e, curText) {
-  alert(e.keyCode);
-  if(e.keyCode === 13){
-
-      showStudentProfile();
-}
-  else {
-    showSuggestions(curText);
-  }
-}
-
-
 function checkBox(checkbox, keyword) {
     //var val = checkbox.value;
     //alert(keyword + ' is ' + val);
@@ -199,6 +186,7 @@ function displayAttendanceTable(table_name) {
 }
 
 function displayAttendanceList() {
+    alert("got here");
     /*var list = document.getElementById("attendanceList");
     var attendance_names = '{"atten", "atten1", "atten2"}';
     var myData = JSON.parse(attendance_names);

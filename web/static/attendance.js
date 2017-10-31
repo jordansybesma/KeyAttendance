@@ -98,11 +98,11 @@ function showProfile(_, studentInfo) {
     alert("got to showProfile")
     var popUp = document.getElementById('studentInfo');
     popUp.style.display = "block";
-<<<<<<< HEAD
+
     document.getElementById("studentProfileText").innerHTML = JSON.stringify(studentInfo);
-=======
+
     document.getElementById("testContent").value = JSON.stringify(studentInfo);
->>>>>>> 021bfc1263c21d207e5d2cf81177d091dc743ec4
+
     alert(JSON.stringify(studentInfo))
 
 }

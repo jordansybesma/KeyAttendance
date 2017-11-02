@@ -21,7 +21,7 @@ function addNewStudent() {
         return;
     }
     alert(first + " " + last);
-    data = {
+    /*data = {
         "id": "3",
         "firstName": first,
         "lastName": last,
@@ -36,11 +36,12 @@ function addNewStudent() {
         "comments": "FALSE"
     };
     data = JSON.stringify(data);
-    console.log(data);
+    console.log(data);*/
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
     closeAddStudent();
-    var response = addAttendant(data);
+    //var response = addAttendant(data);
+    sendNewStudent(first, last);
 }
 
 function sendRequest(isPost, data, header, value, urlAddOn) {
@@ -51,6 +52,12 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
     xhr.send(data);
     alert(urlAddOn + xhr.responseText);
     return xhr.responseText;
+}
+function sendNewStudent(firstname, lastname) {
+
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addNewStudent/");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
 function addAttendant(data) {
     var xhttp = new XMLHttpRequest();

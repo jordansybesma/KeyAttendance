@@ -59,7 +59,7 @@ def getAttendance():
 
 @app.route('/addAttendant/', methods = ["POST"])
 def addAttendant():
-    print(json.decode(request.data))
+    #print(json.decode(request.data))
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
     activityNames = ["art", "madeFood", "recievedFood", "leadership", "exercise", "mentalHealth", "volunteering", "oneOnOne", "comments"]

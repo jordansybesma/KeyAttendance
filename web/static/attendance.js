@@ -234,10 +234,10 @@ function displayAttendanceList() {
         alert("displayAttendanceTable(" + attendance_name + ")");
         entry.innerHTML = '<li onclick="displayAttendanceTable(\'' + attendance_name + '\')" />';
         //link.innerHTML = '<span onclick="displayAttendanceTable("' + attendance_name + '")" />';
-        link.textContent = attendance_name;
+        entry.textContent = attendance_name;
         
   
-        entry.appendChild(link);
+        //entry.appendChild(link);
         list.appendChild(entry);
         return false;
     //<a onclick="jsfunction()" href="#">

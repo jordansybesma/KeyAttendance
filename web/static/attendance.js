@@ -218,15 +218,24 @@ function displayAttendanceList() {
     //var myData = JSON.parse(attendance_names);
 
 
-        var a = document.createElement('a');
+        //var a = document.createElement('a');
         var entry = document.createElement('li');
-        var linkText = document.createTextNode(attendance_name);
+        //var linkText = document.createTextNode(attendance_name);
         //linkText.onclick = "displayAttendanceTable(" + attendance_name + ")";
-        a.appendChild(linkText);
-        a.title = attendance_name;
-        a.href = "#";
-        a.onclick = "displayAttendanceTable(" + attendance_name + ")";
-        entry.appendChild(a);
+        //a.appendChild(linkText);
+        //a.title = attendance_name;
+        //a.href = "#";
+    //a.onclick = "displayAttendanceTable(" + attendance_name + ")";
+        var link = document.createElement('span');
+        link.onmouseover="this.style.cursor='pointer'";
+
+        link.onmouseout="this.style.cursor='default'";
+        alert("displayAttendanceTable(" + attendance_name + ")");
+        link.onclick="displayAttendanceTable(" + attendance_name + ")";
+        link.textContent = attendance_name;
+        
+  
+        entry.appendChild(link);
         list.appendChild(entry);
         return false;
     //<a onclick="jsfunction()" href="#">

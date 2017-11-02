@@ -85,11 +85,13 @@ def addAttendant():
         elif len(databaseResult) == 0:
             return "false"
 
-@app.route('/download/<table>')
-def downloadAttendanceSheet(table):
-    tableName = table
-    query = "COPY " + tableName + " TO stdout DELIMITER ',' CSV HEADER;"
+@app.route('/download/<tableName>')
+def downloadAttendanceSheet(tableName):
+    output = ""
+    query = "\copy " + tableName + " TO pstdout DELIMITER ',' CSV HEADER;"
     databaseResult = executeSingleQuery(query, fetch = True)
+    while(databaseResult.next()):
+        output = databaseResult.getObject(1)
     result = json.dumps(databaseResult)
     return result
 

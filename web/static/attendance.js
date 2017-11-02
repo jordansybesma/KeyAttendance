@@ -228,11 +228,12 @@ function displayAttendanceList() {
     //a.onclick = "displayAttendanceTable(" + attendance_name + ")";
         var link = document.createElement('span');
         link.id = "spanID";
-        link.onmouseover="this.style.cursor='pointer'";
+        //link.onmouseover="this.style.cursor='pointer'";
 
-        link.onmouseout="this.style.cursor='default'";
+        //link.onmouseout="this.style.cursor='default'";
         alert("displayAttendanceTable(" + attendance_name + ")");
-        link.onclick="displayAttendanceTable(" + attendance_name + ")";
+        link.onclick = "displayAttendanceTable(" + attendance_name + ")";
+        link.innerHTML = '<span onclick="displayAttendanceTable("' + attendance_name + '")" />';
         link.textContent = attendance_name;
         
   

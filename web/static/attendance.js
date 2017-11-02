@@ -191,7 +191,7 @@ function onAddRow() {
 }
 
 function displayAttendanceTable(table_name) {
-    alert("got here");
+    
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
@@ -201,7 +201,7 @@ function displayAttendanceTable(table_name) {
 }
 
 function displayAttendanceList() {
-    alert("got here");
+    
     /*var list = document.getElementById("attendanceList");
     var attendance_names = '{"atten", "atten1", "atten2"}';
     var myData = JSON.parse(attendance_names);
@@ -232,7 +232,7 @@ function displayAttendanceList() {
         //link.onmouseover="this.style.cursor='pointer'";
 
         //link.onmouseout="this.style.cursor='default'";
-        alert("displayAttendanceTable(" + attendance_name + ")");
+        
         //entry.textContent = attendance_name;
         entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + attendance_name + '\')">' + attendance_name + '</span>';
         //link.innerHTML = '<span onclick="displayAttendanceTable("' + attendance_name + '")" />';

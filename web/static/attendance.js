@@ -227,6 +227,7 @@ function displayAttendanceList() {
         //a.href = "#";
     //a.onclick = "displayAttendanceTable(" + attendance_name + ")";
         var link = document.createElement('span');
+        link.id = "spanID";
         link.onmouseover="this.style.cursor='pointer'";
 
         link.onmouseout="this.style.cursor='default'";

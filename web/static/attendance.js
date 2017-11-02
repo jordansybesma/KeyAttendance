@@ -195,6 +195,7 @@ function displayAttendanceTable(table_name) {
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
+    list.style.display = "none";
     return false;
     // list.style.display = "none";
 }

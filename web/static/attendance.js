@@ -219,7 +219,7 @@ function displayAttendanceTable(table_name) {
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
-    getRequest("/getAttendance" + curText, "", fillAttendance);
+    getRequest("/getAttendance", "", fillAttendance);
     return false;
     // list.style.display = "none";
 }

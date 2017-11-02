@@ -99,6 +99,11 @@ function sendSubmitForm()  {
 
     console.log('theirText:' + sendRequest(true, theirText, "attendance-json", "application/json", "/addText"));
 }
+function fillAttendance(_, attendance) {
+    console.log(attendance);
+    var myData = JSON.parse(attendance);
+    //for (i in myData)
+}
 
 function modifyAutofillList(_ , studentNames) {
   var list = document.getElementById("suggestedStudents");
@@ -214,6 +219,7 @@ function displayAttendanceTable(table_name) {
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
+    getRequest("/getAttendance" + curText, "", fillAttendance);
     return false;
     // list.style.display = "none";
 }

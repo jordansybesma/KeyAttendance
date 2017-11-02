@@ -232,7 +232,7 @@ function displayAttendanceList() {
 
         //link.onmouseout="this.style.cursor='default'";
         alert("displayAttendanceTable(" + attendance_name + ")");
-        entry.innerHTML = '<entry onclick="displayAttendanceTable("' + attendance_name + '")" />';
+        entry.innerHTML = '<li onclick="displayAttendanceTable(\'' + attendance_name + '\')" />';
         //link.innerHTML = '<span onclick="displayAttendanceTable("' + attendance_name + '")" />';
         link.textContent = attendance_name;
         

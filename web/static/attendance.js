@@ -214,7 +214,7 @@ function displayAttendanceList() {
         list.appendChild(entry);
     }*/
     var list = document.getElementById("attendanceList");
-    var attendance_name = 'Attendance Table';
+    var attendance_name = 'Attendance_Table';
     //var myData = JSON.parse(attendance_names);
 
 

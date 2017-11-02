@@ -85,13 +85,11 @@ def addAttendant():
         elif len(databaseResult) == 0:
             return "false"
 
+# Roughly informed by https://www.postgresql.org/docs/9.6/static/app-psql.html#APP-PSQL-META-COMMANDS-COPY
 @app.route('/download/<tableName>')
 def downloadAttendanceSheet(tableName):
-    output = ""
-    query = "\copy " + tableName + " TO pstdout DELIMITER ',' CSV HEADER;"
+    query = "\COPY " + tableName + " TO pstdout DELIMITER ',' CSV HEADER;"
     databaseResult = executeSingleQuery(query, fetch = True)
-    while(databaseResult.next()):
-        output = databaseResult.getObject(1)
     result = json.dumps(databaseResult)
     return result
 

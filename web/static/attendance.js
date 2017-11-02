@@ -54,7 +54,7 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
     return xhr.responseText;
 }
 function sendNewStudent(firstname, lastname) {
-
+    var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addNewStudent/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);

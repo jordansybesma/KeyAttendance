@@ -82,6 +82,10 @@ def addAttendant():
 
         if len(databaseResult) > 1:
             return json.dumps(databaseResult[:10])
+        elif len(databaseResult) == 1:
+            executeSingleQuery("INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " +lastName ", (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            activities)
+            return "true"
         elif len(databaseResult) == 0:
             return "false"
 

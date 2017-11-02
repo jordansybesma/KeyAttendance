@@ -8,6 +8,14 @@ function closeAddStudent() {
     document.getElementById("newStudentLast").value = "";
     popUp.style.display = "none";
 }
+function addAttendant(first, last) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("firstName=" + first + "&lastName=" + last +"&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exercise=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&id=FALSE");
+        
+
+}
 function addNewStudent() {
 
     var first = document.getElementById("newStudentFirst").value;
@@ -59,14 +67,14 @@ function sendNewStudent(firstname, lastname) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
-function addAttendant(data) {
+/*function addAttendant(data) {
     var xhttp = new XMLHttpRequest();
     url = window.location.origin + "/addAttendant/";
     xhttp.open("POST", url, true);
     xhttp.send(data);
     //alert(urlAddOn + xhr.responseText);
     return xhttp.responseText;
-}
+}*/
 
 function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest = new XMLHttpRequest();
@@ -191,10 +199,13 @@ function onAddRow() {
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;
     cell3.innerHTML = str;
+    var names = keywordElement.split(" ");
+    addAttendant(names[0], names[1]);
   } else {
     alert("Please enter an existing student");
   }
-
+    //var str = "How are you doing today?";
+    
 }
 
 function displayAttendanceTable(table_name) {

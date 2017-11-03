@@ -77,7 +77,7 @@ def addAttendant():
         query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
         databaseResult = executeSingleQuery(query, fetch = True)
         print(databaseResult[0][0])
-        newString = "INSERT INTO dailyAttendance VALUES " + str(databaseResult[0][0]) + ", " + firstName + ", " +lastName +", FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE;"
+        newString = "INSERT INTO dailyAttendance VALUES (" + str(databaseResult[0][0]) + ", " + firstName + ", " +lastName +", FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);"
         #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
         executeSingleQuery(newString, fetch=True)
             

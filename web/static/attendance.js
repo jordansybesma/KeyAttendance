@@ -130,7 +130,7 @@ function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     for (i in myData) {
         console.log(myData[i]);
-        addRowHelper(myData[i][1], myData[i][2], myData[i][3], myData[i][4])
+        addRowHelper(myData[i][1], myData[i][2], myData[i][3], myData[i][4], myData[i][5],myData[i][6],myData[i][7],myData[i][8],myData[i][9],myData[i][10])
     }
 }
 
@@ -210,7 +210,7 @@ function showStudentProfile() {
     }
 
 }
-function addRowHelper(first, last, art, madeFood) {
+function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {
     var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keyword').value;
     
@@ -220,21 +220,63 @@ function addRowHelper(first, last, art, madeFood) {
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
-    var checkIDArt = date + first + last + "art";
-    var checkIDmadeFood = date + first + last + "madeFood";
+    var cell4 = row.insertCell(3);
+    var cell5 = row.insertCell(4);
+    var cell6 = row.insertCell(5);
+    var cell7 = row.insertCell(6);
+    var cell8 = row.insertCell(7);
+    var cell9 = row.insertCell(8);
+    
     if (art) {
-        str = "<input type=\"checkbox\"  id='" + checkIDArt + "'  checked  onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
+        str = "<input type=\"checkbox\" checked  onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
     } else {
-        str = " <input type=\"checkbox\"  id='" + checkIDArt + "'  onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
+        str = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
     }
     if (madeFood) {
-        str2 = "<input type=\"checkbox\"  id='" + checkIDmadeFood + "'    checked onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\">";
+        str2 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\">";
     } else {
-        str2 = " <input type=\"checkbox\" id='" + checkIDmadeFood + "'  onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\">";
+        str2 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\">";
+    }
+    if (recievedFood) {
+        str3 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'recievedFood', '" + date + "')\">";
+    } else {
+        str3 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'recievedFood', '" + date + "')\">";
+    }
+    if (leadership) {
+        str4 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'leadership', '" + date + "')\">";
+    } else {
+        str4 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'leadership', '" + date + "')\">";
+    }
+    if (exersize) {
+        str5 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'exersize', '" + date + "')\">";
+    } else {
+        str5 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'exersize', '" + date + "')\">";
+    }
+    if (mentalHealth) {
+        str6 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'mentalHealth', '" + date + "')\">";
+    } else {
+        str6 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'mentalHealth', '" + date + "')\">";
+    }
+    if (volunteering) {
+        str7 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'volunteering', '" + date + "')\">";
+    } else {
+        str7 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'volunteering', '" + date + "')\">";
+    }
+    if (oneOnOne) {
+        str8 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'oneOnOne', '" + date + "')\">";
+    } else {
+        str8 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'oneOnOne', '" + date + "')\">";
     }
     cell1.innerHTML = first + " " + last;
     cell2.innerHTML = str;
     cell3.innerHTML = str2;
+    cell3.innerHTML = str3;
+    cell3.innerHTML = str4;
+    cell3.innerHTML = str5;
+    cell3.innerHTML = str6;
+    cell3.innerHTML = str7;
+    cell3.innerHTML = str8;
+
 
     
 }
@@ -273,12 +315,30 @@ function onAddRow() {
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
-    str = "<form> <input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'art', '" + date + "')\"></form>";
-    str2 = "<form> <input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'madeFood', '" + date + "')\"></form>";
+    var cell4 = row.insertCell(3);
+    var cell5 = row.insertCell(4);
+    var cell6 = row.insertCell(5);
+    var cell7 = row.insertCell(6);
+    var cell8 = row.insertCell(7);
+    var cell9 = row.insertCell(8);
+    str = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'art', '" + date + "')\">";
+    str2 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'madeFood', '" + date + "')\">";
+    str3 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'recievedFood', '" + date + "')\">";
+    str4 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'leadership', '" + date + "')\">";
+    str5 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'exersize', '" + date + "')\">";
+    str6 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'mentalHealth', '" + date + "')\">";
+    str7 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'volunteering', '" + date + "')\">";
+    str8 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'oneOnOne', '" + date + "')\">";
 
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;
     cell3.innerHTML = str2;
+    cell3.innerHTML = str3;
+    cell3.innerHTML = str4;
+    cell3.innerHTML = str5;
+    cell3.innerHTML = str6;
+    cell3.innerHTML = str7;
+    cell3.innerHTML = str8;
     var names = keywordElement.split(" ");
     addAttendant(names[0], names[1]);
   } else {
@@ -309,7 +369,7 @@ function createNewAttendance() {
     cell3.innerHTML = "Made Food";
     cell4.innerHTML = "Recieved Food";
     cell5.innerHTML = "Leadership";
-    cell6.innerHTML = "Excersize";
+    cell6.innerHTML = "Exersize";
     cell7.innerHTML = "Mental Health";
     cell8.innerHTML = "Volunteering";
     cell9.innerHTML = "One On One";
@@ -339,7 +399,7 @@ function displayAttendanceTable(table_date) {
     cell3.innerHTML = "Made Food";
     cell4.innerHTML = "Recieved Food";
     cell5.innerHTML = "Leadership";
-    cell6.innerHTML = "Excersize";
+    cell6.innerHTML = "Exersize";
     cell7.innerHTML = "Mental Health";
     cell8.innerHTML = "Volunteering";
     cell9.innerHTML = "One On One";

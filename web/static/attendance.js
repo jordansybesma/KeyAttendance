@@ -459,8 +459,8 @@ function displayMasterAttendance() {
 }
 
 function masterAttendanceHelper(_, masterData) {
-    console.log(dates);
-    var myData = JSON.parse(dates);
+    console.log(masterData);
+    var myData = JSON.parse(masterData);
     var table = document.getElementById("masterAttendanceTable");
     //table.innerHTML = "";
     for (i in myData) {

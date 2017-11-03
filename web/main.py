@@ -130,7 +130,7 @@ def studentProfile(string):
     query = "SELECT * FROM testStudents WHERE firstName LIKE '%" + first + "%' OR lastName LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(databaseResult)
-    return result
+    return databaseResult
 
 # @app.route('/getID/<string>')
 # def getStudentID(string):

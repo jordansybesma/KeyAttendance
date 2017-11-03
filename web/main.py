@@ -72,6 +72,19 @@ def deleteAttendant():
     last = nameList[1]
     query = "DELETE FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
+    queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"
+        #result = executeSingleQuery(queryMaster)
+    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+    newResult =json.loads(result)
+    numAttend = newResult[0][0]
+    
+    print(numAttend)
+    if (numAttend == 0):
+        newNumAttend = 0
+    else:
+        newNumAttend = numAttend - 1
+    alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    executeSingleQuery(alterQuery, [])
       
 @app.route('/getDates')
 def getDates():

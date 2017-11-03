@@ -17,7 +17,7 @@ function addAttendant(first, last) {
     var hour = dt.getHours();
     var minute = dt.getMinutes();
     var seconds = dt.getSeconds();
-    console.log(month + '-' + day + '-' + year + "  " + hour+ " " + minute + " " + seconds);
+    alert(month + '-' + day + '-' + year + "  " + hour+ " " + minute + " " + seconds);
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");

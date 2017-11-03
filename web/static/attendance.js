@@ -262,7 +262,7 @@ function onAddRow() {
 }
 
 function displayAttendanceTable(table_date) {
-    document.getElementById("attendanceName").innerHTML = "Attendance Sheet " + table_date;
+    document.getElementById("attendanceName").innerHTML = "Attendance Sheet " + makeDateReadable(table_date);
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
@@ -311,4 +311,18 @@ function displayAttendanceList() {
     
         
     
+}
+function makeDateReadable(date) {
+    var month = date.substr(5, 6);
+    var day = date.substr(8, 9);
+    var year = date.substr(0, 3);
+    var newDate = month + "/" + day + "/" + year;
+    return newDate;
+}
+function makeDateSQL(date) {
+    var month = date.substr(0, 1);
+    var day = date.substr(3, 4);
+    var year = date.substr(6, 9);
+    var newDate = year + "-" + month + "-" + day;
+    return newDate;
 }

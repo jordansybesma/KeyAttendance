@@ -35,7 +35,7 @@ function addAttendant(first, last) {
         seconds = "0" + seconds;
     }
     var date = year + "-" + month + "-" + day;
-    var time = hour + "-" + minute + "-" + seconds
+    var time = hour + ":" + minute + ":" + seconds
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last +"&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exercise=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date="+ date + "&time=" + time +"&id=");

@@ -130,7 +130,7 @@ function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     for (i in myData) {
         console.log(myData[i]);
-        addRowHelper(myData[i][1], myData[i][2])
+        addRowHelper(myData[i][1], myData[i][2], myData[i][3], myData[i][4])
     }
 }
 
@@ -210,7 +210,7 @@ function showStudentProfile() {
     }
 
 }
-function addRowHelper(first, last) {
+function addRowHelper(first, last, art, madeFood) {
     var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keyword').value;
     
@@ -228,6 +228,13 @@ function addRowHelper(first, last) {
     cell1.innerHTML = first + " " + last;
     cell2.innerHTML = str;
     cell3.innerHTML = str2;
+
+    if (art) {
+        document.getElementById(checkIDArt).checked = true;
+    }
+    if (madeFood) {
+        document.getElementById(checkIDmadeFood).checked = true;
+    }
     //var names = keywordElement.split(" ");
     //addAttendant(names[0], names[1]);
     

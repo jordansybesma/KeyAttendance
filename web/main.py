@@ -69,7 +69,20 @@ def temp():
     query2 = "CREATE TABLE dailyAttendance (id int, firstName varchar(255), lastName varchar(255), art boolean, madeFood boolean, recievedFood boolean, leadership boolean, exercise boolean, mentalHealth boolean, volunteering boolean, onOnOne boolean, comments varchar(1000), date date, time time)"
     executeSingleQuery(query, [])
     executeSingleQuery(query2, []) 
-
+    
+    
+@app.route('/selectActivity', methods=["POST"])
+def selectActivity():
+    column = request.form.get("column")
+    date = request.form.get("date")
+    name = request.form.get("name")
+    nameList = name.split()
+    
+    first = nameList[0]
+    last = nameList[1]
+    query = "UPDATE dailyAttendance SET " +  column + " = 'TRUE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    executeSingleQuery(query, [])
+    
 @app.route('/addAttendant/', methods = ["POST"])
 def addAttendant():
     #print(json.decode(request.data))

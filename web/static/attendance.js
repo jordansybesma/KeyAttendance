@@ -93,6 +93,14 @@ function sendNewStudent(firstname, lastname) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
+
+function deleteAttendant(date, name) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/deleteAttendant");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name + "&date=" + date);
+    displayAttendanceTable(date);
+}
 /*function addAttendant(data) {
     var xhttp = new XMLHttpRequest();
     url = window.location.origin + "/addAttendant/";
@@ -227,6 +235,7 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     var cell7 = row.insertCell(6);
     var cell8 = row.insertCell(7);
     var cell9 = row.insertCell(8);
+    var cell10 = row.insertCell(9);
     
     if (art) {
         str = "<input type=\"checkbox\" checked  onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
@@ -272,6 +281,8 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     } else {
         str8 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'oneOnOne', '" + date + "')\">";
     }
+    str9 = "<button type=\"button\" onclink=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete<button/>"
+
     cell1.innerHTML = first + " " + last;
     cell2.innerHTML = str;
     cell3.innerHTML = str2;
@@ -281,6 +292,7 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     cell7.innerHTML = str6;
     cell8.innerHTML = str7;
     cell9.innerHTML = str8;
+    cell10.innerHTML = str9;
 
 
     
@@ -326,6 +338,7 @@ function onAddRow() {
     var cell7 = row.insertCell(6);
     var cell8 = row.insertCell(7);
     var cell9 = row.insertCell(8);
+    var cell10 = row.insertCell(9);
     str = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'art', '" + date + "')\">";
     str2 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'madeFood', '" + date + "')\">";
     str3 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'recievedFood', '" + date + "')\">";
@@ -334,7 +347,7 @@ function onAddRow() {
     str6 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'mentalHealth', '" + date + "')\">";
     str7 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'volunteering', '" + date + "')\">";
     str8 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'oneOnOne', '" + date + "')\">";
-
+    str9 = "<button type=\"button\" onclink=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete<button/>"
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;
     cell3.innerHTML = str2;
@@ -344,6 +357,7 @@ function onAddRow() {
     cell7.innerHTML = str6;
     cell8.innerHTML = str7;
     cell9.innerHTML = str8;
+    cell10.innerHTML = str9;
     var names = keywordElement.split(" ");
     addAttendant(names[0], names[1]);
   } else {

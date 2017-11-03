@@ -248,6 +248,7 @@ function onAddRow() {
         break;
       }
     }
+    var date = getCurrentDate;
     if (optionFound){
     document.getElementById("keyword").value = "";
     var row = table.insertRow(1);

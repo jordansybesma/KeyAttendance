@@ -122,8 +122,12 @@ def addAttendant():
         executeSingleQuery(newString, [])
         queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"
         result = executeSingleQuery(queryMaster)
-        numAttend = result[0][0]
-        print(numAttend)
+        if result is None:
+            newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1', '0', '0', '0', '0', '0', '0', '0', '0');"
+            executeSingleQuery(newQuery, [])
+        else:
+            numAttend = result[0][0]
+            print(numAttend)
         
             
 # If more than one "same name" student is available, return students

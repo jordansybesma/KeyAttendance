@@ -104,6 +104,7 @@ function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     for (i in myData) {
         console.log(myData[i]);
+        addRowHelper(myData[1][1], myData[i][2])
     }
 }
 
@@ -182,6 +183,25 @@ function showStudentProfile() {
 
     }
 
+}
+function addRowHelper(first, last) {
+    var table = document.getElementById("Attendance-Table");
+    var keywordElement = document.getElementById('keyword').value;
+    
+    
+    //document.getElementById("keyword").value = "";
+    var row = table.insertRow(1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    str = "<form> <input type=\"checkbox\" onclick=\"checkBox(this, \'" + first + " " + last + "\')\"></form>";
+
+    cell1.innerHTML = first + " " + last;
+    cell2.innerHTML = str;
+    cell3.innerHTML = str;
+    //var names = keywordElement.split(" ");
+    //addAttendant(names[0], names[1]);
+    
 }
 
 function onAddRow() {

@@ -28,7 +28,7 @@
 <div class="tab">
 <button id = "defaultOpen" class = "tablinks" onclick = "openTab(event, 'Home')" > Home </button>
 <button class = "tablinks" onclick = "openTab(event, 'Data'); displayAttendanceList();"> Attendance Sheets </button>
-<button class = "tablinks" onclick = "openTab(event, 'Incident')"> Attendance Overview </button>
+<button class = "tablinks" onclick = "openTab(event, 'Incident'); displayMasterAttendance();"> Attendance Overview </button>
 <button class = "tablinks" onclick = "openTab(event, 'Student Profiles')"> Student Profiles</button>
 <button class = "tablinks" onclick = "openTab(event, 'Staff Schedules')"> Staff Schedules</button>
 <button class = "tablinks" onclick = "openTab(event, 'Edit Attendance Sheets')"> Edit Attendance Sheets </button>
@@ -129,7 +129,7 @@
 
 
 <div id="Incident" class="tabcontent">
-  <h3>Incident</h3>
+  <h3>Statistics On Past Attendance Sheets</h3>
     <table id="masterAttendanceTable" style="width:100%">
         <tr>
             <th>Date</th>

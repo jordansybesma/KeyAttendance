@@ -57,7 +57,12 @@ def addNewStudent():
 def getAttendance(date):
     return json.dumps(executeSingleQuery("SELECT * FROM dailyAttendance WHERE date= '" + date + "';",
         fetch = True), indent=4, sort_keys=True, default=str)
-    
+   
+@app.route('/getMasterAttendance')
+def getMasterAttendance():
+    return json.dumps(executeSingleQuery("SELECT * FROM masterAttendance;",
+        fetch = True), indent=4, sort_keys=True, default=str)
+      
 @app.route('/getDates')
 def getDates():
     query = "SELECT DISTINCT date FROM dailyAttendance"

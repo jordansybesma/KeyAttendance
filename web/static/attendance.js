@@ -279,9 +279,10 @@ function displayAttendanceTable(table_name) {
 
 function createListOfAttendanceDates(_, dates) {
     console.log(dates);
+    var myData = JSON.parse(dates);
     var list = document.getElementById("attendanceList");
-    for (i in dates) {
-        var date = dates[i][0];
+    for (i in myData) {
+        var date = myData[i][0];
         var entry = document.createElement('li');
         entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + date + '\')">' + date + '</span>';
         list.appendChild(entry);

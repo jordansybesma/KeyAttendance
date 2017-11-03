@@ -488,4 +488,5 @@ function getCurrentDate() {
 function getDate() {
     var date = document.getElementById("datePicker").value;
     console.log(date);
+    displayAttendanceTable(date);
 }

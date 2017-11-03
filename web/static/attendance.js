@@ -17,7 +17,7 @@ function addAttendant(first, last) {
     var hour = dt.getHours();
     var minute = dt.getMinutes();
     var seconds = dt.getSeconds();
-    alert(month + '-' + day + '-' + year + "  " + hour+ " " + minute + " " + seconds);
+    
     var xmlhttp = new XMLHttpRequest();
     if (month < 10) {
         month = "0" + month;

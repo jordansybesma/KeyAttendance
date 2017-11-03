@@ -431,6 +431,7 @@ function createListOfAttendanceDates(_, dates) {
     console.log(dates);
     var myData = JSON.parse(dates);
     var list = document.getElementById("attendanceList");
+    list.innerHTML = "";
     for (i in myData) {
         var date = myData[i][0];
         var readable = makeDateReadable(date);

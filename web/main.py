@@ -62,7 +62,21 @@ def getAttendance(date):
 def getMasterAttendance():
     return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance;",
         fetch = True), indent=4, sort_keys=True, default=str)
-        
+
+def decreaseActivityCount(column, date, increase):
+    queryMaster = "SELECT "+ column + " FROM masterAttendance WHERE date = '" + date + "';"
+    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+    newResult =json.loads(result)
+    numAttend = newResult[0][0]
+    if increase:
+        newNumAttend = numAttend + 1
+    else:
+        newNumAttend = numAttend - 1
+    alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    executeSingleQuery(alterQuery, [])
+    
+                
+                        
 @app.route('/deleteAttendant', methods = ["POST"])
 def deleteAttendant():
     name = request.form.get("name")
@@ -70,6 +84,30 @@ def deleteAttendant():
     nameList = name.split()
     first = nameList[0]
     last = nameList[1]
+    query1 = "SELECT * FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    row = json.dumps(executeSingleQuery(query1,fetch = True))
+    rowData = json.loads(row)
+    if rowData == []:
+        print("this is strange")
+    else:
+        if rowData[0][3] == True:
+            decreaseActivityCount("art", date, False)
+        if rowData[0][4] == True:
+            decreaseActivityCount("madeFood", date, False)
+        if rowData[0][5] == True:
+            decreaseActivityCount("recievedFood", date, False)
+        if rowData[0][6] == True:
+            decreaseActivityCount("leadership", date, False)
+        if rowData[0][7] == True:
+            decreaseActivityCount("exersize", date, False)
+        if rowData[0][8] == True:
+            decreaseActivityCount("mentalHealth", date, False)
+        if rowData[0][9] == True:
+            decreaseActivityCount("volunteering", date, False)
+        if rowData[0][10] == True:
+            decreaseActivityCount("oneOnOne", date, False)
+        
+    
     query = "DELETE FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
     queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"

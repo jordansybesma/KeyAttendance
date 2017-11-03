@@ -77,15 +77,14 @@ def addAttendant():
     else:
         query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
         databaseResult = executeSingleQuery(query, fetch = True)
-
+        newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " +lastName +", FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE;"
+        #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
+        executeSingleQuery(newString, fetch=True)
+            
 # If more than one "same name" student is available, return students
 
         if len(databaseResult) > 1:
             return json.dumps(databaseResult[:10])
-        elif len(databaseResult) == 1:
-            executeSingleQuery("INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " +lastName ", (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            activities)
-            return "true"
         elif len(databaseResult) == 0:
             return "false"
 

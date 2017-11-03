@@ -301,6 +301,8 @@ function returnAttendance() {
     popUp.style.display = "none";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "block";
+    var list = document.getElementById("attendanceList");
+    list.innerHTML = '';
     getRequest("/getDates", "", createListOfAttendanceDates);
 }
 function makeDateReadable(date) {

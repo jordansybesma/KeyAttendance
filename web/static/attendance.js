@@ -261,6 +261,22 @@ function onAddRow() {
     
 }
 
+function createNewAttendance() {
+    var table = document.getElementById("Attendance-Table");
+    table.innerHTML = "";
+    var row = table.insertRow(0);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    cell1.innerHTML = "Name";
+    cell2.innerHTML = "Health";
+    cell3.innerHTML = "Food";
+    var popUp = document.getElementById('attendanceDiv');
+    popUp.style.display = "block";
+    var list = document.getElementById('attendanceListDiv');
+    list.style.display = "none";
+}
+
 function displayAttendanceTable(table_date) {
     var table = document.getElementById("Attendance-Table");
     table.innerHTML = "";

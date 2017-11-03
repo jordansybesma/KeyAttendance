@@ -60,7 +60,7 @@ def getAttendance(date):
    
 @app.route('/getMasterAttendance')
 def getMasterAttendance():
-    return json.dumps(executeSingleQuery("SELECT * FROM masterAttendance;",
+    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance;",
         fetch = True), indent=4, sort_keys=True, default=str)
         
 @app.route('/deleteAttendant', methods = ["POST"])
@@ -117,11 +117,29 @@ def selectActivity():
     query1 = "SELECT "+ column + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     #currentStatus = executeSingleQuery(query1)
     result = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
+    
+    queryMaster = "SELECT "+ column + " FROM masterAttendance WHERE date = '" + date + "';"
+    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+    newResult =json.loads(result)
+    numAttend = newResult[0][0]
+    
+    print(numAttend)
+    
+    
     if "true" in result:
+        newNumAttend = numAttend + 1
         query = "UPDATE dailyAttendance SET " +  column + " = 'FALSE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     else:
+        if (numAttend == 0):
+            newNumAttend = 0
+        else:
+            newNumAttend = numAttend - 1
         query = "UPDATE dailyAttendance SET " +  column + " = 'TRUE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
+    
+    alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    executeSingleQuery(alterQuery, [])
+    
     
 @app.route('/addAttendant/', methods = ["POST"])
 def addAttendant():

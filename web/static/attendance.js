@@ -277,8 +277,12 @@ function displayAttendanceTable(table_name) {
     // list.style.display = "none";
 }
 
+function createListOfAttendanceDates(_, dates) {
+    console.log(dates);
+}
+
 function displayAttendanceList() {
-    
+    getRequest("/getDates", "", createListOfAttendanceDates);
     /*var list = document.getElementById("attendanceList");
     var attendance_names = '{"atten", "atten1", "atten2"}';
     var myData = JSON.parse(attendance_names);
@@ -293,37 +297,14 @@ function displayAttendanceList() {
     }*/
     var list = document.getElementById("attendanceList");
     var attendance_name = 'Attendance_Table';
-    //var myData = JSON.parse(attendance_names);
-
-
-        //var a = document.createElement('a');
+    
         var entry = document.createElement('li');
-        //var linkText = document.createTextNode(attendance_name);
-        //linkText.onclick = "displayAttendanceTable(" + attendance_name + ")";
-        //a.appendChild(linkText);
-        //a.title = attendance_name;
-        //a.href = "#";
-    //a.onclick = "displayAttendanceTable(" + attendance_name + ")";
+        
         var link = document.createElement('span');
-        //link.id = "spanID";
-        //link.onmouseover="this.style.cursor='pointer'";
-
-        //link.onmouseout="this.style.cursor='default'";
         
-        //entry.textContent = attendance_name;
         entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + attendance_name + '\')">' + attendance_name + '</span>';
-        //link.innerHTML = '<span onclick="displayAttendanceTable("' + attendance_name + '")" />';
         
-        
-  
-        //entry.appendChild(link);
         list.appendChild(entry);
-        return false;
-    //<a onclick="jsfunction()" href="#">
-
-
-    //var firstname = document.getElementById('firstname').value;
-    //var entry = document.createElement('li');
-    //entry.appendChild(document.createTextNode(firstname));
-    //list.appendChild(entry);
+        
+    
 }

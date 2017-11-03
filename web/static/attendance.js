@@ -282,7 +282,6 @@ function displayAttendanceTable(table_date) {
 
 function createListOfAttendanceDates(_, dates) {
     console.log(dates);
-    
     var myData = JSON.parse(dates);
     var list = document.getElementById("attendanceList");
     for (i in myData) {
@@ -291,31 +290,18 @@ function createListOfAttendanceDates(_, dates) {
         var entry = document.createElement('li');
         entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
         list.appendChild(entry);
-    }
-
-    
-
-    
-    
+    }   
 }
 
 function displayAttendanceList() {
     getRequest("/getDates", "", createListOfAttendanceDates);
-    /*var list = document.getElementById("attendanceList");
-    var attendance_names = '{"atten", "atten1", "atten2"}';
-    var myData = JSON.parse(attendance_names);
-
-    for (i in myData) {
-        var a = document.createElement('a');
-        var entry = document.createElement('li');
-        a.title = myData[i][0];
-        a.href = "displayAttendanceTable(" + myData[i][0] + ")";
-        entry.appendChild(a);
-        list.appendChild(entry);
-    }*/
-    
-        
-    
+}
+function returnAttendance() {
+    var popUp = document.getElementById('attendanceDiv');
+    popUp.style.display = "none";
+    var list = document.getElementById('attendanceListDiv');
+    list.style.display = "block";
+    getRequest("/getDates", "", createListOfAttendanceDates);
 }
 function makeDateReadable(date) {
     var month = date.substr(5, 7);

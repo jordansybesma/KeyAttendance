@@ -82,9 +82,11 @@ def selectActivity():
     last = nameList[1]
     query1 = "SELECT "+ column + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     #currentStatus = executeSingleQuery(query1)
-    print(json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str))
-    
-    query = "UPDATE dailyAttendance SET " +  column + " = 'TRUE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    result = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
+    if "true" in result:
+        query = "UPDATE dailyAttendance SET " +  column + " = 'FALSE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    else:
+        query = "UPDATE dailyAttendance SET " +  column + " = 'TRUE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
     
 @app.route('/addAttendant/', methods = ["POST"])

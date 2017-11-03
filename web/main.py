@@ -81,8 +81,9 @@ def selectActivity():
     first = nameList[0]
     last = nameList[1]
     query1 = "SELECT "+ column + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
-    currentStatus = executeSingleQuery(query1)
-    print(currentStatus)
+    #currentStatus = executeSingleQuery(query1)
+    print(json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str))
+    
     query = "UPDATE dailyAttendance SET " +  column + " = 'TRUE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
     

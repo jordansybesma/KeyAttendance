@@ -134,6 +134,9 @@ def addAttendant():
             numAttend = newResult[0][0]
             #print(result)
             print(numAttend)
+            newNumAttend = numAttend + 1
+            alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+            executeSingleQuery(alterQuery, [])
         
             
 # If more than one "same name" student is available, return students

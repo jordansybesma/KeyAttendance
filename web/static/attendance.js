@@ -104,7 +104,7 @@ function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     for (i in myData) {
         console.log(myData[i]);
-        addRowHelper(myData[1][1], myData[i][2])
+        addRowHelper(myData[i][1], myData[i][2])
     }
 }
 

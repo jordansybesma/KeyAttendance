@@ -223,12 +223,12 @@ function addRowHelper(first, last, art, madeFood) {
     var checkIDArt = date + first + last + "art";
     var checkIDmadeFood = date + first + last + "madeFood";
     if (art) {
-        str = "<form> <id='" + checkIDArt + "' checked='checked' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\"></form>";
+        str = "<form> <id='" + checkIDArt + "' input type=\"checkbox\"  checked  onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\"></form>";
     } else {
         str = "<form> <id='" + checkIDArt + "' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\"></form>";
     }
     if (madeFood) {
-        str2 = "<form> <id='" + checkIDmadeFood + "' checked='checked' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\"></form>";
+        str2 = "<form> <id='" + checkIDmadeFood + "'  input type=\"checkbox\"  checked onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\"></form>";
     } else {
         str2 = "<form> <id='" + checkIDmadeFood + "' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\"></form>";
     }

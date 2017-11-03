@@ -110,7 +110,16 @@ def downloadAttendanceSheet(tableName):
     query = "SELECT * FROM " + tableName + ";"
     databaseResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(databaseResult)
-    return result
+
+    csv = ""
+
+    for attendee in result:
+        csv = "#" + attendee[0] + "," + attendee[1] + "," + attendee[2] + csv
+
+    csv = csv[1:]
+
+
+    return csv
 
 """
     Literally just takes a string. Compares both first and last name.

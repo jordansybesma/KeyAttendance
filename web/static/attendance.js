@@ -214,20 +214,27 @@ function addRowHelper(first, last) {
     var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keyword').value;
     
-    
+    var date = getCurrentDate;
     //document.getElementById("keyword").value = "";
     var row = table.insertRow(1);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
-    str = "<form> <input type=\"checkbox\" onclick=\"checkBox(this, \'" + first + " " + last + "\')\"></form>";
+    str = "<form> <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\"></form>";
+    str2 = "<form> <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\"></form>";
 
     cell1.innerHTML = first + " " + last;
     cell2.innerHTML = str;
-    cell3.innerHTML = str;
+    cell3.innerHTML = str2;
     //var names = keywordElement.split(" ");
     //addAttendant(names[0], names[1]);
     
+}
+function selectActivity(name, column, date) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/selectActivity");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name + "&column=" + column + "&date=" + date);
 }
 
 function onAddRow() {

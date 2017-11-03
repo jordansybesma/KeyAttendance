@@ -278,6 +278,7 @@ function createNewAttendance() {
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
+    //getRequest("/getAttendance/" + table_date, "", fillAttendance);??
 }
 
 function displayAttendanceTable(table_date) {

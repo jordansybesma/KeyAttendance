@@ -486,6 +486,6 @@ function getCurrentDate() {
 }
 //used with date picker
 function getDate() {
-    var date = document.getElementById("datePicker");
+    var date = document.getElementById("datePicker").value;
     console.log(date);
 }

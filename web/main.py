@@ -62,6 +62,16 @@ def getAttendance(date):
 def getMasterAttendance():
     return json.dumps(executeSingleQuery("SELECT * FROM masterAttendance;",
         fetch = True), indent=4, sort_keys=True, default=str)
+        
+@app.route('/deleteAttendant', methods = ["POST"])
+def deleteAttendant():
+    name = request.form.get("name")
+    date = request.form.get("date")
+    nameList = name.split()
+    first = nameList[0]
+    last = nameList[1]
+    query = "DELETE FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    executeSingleQuery(query, [])
       
 @app.route('/getDates')
 def getDates():

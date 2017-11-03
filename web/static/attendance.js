@@ -261,7 +261,7 @@ function onAddRow() {
     
 }
 
-function displayAttendanceTable(table_name) {
+function displayAttendanceTable(table_date) {
     
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
@@ -271,7 +271,7 @@ function displayAttendanceTable(table_name) {
     /*xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/temp");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send();*/
-    getRequest("/getAttendance", "", fillAttendance);
+    getRequest("/getAttendance/" + table_date, "", fillAttendance);
     
     return false;
     // list.style.display = "none";

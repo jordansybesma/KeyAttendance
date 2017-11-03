@@ -281,7 +281,7 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     } else {
         str8 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'oneOnOne', '" + date + "')\">";
     }
-    str9 = "<button type=\"button\" onclink=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete<button/>"
+    str9 = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + first + " " + last + "')\">Delete<button/>"
 
     cell1.innerHTML = first + " " + last;
     cell2.innerHTML = str;
@@ -347,7 +347,7 @@ function onAddRow() {
     str6 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'mentalHealth', '" + date + "')\">";
     str7 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'volunteering', '" + date + "')\">";
     str8 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'oneOnOne', '" + date + "')\">";
-    str9 = "<button type=\"button\" onclink=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete<button/>"
+    str9 = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + first + " " + last + "')\">Delete<button/>"
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;
     cell3.innerHTML = str2;

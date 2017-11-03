@@ -6,6 +6,7 @@ import sys
 import datetime
 
 
+
 #flask automatically serves everything in the static folder for us, which is really nice
 app = flask.Flask(__name__)
 
@@ -55,8 +56,8 @@ def addNewStudent():
 @app.route('/getAttendance')
 def getAttendance():
     return json.dumps(executeSingleQuery("SELECT * FROM dailyAttendance",
-        fetch = True))
-        
+        fetch = True), indent=4, sort_keys=True, default=str)
+    
 @app.route('/temp', methods=["POST"])
 def temp():
     query = "DROP TABLE IF EXISTS dailyAttendance;"

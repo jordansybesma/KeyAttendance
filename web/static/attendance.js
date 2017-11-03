@@ -223,14 +223,14 @@ function addRowHelper(first, last, art, madeFood) {
     var checkIDArt = date + first + last + "art";
     var checkIDmadeFood = date + first + last + "madeFood";
     if (art) {
-        str = "<form> <id='" + checkIDArt + "' input type=\"checkbox\"  checked  onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\"></form>";
+        str = "<input type=\"checkbox\"  id='" + checkIDArt + "'  checked  onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
     } else {
-        str = "<form> <id='" + checkIDArt + "' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\"></form>";
+        str = " <input type=\"checkbox\"  id='" + checkIDArt + "'  onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
     }
     if (madeFood) {
-        str2 = "<form> <id='" + checkIDmadeFood + "'  input type=\"checkbox\"  checked onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\"></form>";
+        str2 = "<input type=\"checkbox\"  id='" + checkIDmadeFood + "'    checked onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\">";
     } else {
-        str2 = "<form> <id='" + checkIDmadeFood + "' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\"></form>";
+        str2 = " <input type=\"checkbox\" id='" + checkIDmadeFood + "'  onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\">";
     }
     cell1.innerHTML = first + " " + last;
     cell2.innerHTML = str;

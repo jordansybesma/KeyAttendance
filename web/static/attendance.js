@@ -453,6 +453,41 @@ function returnAttendance() {
     list.innerHTML = '';
     getRequest("/getDates", "", createListOfAttendanceDates);
 }
+
+function displayMasterAttendance() {
+    getRequest("/getMasterAttendance", "", masterAttendanceHelper);
+}
+
+function masterAttendanceHelper(_, masterData) {
+    console.log(dates);
+    var myData = JSON.parse(dates);
+    var table = document.getElementById("masterAttendanceTable");
+    //table.innerHTML = "";
+    for (i in myData) {
+        var row = table.insertRow(1);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+        var cell5 = row.insertCell(4);
+        var cell6 = row.insertCell(5);
+        var cell7 = row.insertCell(6);
+        var cell8 = row.insertCell(7);
+        var cell9 = row.insertCell(8);
+        var cell10 = row.insertCell(9);
+        cell1.innerHTML = myData[i][0];
+        cell2.innerHTML = myData[i][1];
+        cell3.innerHTML = myData[i][2];
+        cell4.innerHTML = myData[i][3];
+        cell5.innerHTML = myData[i][4];
+        cell6.innerHTML = myData[i][5];
+        cell7.innerHTML = myData[i][6];
+        cell8.innerHTML = myData[i][7];
+        cell9.innerHTML = myData[i][8];
+        cell10.innerHTML = myData[i][9];
+    }
+}
+
 function makeDateReadable(date) {
     var month = date.substr(5, 7);
     var day = date.substr(8, 10);

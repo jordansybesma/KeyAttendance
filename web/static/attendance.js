@@ -19,8 +19,23 @@ function addAttendant(first, last) {
     var seconds = dt.getSeconds();
     alert(month + '-' + day + '-' + year + "  " + hour+ " " + minute + " " + seconds);
     var xmlhttp = new XMLHttpRequest();
+    if (month < 10) {
+        month = "0" + month;
+    }
+    if (day < 10) {
+        day = "0" + day;
+    }
+    if (hour < 10) {
+        hour = "0" + hour;
+    }
+    if (minute < 10) {
+        minute = "0" + minute;
+    }
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    }
     var date = year + "-" + month + "-" + day;
-    var time = hour + "-" + minute + "-" + seconds
+    var time = hour + ":" + minute + ":" + seconds
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last +"&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exercise=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date="+ date + "&time=" + time +"&id=");
@@ -262,8 +277,25 @@ function displayAttendanceTable(table_name) {
     // list.style.display = "none";
 }
 
-function displayAttendanceList() {
+function createListOfAttendanceDates(_, dates) {
+    console.log(dates);
+    var myData = JSON.parse(dates);
+    var list = document.getElementById("attendanceList");
+    for (i in myData) {
+        var date = myData[i][0];
+        var entry = document.createElement('li');
+        entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + date + '\')">' + date + '</span>';
+        list.appendChild(entry);
+    }
+
     
+
+    
+    
+}
+
+function displayAttendanceList() {
+    getRequest("/getDates", "", createListOfAttendanceDates);
     /*var list = document.getElementById("attendanceList");
     var attendance_names = '{"atten", "atten1", "atten2"}';
     var myData = JSON.parse(attendance_names);
@@ -276,39 +308,7 @@ function displayAttendanceList() {
         entry.appendChild(a);
         list.appendChild(entry);
     }*/
-    var list = document.getElementById("attendanceList");
-    var attendance_name = 'Attendance_Table';
-    //var myData = JSON.parse(attendance_names);
-
-
-        //var a = document.createElement('a');
-        var entry = document.createElement('li');
-        //var linkText = document.createTextNode(attendance_name);
-        //linkText.onclick = "displayAttendanceTable(" + attendance_name + ")";
-        //a.appendChild(linkText);
-        //a.title = attendance_name;
-        //a.href = "#";
-    //a.onclick = "displayAttendanceTable(" + attendance_name + ")";
-        var link = document.createElement('span');
-        //link.id = "spanID";
-        //link.onmouseover="this.style.cursor='pointer'";
-
-        //link.onmouseout="this.style.cursor='default'";
+    
         
-        //entry.textContent = attendance_name;
-        entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + attendance_name + '\')">' + attendance_name + '</span>';
-        //link.innerHTML = '<span onclick="displayAttendanceTable("' + attendance_name + '")" />';
-        
-        
-  
-        //entry.appendChild(link);
-        list.appendChild(entry);
-        return false;
-    //<a onclick="jsfunction()" href="#">
-
-
-    //var firstname = document.getElementById('firstname').value;
-    //var entry = document.createElement('li');
-    //entry.appendChild(document.createTextNode(firstname));
-    //list.appendChild(entry);
+    
 }

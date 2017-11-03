@@ -54,7 +54,7 @@ def addNewStudent():
 # going to get today's data later
 @app.route('/getAttendance')
 def getAttendance():
-    return json.dumps(executeSingleQuery("SELECT * FROM testattendance",
+    return json.dumps(executeSingleQuery("SELECT * FROM dailyAttendance",
         fetch = True))
         
 @app.route('/temp', methods=["POST"])

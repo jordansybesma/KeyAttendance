@@ -56,6 +56,13 @@ def addNewStudent():
 def getAttendance():
     return json.dumps(executeSingleQuery("SELECT * FROM testattendance",
         fetch = True))
+        
+@app.route('/temp', methods=["POST"])
+def temp():
+    query = "DROP IF EXISTS dailyAttendance;"
+    query2 = "CREATE TABLE dailyAttendance (id int, firstName varchar(255), lastName varchar(255), art boolean, madeFood boolean, recievedFood boolean, leadership boolean, exercise boolean, mentalHealth boolean, volunteering boolean, onOnOne boolean, comments varchar(1000))"
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, []) 
 
 @app.route('/addAttendant/', methods = ["POST"])
 def addAttendant():
@@ -78,7 +85,7 @@ def addAttendant():
         query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
         databaseResult = executeSingleQuery(query, fetch = True)
         print(databaseResult[0][0])
-        newString = "INSERT INTO dailyAttendance VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName +"', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE');"
+        newString = "INSERT INTO dailyAttendance VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName +"', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE');"
         #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
         executeSingleQuery(newString, fetch=True)
             

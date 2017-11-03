@@ -70,6 +70,8 @@ def addAttendant():
     #print(json.decode(request.data))
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
+    date = request.form.get('date')
+    time = request.form.get('time')
     activityNames = ["art", "madeFood", "recievedFood", "leadership", "exercise", "mentalHealth", "volunteering", "oneOnOne", "comments"]
     activities = [request.form.get(activityName) for activityName in activityNames]
     id = request.form.get('id')
@@ -85,7 +87,7 @@ def addAttendant():
         query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
         databaseResult = executeSingleQuery(query, fetch = True)
         print(databaseResult[0][0])
-        newString = "INSERT INTO dailyAttendance VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName +"', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', '2017-11-02', '08:32:00');"
+        newString = "INSERT INTO dailyAttendance VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName +"', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', '" + date + "','" + time + "');"
         #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
         executeSingleQuery(newString, [])
             

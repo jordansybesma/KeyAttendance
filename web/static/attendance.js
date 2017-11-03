@@ -19,6 +19,21 @@ function addAttendant(first, last) {
     var seconds = dt.getSeconds();
     alert(month + '-' + day + '-' + year + "  " + hour+ " " + minute + " " + seconds);
     var xmlhttp = new XMLHttpRequest();
+    if (month < 10) {
+        month = "0" + month;
+    }
+    if (day < 10) {
+        day = "0" + day;
+    }
+    if (hour < 10) {
+        hour = "0" + hour;
+    }
+    if (minute < 10) {
+        minute = "0" + minute;
+    }
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    }
     var date = year + "-" + month + "-" + day;
     var time = hour + "-" + minute + "-" + seconds
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");

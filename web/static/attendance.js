@@ -9,6 +9,15 @@ function closeAddStudent() {
     popUp.style.display = "none";
 }
 function addAttendant(first, last) {
+    var dt = new Date();
+    // Display the month, day, and year. getMonth() returns a 0-based number.  
+    var month = dt.getMonth() + 1;
+    var day = dt.getDate();
+    var year = dt.getFullYear();
+    var hour = dt.getHours();
+    var minute = dt.getMinutes();
+    var seconds = dt.getSeconds();
+    console.log(month + '-' + day + '-' + year + "  " + hour+ " " + minute + " " + seconds);
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");

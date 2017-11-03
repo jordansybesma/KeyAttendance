@@ -106,9 +106,16 @@ def addAttendant():
 # Roughly informed by https://www.postgresql.org/docs/9.6/static/app-psql.html#APP-PSQL-META-COMMANDS-COPY
 @app.route('/download/<tableName>')
 def downloadAttendanceSheet(tableName):
-    query = "\COPY " + tableName + " TO pstdout DELIMITER ',' CSV HEADER;"
+    query = "SELECT * FROM " + tableName + ";"
     databaseResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(databaseResult)
+
+    # csv = ""
+    # for attendee in result:
+    #     csv = "#" + attendee[0] + "," + attendee[1] + "," + attendee[2] + csv
+    # csv = csv[1:]
+    # csv = csv.replace("#", "\n")
+
     return result
 
 """

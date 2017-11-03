@@ -484,3 +484,8 @@ function getCurrentDate() {
     var date = year + "-" + month + "-" + day;
     return date;
 }
+//used with date picker
+function getDate() {
+    var date = document.getElementById("datePicker");
+    console.log(date);
+}

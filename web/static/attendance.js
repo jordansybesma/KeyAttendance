@@ -102,7 +102,9 @@ function sendSubmitForm()  {
 function fillAttendance(_, attendance) {
     console.log(attendance);
     var myData = JSON.parse(attendance);
-    //for (i in myData)
+    for (i in myData) {
+        console.log(myData[i]);
+    }
 }
 
 function modifyAutofillList(_ , studentNames) {
@@ -220,10 +222,7 @@ function displayAttendanceTable(table_name) {
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
     getRequest("/getAttendance", "", fillAttendance);
-    /*var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/temp");
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send();*/
+    
     return false;
     // list.style.display = "none";
 }

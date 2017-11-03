@@ -127,7 +127,7 @@ def studentProfile(string):
     nameList = string.split()
     first = nameList[0]
     last = nameList[1]
-    query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + first + "%' OR lastName LIKE '%" + last + "%';"
+    query = "SELECT * FROM testStudents WHERE firstName LIKE '%" + first + "%' OR lastName LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(databaseResult)
     return result

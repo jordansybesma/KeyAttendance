@@ -122,7 +122,7 @@ def selectActivity():
     result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
     newResult =json.loads(result)
     numAttend = newResult[0][0]
-    
+    print(result)
     print(numAttend)
     
     

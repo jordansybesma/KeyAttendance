@@ -130,7 +130,7 @@ function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     for (i in myData) {
         console.log(myData[i]);
-        addRowHelper(myData[i][1], myData[i][2])
+        addRowHelper(myData[i][1], myData[i][2], myData[i][3], myData[i][4])
     }
 }
 
@@ -210,7 +210,7 @@ function showStudentProfile() {
     }
 
 }
-function addRowHelper(first, last) {
+function addRowHelper(first, last, art, madeFood) {
     var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keyword').value;
     
@@ -220,12 +220,21 @@ function addRowHelper(first, last) {
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
-    str = "<form> <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\"></form>";
-    str2 = "<form> <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\"></form>";
+    var checkIDArt = date + first + last + "art";
+    var checkIDmadeFood = date + first + last + "madeFood";
+    str = "<form> <id='" + checkIDArt + "' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\"></form>";
+    str2 = "<form> <id='" + checkIDmadeFood + "' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\"></form>";
 
     cell1.innerHTML = first + " " + last;
     cell2.innerHTML = str;
     cell3.innerHTML = str2;
+
+    if (art) {
+        document.getElementById(checkIDArt).checked = true;
+    }
+    if (madeFood) {
+        document.getElementById(checkIDmadeFood).checked = true;
+    }
     //var names = keywordElement.split(" ");
     //addAttendant(names[0], names[1]);
     

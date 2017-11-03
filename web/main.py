@@ -58,6 +58,11 @@ def getAttendance():
     return json.dumps(executeSingleQuery("SELECT * FROM dailyAttendance",
         fetch = True), indent=4, sort_keys=True, default=str)
     
+@app.route('/getDates')
+def getDates():
+    query = "SELECT DISTINCT date FROM dailyAttendance"
+    return json.dumps(executeSingleQuery(query,fetch = True), indent=4, sort_keys=True, default=str)
+    
 @app.route('/temp', methods=["POST"])
 def temp():
     query = "DROP TABLE IF EXISTS dailyAttendance;"

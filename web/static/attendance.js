@@ -275,12 +275,12 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     cell1.innerHTML = first + " " + last;
     cell2.innerHTML = str;
     cell3.innerHTML = str2;
-    cell3.innerHTML = str3;
-    cell3.innerHTML = str4;
-    cell3.innerHTML = str5;
-    cell3.innerHTML = str6;
-    cell3.innerHTML = str7;
-    cell3.innerHTML = str8;
+    cell4.innerHTML = str3;
+    cell5.innerHTML = str4;
+    cell6.innerHTML = str5;
+    cell7.innerHTML = str6;
+    cell8.innerHTML = str7;
+    cell9.innerHTML = str8;
 
 
     
@@ -338,12 +338,12 @@ function onAddRow() {
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;
     cell3.innerHTML = str2;
-    cell3.innerHTML = str3;
-    cell3.innerHTML = str4;
-    cell3.innerHTML = str5;
-    cell3.innerHTML = str6;
-    cell3.innerHTML = str7;
-    cell3.innerHTML = str8;
+    cell4.innerHTML = str3;
+    cell5.innerHTML = str4;
+    cell6.innerHTML = str5;
+    cell7.innerHTML = str6;
+    cell8.innerHTML = str7;
+    cell9.innerHTML = str8;
     var names = keywordElement.split(" ");
     addAttendant(names[0], names[1]);
   } else {

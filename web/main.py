@@ -127,13 +127,14 @@ def selectActivity():
     
     
     if "true" in result:
-        newNumAttend = numAttend + 1
-        query = "UPDATE dailyAttendance SET " +  column + " = 'FALSE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
-    else:
         if (numAttend == 0):
             newNumAttend = 0
         else:
             newNumAttend = numAttend - 1
+        
+        query = "UPDATE dailyAttendance SET " +  column + " = 'FALSE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    else:
+        newNumAttend = numAttend + 1
         query = "UPDATE dailyAttendance SET " +  column + " = 'TRUE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
     

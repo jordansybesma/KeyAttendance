@@ -123,14 +123,16 @@ def addAttendant():
         executeSingleQuery(newString, [])
         queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"
         #result = executeSingleQuery(queryMaster)
-        result = json.loads(executeSingleQuery(queryMaster,fetch = True))
+        result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+        newResult =json.loads(result)
     
         if result is None:
             newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1', '0', '0', '0', '0', '0', '0', '0', '0');"
             executeSingleQuery(newQuery, [])
         else:
-            numAttend = result[0][0]
-            print(result)
+            print(newResult)
+            numAttend = newResult[0][0]
+            #print(result)
             print(numAttend)
         
             

@@ -262,7 +262,7 @@ function onAddRow() {
 }
 
 function displayAttendanceTable(table_date) {
-    
+    document.getElementById("attendanceName").value = "Attendance Sheet " + table_date;
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');

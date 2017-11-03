@@ -53,9 +53,9 @@ def addNewStudent():
 
 # strictly test for now
 # going to get today's data later
-@app.route('/getAttendance')
-def getAttendance():
-    return json.dumps(executeSingleQuery("SELECT * FROM dailyAttendance",
+@app.route('/getAttendance/<date>')
+def getAttendance(date):
+    return json.dumps(executeSingleQuery("SELECT * FROM dailyAttendance WHERE date= '" + date + "';",
         fetch = True), indent=4, sort_keys=True, default=str)
     
 @app.route('/getDates')

@@ -313,9 +313,9 @@ function displayAttendanceList() {
     
 }
 function makeDateReadable(date) {
-    var month = date.substr(5, 6);
-    var day = date.substr(8, 9);
-    var year = date.substr(0, 3);
+    var month = date.substr(5, 7);
+    var day = date.substr(8, 10);
+    var year = date.substr(0, 4);
     var newDate = month + "/" + day + "/" + year;
     return newDate;
 }

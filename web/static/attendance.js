@@ -100,6 +100,7 @@ function deleteAttendant(date, name) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&date=" + date);
     displayAttendanceTable(date);
+    console.log("got here");
 }
 /*function addAttendant(data) {
     var xhttp = new XMLHttpRequest();

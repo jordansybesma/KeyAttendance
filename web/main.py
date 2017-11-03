@@ -59,7 +59,7 @@ def getAttendance():
         
 @app.route('/temp', methods=["POST"])
 def temp():
-    query = "DROP dailyAttendance;"
+    query = "DROP TABLE IF EXISTS dailyAttendance;"
     query2 = "CREATE TABLE dailyAttendance (id int, firstName varchar(255), lastName varchar(255), art boolean, madeFood boolean, recievedFood boolean, leadership boolean, exercise boolean, mentalHealth boolean, volunteering boolean, onOnOne boolean, comments varchar(1000))"
     executeSingleQuery(query, [])
     executeSingleQuery(query2, []) 

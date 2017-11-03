@@ -171,7 +171,7 @@ def addAttendant():
         result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
         newResult =json.loads(result)
     
-        if result is None:
+        if result == []:
             newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1', '0', '0', '0', '0', '0', '0', '0', '0');"
             executeSingleQuery(newQuery, [])
         else:

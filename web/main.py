@@ -86,7 +86,7 @@ def addAttendant():
         print(databaseResult[0][0])
         newString = "INSERT INTO dailyAttendance VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName +"', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE');"
         #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
-        executeSingleQuery(newString, fetch=True)
+        executeSingleQuery(newString, [])
             
 # If more than one "same name" student is available, return students
 

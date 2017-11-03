@@ -254,11 +254,12 @@ function onAddRow() {
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
-    str = "<form> <input type=\"checkbox\" onclick=\"checkBox(this, \'" + keywordElement + "\')\"></form>";
+    str = "<form> <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\"></form>";
+    str2 = "<form> <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\"></form>";
 
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;
-    cell3.innerHTML = str;
+    cell3.innerHTML = str2;
     var names = keywordElement.split(" ");
     addAttendant(names[0], names[1]);
   } else {

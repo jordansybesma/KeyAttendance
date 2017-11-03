@@ -214,7 +214,7 @@ function addRowHelper(first, last) {
     var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keyword').value;
     
-    var date = getCurrentDate;
+    var date = getCurrentDate();
     //document.getElementById("keyword").value = "";
     var row = table.insertRow(1);
     var cell1 = row.insertCell(0);
@@ -248,7 +248,7 @@ function onAddRow() {
         break;
       }
     }
-    var date = getCurrentDate;
+    var date = getCurrentDate();
     if (optionFound){
     document.getElementById("keyword").value = "";
     var row = table.insertRow(1);

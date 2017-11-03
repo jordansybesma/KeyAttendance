@@ -234,7 +234,9 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
         str = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
     }
     if (madeFood) {
+        console.log("got to madefood");
         str2 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\">";
+        console.log(str2);
     } else {
         str2 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\">";
     }
@@ -243,6 +245,7 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     } else {
         console.log("got to here");
         str3 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'recievedFood', '" + date + "')\">";
+        console.log(str3);
     }
     if (leadership) {
         str4 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'leadership', '" + date + "')\">";

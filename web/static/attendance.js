@@ -262,6 +262,9 @@ function onAddRow() {
 }
 
 function createNewAttendance() {
+    var date = getCurrentDate();
+    var readable = makeDateReadable(date);
+    document.getElementById("attendanceName").innerHTML = "Attendance Sheet " + readable;
     var table = document.getElementById("Attendance-Table");
     table.innerHTML = "";
     var row = table.insertRow(0);
@@ -343,4 +346,21 @@ function makeDateSQL(date) {
     var year = date.substr(6, 9);
     var newDate = year + "-" + month + "-" + day.substr(0,2);
     return newDate;
+}
+function getCurrentDate() {
+    var dt = new Date();
+    // Display the month, day, and year. getMonth() returns a 0-based number.  
+    var month = dt.getMonth() + 1;
+    var day = dt.getDate();
+    var year = dt.getFullYear();
+   
+    if (month < 10) {
+        month = "0" + month;
+    }
+    if (day < 10) {
+        day = "0" + day;
+    }
+    
+    var date = year + "-" + month + "-" + day;
+    return date;
 }

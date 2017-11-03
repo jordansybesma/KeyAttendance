@@ -222,23 +222,32 @@ function addRowHelper(first, last, art, madeFood) {
     var cell3 = row.insertCell(2);
     var checkIDArt = date + first + last + "art";
     var checkIDmadeFood = date + first + last + "madeFood";
-    str = "<form> <id='" + checkIDArt + "' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\"></form>";
-    str2 = "<form> <id='" + checkIDmadeFood + "' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\"></form>";
-
+    if (art) {
+        str = "<form> <id='" + checkIDArt + "' checked='checked' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\"></form>";
+    } else {
+        str = "<form> <id='" + checkIDArt + "' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\"></form>";
+    }
+    if (madeFood) {
+        str2 = "<form> <id='" + checkIDmadeFood + "' checked='checked' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\"></form>";
+    } else {
+        str2 = "<form> <id='" + checkIDmadeFood + "' input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\"></form>";
+    }
     cell1.innerHTML = first + " " + last;
     cell2.innerHTML = str;
     cell3.innerHTML = str2;
 
+    
+}
+
+function makeChecks(art, artID, madeFood, madeFoodID) {
     if (art) {
-        document.getElementById(checkIDArt).checked = true;
+        document.getElementById(artID).checked = true;
     }
     if (madeFood) {
         document.getElementById(checkIDmadeFood).checked = true;
     }
-    //var names = keywordElement.split(" ");
-    //addAttendant(names[0], names[1]);
-    
 }
+
 function selectActivity(name, column, date) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/selectActivity");

@@ -263,6 +263,8 @@ function onAddRow() {
 
 function displayAttendanceTable(table_date) {
     var readable = makeDateReadable(table_date);
+    var sql = makeDateSQL(readable);
+    console.log(sql);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet " +readable;
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";

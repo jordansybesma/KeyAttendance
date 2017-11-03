@@ -323,9 +323,9 @@ function makeDateReadable(date) {
     return newDate;
 }
 function makeDateSQL(date) {
-    var month = date.substr(0, 1);
+    var month = date.substr(0, 2);
     var day = date.substr(3, 4);
     var year = date.substr(6, 9);
-    var newDate = year + "-" + month + "-" + day;
+    var newDate = year + "-" + month + "-" + day.substr(0,2);
     return newDate;
 }

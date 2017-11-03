@@ -121,6 +121,11 @@ def addAttendant():
         newString = "INSERT INTO dailyAttendance VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName +"', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', '" + date + "','" + time + "');"
         #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
         executeSingleQuery(newString, [])
+        queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"
+        result = executeSingleQuery(queryMaster)
+        numAttend = result[0][0]
+        print(numAttend)
+        
             
 # If more than one "same name" student is available, return students
 

@@ -71,8 +71,8 @@ def decreaseActivityCount(column, date, increase):
     if increase:
         newNumAttend = numAttend + 1
     else:
-        #newNumAttend = numAttend - 1
-        newNumAttend = 0
+        newNumAttend = numAttend - 1
+        
     alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
     executeSingleQuery(alterQuery, [])
     

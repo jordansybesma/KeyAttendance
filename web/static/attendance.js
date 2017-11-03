@@ -279,6 +279,18 @@ function displayAttendanceTable(table_name) {
 
 function createListOfAttendanceDates(_, dates) {
     console.log(dates);
+    var list = document.getElementById("attendanceList");
+    for (i in dates) {
+        var date = dates[i][0];
+        var entry = document.createElement('li');
+        entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + date + '\')">' + date + '</span>';
+        list.appendChild(entry);
+    }
+
+    
+
+    
+    
 }
 
 function displayAttendanceList() {
@@ -295,16 +307,7 @@ function displayAttendanceList() {
         entry.appendChild(a);
         list.appendChild(entry);
     }*/
-    var list = document.getElementById("attendanceList");
-    var attendance_name = 'Attendance_Table';
     
-        var entry = document.createElement('li');
-        
-        var link = document.createElement('span');
-        
-        entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + attendance_name + '\')">' + attendance_name + '</span>';
-        
-        list.appendChild(entry);
         
     
 }

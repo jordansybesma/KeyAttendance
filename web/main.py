@@ -116,7 +116,7 @@ def selectActivity():
     last = nameList[1]
     query1 = "SELECT "+ column + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     #currentStatus = executeSingleQuery(query1)
-    result = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
+    result1 = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
     
     queryMaster = "SELECT "+ column + " FROM masterAttendance WHERE date = '" + date + "';"
     result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
@@ -126,7 +126,7 @@ def selectActivity():
     print(numAttend)
     
     
-    if "true" in result:
+    if "true" in result1:
         if (numAttend == 0):
             newNumAttend = 0
         else:

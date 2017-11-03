@@ -70,6 +70,12 @@ def temp():
     executeSingleQuery(query, [])
     executeSingleQuery(query2, []) 
     
+@app.route('/tempMaster', methods=["POST"])
+def tempMaster():
+    query = "DROP TABLE IF EXISTS masterAttendance;"
+    query2 = "CREATE TABLE masterAttendance (date date, numAttend int, numArt int, numMadeFood int, numRecievedFood int, numLeadership int, numExersize int, numMentalHealth int, numVolunteering int, numOneOnOne int);"
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, []) 
     
 @app.route('/selectActivity', methods=["POST"])
 def selectActivity():

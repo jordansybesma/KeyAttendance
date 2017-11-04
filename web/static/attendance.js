@@ -534,7 +534,7 @@ function checkLogin() {
 function checkLoginHelper(_, loginData) {
     console.log(loginData);
     var myData = JSON.parse(loginData);
-    if (length(myData) > 0) {
+    if (myData.length > 0) {
         var hide = document.getElementById('login');
         hide.style.display = "none";
         var show = document.getElementById('dontShow');

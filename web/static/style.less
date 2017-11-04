@@ -20,6 +20,7 @@
     background-color: @base03;
     color: @base0;
 }
+
 .solarized-light() {
     background-color: @base3;
     color: @base00;
@@ -70,15 +71,24 @@ div.tab button.active {
     to {opacity: 1;}
 }
 
+
+#Incident  {
+    .masterGraph  {
+        float: left;
+    }
+
+    .activityGraph  {
+        float: right;
+    }
+}
+
 #the-key-heading  {
     height: 25px;
-    //width: 95%;
     margin-left: 2.5%;
     font-size: 20px;
     font-weight: bold;
     color: @red;
     text-align: left;
-
     vertical-align: middle;
 }
 
@@ -92,18 +102,20 @@ div.tab button.active {
 }
 
 
-#Notifications  {
-    width: 310px;
-    left: 10px;
-    top: 100px;
-}
 
 #Home  {
+    #Notifications  {
+        width: 310px;
+        left: 10px;
+        top: 100px;
+    }
+
     #content  {
         padding-left: 330px;
         padding-right: 330px;
         padding-top: 20px;
     }
+
     #Past-Attendance-Sheets  {
         width: 310px;
         left: 10px;
@@ -116,57 +128,39 @@ div.tab button.active {
         top: 100px;
     }
 }
-th {
 
-	text-align: left;
-	background-color: #violet;
-	
+th {
+    text-align: left;
+    background-color: #violet;
 }
+
 th, td {
     border-bottom: 1px solid #ddd;
 }
+
 #nameEnter {
-	width: 310px;
-        right: 10px;
-        top: 100px;
-	
+    width: 310px;
+    right: 10px;
+    top: 100px;
 }
+
 #Attendance-Table {
-	border: 2px solid #ddd;
-	border-collaps: collapse;
+    border: 2px solid #ddd;
+    border-collaps: collapse;
 }
+
 #masterAttendanceTable {
     border: 2px solid #ddd;
-	border-collaps: collapse;
+    border-collaps: collapse;
 }
-tr:nth-child(even) {background-color: white}
+
+tr:nth-child(even) {background-color: @base2}
 
 h4 {
     color: @blue
 }
 
-.addStudentContent {
-    position: absolute;
-    width: 400px;
-    height: 250px;
-    z-index: 15;
-    top: 50%;
-    left: 50%;
-    margin: -100px 0 0 -150px;
-    display: none; /* Hidden by default */
-    //position: fixed; /* Stay in place */
-    //z-index: 1; /* Sit on top */
-    //left: 0;
-    //top: 0;
-    //width: 50%; /* Full width */
-    //height: 50%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: white; /* Fallback color */
-    border: 2px solid black;
-    //margin: auto;
-}
 #popUpHeader {
-
     text-align: center;
 }
 
@@ -178,46 +172,81 @@ h4 {
     bottom: 0;
 }
 
-.studentInfo {
-    position: absolute;
-    width: 400px;
-    height: 250px;
-    z-index: 15;
-    top: 50%;
-    left: 50%;
-    margin: -10px 0 0 -150px;
-    display: none; /* Hidden by default */
-    //position: fixed; /* Stay in place */
-    //z-index: 1; /* Sit on top */
-    //left: 0;
-    //top: 0;
-    //width: 50%; /* Full width */
-    //height: 50%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: white; /* Fallback color */
-    //border: 2px solid black;
-    //margin: auto;
+#StudentProfiles {
+    .studentInfo {
+        position: absolute;
+        width: 400px;
+        height: 250px;
+        z-index: 15;
+        top: 50%;
+        left: 50%;
+        margin: -10px 0 0 -150px;
+        display: none; /* Hidden by default */
+        //position: fixed; /* Stay in place */
+        //z-index: 1; /* Sit on top */
+        //left: 0;
+        //top: 0;
+        //width: 50%; /* Full width */
+        //height: 50%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: white; /* Fallback color */
+        //border: 2px solid black;
+        //margin: auto;
+    }
 }
-#submitStudent {
-    float: right;
-    padding: 5px;
-    border: 5px solid white;
-    bottom: 0;
 
-}
-#addStudent {
-    float: right;
-}
-#newStudentFirst{
-    left: -10px;
-}
-#newStudentLast{
-    left: -10px;
-}
-#attendanceDiv {
+#Data  {
+    #submitStudent {
+        float: right;
+        padding: 5px;
+        border: 5px solid white;
+        bottom: 0;
+    }
 
-    display: none;
+    #addStudent {
+        float: right;
+    }
+    #newStudentFirst{
+        left: -10px;
+    }
 
+    #newStudentLast{
+        left: -10px;
+    }
+
+    #attendanceDiv {
+        display: none;
+    }
+
+    .addStudentContent {
+        position: absolute;
+        width: 400px;
+        height: 250px;
+        z-index: 15;
+        top: 50%;
+        left: 50%;
+        margin: -100px 0 0 -150px;
+        display: none; /* Hidden by default */
+        //position: fixed; /* Stay in place */
+        //z-index: 1; /* Sit on top */
+        //left: 0;
+        //top: 0;
+        //width: 50%; /* Full width */
+        //height: 50%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: white; /* Fallback color */
+        border: 2px solid black;
+        //margin: auto;
+    }
+
+    #attendanceList {
+        cursor:pointer;
+    }
+
+    #returnAttendanceList{
+        padding: 5px;
+        border: 5px @base3;
+    }
 }
 
 html {
@@ -229,14 +258,6 @@ html {
 
 span:hover {
     color: red;
-}
-#attendanceList {
-    cursor:pointer;
-}
-
-#returnAttendanceList{
-    padding: 5px;
-    border: 5px @base3;
 }
 #dontShow {
     display: none;

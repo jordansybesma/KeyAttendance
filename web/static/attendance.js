@@ -1,6 +1,6 @@
 
 
-
+// Called when a user exits the add new student pop up window
 function closeAddStudent() {
     var span = document.getElementById("close");
     var popUp = document.getElementById('studentDiv');
@@ -8,6 +8,8 @@ function closeAddStudent() {
     document.getElementById("newStudentLast").value = "";
     popUp.style.display = "none";
 }
+
+// Called when a new name is added to the attendance sheet
 function addAttendant(first, last) {
     var dt = new Date();
     // Display the month, day, and year. getMonth() returns a 0-based number.  
@@ -42,6 +44,9 @@ function addAttendant(first, last) {
         
 
 }
+
+// Called when a user clicks submit on the add new student dialogue. checks
+//that both values have been entered then adds them to the database
 function addNewStudent() {
 
     var first = document.getElementById("newStudentFirst").value;
@@ -55,28 +60,14 @@ function addNewStudent() {
         return;
     }
     alert(first + " " + last);
-    /*data = {
-        "id": "3",
-        "firstName": first,
-        "lastName": last,
-        "art": "FALSE",
-        "madeFood": "FALSE",
-        "recievedFood": "FALSE",
-        "leadership": "FALSE",
-        "exercise": "FALSE",
-        "mentalHealth": "FALSE",
-        "volunteering": "FALSE",
-        "oneOnOne": "FALSE",
-        "comments": "FALSE"
-    };
-    data = JSON.stringify(data);
-    console.log(data);*/
+    
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
     closeAddStudent();
     //var response = addAttendant(data);
     sendNewStudent(first, last);
 }
+
 
 function sendRequest(isPost, data, header, value, urlAddOn) {
     var xhr = new XMLHttpRequest();
@@ -102,14 +93,6 @@ function deleteAttendant(date, name) {
     displayAttendanceTable(date);
     console.log("got here");
 }
-/*function addAttendant(data) {
-    var xhttp = new XMLHttpRequest();
-    url = window.location.origin + "/addAttendant/";
-    xhttp.open("POST", url, true);
-    xhttp.send(data);
-    //alert(urlAddOn + xhr.responseText);
-    return xhttp.responseText;
-}*/
 
 function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest = new XMLHttpRequest();
@@ -294,9 +277,6 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     cell8.innerHTML = str7;
     cell9.innerHTML = str8;
     cell10.innerHTML = str9;
-
-
-    
 }
 
 function makeChecks(art, artID, madeFood, madeFoodID) {
@@ -348,6 +328,9 @@ function onAddRow() {
     str6 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'mentalHealth', '" + date + "')\">";
     str7 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'volunteering', '" + date + "')\">";
     str8 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'oneOnOne', '" + date + "')\">";
+    var entry = document.createElement('button');
+    entry.innerHTML = 'onclick=\"deleteAttendant(\"' + date + '\", \"' + keywordElement + '\")\">Delete\"';
+    //list.appendChild(entry);
     str9 = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete"
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;
@@ -358,7 +341,7 @@ function onAddRow() {
     cell7.innerHTML = str6;
     cell8.innerHTML = str7;
     cell9.innerHTML = str8;
-    cell10.innerHTML = str9;
+    cell10.appendChild(entry);
     var names = keywordElement.split(" ");
     addAttendant(names[0], names[1]);
   } else {

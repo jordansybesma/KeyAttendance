@@ -343,7 +343,7 @@ function onAddRow() {
     cell7.innerHTML = str6;
     cell8.innerHTML = str7;
     cell9.innerHTML = str8;
-    cell10.appendChild(entry);
+    cell10.innerHTML = str9;
     var names = keywordElement.split(" ");
     addAttendant(names[0], names[1]);
   } else {

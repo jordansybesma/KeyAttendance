@@ -328,14 +328,12 @@ function onAddRow() {
     str6 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'mentalHealth', '" + date + "')\">";
     str7 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'volunteering', '" + date + "')\">";
     str8 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'oneOnOne', '" + date + "')\">";
-<<<<<<< HEAD
+
     var entry = document.createElement('button');
     entry.innerHTML = 'onclick=\"deleteAttendant(\"' + date + '\", \"' + keywordElement + '\")\">Delete\"';
     //list.appendChild(entry);
-    str9 = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete"
-=======
+    
     str9 = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
->>>>>>> 6a2c3eefa7d0ec7ff91c60eeb844497e61ca5bc0
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;
     cell3.innerHTML = str2;

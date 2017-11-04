@@ -534,6 +534,7 @@ function masterAttendanceHelper(_, masterData) {
 function masterDataPlot(xaxis, yaxis) {
     console.log(xaxis);
     console.log(yaxis);
+    var max = Math.max(yaxis);
     var trace1 = {
         x: xaxis,
         y: yaxis,
@@ -549,6 +550,7 @@ function masterDataPlot(xaxis, yaxis) {
         autosize: false,
         width: 500,
         height: 500,
+        yaxis: {range: [0, max]},
         margin: {
             l: 50,
             r: 50,

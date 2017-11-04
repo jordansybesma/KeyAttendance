@@ -558,7 +558,9 @@ function masterDataPlot(xaxis, yaxis) {
             t: 100,
             pad: 4
         },
-        title: 'Recent Attendance'
+        title: 'Recent Attendance',
+        layout_autorange_after : false
+
     };
 
     Plotly.newPlot('masterGraph', data, layout);

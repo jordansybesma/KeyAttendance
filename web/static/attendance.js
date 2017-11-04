@@ -544,9 +544,9 @@ function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood) {
     maxList.push(Math.max.apply(Math, yaxisMadeFood));
     maxList.push(Math.max.apply(Math, yaxisRecievedFood));
     var max = Math.max.apply(Math, maxList);
-    var min = Math.min.apply(Math, yaxis);
-    var change = Math.ceil((max - min) / xaxis.lenth);
-    change = 10;
+    //var min = Math.min.apply(Math, yaxis);
+    //var change = Math.ceil((max - min) / xaxis.lenth);
+    var change = 10;
     console.log(max);
     console.log(change);
 

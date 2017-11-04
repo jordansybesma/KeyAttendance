@@ -535,6 +535,8 @@ function masterDataPlot(xaxis, yaxis) {
     console.log(xaxis);
     console.log(yaxis);
     var max = Math.max.apply(Math, yaxis);
+    var min = Math.min.apply(Math, yaxis);
+    var change = (max - min) / xaxis.lenth;
     console.log(max);
     var trace1 = {
         x: xaxis,
@@ -555,9 +557,9 @@ function masterDataPlot(xaxis, yaxis) {
             autotick: false,
             ticks: 'outside',
             tick0: 0,
-            dtick: 1,
-            ticklen: 1,
-            tickwidth: 1,
+            dtick: change,
+            ticklen: change,
+            tickwidth: change,
             tickcolor: '#000',
             autorange: false,
             range: [0, max]

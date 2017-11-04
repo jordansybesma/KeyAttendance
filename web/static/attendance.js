@@ -606,7 +606,7 @@ function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood) {
 
     };
 
-    Plotly.newPlot('masterGraph', data, layout);
+    Plotly.newPlot('activityGraph', data, layout);
 }
 
 function masterDataPlot(xaxis, yaxis) {

@@ -504,12 +504,22 @@ function masterAttendanceHelper(_, masterData) {
     var yaxisArt = [];
     var yaxisMadeFood = [];
     var yaxisRecievedFood = [];
+    var yaxisLeadership = [];
+    var yaxisExersize = [];
+    var yaxisMentalHealth = [];
+    var yaxisVolunteering = [];
+    var yaxisOneOnOne = [];
     for (i in myData) {
         xaxis.push(myData[i][0]);
         yaxis.push(myData[i][1]);
         yaxisArt.push(myData[i][2]);
         yaxisMadeFood.push(myData[i][3]);
         yaxisRecievedFood.push(myData[i][4]);
+        yaxisLeadership.push(myData[i][5]);
+        yaxisExersize = [];
+        yaxisMentalHealth = [];
+        yaxisVolunteering = [];
+        yaxisOneOnOne = [];
         var row = table.insertRow(1);
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);

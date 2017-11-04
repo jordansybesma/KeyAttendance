@@ -282,7 +282,7 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     } else {
         str8 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'oneOnOne', '" + date + "')\">";
     }
-    str9 = "< type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + first + " " + last + "')\">Delete"
+    str9 = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + first + " " + last + "')\">Delete<button/>"
 
     cell1.innerHTML = first + " " + last;
     cell2.innerHTML = str;
@@ -348,7 +348,7 @@ function onAddRow() {
     str6 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'mentalHealth', '" + date + "')\">";
     str7 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'volunteering', '" + date + "')\">";
     str8 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'oneOnOne', '" + date + "')\">";
-    str9 = "< type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete"
+    str9 = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;
     cell3.innerHTML = str2;
@@ -479,26 +479,26 @@ function masterAttendanceHelper(_, masterData) {
     var table = document.getElementById("masterAttendanceTable");
     table.innerHTML = "";
     var row = table.insertRow(0);
-    var cell1  = row.insertCell(0);
-    var cell2  = row.insertCell(1);
-    var cell3  = row.insertCell(2);
-    var cell4  = row.insertCell(3);
-    var cell5  = row.insertCell(4);
-    var cell6  = row.insertCell(5);
-    var cell7  = row.insertCell(6);
-    var cell8  = row.insertCell(7);
-    var cell9  = row.insertCell(8);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+    var cell5 = row.insertCell(4);
+    var cell6 = row.insertCell(5);
+    var cell7 = row.insertCell(6);
+    var cell8 = row.insertCell(7);
+    var cell9 = row.insertCell(8);
     var cell10 = row.insertCell(9);
-    cell1.innerHTML  = "Date";
-    cell2.innerHTML  = "Attendees";
-    cell3.innerHTML  = "Art";
-    cell4.innerHTML  = "Make Food";
-    cell5.innerHTML  = "Recieved Food";
-    cell6.innerHTML  = "Leadership";
-    cell7.innerHTML  = "Exersize";
-    cell8.innerHTML  = "Mental Health";
-    cell9.innerHTML  = "Volunteering";
-    cell10.innerHTML = " One On One";
+    cell1.innerHTML = "Date";
+    cell2.innerHTML = "# Attendees";
+    cell3.innerHTML = "# Art";
+    cell4.innerHTML = "# Make Food";
+    cell5.innerHTML = "# Recieved Food";
+    cell6.innerHTML = "# Leadership";
+    cell7.innerHTML = "# Exersize";
+    cell8.innerHTML = "# Mental Health";
+    cell9.innerHTML = "# Volunteering";
+    cell10.innerHTML = "# One On One";
     var xaxis = [];
     var yaxis = [];
     var yaxisArt = [];

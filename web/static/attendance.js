@@ -535,6 +535,7 @@ function masterDataPlot(xaxis, yaxis) {
     console.log(xaxis);
     console.log(yaxis);
     var max = Math.max(yaxis);
+    console.log(max);
     var trace1 = {
         x: xaxis,
         y: yaxis,

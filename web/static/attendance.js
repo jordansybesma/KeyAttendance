@@ -501,9 +501,15 @@ function masterAttendanceHelper(_, masterData) {
     cell10.innerHTML = "# One On One";
     var xaxis = [];
     var yaxis = [];
+    var yaxisArt = [];
+    var yaxisMadeFood = [];
+    var yaxisRecievedFood = [];
     for (i in myData) {
         xaxis.push(myData[i][0]);
         yaxis.push(myData[i][1]);
+        yaxisArt.push(myData[i][2]);
+        yaxisMadeFood.push(myData[i][3]);
+        yaxisRecievedFood.push(myData[i][4]);
         var row = table.insertRow(1);
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
@@ -528,7 +534,79 @@ function masterAttendanceHelper(_, masterData) {
     }
 
     masterDataPlot(xaxis, yaxis);
+    activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood)
 
+}
+
+function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood) {
+    var maxList = [];
+    maxList.push(Math.max.apply(Math, yaxisArt));
+    maxList.push(Math.max.apply(Math, yaxisMadeFood));
+    maxList.push(Math.max.apply(Math, yaxisRecievedFood));
+    var max = Math.max.apply(Math, maxList);
+    var min = Math.min.apply(Math, yaxis);
+    var change = Math.ceil((max - min) / xaxis.lenth);
+    change = 10;
+    console.log(max);
+    console.log(change);
+
+    var trace1 = {
+        x: xaxis,
+        y: yaxisArt,
+        mode: 'lines',
+        name: "Art",
+        line: {
+            width: 3
+        }
+    };
+    var trace2 = {
+        x: xaxis,
+        y: yaxisMadeFood,
+        mode: 'lines',
+        name: "Made Food",
+        line: {
+            width: 3
+        }
+    };
+    var trace3 = {
+        x: xaxis,
+        y: yaxisRecievedFood,
+        mode: 'lines',
+        name: "Received Food",
+        line: {
+            width: 3
+        }
+    };
+    var data = [trace1, trace2, trace3];
+
+    var layout = {
+        autosize: false,
+        width: 500,
+        height: 500,
+        yaxis: {
+            autotick: false,
+            ticks: 'outside',
+            tick0: 0,
+            dtick: change,
+            ticklen: 1,
+            tickwidth: 1,
+            tickcolor: '#000',
+            autorange: false,
+            range: [0, max]
+        },
+        margin: {
+            l: 50,
+            r: 50,
+            b: 100,
+            t: 100,
+            pad: 4
+        },
+        title: 'Activity Participation',
+        layout_autorange_after: false
+
+    };
+
+    Plotly.newPlot('masterGraph', data, layout);
 }
 
 function masterDataPlot(xaxis, yaxis) {

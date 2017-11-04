@@ -561,8 +561,8 @@ function masterDataPlot(xaxis, yaxis) {
             ticks: 'outside',
             tick0: 0,
             dtick: change,
-            ticklen: change,
-            tickwidth: change,
+            ticklen: 1,
+            tickwidth: 1,
             tickcolor: '#000',
             autorange: false,
             range: [0, max]

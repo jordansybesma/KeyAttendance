@@ -504,12 +504,22 @@ function masterAttendanceHelper(_, masterData) {
     var yaxisArt = [];
     var yaxisMadeFood = [];
     var yaxisRecievedFood = [];
+    var yaxisLeadership = [];
+    var yaxisExersize = [];
+    var yaxisMentalHealth = [];
+    var yaxisVolunteering = [];
+    var yaxisOneOnOne = [];
     for (i in myData) {
         xaxis.push(myData[i][0]);
         yaxis.push(myData[i][1]);
         yaxisArt.push(myData[i][2]);
         yaxisMadeFood.push(myData[i][3]);
         yaxisRecievedFood.push(myData[i][4]);
+        yaxisLeadership.push(myData[i][5]);
+        yaxisExersize.push(myData[i][6]);
+        yaxisMentalHealth.push(myData[i][7]);
+        yaxisVolunteering.push(myData[i][8]);
+        yaxisOneOnOne.push(myData[i][9]);
         var row = table.insertRow(1);
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
@@ -534,15 +544,21 @@ function masterAttendanceHelper(_, masterData) {
     }
 
     masterDataPlot(xaxis, yaxis);
-    activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood)
+    activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxisLeadership, yaxisExersize, yaxisMentalHealth, yaxisVolunteering, yaxisOneOnOne);
+
 
 }
 
-function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood) {
+function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxisLeadership, yaxisExersize, yaxisMentalHealth, yaxisVolunteering, yaxisOneOnOne){
     var maxList = [];
     maxList.push(Math.max.apply(Math, yaxisArt));
     maxList.push(Math.max.apply(Math, yaxisMadeFood));
     maxList.push(Math.max.apply(Math, yaxisRecievedFood));
+    maxList.push(Math.max.apply(Math, yaxisLeadership));
+    maxList.push(Math.max.apply(Math, yaxisExersize));
+    maxList.push(Math.max.apply(Math, yaxisMentalHealth));
+    maxList.push(Math.max.apply(Math, yaxisVolunteering));
+    maxList.push(Math.max.apply(Math, yaxisOneOnOne));
     var max = Math.max.apply(Math, maxList);
     //var min = Math.min.apply(Math, yaxis);
     //var change = Math.ceil((max - min) / xaxis.lenth);
@@ -577,7 +593,52 @@ function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood) {
             width: 3
         }
     };
-    var data = [trace1, trace2, trace3];
+    var trace4 = {
+        x: xaxis,
+        y: yaxisLeadership,
+        mode: 'lines',
+        name: "Leadership",
+        line: {
+            width: 3
+        }
+    };
+    var trace5 = {
+        x: xaxis,
+        y: yaxisExersize,
+        mode: 'lines',
+        name: "Exersize",
+        line: {
+            width: 3
+        }
+    };
+    var trace6 = {
+        x: xaxis,
+        y: yaxisMentalHealth,
+        mode: 'lines',
+        name: "Mental Health",
+        line: {
+            width: 3
+        }
+    };
+    var trace7 = {
+        x: xaxis,
+        y: yaxisVolunteering,
+        mode: 'lines',
+        name: "Volunteering",
+        line: {
+            width: 3
+        }
+    };
+    var trace8 = {
+        x: xaxis,
+        y: yaxisOneOnOne,
+        mode: 'lines',
+        name: "OneOnOne",
+        line: {
+            width: 3
+        }
+    };
+    var data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8];
 
     var layout = {
         autosize: false,

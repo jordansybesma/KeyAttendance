@@ -550,7 +550,10 @@ function masterDataPlot(xaxis, yaxis) {
         autosize: false,
         width: 500,
         height: 500,
-        yaxis: {range: [0, max]},
+        yaxis: {
+            range: [0, max],
+            tick0 : 0
+        },
         margin: {
             l: 50,
             r: 50,

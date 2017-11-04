@@ -57,7 +57,15 @@ def addNewStudent():
 def getAttendance(date):
     return json.dumps(executeSingleQuery("SELECT * FROM dailyAttendance WHERE date= '" + date + "';",
         fetch = True), indent=4, sort_keys=True, default=str)
-   
+        
+@app.route('/getLogin/<login>')
+def getLogin(login):
+    nameList = login.split()
+    user = nameList[0]
+    password = nameList[1]
+    query = "SELECT * FROM login WHERE username = '" + user + "' AND password = '" + password + "';"
+    return json.dumps(executeSingleQuery(query,
+        fetch = True), indent=4, sort_keys=True, default=str)
 @app.route('/getMasterAttendance')
 def getMasterAttendance():
     return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance;",

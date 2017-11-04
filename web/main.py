@@ -144,6 +144,15 @@ def tempMaster():
     executeSingleQuery(query, [])
     executeSingleQuery(query2, []) 
     
+@app.route('/tempLogin', methods=["POST"])
+def tempLogin():
+    query = "DROP TABLE IF EXISTS login;"
+    query2 = "CREATE TABLE login (username varchar(255), password varchar(255));"
+    query3 = "INSERT INTO login values ('user1', 'password1');"
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, []) 
+    executeSingleQuery(query3, []) 
+    
 @app.route('/selectActivity', methods=["POST"])
 def selectActivity():
     column = request.form.get("column")

@@ -557,7 +557,9 @@ function masterDataPlot(xaxis, yaxis) {
             dtick: 1,
             ticklen: 1,
             tickwidth: 1,
-            tickcolor: '#000'
+            tickcolor: '#000',
+            autorange: false,
+            range: [0, max]
         },
         margin: {
             l: 50,

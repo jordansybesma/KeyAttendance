@@ -499,7 +499,11 @@ function masterAttendanceHelper(_, masterData) {
     cell8.innerHTML = "# Mental Health";
     cell9.innerHTML = "# Volunteering";
     cell10.innerHTML = "# One On One";
+    var xaxis = [];
+    var yaxis = [];
     for (i in myData) {
+        xaxis.push(myData[i][0]);
+        yaxis.push(myData[i][1]);
         var row = table.insertRow(1);
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
@@ -522,6 +526,30 @@ function masterAttendanceHelper(_, masterData) {
         cell9.innerHTML = myData[i][8];
         cell10.innerHTML = myData[i][9];
     }
+
+    masterDataPlot(xaxis, yaxis);
+
+}
+
+function masterDataPlot(xaxis, yaxis) {
+    console.log(xaxis);
+    console.log(yaxis);
+    var trace1 = {
+        x: xaxis,
+        y: yaxis,
+        mode: 'lines',
+        line: {
+            color: 'rgb(55, 128, 191)',
+            width: 3
+        }
+    };
+    var data = [trace1];
+
+    var layout = {
+        title: 'Recent Attendance'
+    };
+
+    Plotly.newPlot('masterGraph', data, layout);
 }
 
 function checkLogin() {

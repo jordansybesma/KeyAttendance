@@ -68,7 +68,7 @@ def getLogin(login):
         fetch = True), indent=4, sort_keys=True, default=str)
 @app.route('/getMasterAttendance')
 def getMasterAttendance():
-    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance;",
+    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;",
         fetch = True), indent=4, sort_keys=True, default=str)
 
 def decreaseActivityCount(column, date, increase):
@@ -135,8 +135,8 @@ def deleteAttendant():
       
 @app.route('/getDates')
 def getDates():
-    query = "SELECT DISTINCT date FROM dailyAttendance"
-    return json.dumps(executeSingleQuery(query,fetch = True), indent=4, sort_keys=True, default=str)
+    query = "SELECT DISTINCT date FROM dailyAttendance ORDER BY date DESC"
+    return json.dumps(executeSingleQuery(query,fetch = True)[:10], indent=4, sort_keys=True, default=str)
     
 @app.route('/temp', methods=["POST"])
 def temp():

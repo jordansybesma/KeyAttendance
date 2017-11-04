@@ -536,8 +536,10 @@ function masterDataPlot(xaxis, yaxis) {
     console.log(yaxis);
     var max = Math.max.apply(Math, yaxis);
     var min = Math.min.apply(Math, yaxis);
-    var change = (max - min) / xaxis.lenth;
+    var change = Math.ceil((max - min) / xaxis.lenth);
     console.log(max);
+    console.log(change);
+
     var trace1 = {
         x: xaxis,
         y: yaxis,

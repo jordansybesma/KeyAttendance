@@ -145,7 +145,7 @@ def temp():
     executeSingleQuery(query, [])
     executeSingleQuery(query2, []) 
     
-@app.rout('/tempAdd', methods=["POST"])
+@app.route('/tempAdd', methods=["POST"])
 def tempAdd():
     query = "INSERT INTO masterAttendance VALUES ('2017-11-02', '55', '20', '4', '5', '2', '10', '5', '0', '1'), ('2017-11-01', '65', '23', '6', '5', '12', '5', '7', '2', '5'), ('2017-10-31', '88', '10', '30', '15', '0', '2', '6', '2', '0'), ('2017-10-30', '100', '22', '2', '10', '1', '11', '4', '1', '2');"
     executeSingleQuery(query, [])

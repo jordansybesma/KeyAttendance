@@ -546,6 +546,16 @@ function masterDataPlot(xaxis, yaxis) {
     var data = [trace1];
 
     var layout = {
+        autosize: false,
+        width: 500,
+        height: 500,
+        margin: {
+            l: 50,
+            r: 50,
+            b: 100,
+            t: 100,
+            pad: 4
+        },
         title: 'Recent Attendance'
     };
 

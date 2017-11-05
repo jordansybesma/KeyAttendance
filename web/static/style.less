@@ -101,46 +101,48 @@ div.tab button.active {
     vertical-align: middle;
 }
 
+
 .secondary-info {
     background-color: @base2;
-    padding-top: 0px;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-bottom: 2px;
-    position: fixed;
+    padding: 5px;
 }
 
 
 
 #Home  {
-    #Notifications {
-        width: 310px;
-        left: 10px;
-        top: 100px;
-    }
+    #home-content  {
+        display: grid !important;
+        padding-top: 6px;
+        grid-template-columns: 25% auto 25%;
+        grid-template-rows: 30% 30%;
+        grid-column-gap: 6px;
+        grid-row-gap: 6px;
 
-    #content {
-        padding-left: 330px;
-        padding-right: 330px;
-        padding-top: 20px;
-    }
+        #Notifications {
+            grid-column: 1;
+            grid-row: 1;
+        }
 
-    #Past-Attendance-Sheets {
-        width: 310px;
-        left: 10px;
-        top: 290px;
-    }
+        #content {
+            grid-column: 2;
+            grid-row: 1 / span 2;
+        }
 
-    #Activities {
-        width: 310px;
-        right: 10px;
-        top: 100px;
+        #Past-Attendance-Sheets {
+            grid-column: 3;
+            grid-row: 3;
+        }
+
+        #Activities {
+            grid-column: 3;
+            grid-row: 1 / span 2;
+        }
     }
 }
 
+
 th {
     text-align: left;
-    background-color: #violet;
 }
 
 th, td {

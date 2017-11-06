@@ -769,3 +769,12 @@ function getDate() {
     console.log(date);
     displayAttendanceTable(date);
 }
+
+function runPHP() {
+    $.ajax({
+        url: 'makeFile.php',
+        type: 'post',
+        data: { "callFunc1": "1" },
+        success: function (response) { console.log(response); }
+    });
+}

@@ -29,7 +29,7 @@
 <div class="tab">
 <button id = "defaultOpen" class = "tablinks" onclick = "openTab(event, 'Home')" > Home </button>
 <button class = "tablinks" onclick = "openTab(event, 'Data'); displayAttendanceList();"> Attendance Sheets </button>
-<button class = "tablinks" onclick = "openTab(event, 'Incident'); displayMasterAttendance();"> Attendance Overview </button>
+<button class = "tablinks" onclick = "openTab(event, 'AttendanceOverview'); displayMasterAttendance();"> Attendance Overview </button>
 <button class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</button>
 <button class = "tablinks" onclick = "openTab(event, 'Staff Schedules'); showLogin();"> Staff Schedules</button>
 <button class = "tablinks" onclick = "openTab(event, 'Edit Attendance Sheets')"> Edit Attendance Sheets </button>
@@ -133,28 +133,29 @@
 </div>
 
 
-<div id="Incident" class="tabcontent">
+<div id="AttendanceOverview" class="tabcontent">
   <h3>Statistics On Past Attendance Sheets</h3>
-    <div id="graphs">
-        <div id="masterGraph">
-        </div>
-        <div id="activityGraph">
-        </div>
+    
+    <div id="masterGraph">
     </div>
-    <table id="masterAttendanceTable" style="width:100%">
-        <tr>
-            <th>Date</th>
-            <th>Attendees</th>
-            <th>Art</th>
-            <th>Make Food</th>
-            <th>Recieved Food</th>
-            <th>Leadership</th>
-            <th>Exercise</th>
-            <th>Mental Health</th>
-            <th>Volunteering</th>
-            <th>One On One</th>
-        </tr>
-    </table>
+    <div id="activityGraph">
+    </div>
+    <div id="attendanceTable">
+        <table id="masterAttendanceTable" style="width:100%">
+            <tr>
+                <th>Date</th>
+                <th>Attendees</th>
+                <th>Art</th>
+                <th>Make Food</th>
+                <th>Recieved Food</th>
+                <th>Leadership</th>
+                <th>Exercise</th>
+                <th>Mental Health</th>
+                <th>Volunteering</th>
+                <th>One On One</th>
+            </tr>
+        </table>
+    </div>
 </div>
 
 <div id="StudentProfiles" class="tabcontent">

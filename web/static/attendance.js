@@ -795,8 +795,13 @@ function createFileHelper(_, attendance) {
 
     console.log(attendance);
     var myData = JSON.parse(attendance);
-    rows.push(myData);
-    exportToCsv("testFile.csv", rows);
+    for (i in myData){
+        rows.push(myData[i]);
+    }
+    var date = myData[0][12];
+    var filename = "Attendance_" + date;
+    
+    exportToCsv(filename, rows);
 
 }
 

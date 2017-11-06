@@ -791,7 +791,7 @@ function createFile() {
 
 function createFileHelper(_, attendance) {
     console.log(attendance);
-    var myData = JSON.parse(loginData);
+    var myData = JSON.parse(attendance);
     exportToCsv("testFile.csv", myData);
 
 }

@@ -199,7 +199,7 @@ function showStudentProfile() {
     if (optionFound) {
         alert("option found")
         alert(keywordElement)
-        getRequest("http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/getID/" + keywordElement, "", showProfile);
+        getRequest("/getID/" + keywordElement, "", showProfile);
 
 
     }

@@ -90,12 +90,13 @@
         <h2 id="attendanceName"> Attendance Sheet 10/19/2017 </h2>
 
         <div>
-            <button type="button" onclick="createFile()">Click Me</button>
+            
         <aside>
             <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required /></label>
             <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
             <datalist id="suggestedStudents"></datalist>
         </aside>
+            <button type="button" onclick="createFile()">Download Attendance Sheet</button>
         <button id="addStudent" onclick="openAddStudent()">Add New Student</button>
             <div id="studentDiv" class="addStudentContent">
                 <div class="addStudentHeader">

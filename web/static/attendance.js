@@ -12,14 +12,14 @@ function closeAddStudent() {
 // Called when a new name is added to the attendance sheet
 function addAttendant(first, last) {
     var dt = new Date();
-    // Display the month, day, and year. getMonth() returns a 0-based number.  
+    // Display the month, day, and year. getMonth() returns a 0-based number.
     var month = dt.getMonth() + 1;
     var day = dt.getDate();
     var year = dt.getFullYear();
     var hour = dt.getHours();
     var minute = dt.getMinutes();
     var seconds = dt.getSeconds();
-    
+
     var xmlhttp = new XMLHttpRequest();
     if (month < 10) {
         month = "0" + month;
@@ -41,7 +41,7 @@ function addAttendant(first, last) {
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last +"&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exercise=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date="+ date + "&time=" + time +"&id=");
-        
+
 
 }
 
@@ -60,7 +60,7 @@ function addNewStudent() {
         return;
     }
     alert(first + " " + last);
-    
+
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
     closeAddStudent();
@@ -91,7 +91,7 @@ function deleteAttendant(date, name) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&date=" + date);
     displayAttendanceTable(date);
-    console.log("got here");
+    console.log("got to deleteAttendant");
 }
 
 function getRequest(urlAddon, callbackState, callback) {
@@ -174,7 +174,7 @@ function handleProfileBox(e, curText) {
 function checkBox(checkbox, keyword) {
     //var val = checkbox.value;
     //alert(keyword + ' is ' + val);
-    var str = "got here " + checkbox.value + " " + keyword;
+    var str = "got to checkBox " + checkbox.value + " " + keyword;
     alert(str);
 }
 function openAddStudent() {
@@ -183,9 +183,11 @@ function openAddStudent() {
 }
 
 function showStudentProfile() {
-    alert("got here")
+    alert("got to showStudentProfile")
     //var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
+
+    alert(keywordElement)
     var optionFound = false;
     datalist = document.getElementById("suggestedStudents");
     for (var j = 0; j < datalist.options.length; j++){
@@ -206,7 +208,7 @@ function showStudentProfile() {
 function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {
     var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keyword').value;
-    
+
     var date = getCurrentDate();
     //document.getElementById("keyword").value = "";
     var row = table.insertRow(1);
@@ -220,7 +222,7 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     var cell8 = row.insertCell(7);
     var cell9 = row.insertCell(8);
     var cell10 = row.insertCell(9);
-    
+
     if (art) {
         str = "<input type=\"checkbox\" checked  onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
     } else {
@@ -332,7 +334,7 @@ function onAddRow() {
     var entry = document.createElement('button');
     entry.innerHTML = 'onclick=\"deleteAttendant(\"' + date + '\", \"' + keywordElement + '\")\">Delete\"';
     //list.appendChild(entry);
-    
+
     str9 = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
     cell1.innerHTML = keywordElement;
     cell2.innerHTML = str;
@@ -350,7 +352,7 @@ function onAddRow() {
     alert("Please enter an existing student");
   }
     //var str = "How are you doing today?";
-    
+
 }
 
 function createNewAttendance() {
@@ -416,13 +418,13 @@ function displayAttendanceTable(table_date) {
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
-    console.log("got here");
+    console.log("got to displayAttendanceTable");
     /*var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/tempAdd");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send();*/
     getRequest("/getAttendance/" + table_date, "", fillAttendance);
-    
+
     return false;
     // list.style.display = "none";
 }
@@ -438,7 +440,7 @@ function createListOfAttendanceDates(_, dates) {
         var entry = document.createElement('li');
         entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
         list.appendChild(entry);
-    }   
+    }
 }
 
 function displayAttendanceList() {
@@ -748,18 +750,18 @@ function makeDateSQL(date) {
 }
 function getCurrentDate() {
     var dt = new Date();
-    // Display the month, day, and year. getMonth() returns a 0-based number.  
+    // Display the month, day, and year. getMonth() returns a 0-based number.
     var month = dt.getMonth() + 1;
     var day = dt.getDate();
     var year = dt.getFullYear();
-   
+
     if (month < 10) {
         month = "0" + month;
     }
     if (day < 10) {
         day = "0" + day;
     }
-    
+
     var date = year + "-" + month + "-" + day;
     return date;
 }
@@ -800,7 +802,7 @@ function createFileHelper(_, attendance) {
     }
     var date = myData[0][12];
     var filename = "Attendance_" + date + ".csv";
-    
+
     exportToCsv(filename, rows);
 
 }

@@ -311,11 +311,17 @@ def getStudentID(string):
 
 @app.route('/getJustID/<string>')
 def getJustID(string):
+    print("1")
     nameList = string.split()
+    print("2")
     first = nameList[0].upper()
+    print("3")
     last = nameList[1].upper()
+    print("4")
     query = "SELECT id FROM teststudents WHERE UPPER(firstname) LIKE '%" + first + "%' AND UPPER(lastname) LIKE '%" + last + "%';"
+    print("5")
     databaseResult = executeSingleQuery(query, fetch = True)
+    print("6")
     return databaseResult;
 
 if __name__ == "__main__":

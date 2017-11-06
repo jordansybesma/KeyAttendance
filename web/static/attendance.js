@@ -209,7 +209,8 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keyword').value;
 
-    var date = getCurrentDate();
+    //var date = getCurrentDate();
+    var date = document.getElementById("storeDate").value;
     //document.getElementById("keyword").value = "";
     var row = table.insertRow(1);
     var cell1 = row.insertCell(0);
@@ -308,7 +309,8 @@ function onAddRow() {
         break;
       }
     }
-    var date = getCurrentDate();
+    //var date = getCurrentDate();
+    var date = document.getElementById("storeDate").value;
     if (optionFound){
     document.getElementById("keyword").value = "";
     var row = table.insertRow(1);
@@ -357,6 +359,7 @@ function onAddRow() {
 
 function createNewAttendance() {
     var date = getCurrentDate();
+    document.getElementById("storeDate").innerHTML = date;
     var readable = makeDateReadable(date);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet " + readable;
     var table = document.getElementById("Attendance-Table");
@@ -389,6 +392,7 @@ function createNewAttendance() {
 
 
 function displayAttendanceTable(table_date) {
+    document.getElementById("storeDate").innerHTML = table_date;
     var table = document.getElementById("Attendance-Table");
     table.innerHTML = "";
     var row = table.insertRow(0);
@@ -782,7 +786,8 @@ function getDate() {
 }*/
 
 function createFile() {
-    var date = getCurrentDate();
+    //var date = getCurrentDate();
+    var date = document.getElementById("storeDate").value;
     getRequest("/getAttendance/" + date, "", createFileHelper);
     var rows = [];
     rows.push(["things", "things2", "thing3"]);

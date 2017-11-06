@@ -790,9 +790,13 @@ function createFile() {
 }
 
 function createFileHelper(_, attendance) {
+    var rows = [];
+    rows.push(["ID", "First Name", "Last Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One", "Comments", "Date", "Time"]);
+
     console.log(attendance);
     var myData = JSON.parse(attendance);
-    exportToCsv("testFile.csv", myData);
+    rows.push(myData);
+    exportToCsv("testFile.csv", rows);
 
 }
 

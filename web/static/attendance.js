@@ -784,7 +784,7 @@ function createFile() {
     rows.push(["things", "things2", "thing3"]);
     rows.push(["things4", "things5", "thing6"]);
     rows.push(["things7", "things8", "thing9"]);
-    exportToCsv("testFile", rows);
+    exportToCsv("testFile.csv", rows);
 }
 
 // source: https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side

@@ -799,7 +799,7 @@ function createFileHelper(_, attendance) {
         rows.push(myData[i]);
     }
     var date = myData[0][12];
-    var filename = "Attendance_" + date;
+    var filename = "Attendance_" + date + ".csv";
     
     exportToCsv(filename, rows);
 

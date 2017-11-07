@@ -54,6 +54,7 @@ function addNewStudent() {
     var firstChar = first[0];
     alert("firstChar: " + firstChar);
     firstChar = firstChar.toUpperCase();
+    alert("firstChar: " + firstChar);
     first = lastChar + first.slice(1);
     var last = document.getElementById("newStudentLast").value;
     var lastChar = first[0];

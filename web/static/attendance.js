@@ -484,6 +484,7 @@ function masterAttendanceHelper(_, masterData) {
     var myData = JSON.parse(masterData);
     var table = document.getElementById("masterAttendanceTable");
     table.innerHTML = "";
+    var row = table.insertRow(-1);
     headers = ["Date", "# Attendees", "# Art", "# Make Food", "# Recieved Food", "# Leadership", "# Exersize", "# Mental Health", "# Volunteering", "# One On One"];
     for (header of headers)  {
         row.insertCell(-1).innerHTML = header;

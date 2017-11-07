@@ -184,6 +184,7 @@ function openAddStudent() {
 }
 
 function showStudentProfile() {
+    alert("showStudentProfile called")
     var profileSpace = document.getElementById('studentProfileText')
     profileSpace.innerHTML = ("")
     var nameSpace = document.getElementById('studentName')

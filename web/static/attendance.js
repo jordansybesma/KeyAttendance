@@ -272,6 +272,12 @@ function graphStudentAttendance(yaxis) {
 
 function fillProfileTable(attendance)  {
     var table = document.getElementById("profileAttendanceTable");
+    table.innerHTML = ""
+    var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne', 'date', 'time'];
+    row = table.insertRow(-1);
+    for (header of fields)  {
+        row.insertCell(-1).innerHTML = header;
+    }
 
     for (i in attendance)  {
         currRow = table.insertRow(-1);

@@ -57,6 +57,11 @@ function addNewStudent() {
     var lastChar = first[0];
     lastChar = lastChar.toUpperCase();
     last[0] = lastChar;
+    alert("first: " + first);
+    alert("firstChar: " + firstChar);
+
+    alert("last: " + last);
+    alert("lastChar: " + lastChar);
     if (first == "") {
         alert("Please enter a first name");
         return;

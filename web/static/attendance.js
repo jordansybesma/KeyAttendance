@@ -206,13 +206,15 @@ function showStudentProfile() {
 
 function showStudentAttendance(_, data) {
 
+    var parsedData = JSON.parse(data);
+
     console.log(JSON.parse(data));
     //
     // var x = [];
 
-    for(i = 0; i < data.length; i++) {
-      var dateString = data[i];
-      console.log(data);
+    for(i = 0; i < parsedData.length; i++) {
+      var dateString = parsedData[i][12];
+      console.log(dateString);
       var dateList = dateString.split("-")
       var myDate = new date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
       console.log(myDate.getDay());

@@ -256,13 +256,12 @@ function showStudentAttendance(_, data) {
 }
 
 function scatterStudentAttendance(dateTimes){
-    var xList = [];
-    var yList = [];
+    var xList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var yList = [[], [], [], [], [], [], []];
 
     for (i = 0; i < dateTimes.length; i++) {
       for (j = 0; j < dateTimes[i].length; i++) {
-        xList.push(i);
-        yList.push(dateTimes[i][j]);
+        yList[i].push(dateTimes[i][j]);
       }
     }
 
@@ -820,6 +819,7 @@ function createFileHelper(_, attendance) {
 
 function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
+    return false;
 }
 function downloadMasterDates() {
     console.log("got here");

@@ -60,8 +60,6 @@ function addNewStudent() {
     lastChar = lastChar.toUpperCase();
     last = lastChar + last.slice(1);
 
-    // alert("last: " + last);
-    // alert("lastChar: " + lastChar);
     if (first == "") {
         alert("Please enter a first name");
         return;
@@ -70,7 +68,6 @@ function addNewStudent() {
         alert("Please enter a last name");
         return;
     }
-    alert(first + " " + last);
 
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
@@ -86,7 +83,6 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
     // xhr.setRequestHeader(header, value);
     // var data = JSON.stringify({"text": theirText});
     xhr.send(data);
-    alert(urlAddOn + xhr.responseText);
     return xhr.responseText;
 }
 function sendNewStudent(firstname, lastname) {
@@ -148,14 +144,11 @@ function modifyAutofillList(_ , studentNames) {
   list.innerHTML = inner;
 }
 function showProfile(_, studentInfo) {
-    alert("got to showProfile")
-    alert(studentInfo)
 
     document.getElementById("studentProfileText").innerHTML += ("ID Number: ")
 
     document.getElementById("studentProfileText").innerHTML += JSON.stringify(studentInfo)
 
-    alert(JSON.stringify(studentInfo))
 
 }
 
@@ -184,10 +177,7 @@ function handleProfileBox(e, curText) {
 
 
 function checkBox(checkbox, keyword) {
-    //var val = checkbox.value;
-    //alert(keyword + ' is ' + val);
     var str = "got to checkBox " + checkbox.value + " " + keyword;
-    alert(str);
 }
 function openAddStudent() {
     var popUp = document.getElementById('studentDiv');
@@ -195,7 +185,6 @@ function openAddStudent() {
 }
 
 function showStudentProfile() {
-    alert("showStudentProfile called")
     var profileSpace = document.getElementById('studentProfileText')
     profileSpace.innerHTML = ("")
     var nameSpace = document.getElementById('studentName')
@@ -203,7 +192,6 @@ function showStudentProfile() {
     //var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
-    alert(keywordElement)
     var optionFound = false;
     datalist = document.getElementById("suggestedStudents");
     for (var j = 0; j < datalist.options.length; j++){
@@ -213,7 +201,6 @@ function showStudentProfile() {
         }
     }
     if (optionFound) {
-        alert("option found")
         nameSpace.innerHTML += (keywordElement)
         profileSpace.innerHTML += ("\n")
         getRequest("/getJustID/" + keywordElement, "", showProfile);
@@ -242,77 +229,6 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
     row.insertCell(9).innerHTML = str;
-    /*
-    //document.getElementById("keyword").value = "";
-    var row = table.insertRow(1);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
-    var cell5 = row.insertCell(4);
-    var cell6 = row.insertCell(5);
-    var cell7 = row.insertCell(6);
-    var cell8 = row.insertCell(7);
-    var cell9 = row.insertCell(8);
-    var cell10 = row.insertCell(9);
-
-    if (art) {
-        str = "<input type=\"checkbox\" checked  onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
-    } else {
-        str = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
-    }
-    if (madeFood) {
-        console.log("got to madefood");
-        str2 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\">";
-        console.log(str2);
-    } else {
-        str2 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\">";
-    }
-    if (recievedFood) {
-        str3 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'recievedFood', '" + date + "')\">";
-    } else {
-        console.log("got to here");
-        str3 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'recievedFood', '" + date + "')\">";
-        console.log(str3);
-    }
-    if (leadership) {
-        str4 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'leadership', '" + date + "')\">";
-    } else {
-        str4 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'leadership', '" + date + "')\">";
-    }
-    if (exersize) {
-        str5 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'exersize', '" + date + "')\">";
-    } else {
-        str5 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'exersize', '" + date + "')\">";
-    }
-    if (mentalHealth) {
-        str6 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'mentalHealth', '" + date + "')\">";
-    } else {
-        str6 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'mentalHealth', '" + date + "')\">";
-    }
-    if (volunteering) {
-        str7 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'volunteering', '" + date + "')\">";
-    } else {
-        str7 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'volunteering', '" + date + "')\">";
-    }
-    if (oneOnOne) {
-        str8 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'oneOnOne', '" + date + "')\">";
-    } else {
-        str8 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'oneOnOne', '" + date + "')\">";
-    }
-    str9 = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + first + " " + last + "')\">Delete<button/>"
-
-    cell1.innerHTML = first + " " + last;
-    cell2.innerHTML = str;
-    cell3.innerHTML = str2;
-    cell4.innerHTML = str3;
-    cell5.innerHTML = str4;
-    cell6.innerHTML = str5;
-    cell7.innerHTML = str6;
-    cell8.innerHTML = str7;
-    cell9.innerHTML = str8;
-    cell10.innerHTML = str9;
-    */
 }
 
 function makeChecks(art, artID, madeFood, madeFoodID) {

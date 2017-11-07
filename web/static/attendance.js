@@ -210,10 +210,10 @@ function showStudentAttendance(_, data) {
 
 function fillProfileTable(attendance)  {
     var table = document.getElementById("profileAttendanceTable");
-    for each (var line in attendance)  {
+    for (line of attendance)  {
         currRow = table.insertRow(-1);
         currLine = attendance.split(3);
-        for each (var cell in line)  {
+        for (cell of line)  {
             currRow.insertCell(-1).innerHTML = cell;
         }
     }

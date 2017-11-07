@@ -198,9 +198,14 @@ function showStudentProfile() {
         nameSpace.innerHTML += (keywordElement)
         profileSpace.innerHTML += ("\n")
         getRequest("/getJustID/" + keywordElement, "", showProfile);
-
+        getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 
     }
+
+}
+
+function showStudentAttendance(_, data) {
+    console.log(JSON.stringify(studentInfo));
 
 }
 function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {
@@ -758,4 +763,15 @@ function exportToCsv(filename, rows) {
             document.body.removeChild(link);
         }
     }
+}
+
+function sendFeedback() {
+    var feedback = document.getElementById("feedback").value;
+    var date = getCurrentDate();
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/sendFeedback");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("date=" + date + "&feedback=" + feedback);
+    document.getElementById("feedback").value = "";
+
 }

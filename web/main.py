@@ -50,7 +50,14 @@ def addNewStudent():
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
 
-
+@app.route('/sendFeedback', methods=["POST"])
+def sendFeedback():
+    feedback = request.form.get('feedback')
+    date = request.form.get('date')
+    query = "INSERT INTO feedback VALUES ('" + date +"', '" + feedback + "');"
+    executeSingleQuery(query,[])
+    
+    
 # strictly test for now
 # going to get today's data later
 @app.route('/getAttendance/<date>')
@@ -65,6 +72,15 @@ def getLogin(login):
     user = nameList[0]
     password = nameList[1]
     query = "SELECT * FROM login WHERE username = '" + user + "' AND password = '" + password + "';"
+    return json.dumps(executeSingleQuery(query,
+        fetch = True), indent=4, sort_keys=True, default=str)
+
+@app.route('/getStudentAttendance/<student>/')
+def getStudentAttendance(student):
+    nameList = student.split()
+    first = nameList[0]
+    last = nameList[1]
+    query = "SELECT * FROM dailyAttendance WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
     return json.dumps(executeSingleQuery(query,
         fetch = True), indent=4, sort_keys=True, default=str)
 

@@ -34,7 +34,7 @@
 <button class = "tablinks" onclick = "openTab(event, 'AttendanceOverview'); displayMasterAttendance();"> Attendance Overview </button>
 <button class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</button>
 <button class = "tablinks" onclick = "openTab(event, 'StaffSchedules'); showLogin();"> Staff Schedules</button>
-<button class = "tablinks" onclick = "openTab(event, 'Edit Attendance Sheets')"> Edit Attendance Sheets </button>
+<button class = "tablinks" onclick = "openTab(event, 'Edit Attendance Sheets')"> Feedback Forum </button>
 </div>
 
 <div id="Home" class="tabcontent">
@@ -189,7 +189,7 @@
 <div id="login">
     <form>
 	<input id="username" type="text" placeholder="Username" />
-	<input id="password" type="text" placeholder="Password" />
+	<input id="password" type="password" placeholder="Password" />
 	<input id="submitLogin" type="button" value="Submit" onclick="checkLogin()" />
     </form>
 </div>
@@ -200,10 +200,12 @@
 </div>
 
 <div id="Edit Attendance Sheets" class="tabcontent">
-  <h3>Edit Attendance Sheets</h3>
-        The text:
-        <input type = "text" id = "someRandoText">
-        <button onclick = "sendSubmitForm()"> submit </button>
+  <h3>Feedback Forum</h3>
+    <textarea id = "feedback" rows="4" cols="50">
+        
+    </textarea>
+    
+        <button onclick = "sendFeedback()"> submit </button>
 </div>
 </body>
 

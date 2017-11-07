@@ -226,7 +226,7 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     row.insertCell(0).innerHTML = fullName;
     
     for(var i = 0; i < 8; i++)  {
-        var str = "<input type=\"checkbox\" " + (checked[i]? "checked": "") + " onclick=\"selectActivity('" fullName "','" + fields[i] + "', '" + date + "')\">";
+        var str = "<input type=\"checkbox\" " + (checked[i]? "checked": "") + " onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
         row.insertCell(i + 1).innerHTML = str;
     }
     

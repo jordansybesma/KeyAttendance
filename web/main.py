@@ -55,8 +55,9 @@ def addNewStudent():
 # going to get today's data later
 @app.route('/getAttendance/<date>')
 def getAttendance(date):
-    return json.dumps(executeSingleQuery("SELECT * FROM dailyAttendance WHERE date= '" + date + "';",
-        fetch = True), indent=4, sort_keys=True, default=str)
+    queryResult = executeSingleQuery("SELECT * FROM dailyAttendance WHERE date= '" + date + "' ORDER BY lastName ASC;", fetch = True)
+    result = json.dumps(queryResult, indent=4, sort_keys=True, default=str)
+    return result
 
 @app.route('/getLogin/<login>')
 def getLogin(login):
@@ -68,7 +69,7 @@ def getLogin(login):
         fetch = True), indent=4, sort_keys=True, default=str)
 @app.route('/getMasterAttendance')
 def getMasterAttendance():
-    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;",
+    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date ASC;",
         fetch = True), indent=4, sort_keys=True, default=str)
 
 def decreaseActivityCount(column, date, increase):

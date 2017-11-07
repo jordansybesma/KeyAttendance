@@ -50,7 +50,14 @@ def addNewStudent():
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
 
-
+@app.route('/sendFeedback', methods=["POST"])
+def sendFeedback():
+    feedback = request.form.get('feedback')
+    date = request.form.get('date')
+    query = "INSERT INTO feedback VALUES ('" + date +"', '" + feedback + "');"
+    executeSingleQuery(query,[])
+    
+    
 # strictly test for now
 # going to get today's data later
 @app.route('/getAttendance/<date>')

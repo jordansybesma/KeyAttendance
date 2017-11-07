@@ -216,7 +216,7 @@ function showStudentProfile() {
         alert("option found")
         nameSpace.innerHTML += (keywordElement)
         profileSpace.innerHTML += ("\n")
-        getRequest("/getJustID/" + keywordElement, "", showProfile);
+        //getRequest("/getJustID/" + keywordElement, "", showProfile);
         getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 
     }

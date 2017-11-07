@@ -281,6 +281,7 @@ function graphStudentAttendance(yaxis) {
 
 function fillProfileTable(attendance)  {
     var table = document.getElementById("profileAttendanceTable");
+
     for (i in attendance)  {
         currRow = table.insertRow(-1);
         currLine = attendance[i];
@@ -374,26 +375,7 @@ function createNewAttendance() {
     var readable = makeDateReadable(date);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet " + readable;
     var table = document.getElementById("Attendance-Table");
-    table.innerHTML = "";
-    var row = table.insertRow(0);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
-    var cell5 = row.insertCell(4);
-    var cell6 = row.insertCell(5);
-    var cell7 = row.insertCell(6);
-    var cell8 = row.insertCell(7);
-    var cell9 = row.insertCell(8);
-    cell1.innerHTML = "Name";
-    cell2.innerHTML = "Art";
-    cell3.innerHTML = "Made Food";
-    cell4.innerHTML = "Recieved Food";
-    cell5.innerHTML = "Leadership";
-    cell6.innerHTML = "Exersize";
-    cell7.innerHTML = "Mental Health";
-    cell8.innerHTML = "Volunteering";
-    cell9.innerHTML = "One On One";
+    makeTableHeader(table);
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
@@ -401,30 +383,19 @@ function createNewAttendance() {
     //getRequest("/getAttendance/" + table_date, "", fillAttendance);??
 }
 
+function makeTableHeader(table) {
+    table.innerHTML = "";
+    var row = table.insertRow(0);
+    cellNames = ["Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One On One"];
+    for (header of cellNames) {
+        row.insertCell(-1).innerHTML = header;
+    }
+}
 
 function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;
     var table = document.getElementById("Attendance-Table");
-    table.innerHTML = "";
-    var row = table.insertRow(0);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
-    var cell5 = row.insertCell(4);
-    var cell6 = row.insertCell(5);
-    var cell7 = row.insertCell(6);
-    var cell8 = row.insertCell(7);
-    var cell9 = row.insertCell(8);
-    cell1.innerHTML = "Name";
-    cell2.innerHTML = "Art";
-    cell3.innerHTML = "Made Food";
-    cell4.innerHTML = "Recieved Food";
-    cell5.innerHTML = "Leadership";
-    cell6.innerHTML = "Exersize";
-    cell7.innerHTML = "Mental Health";
-    cell8.innerHTML = "Volunteering";
-    cell9.innerHTML = "One On One";
+    makeTableHeader(table);
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet " +readable;

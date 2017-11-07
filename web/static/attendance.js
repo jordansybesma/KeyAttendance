@@ -265,6 +265,8 @@ function scatterStudentAttendance(dateTimes){
         yList.push(dateTimes[i][j]);
       }
     }
+    console.log(xList);
+    console.log(yList);
 
     var trace1 = {
       x: xList,

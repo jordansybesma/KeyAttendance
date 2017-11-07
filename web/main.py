@@ -57,7 +57,7 @@ def addNewStudent():
 def getAttendance(date):
     return json.dumps(executeSingleQuery("SELECT * FROM dailyAttendance WHERE date= '" + date + "';",
         fetch = True), indent=4, sort_keys=True, default=str)
-        
+
 @app.route('/getLogin/<login>')
 def getLogin(login):
     nameList = login.split()
@@ -80,12 +80,12 @@ def decreaseActivityCount(column, date, increase):
         newNumAttend = numAttend + 1
     else:
         newNumAttend = numAttend - 1
-        
+
     alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
     executeSingleQuery(alterQuery, [])
-    
-                
-                        
+
+
+
 @app.route('/deleteAttendant', methods = ["POST"])
 def deleteAttendant():
     name = request.form.get("name")
@@ -115,8 +115,8 @@ def deleteAttendant():
             decreaseActivityCount("volunteering", date, False)
         if rowData[0][10] == True:
             decreaseActivityCount("oneOnOne", date, False)
-        
-    
+
+
     query = "DELETE FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
     queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"
@@ -124,7 +124,7 @@ def deleteAttendant():
     result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
     newResult =json.loads(result)
     numAttend = newResult[0][0]
-    
+
     print(numAttend)
     if (numAttend == 0):
         newNumAttend = 0
@@ -132,77 +132,77 @@ def deleteAttendant():
         newNumAttend = numAttend - 1
     alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
     executeSingleQuery(alterQuery, [])
-      
+
 @app.route('/getDates')
 def getDates():
     query = "SELECT DISTINCT date FROM dailyAttendance ORDER BY date DESC"
     return json.dumps(executeSingleQuery(query,fetch = True)[:10], indent=4, sort_keys=True, default=str)
-    
+
 @app.route('/temp', methods=["POST"])
 def temp():
     query = "DROP TABLE IF EXISTS dailyAttendance;"
     query2 = "CREATE TABLE dailyAttendance (id int, firstName varchar(255), lastName varchar(255), art boolean, madeFood boolean, recievedFood boolean, leadership boolean, exersize boolean, mentalHealth boolean, volunteering boolean, oneOnOne boolean, comments varchar(1000), date date, time time)"
     executeSingleQuery(query, [])
-    executeSingleQuery(query2, []) 
-    
+    executeSingleQuery(query2, [])
+
 @app.route('/tempAdd', methods=["POST"])
 def tempAdd():
     query = "INSERT INTO masterAttendance VALUES ('2017-11-02', '55', '20', '4', '5', '2', '10', '5', '0', '1'), ('2017-11-01', '65', '23', '6', '5', '12', '5', '7', '2', '5'), ('2017-10-31', '88', '10', '30', '15', '0', '2', '6', '2', '0'), ('2017-10-30', '100', '22', '2', '10', '1', '11', '4', '1', '2');"
     executeSingleQuery(query, [])
-    
+
 @app.route('/tempMaster', methods=["POST"])
 def tempMaster():
     query = "DROP TABLE IF EXISTS masterAttendance;"
     query2 = "CREATE TABLE masterAttendance (date date, numAttend int, art int, madeFood int, recievedFood int, leadership int, exersize int, mentalHealth int, volunteering int, oneOnOne int);"
     executeSingleQuery(query, [])
-    executeSingleQuery(query2, []) 
-    
+    executeSingleQuery(query2, [])
+
 @app.route('/tempLogin', methods=["POST"])
 def tempLogin():
     query = "DROP TABLE IF EXISTS login;"
     query2 = "CREATE TABLE login (username varchar(255), password varchar(255));"
     query3 = "INSERT INTO login values ('user1', 'password1');"
     executeSingleQuery(query, [])
-    executeSingleQuery(query2, []) 
-    executeSingleQuery(query3, []) 
-    
+    executeSingleQuery(query2, [])
+    executeSingleQuery(query3, [])
+
 @app.route('/selectActivity', methods=["POST"])
 def selectActivity():
     column = request.form.get("column")
     date = request.form.get("date")
     name = request.form.get("name")
     nameList = name.split()
-    
+
     first = nameList[0]
     last = nameList[1]
     query1 = "SELECT "+ column + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     #currentStatus = executeSingleQuery(query1)
     result1 = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
-    
+
     queryMaster = "SELECT "+ column + " FROM masterAttendance WHERE date = '" + date + "';"
     result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
     newResult =json.loads(result)
     numAttend = newResult[0][0]
     print(result)
     print(numAttend)
-    
-    
+
+
     if "true" in result1:
         if (numAttend == 0):
             newNumAttend = 0
         else:
             newNumAttend = numAttend - 1
-        
+
         query = "UPDATE dailyAttendance SET " +  column + " = 'FALSE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     else:
         newNumAttend = numAttend + 1
         query = "UPDATE dailyAttendance SET " +  column + " = 'TRUE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
-    
+
     alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
     executeSingleQuery(alterQuery, [])
-    
-    
+
+
 @app.route('/addAttendant/', methods = ["POST"])
 def addAttendant():
     #print(json.decode(request.data))
@@ -233,7 +233,7 @@ def addAttendant():
         #result = executeSingleQuery(queryMaster)
         result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
         newResult =json.loads(result)
-    
+
         if newResult == []:
             newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1', '0', '0', '0', '0', '0', '0', '0', '0');"
             executeSingleQuery(newQuery, [])
@@ -245,8 +245,8 @@ def addAttendant():
             newNumAttend = numAttend + 1
             alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
             executeSingleQuery(alterQuery, [])
-        
-            
+
+
 # If more than one "same name" student is available, return students
 
         if len(databaseResult) > 1:
@@ -308,6 +308,22 @@ def studentProfile(string):
 @app.route('/getID/<string>')
 def getStudentID(string):
     return autofill(string)
+
+@app.route('/getJustID/<string>')
+def getJustID(string):
+    print("1")
+    nameList = string.split()
+    print("2")
+    first = nameList[0].upper()
+    print("3")
+    last = nameList[1].upper()
+    print("4")
+    query = "SELECT id FROM teststudents WHERE UPPER(firstname) LIKE '%" + first + "%' AND UPPER(lastname) LIKE '%" + last + "%';"
+    print("5")
+    databaseResult = executeSingleQuery(query, fetch = True)
+    print("6")
+    print(databaseResult[0][0])
+    return databaseResult[0][0]
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "local":

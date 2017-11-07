@@ -138,8 +138,6 @@ function modifyAutofillList(_ , studentNames) {
 }
 function showProfile(_, studentInfo) {
     alert("got to showProfile")
-    var popUp = document.getElementById('studentInfo');
-    popUp.style.display = "block";
 
     document.getElementById("studentProfileText").innerHTML = JSON.stringify(studentInfo);
 
@@ -199,7 +197,7 @@ function showStudentProfile() {
     if (optionFound) {
         alert("option found")
         alert(keywordElement)
-        getRequest("/getID/" + keywordElement, "", showProfile);
+        getRequest("/getJustID/" + keywordElement, "", showProfile);
 
 
     }

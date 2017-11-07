@@ -791,7 +791,7 @@ function createFileHelper(_, attendance) {
 function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
 }
-function downloadAllMasterDates() {
+function downloadMasterDates() {
     var start = document.getElementById("startDate").value;
     var end = document.getElementById("endDate").value;
     if (start = ""){

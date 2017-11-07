@@ -37,10 +37,10 @@ function addAttendant(first, last) {
         seconds = "0" + seconds;
     }
     var date = year + "-" + month + "-" + day;
-    var time = hour + ":" + minute + ":" + seconds
+    var time = hour + ":" + minute + ":" + seconds;
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("firstName=" + first + "&lastName=" + last +"&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exercise=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date="+ date + "&time=" + time +"&id=");
+    xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exercise=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
 
 
 }
@@ -52,11 +52,11 @@ function addNewStudent() {
     var first = document.getElementById("newStudentFirst").value;
     var firstChar = first[0];
     firstChar = firstChar.toUpperCase();
-    first = lastChar + first[1:];
+    first = lastChar + first.slice(1);
     var last = document.getElementById("newStudentLast").value;
     var lastChar = first[0];
     lastChar = lastChar.toUpperCase();
-    last = lastChar + last[1:];
+    last = lastChar + last.slice(1);
     alert("first: " + first);
     alert("firstChar: " + firstChar);
 
@@ -339,7 +339,6 @@ function onAddRow() {
         }
             var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
             row.insertCell(10).innerHTML = str;
-        
         /*
         var row = table.insertRow(1);
         var cell1 = row.insertCell(0);
@@ -481,6 +480,7 @@ function createListOfAttendanceDates(_, dates) {
 function displayAttendanceList() {
     getRequest("/getDates", "", createListOfAttendanceDates);
 }
+
 function returnAttendance() {
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "none";

@@ -221,8 +221,8 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     //var date = getCurrentDate();
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
-    var fields = ['art','madeFood','recievedFood','leadership','exercise','mentalHealth','volunteering','oneOnOne']
-    var checked = [art, madeFood, recievedFood, leadership, exercise, mentalHealth, volunteering, oneOnOne]
+    var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exercise', 'mentalHealth', 'volunteering', 'oneOnOne'];
+    var checked = [art, madeFood, recievedFood, leadership, exercise, mentalHealth, volunteering, oneOnOne];
     var row = table.insertRow(1);
     var fullName = first + " " + last;
     row.insertCell(0).innerHTML = fullName;

@@ -191,6 +191,7 @@ def tempLogin():
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
     executeSingleQuery(query3, [])
+    return ""
     
 @app.route('/tempFeedback', methods=["Post"])
 def tempFeedback():
@@ -198,6 +199,7 @@ def tempFeedback():
     query2 = "CREATE TABLE feedback (date date, comment varchar(2000));"
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
+    return ""
 
 @app.route('/selectActivity', methods=["POST"])
 def selectActivity():
@@ -279,6 +281,7 @@ def addAttendant():
         if newResult == []:
             newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1', '0', '0', '0', '0', '0', '0', '0', '0');"
             executeSingleQuery(newQuery, [])
+            return "false"
         else:
             print(newResult)
             numAttend = newResult[0][0]
@@ -287,6 +290,7 @@ def addAttendant():
             newNumAttend = numAttend + 1
             alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
             executeSingleQuery(alterQuery, [])
+        return "true"
 
 
 # If more than one "same name" student is available, return students

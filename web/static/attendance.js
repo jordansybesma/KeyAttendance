@@ -231,11 +231,12 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     document.getElementById("keyword").value = "";
     var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
     var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne]
+    console.log(checked)
     var row = table.insertRow(1);
     row.insertCell(0).innerHTML = keywordElement;
     
     for(var i = 0; i < 8; i++)  {
-        var str = "<input type=\"checkbox\"" + checked[i]? "checked": "" + " onclick=\"selectActivity('" + keywordElement + "','" + fields[i] + "', '" + date + "')\">";
+        var str = "<input type=\"checkbox\" " + checked[i]? "checked": "" + " onclick=\"selectActivity('" + keywordElement + "','" + fields[i] + "', '" + date + "')\">";
         row.insertCell(i + 1).innerHTML = str;
     }
     

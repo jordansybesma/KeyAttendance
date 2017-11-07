@@ -140,7 +140,9 @@ function showProfile(_, studentInfo) {
     alert("got to showProfile")
     alert(studentInfo)
 
-    document.getElementById("studentProfileText").innerHTML += JSON.stringify(studentInfo);
+    document.getElementById("studentProfileText").innerHTML += ("ID Number: ")
+
+    document.getElementById("studentProfileText").innerHTML += JSON.stringify(studentInfo)
 
     alert(JSON.stringify(studentInfo))
 
@@ -184,6 +186,8 @@ function openAddStudent() {
 function showStudentProfile() {
     var profileSpace = document.getElementById('studentProfileText')
     profileSpace.innerHTML = ("")
+    var nameSpace = document.getElementById('studentName')
+    nameSpace.innerHTML = ("")
     //var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
@@ -198,7 +202,7 @@ function showStudentProfile() {
     }
     if (optionFound) {
         alert("option found")
-        profileSpace.innerHTML += (keywordElement)
+        nameSpace.innerHTML += (keywordElement)
         profileSpace.innerHTML += ("\n")
         getRequest("/getJustID/" + keywordElement, "", showProfile);
 

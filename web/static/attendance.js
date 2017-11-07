@@ -807,7 +807,7 @@ function downloadAllMasterHelper(_, data) {
     for (i in myData) {
         rows.push(myData[i]);
     }
-    var date = getCurrentDate;
+    var date = getCurrentDate();
     var filename = "Master_Attendance_" + date + ".csv";
     exportToCsv(filename, rows);
 }

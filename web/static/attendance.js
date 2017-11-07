@@ -256,7 +256,32 @@ function showStudentAttendance(_, data) {
 }
 
 function scatterStudentAttendance(dateTimes){
+    var xList = [];
+    var yList = [];
 
+    for (i = 0; i < dateTimes.length; i++) {
+      for (j = 0; j < dateTimes[i].length; i++) {
+        xList.push(i);
+        yList.push(dateTimes[i][j]);
+      }
+    }
+
+    var trace1 = {
+      x: xList,
+      y: yList,
+      type: 'scatter'
+    };
+
+    var data = [trace1];
+
+    var layout = {
+      autosize: false,
+      width: 500,
+      height: 500,
+      title: 'Attendance Times'
+    };
+
+    Plotly.newPlot('studentTimes', data, layout);
 }
 
 function graphStudentAttendance(yaxis) {
@@ -753,7 +778,8 @@ function getCurrentDate() {
 //used with date picker
 function getDate() {
     var date = document.getElementById("datePicker").value;
-    displayAttendanceTable(date);
+    console.log(date);
+    //displayAttendanceTable(date);
 }
 
 /*function runPHP() {
@@ -806,6 +832,7 @@ function downloadMasterDates() {
         alert("Please enter an end date");
         return false;
     }
+    console.log("/getMasterAttendanceDate/" + start + " " + end);
     getRequest("/getMasterAttendanceDate/" + start + " " + end, "", downloadAllMasterHelper);
 }
 

@@ -36,8 +36,9 @@ function addAttendant(first, last) {
     if (seconds < 10) {
         seconds = "0" + seconds;
     }
-    var date = year + "-" + month + "-" + day;
+    //var date = year + "-" + month + "-" + day;
     var time = hour + ":" + minute + ":" + seconds;
+    var date = document.getElementById("storeDate").innerHTML;
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
@@ -181,7 +182,7 @@ function openAddStudent() {
 function showStudentProfile() {
     var profileSpace = document.getElementById('studentProfileText');
     profileSpace.innerHTML = ("");
-    var nameSpace = document.getElementById('searchButton');
+    var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
     //var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
@@ -212,13 +213,18 @@ function showStudentAttendance(_, data) {
     //
     // var x = [];
 
+    var dateCounts = [0, 0, 0, 0, 0, 0, 0]
     for(i = 0; i < parsedData.length; i++) {
       var dateString = parsedData[i][12];
       console.log(dateString);
       var dateList = dateString.split("-")
-      var myDate = new date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
+      var myDate = new Date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
+      var day = myDate.getDay();
+      dateCounts[day] = dateCounts[day] + 1;
       console.log(myDate.getDay());
     }
+    
+    graphStudentAttendance(dateCounts);
 
     // var trace1 = {
     //   x: [1, 2, 3, 4, 5],
@@ -231,16 +237,39 @@ function showStudentAttendance(_, data) {
     // };
 
 
-    fillProfileTable(data);
+    fillProfileTable(parsedData);
+}
+
+function graphStudentAttendance(yaxis) {
+    var max = Math.max.apply(Math, yaxis);
+    //var min = Math.min.apply(Math, yaxis);
+    //var change = Math.ceil((max - min) / xaxis.lenth);
+    change = 1;
+    xaxis = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var trace1 = {
+        x: xaxis,
+        y: yaxis,
+        type: 'bar'
+    };
+    var data = [trace1];
+
+    var layout = {
+        autosize: false,
+        width: 500,
+        height: 500,
+        title: 'Recent Attendance'
+    };
+
+    Plotly.newPlot('graphStudent', data, layout);
 }
 
 function fillProfileTable(attendance)  {
     var table = document.getElementById("profileAttendanceTable");
-    for (line of attendance)  {
+    for (i in attendance)  {
         currRow = table.insertRow(-1);
-        currLine = attendance.split(3);
-        for (cell of line)  {
-            currRow.insertCell(-1).innerHTML = cell;
+        currLine = attendance[i];
+        for (i in currLine)  {
+            currRow.insertCell(-1).innerHTML = currLine[i];
         }
     }
 }

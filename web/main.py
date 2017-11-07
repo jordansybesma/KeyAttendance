@@ -67,6 +67,7 @@ def getLogin(login):
     query = "SELECT * FROM login WHERE username = '" + user + "' AND password = '" + password + "';"
     return json.dumps(executeSingleQuery(query,
         fetch = True), indent=4, sort_keys=True, default=str)
+
 @app.route('/getMasterAttendance')
 def getMasterAttendance():
     return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date ASC;",

@@ -205,7 +205,7 @@ function showStudentProfile() {
 }
 
 function showStudentAttendance(_, data) {
-    console.log(JSON.stringify(data));
+    console.log(JSON.parse(data));
 
 }
 function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {

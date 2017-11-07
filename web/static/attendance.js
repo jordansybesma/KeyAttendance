@@ -182,7 +182,8 @@ function openAddStudent() {
 }
 
 function showStudentProfile() {
-    alert("got to showStudentProfile")
+    var profileSpace = document.getElementById('studentProfileText')
+    profileSpace.innerHTML = ("")
     //var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 

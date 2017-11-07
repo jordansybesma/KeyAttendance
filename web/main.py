@@ -171,7 +171,7 @@ def tempLogin():
 @app.route('/tempFeedback', methods=["Post"])
 def tempFeedback():
     query = "DROP TABLE IF EXISTS feedback;"
-    query2 = "CREATE TABLE login (date date, comment varchar(2000));"
+    query2 = "CREATE TABLE feedback (date date, comment varchar(2000));"
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
 

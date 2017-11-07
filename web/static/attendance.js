@@ -225,13 +225,18 @@ function showStudentAttendance(_, data) {
       var day = myDate.getDay();
       dateCounts[day] = dateCounts[day] + 1;
       console.log(myDate.getDay());
-      dateTimes[myDate.getDay()].push(parsedData[i][13]);
+      var time = parsedData[i][13];
+      var timeList = time.split(":");
+      var baseTenTime = parseInt(timeList[0]) + (parseInt[1] / 60);
+      dateTimes[myDate.getDay()].push(baseTenTime);
     }
     console.log(dateTimes);
 
 
 
     graphStudentAttendance(dateCounts);
+
+    scatterStudentAttendance(dateTimes);
 
     // var trace1 = {
     //   x: [1, 2, 3, 4, 5],
@@ -245,6 +250,10 @@ function showStudentAttendance(_, data) {
 
 
     fillProfileTable(parsedData);
+}
+
+function scatterStudentAttendance(dateTimes){
+
 }
 
 function graphStudentAttendance(yaxis) {

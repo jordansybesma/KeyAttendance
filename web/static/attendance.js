@@ -261,9 +261,12 @@ function scatterStudentAttendance(dateTimes){
 
     for (i = 0; i < dateTimes.length; i++) {
       for (j = 0; j < dateTimes[i].length; i++) {
-        yList[i].push(dateTimes[i][j]);
+        xList.push(xList[i]);
+        yList.push(dateTimes[i][j]);
       }
     }
+    console.log(xList);
+    console.log(yList);
 
     var trace1 = {
       x: xList,
@@ -791,6 +794,9 @@ function downloadMasterDates() {
     console.log("got here");
     var start = document.getElementById("startDate").value;
     var end = document.getElementById("endDate").value;
+    console.log(start);
+    console.log(end);
+    console.log(typeof start);
     if (start = ""){
         alert("Please enter a start date");
         return false;
@@ -799,6 +805,7 @@ function downloadMasterDates() {
         alert("Please enter an end date");
         return false;
     }
+    console.log(start + " " + end);
     console.log("/getMasterAttendanceDate/" + start + " " + end);
     getRequest("/getMasterAttendanceDate/" + start + " " + end, "", downloadAllMasterHelper);
     return false;

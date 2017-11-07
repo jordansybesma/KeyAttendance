@@ -205,12 +205,18 @@ function showStudentProfile() {
 }
 
 function showStudentAttendance(_, data) {
-    console.log(JSON.parse(data));
-
+    fillProfileTable(data);
 }
 
-function fillProfileTable()  {
-
+function fillProfileTable(attendance)  {
+    var table = document.getElementById("profileAttendanceTable");
+    for each (var line in attendance)  {
+        currRow = table.insertRow(-1);
+        currLine = attendance.split(3);
+        for each (var cell in line)  {
+            currRow.insertCell(-1).innerHTML = cell;
+        }
+    }
 }
 
 function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {
@@ -219,14 +225,14 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     //var date = getCurrentDate();
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
-    var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
+    var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne', 'date', 'time']
     var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne]
     var row = table.insertRow(1);
-    var fullName = first + " " + last;
+    fullName = first + " " + last;
     row.insertCell(0).innerHTML = fullName;
     
     for(var i = 0; i < 8; i++)  {
-        var str = "<input type=\"checkbox\" " + (checked[i]? "checked": "") + " onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
+        var str = "<input type=\"checkbox\" " + (checked[i]? "checked": "") + " onclick=\"selectActivity('" fullName "','" + fields[i] + "', '" + date + "')\">";
         row.insertCell(i + 1).innerHTML = str;
     }
     

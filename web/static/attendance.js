@@ -792,7 +792,6 @@ function downloadAllMaster() {
     return false;
 }
 function downloadMasterDates() {
-    console.log("got here");
     var start = document.getElementById("startDate").value;
     var end = document.getElementById("endDate").value;
     console.log(start);

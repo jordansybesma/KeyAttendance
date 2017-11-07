@@ -300,6 +300,8 @@ def downloadAttendanceSheet(tableName):
 """
 @app.route('/autofill/<partialString>')
 def autofill(partialString):
+    if(partialString == ""):
+        return json.dumps([])
     nameList = partialString.split()
     if (len(nameList) > 1):
         first = nameList[0].upper()

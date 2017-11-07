@@ -213,7 +213,10 @@ function showStudentAttendance(_, data) {
     //
     // var x = [];
 
-    var dateCounts = [0, 0, 0, 0, 0, 0, 0]
+    var dateCounts = [0, 0, 0, 0, 0, 0, 0];
+
+    var dateTimes = [[], [], [], [], [], [], []];
+
     for(i = 0; i < parsedData.length; i++) {
       var dateString = parsedData[i][12];
       console.log(dateString);
@@ -223,7 +226,9 @@ function showStudentAttendance(_, data) {
       dateCounts[day] = dateCounts[day] + 1;
       console.log(myDate.getDay());
     }
-    
+
+
+
     graphStudentAttendance(dateCounts);
 
     // var trace1 = {

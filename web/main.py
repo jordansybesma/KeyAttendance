@@ -167,6 +167,13 @@ def tempLogin():
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
     executeSingleQuery(query3, [])
+    
+@app.route('/tempFeedback', methods=["Post"])
+def tempFeedback():
+    query = "DROP TABLE IF EXISTS feedback;"
+    query2 = "CREATE TABLE feedback (date date, comment varchar(2000));"
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])
 
 @app.route('/selectActivity', methods=["POST"])
 def selectActivity():

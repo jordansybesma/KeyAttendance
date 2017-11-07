@@ -435,7 +435,7 @@ function displayAttendanceTable(table_date) {
     list.style.display = "none";
     console.log("got to displayAttendanceTable");
     /*var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/tempAdd");
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/tempFeedback");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send();*/
     getRequest("/getAttendance/" + table_date, "", fillAttendance);

@@ -140,7 +140,7 @@ function showProfile(_, studentInfo) {
     alert("got to showProfile")
     alert(studentInfo)
 
-    document.getElementById("studentProfileText").innerHTML = JSON.stringify(studentInfo);
+    document.getElementById("studentProfileText").innerHTML += JSON.stringify(studentInfo);
 
     alert(JSON.stringify(studentInfo))
 
@@ -198,7 +198,8 @@ function showStudentProfile() {
     }
     if (optionFound) {
         alert("option found")
-        alert(keywordElement)
+        profileSpace.innerHTML += (keywordElement)
+        profileSpace.innerHTML += ("\n")
         getRequest("/getJustID/" + keywordElement, "", showProfile);
 
 
@@ -394,6 +395,7 @@ function createNewAttendance() {
 function displayAttendanceTable(table_date) {
     console.log(table_date);
     document.getElementById("storeDate").innerHTML = table_date;
+    console.log(document.getElementById("storeDate").value);
     var table = document.getElementById("Attendance-Table");
     table.innerHTML = "";
     var row = table.insertRow(0);

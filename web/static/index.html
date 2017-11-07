@@ -65,7 +65,10 @@
             </ul>
         </div>
         <div id="content">
-            We're still deciding  what to put here.
+        <div id="masterGraph">
+        </div>
+        <div id="activityGraph">
+        </div>
         </div>
     </div>
 </div>
@@ -141,10 +144,6 @@
 <div id="AttendanceOverview" class="tabcontent">
     <h3>Statistics On Past Attendance Sheets</h3>
     <div id="attendanceOverviewContent">
-        <div id="masterGraph">
-        </div>
-        <div id="activityGraph">
-        </div>
         <div id="attendanceTable">
             <table id="masterAttendanceTable" style="width:100%">
                 <tr>
@@ -169,8 +168,9 @@
                 <input type="date" id="startDate" /><br>
                 End Date:<br>
                 <input type="date" id="endDate" /><br>
-                <input type="submit" onclick="downloadMasterDates()" />
+
             </form>
+            <button onclick="downloadMasterDates()">Download</button>
 
         </div>
     </div>
@@ -192,23 +192,19 @@
 
 
             </p>
-            <div id="graphStudent">
+            <!-- <aside>
+              <div id="graphStudent">
 
+              </div>
+              <div id="studentTimes">
+
+              </div>
+            <aside> -->
+            <div style="width: 100%; overflow: hidden;">
+                <div id="graphStudent" style="width: 500px; float: left;"> Left </div>
+                <div id="studentTimes" style="margin-left: 520px;"> Right </div>
             </div>
         <table id="profileAttendanceTable">
-                <tr>
-                    <th>Attendees</th>
-                    <th>Art</th>
-                    <th>Make Food</th>
-                    <th>Recieved Food</th>
-                    <th>Leadership</th>
-                    <th>Exercise</th>
-                    <th>Mental Health</th>
-                    <th>Volunteering</th>
-                    <th>One On One</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                </tr>
         </table>
         </div>
     </div>
@@ -242,5 +238,6 @@
 
 <script>
     // Get the element with id="defaultOpen" and click on it
+    alert("got here");
     document.getElementById("defaultOpen").click();
 </script>

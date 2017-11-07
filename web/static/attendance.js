@@ -226,8 +226,11 @@ function showStudentAttendance(_, data) {
       dateCounts[day] = dateCounts[day] + 1;
       console.log(myDate.getDay());
       var time = parsedData[i][13];
+      console.log(time);
       var timeList = time.split(":");
-      var baseTenTime = parseInt(timeList[0]) + (parseInt[1] / 60);
+      console.log(timeList);
+      var baseTenTime = parseInt(timeList[0]) + (parseInt(timeList[1]) / 60);
+      console.log(baseTenTime);
       dateTimes[myDate.getDay()].push(baseTenTime);
     }
     console.log(dateTimes);
@@ -253,7 +256,32 @@ function showStudentAttendance(_, data) {
 }
 
 function scatterStudentAttendance(dateTimes){
+    var xList = [];
+    var yList = [];
 
+    for (i = 0; i < dateTimes.length; i++) {
+      for (j = 0; j < dateTimes[i].length; i++) {
+        xList.push(i);
+        yList.push(dateTimes[i][j]);
+      }
+    }
+
+    var trace1 = {
+      x: xList,
+      y: yList,
+      type: 'scatter'
+    };
+
+    var data = [trace1];
+
+    var layout = {
+      autosize: false,
+      width: 500,
+      height: 500,
+      title: 'Attendance Times'
+    };
+
+    Plotly.newPlot('studentTimes', data, layout);
 }
 
 function graphStudentAttendance(yaxis) {
@@ -750,7 +778,9 @@ function getCurrentDate() {
 //used with date picker
 function getDate() {
     var date = document.getElementById("datePicker").value;
+    console.log(date);
     displayAttendanceTable(date);
+    return false;
 }
 
 /*function runPHP() {
@@ -791,6 +821,24 @@ function createFileHelper(_, attendance) {
 function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
 }
+function downloadMasterDates() {
+    console.log("got here");
+    var start = document.getElementById("startDate").value;
+    var end = document.getElementById("endDate").value;
+    if (start = ""){
+        alert("Please enter a start date");
+        return false;
+    }
+    if (end = ""){
+        alert("Please enter an end date");
+        return false;
+    }
+    console.log("/getMasterAttendanceDate/" + start + " " + end);
+    getRequest("/getMasterAttendanceDate/" + start + " " + end, "", downloadAllMasterHelper);
+    return false;
+}
+
+
 
 function downloadAllMasterHelper(_, data) {
     var rows = [];
@@ -803,6 +851,7 @@ function downloadAllMasterHelper(_, data) {
     var date = getCurrentDate();
     var filename = "Master_Attendance_" + date + ".csv";
     exportToCsv(filename, rows);
+    return false;
 }
 
 // source: https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side

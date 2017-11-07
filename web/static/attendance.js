@@ -60,8 +60,6 @@ function addNewStudent() {
     lastChar = lastChar.toUpperCase();
     last = lastChar + last.slice(1);
 
-    // alert("last: " + last);
-    // alert("lastChar: " + lastChar);
     if (first == "") {
         alert("Please enter a first name");
         return;
@@ -70,7 +68,6 @@ function addNewStudent() {
         alert("Please enter a last name");
         return;
     }
-    alert(first + " " + last);
 
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
@@ -86,7 +83,6 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
     // xhr.setRequestHeader(header, value);
     // var data = JSON.stringify({"text": theirText});
     xhr.send(data);
-    alert(urlAddOn + xhr.responseText);
     return xhr.responseText;
 }
 function sendNewStudent(firstname, lastname) {
@@ -102,7 +98,6 @@ function deleteAttendant(date, name) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&date=" + date);
     displayAttendanceTable(date);
-    console.log("got to deleteAttendant");
 }
 
 function getRequest(urlAddon, callbackState, callback) {
@@ -124,16 +119,11 @@ function getRequest(urlAddon, callbackState, callback) {
 
 function sendSubmitForm()  {
     theirText = document.getElementById("someRandoText").value
-    console.log(theirText)
 
-    console.log('theirText:' + sendRequest(true, theirText, "attendance-json", "application/json", "/addText"));
 }
 function fillAttendance(_, attendance) {
-    console.log(attendance);
     var myData = JSON.parse(attendance);
     for (i in myData) {
-        console.log(myData[i]);
-        console.log("doing this");
         addRowHelper(myData[i][1], myData[i][2], myData[i][3], myData[i][4], myData[i][5],myData[i][6],myData[i][7],myData[i][8],myData[i][9],myData[i][10])
     }
 }
@@ -148,14 +138,11 @@ function modifyAutofillList(_ , studentNames) {
   list.innerHTML = inner;
 }
 function showProfile(_, studentInfo) {
-    alert("got to showProfile")
-    alert(studentInfo)
 
     document.getElementById("studentProfileText").innerHTML += ("ID Number: ")
 
     document.getElementById("studentProfileText").innerHTML += JSON.stringify(studentInfo)
 
-    alert(JSON.stringify(studentInfo))
 
 }
 
@@ -184,10 +171,7 @@ function handleProfileBox(e, curText) {
 
 
 function checkBox(checkbox, keyword) {
-    //var val = checkbox.value;
-    //alert(keyword + ' is ' + val);
     var str = "got to checkBox " + checkbox.value + " " + keyword;
-    alert(str);
 }
 function openAddStudent() {
     var popUp = document.getElementById('studentDiv');
@@ -195,7 +179,6 @@ function openAddStudent() {
 }
 
 function showStudentProfile() {
-    alert("showStudentProfile called")
     var profileSpace = document.getElementById('studentProfileText')
     profileSpace.innerHTML = ("")
     var nameSpace = document.getElementById('studentName')
@@ -203,7 +186,6 @@ function showStudentProfile() {
     //var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
-    alert(keywordElement)
     var optionFound = false;
     datalist = document.getElementById("suggestedStudents");
     for (var j = 0; j < datalist.options.length; j++){
@@ -213,7 +195,6 @@ function showStudentProfile() {
         }
     }
     if (optionFound) {
-        alert("option found")
         nameSpace.innerHTML += (keywordElement)
         profileSpace.innerHTML += ("\n")
         //getRequest("/getJustID/" + keywordElement, "", showProfile);
@@ -236,7 +217,6 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     document.getElementById("keyword").value = "";
     var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
     var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne]
-    console.log(checked)
     var row = table.insertRow(1);
     row.insertCell(0).innerHTML = first + " " + last;
     
@@ -247,77 +227,6 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
     row.insertCell(9).innerHTML = str;
-    /*
-    //document.getElementById("keyword").value = "";
-    var row = table.insertRow(1);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
-    var cell5 = row.insertCell(4);
-    var cell6 = row.insertCell(5);
-    var cell7 = row.insertCell(6);
-    var cell8 = row.insertCell(7);
-    var cell9 = row.insertCell(8);
-    var cell10 = row.insertCell(9);
-
-    if (art) {
-        str = "<input type=\"checkbox\" checked  onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
-    } else {
-        str = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'art', '" + date + "')\">";
-    }
-    if (madeFood) {
-        console.log("got to madefood");
-        str2 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\">";
-        console.log(str2);
-    } else {
-        str2 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'madeFood', '" + date + "')\">";
-    }
-    if (recievedFood) {
-        str3 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'recievedFood', '" + date + "')\">";
-    } else {
-        console.log("got to here");
-        str3 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'recievedFood', '" + date + "')\">";
-        console.log(str3);
-    }
-    if (leadership) {
-        str4 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'leadership', '" + date + "')\">";
-    } else {
-        str4 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'leadership', '" + date + "')\">";
-    }
-    if (exersize) {
-        str5 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'exersize', '" + date + "')\">";
-    } else {
-        str5 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'exersize', '" + date + "')\">";
-    }
-    if (mentalHealth) {
-        str6 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'mentalHealth', '" + date + "')\">";
-    } else {
-        str6 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'mentalHealth', '" + date + "')\">";
-    }
-    if (volunteering) {
-        str7 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'volunteering', '" + date + "')\">";
-    } else {
-        str7 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'volunteering', '" + date + "')\">";
-    }
-    if (oneOnOne) {
-        str8 = "<input type=\"checkbox\" checked onclick=\"selectActivity('" + first + " " + last + "', 'oneOnOne', '" + date + "')\">";
-    } else {
-        str8 = " <input type=\"checkbox\" onclick=\"selectActivity('" + first + " " + last + "', 'oneOnOne', '" + date + "')\">";
-    }
-    str9 = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + first + " " + last + "')\">Delete<button/>"
-
-    cell1.innerHTML = first + " " + last;
-    cell2.innerHTML = str;
-    cell3.innerHTML = str2;
-    cell4.innerHTML = str3;
-    cell5.innerHTML = str4;
-    cell6.innerHTML = str5;
-    cell7.innerHTML = str6;
-    cell8.innerHTML = str7;
-    cell9.innerHTML = str8;
-    cell10.innerHTML = str9;
-    */
 }
 
 function makeChecks(art, artID, madeFood, madeFoodID) {
@@ -406,9 +315,7 @@ function createNewAttendance() {
 
 
 function displayAttendanceTable(table_date) {
-    console.log(table_date);
     document.getElementById("storeDate").innerHTML = table_date;
-    console.log(document.getElementById("storeDate").innerHTML);
     var table = document.getElementById("Attendance-Table");
     table.innerHTML = "";
     var row = table.insertRow(0);
@@ -432,13 +339,11 @@ function displayAttendanceTable(table_date) {
     cell9.innerHTML = "One On One";
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);
-    console.log(sql);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet " +readable;
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
-    console.log("got to displayAttendanceTable");
     /*var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/tempFeedback");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
@@ -450,7 +355,6 @@ function displayAttendanceTable(table_date) {
 }
 
 function createListOfAttendanceDates(_, dates) {
-    console.log(dates);
     var myData = JSON.parse(dates);
     var list = document.getElementById("attendanceList");
     list.innerHTML = "";
@@ -482,7 +386,6 @@ function displayMasterAttendance() {
 }
 
 function masterAttendanceHelper(_, masterData) {
-    console.log(masterData);
     var myData = JSON.parse(masterData);
     var table = document.getElementById("masterAttendanceTable");
     table.innerHTML = "";
@@ -571,8 +474,6 @@ function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxis
     //var min = Math.min.apply(Math, yaxis);
     //var change = Math.ceil((max - min) / xaxis.lenth);
     var change = 10;
-    console.log(max);
-    console.log(change);
 
     var trace1 = {
         x: xaxis,
@@ -679,14 +580,10 @@ function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxis
 }
 
 function masterDataPlot(xaxis, yaxis) {
-    console.log(xaxis);
-    console.log(yaxis);
     var max = Math.max.apply(Math, yaxis);
     var min = Math.min.apply(Math, yaxis);
     var change = Math.ceil((max - min) / xaxis.lenth);
     change = 10;
-    console.log(max);
-    console.log(change);
 
     var trace1 = {
         x: xaxis,
@@ -737,7 +634,6 @@ function checkLogin() {
 }
 
 function checkLoginHelper(_, loginData) {
-    console.log(loginData);
     var myData = JSON.parse(loginData);
     if (myData.length > 0) {
         var hide = document.getElementById('login');
@@ -789,7 +685,6 @@ function getCurrentDate() {
 //used with date picker
 function getDate() {
     var date = document.getElementById("datePicker").value;
-    console.log(date);
     displayAttendanceTable(date);
 }
 
@@ -817,7 +712,6 @@ function createFileHelper(_, attendance) {
     var rows = [];
     rows.push(["ID", "First Name", "Last Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One", "Comments", "Date", "Time"]);
 
-    console.log(attendance);
     var myData = JSON.parse(attendance);
     for (i in myData){
         rows.push(myData[i]);

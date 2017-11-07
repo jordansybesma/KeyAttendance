@@ -225,7 +225,9 @@ function showStudentAttendance(_, data) {
       var day = myDate.getDay();
       dateCounts[day] = dateCounts[day] + 1;
       console.log(myDate.getDay());
+      dateTimes[myDate.getDay()].push(parsedData[i][13]);
     }
+    console.log(dateTimes);
 
 
 

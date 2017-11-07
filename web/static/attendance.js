@@ -205,6 +205,7 @@ function showStudentProfile() {
 }
 
 function showStudentAttendance(_, data) {
+    console.log("got to showStudentAttendance")
     console.log(JSON.parse(data));
 
 }
@@ -230,12 +231,12 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     var row = table.insertRow(1);
     var fullName = first + " " + last;
     row.insertCell(0).innerHTML = fullName;
-    
+
     for(var i = 0; i < 8; i++)  {
         var str = "<input type=\"checkbox\" " + (checked[i]? "checked": "") + " onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
         row.insertCell(i + 1).innerHTML = str;
     }
-    
+
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>"
     row.insertCell(9).innerHTML = str;
 }
@@ -274,12 +275,12 @@ function onAddRow() {
         fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
         var row = table.insertRow(1);
         row.insertCell(0).innerHTML = keywordElement;
-        
+
         for(var i = 0; i < 8; i++)  {
             var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "','" + fields[i] + "', '" + date + "')\">";
             row.insertCell(i + 1).innerHTML = str;
         }
-        
+
         var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
         row.insertCell(9).innerHTML = str;
         var names = keywordElement.split(" ");

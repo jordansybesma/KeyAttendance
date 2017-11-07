@@ -231,16 +231,16 @@ function showStudentAttendance(_, data) {
     // };
 
 
-    fillProfileTable(data);
+    fillProfileTable(parsedData);
 }
 
 function fillProfileTable(attendance)  {
     var table = document.getElementById("profileAttendanceTable");
-    for (line of attendance)  {
+    for (i in attendance)  {
         currRow = table.insertRow(-1);
-        currLine = attendance.split(3);
-        for (cell of line)  {
-            currRow.insertCell(-1).innerHTML = cell;
+        currLine = attendance[i];
+        for (i in line)  {
+            currRow.insertCell(-1).innerHTML = line[i];
         }
     }
 }

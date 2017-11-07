@@ -75,6 +75,15 @@ def getLogin(login):
     return json.dumps(executeSingleQuery(query,
         fetch = True), indent=4, sort_keys=True, default=str)
 
+@app.route('/getStudentAttendance/<student>/')
+def getStudentAttendance(student):
+    nameList = student.split()
+    first = nameList[0]
+    last = nameList[1]
+    query = "SELECT * FROM dailyAttendance WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
+    return json.dumps(executeSingleQuery(query,
+        fetch = True), indent=4, sort_keys=True, default=str)
+
 @app.route('/getMasterAttendance')
 def getMasterAttendance():
     return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date ASC;",

@@ -239,7 +239,7 @@ function fillProfileTable(attendance)  {
     for (i in attendance)  {
         currRow = table.insertRow(-1);
         currLine = attendance[i];
-        for (i in line)  {
+        for (i in currLine)  {
             currRow.insertCell(-1).innerHTML = line[i];
         }
     }

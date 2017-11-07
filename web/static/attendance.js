@@ -240,7 +240,7 @@ function fillProfileTable(attendance)  {
         currRow = table.insertRow(-1);
         currLine = attendance[i];
         for (i in currLine)  {
-            currRow.insertCell(-1).innerHTML = line[i];
+            currRow.insertCell(-1).innerHTML = currLine[i];
         }
     }
 }

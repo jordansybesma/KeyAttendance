@@ -149,7 +149,7 @@ div.tab button.active {
 
 th {
     text-align: left;
-    background-color: @violet;
+    background-color: @base2;
 }
 
 th, td {
@@ -199,12 +199,23 @@ h4 {
     }
 }
 
+
+
 #Data  {
 
     #returnAttendanceList {
-        width: 30px;
-        height: 10px;
+        //width: 50px;
+        //height: 27px;
+        font-size: 13pt;
+        background-color: @base02;
+        color: @base01;
+        padding-left: 4px;
+        padding-top:  4px;
+    }
+
+    #returnAttendanceList:hover {
         background-color: @base2;
+        color: @base1;
     }
 
     #submitStudent {
@@ -274,6 +285,12 @@ h4 {
         //border: 2px solid @base2;
         border-collaps: collapse;
     }
+}
+
+#StaffSchedules {
+    #login {
+        padding-top: 10px;
+    }	
 }
 
 html {

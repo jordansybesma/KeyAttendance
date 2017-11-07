@@ -206,8 +206,29 @@ function showStudentProfile() {
 
 function showStudentAttendance(_, data) {
     console.log(JSON.parse(data));
+    //
+    // var x = [];
+
+    for(i = 0; i < data.length; i++) {
+      var dateString = data[i][12];
+      var dateList = dateString.split("-")
+      var myDate = new date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
+      console.log(myDate.getDay());
+    }
+
+    // var trace1 = {
+    //   x: [1, 2, 3, 4, 5],
+    //   y: [1, 6, 3, 6, 1],
+    //   mode: 'markers',
+    //   type: 'scatter',
+    //   name: 'Team A',
+    //   text: ['A-1', 'A-2', 'A-3', 'A-4', 'A-5'],
+    //   marker: { size: 12 }
+    // };
 
 }
+
+
 
 
 

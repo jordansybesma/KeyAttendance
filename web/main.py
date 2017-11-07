@@ -250,7 +250,7 @@ def addAttendant():
         return "true"
     else:
         firstQuery = "SELECT * FROM dailyAttendance WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "' AND date = '" + date + "';"
-        existingEntry = json.dumps(executeSingleQuery(firstQuery, fetch = True))
+        existingEntry = json.dumps(executeSingleQuery(firstQuery, fetch = True), indent=4, sort_keys=True, default=str)
         entries = json.loads(existingEntry)
         if entries != []:
             print("already added")

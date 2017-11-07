@@ -256,7 +256,32 @@ function showStudentAttendance(_, data) {
 }
 
 function scatterStudentAttendance(dateTimes){
+    var xList = [];
+    var yList = [];
 
+    for (i = 0; i < dateTimes.length; i++) {
+      for (j = 0; j < dateTimes[i].length; i++) {
+        xList.push(i);
+        yList.push(dateTimes[i][j]);
+      }
+    }
+
+    var trace1 = {
+      x: xList,
+      y: yList,
+      type: 'scatter'
+    };
+
+    var data = [trace1];
+
+    var layout = {
+      autosize: false,
+      width: 500,
+      height: 500,
+      title: 'Attendance Times'
+    };
+
+    Plotly.newPlot('studentTimes', data, layout);
 }
 
 function graphStudentAttendance(yaxis) {

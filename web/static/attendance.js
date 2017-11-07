@@ -261,7 +261,7 @@ function scatterStudentAttendance(dateTimes){
 
     for (i = 0; i < dateTimes.length; i++) {
       for (j = 0; j < dateTimes[i].length; i++) {
-        xList.push[xList[i]];
+        xList.push(xList[i]);
         yList.push(dateTimes[i][j]);
       }
     }

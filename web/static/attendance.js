@@ -208,16 +208,14 @@ function showStudentAttendance(_, data) {
     console.log(JSON.parse(data));
 
 }
-<<<<<<< HEAD
-function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exercise, mentalHealth, volunteering, oneOnOne) {
-=======
+
 
 function fillProfileTable()  {
 
 }
 
 function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {
->>>>>>> 51de58a975c4cd5ada98c4084a930e8eb4719054
+
     var table = document.getElementById("Attendance-Table");
 
     //var date = getCurrentDate();

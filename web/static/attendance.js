@@ -806,7 +806,7 @@ function downloadMasterDates() {
         alert("Please enter an end date");
         return false;
     }
-    getRequest("/getMasterAttendance/" + start + " " + end, "", downloadAllMasterHelper);
+    getRequest("/getMasterAttendanceDate/" + start + " " + end, "", downloadAllMasterHelper);
 }
 
 

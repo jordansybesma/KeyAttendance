@@ -265,8 +265,7 @@ function graphStudentAttendance(yaxis) {
 
 function fillProfileTable(attendance)  {
     var table = document.getElementById("profileAttendanceTable");
-    var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne', 'date', 'time'];
-    attendance.prepend(fields);
+
     for (i in attendance)  {
         currRow = table.insertRow(-1);
         currLine = attendance[i];

@@ -138,6 +138,7 @@ function modifyAutofillList(_ , studentNames) {
 }
 function showProfile(_, studentInfo) {
     alert("got to showProfile")
+    alert(studentInfo)
 
     document.getElementById("studentProfileText").innerHTML = JSON.stringify(studentInfo);
 

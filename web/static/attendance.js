@@ -140,7 +140,7 @@ function showProfile(_, studentInfo) {
     alert("got to showProfile")
     alert(studentInfo)
 
-    document.getElementById("studentProfileText").innerHTML = JSON.stringify(studentInfo);
+    document.getElementById("studentProfileText").innerHTML += JSON.stringify(studentInfo);
 
     alert(JSON.stringify(studentInfo))
 
@@ -198,7 +198,8 @@ function showStudentProfile() {
     }
     if (optionFound) {
         alert("option found")
-        alert(keywordElement)
+        profileSpace.innerHTML += (keywordElement)
+        profileSpace.innerHTML += ("\n")
         getRequest("/getJustID/" + keywordElement, "", showProfile);
 
 

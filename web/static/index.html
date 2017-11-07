@@ -161,6 +161,18 @@
                 </tr>
             </table>
         </div>
+        <div id="downloadMaster">
+            <button onclick="downloadAllMaster()">Download All Data</button>
+            <h2>Download Data Between Two Dates</h2>
+            <form>
+                Start Date:<br>
+                <input type="date" id="startDate" /><br>
+                End Date:<br>
+                <input type="date" id="endDate" /><br>
+                <input type="submit" onclick="downloadMasterDates()" />
+            </form>
+
+        </div>
     </div>
 </div>
 

@@ -213,7 +213,10 @@ function showStudentAttendance(_, data) {
     //
     // var x = [];
 
-    var dateCounts = [0, 0, 0, 0, 0, 0, 0]
+    var dateCounts = [0, 0, 0, 0, 0, 0, 0];
+
+    var dateTimes = [[], [], [], [], [], [], []];
+
     for(i = 0; i < parsedData.length; i++) {
       var dateString = parsedData[i][12];
       console.log(dateString);
@@ -222,8 +225,12 @@ function showStudentAttendance(_, data) {
       var day = myDate.getDay();
       dateCounts[day] = dateCounts[day] + 1;
       console.log(myDate.getDay());
+      dateTimes[myDate.getDay()].push(parsedData[i][13]);
     }
-    
+    console.log(dateTimes);
+
+
+
     graphStudentAttendance(dateCounts);
 
     // var trace1 = {
@@ -764,6 +771,23 @@ function createFileHelper(_, attendance) {
 
     exportToCsv(filename, rows);
 
+}
+
+function downloadAllMaster() {
+    getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
+}
+
+function downloadAllMasterHelper(_, data) {
+    var rows = [];
+    rows.push(["Date", "Number Attended", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One"]);
+
+    var myData = JSON.parse(data);
+    for (i in myData) {
+        rows.push(myData[i]);
+    }
+    var date = getCurrentDate();
+    var filename = "Master_Attendance_" + date + ".csv";
+    exportToCsv(filename, rows);
 }
 
 // source: https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side

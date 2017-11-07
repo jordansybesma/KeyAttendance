@@ -209,15 +209,19 @@ function showStudentAttendance(_, data) {
 
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {
 =======
+=======
+
+>>>>>>> fcd4a3d58099fca4fc3395885be81551ab80014f
 
 function fillProfileTable()  {
 
 }
 
 function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {
->>>>>>> 51de58a975c4cd5ada98c4084a930e8eb4719054
+
     var table = document.getElementById("Attendance-Table");
 
     //var date = getCurrentDate();

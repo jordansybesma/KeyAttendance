@@ -228,8 +228,8 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
 <<<<<<< HEAD
-    var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exercise', 'mentalHealth', 'volunteering', 'oneOnOne'];
-    var checked = [art, madeFood, recievedFood, leadership, exercise, mentalHealth, volunteering, oneOnOne];
+    var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
+    var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
 =======
     var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
     var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne]

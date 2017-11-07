@@ -233,7 +233,7 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne]
     console.log(checked)
     var row = table.insertRow(1);
-    row.insertCell(0).innerHTML = keywordElement;
+    row.insertCell(0).innerHTML = first + " " + last;
     
     for(var i = 0; i < 8; i++)  {
         var str = "<input type=\"checkbox\" " + checked[i]? "checked": "" + " onclick=\"selectActivity('" + keywordElement + "','" + fields[i] + "', '" + date + "')\">";

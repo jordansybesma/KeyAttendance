@@ -795,6 +795,7 @@ function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
 }
 function downloadMasterDates() {
+    console.log("got here");
     var start = document.getElementById("startDate").value;
     var end = document.getElementById("endDate").value;
     if (start = ""){

@@ -179,17 +179,17 @@ function openAddStudent() {
 }
 
 function showStudentProfile() {
-    var profileSpace = document.getElementById('studentProfileText')
-    profileSpace.innerHTML = ("")
-    var nameSpace = document.getElementById('studentName')
-    nameSpace.innerHTML = ("")
+    var profileSpace = document.getElementById('studentProfileText');
+    profileSpace.innerHTML = ("");
+    var nameSpace = document.getElementById('searchButton');
+    nameSpace.innerHTML = ("");
     //var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
     var optionFound = false;
     datalist = document.getElementById("suggestedStudents");
-    for (var j = 0; j < datalist.options.length; j++){
-        if (keywordElement == datalist.options[j].value){
+    for (var j = 0; j < datalist.options.length; j++) {
+        if (keywordElement == datalist.options[j].value) {
             optionFound= true;
             break;
         }

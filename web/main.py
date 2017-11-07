@@ -318,7 +318,8 @@ def getJustID(string):
     query = "SELECT id FROM teststudents WHERE UPPER(firstname) LIKE '%" + first + "%' AND UPPER(lastname) LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     print(databaseResult[0][0])
-    return databaseResult[0][0]
+    result = json.dumps(databaseResult[0][0])
+    return result
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "local":

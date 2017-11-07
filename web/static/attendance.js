@@ -212,6 +212,7 @@ function showStudentAttendance(_, data) {
 
     for(i = 0; i < data.length; i++) {
       var dateString = data[i][12];
+      console.console.log(dateString);
       var dateList = dateString.split("-")
       var myDate = new date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
       console.log(myDate.getDay());
@@ -259,8 +260,8 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     row.insertCell(0).innerHTML = fullName;
 
     for(var i = 0; i < 8; i++)  {
-        var str = "<input type=\"checkbox\" " 
-            + (checked[i]? "checked": "") 
+        var str = "<input type=\"checkbox\" "
+            + (checked[i]? "checked": "")
             + " onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
         row.insertCell(i + 1).innerHTML = str;
     }

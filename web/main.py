@@ -201,6 +201,7 @@ def selectActivity():
 
     alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
     executeSingleQuery(alterQuery, [])
+    return ""
 
 
 @app.route('/addAttendant/', methods = ["POST"])

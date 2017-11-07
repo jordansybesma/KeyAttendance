@@ -197,7 +197,7 @@ function showStudentProfile() {
     if (optionFound) {
         nameSpace.innerHTML += (keywordElement)
         profileSpace.innerHTML += ("\n")
-        getRequest("/getJustID/" + keywordElement, "", showProfile);
+        //getRequest("/getJustID/" + keywordElement, "", showProfile);
         getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 
     }
@@ -205,7 +205,7 @@ function showStudentProfile() {
 }
 
 function showStudentAttendance(_, data) {
-    console.log(JSON.stringify(studentInfo));
+    console.log(JSON.parse(data));
 
 }
 function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {

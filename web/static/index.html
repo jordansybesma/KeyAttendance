@@ -163,14 +163,14 @@
         <div id="downloadMaster">
             <button onclick="downloadAllMaster()">Download All Data</button>
             <h2>Download Data Between Two Dates</h2>
-            <form>
-                Start Date:<br>
-                <input type="date" id="startDate" /><br>
-                End Date:<br>
-                <input type="date" id="endDate" /><br>
-
+            <form onsubmit="return false;">
+                
+                <input type="date" id="startDate" />
+                
+                <input type="date" id="endDate" />
+                <input type="submit" onclick="downloadMasterDates()" />
             </form>
-            <button onclick="downloadMasterDates()">Download</button>
+            
 
         </div>
     </div>

@@ -216,7 +216,7 @@ function showStudentAttendance(_, data) {
       var dateString = parsedData[i][12];
       console.log(dateString);
       var dateList = dateString.split("-")
-      var myDate = new date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
+      var myDate = new Date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
       console.log(myDate.getDay());
     }
 

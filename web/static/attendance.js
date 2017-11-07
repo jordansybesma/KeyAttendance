@@ -327,12 +327,14 @@ function onAddRow() {
         document.getElementById("keyword").value = "";
         fields = [keywordElement, 'art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
         var row = table.insertRow(1);
+        row.insertCell(0).innerHTML = keywordElement;
         for(var i = 0; i < 9; i++)  {
             var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "'," + fields[i] + ", '" + date + "')\">";
             row.insertCell(i).innerHTML = str;
         }
             var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
             row.insertCell(10).innerHTML = str;
+        
         /*
         var row = table.insertRow(1);
         var cell1 = row.insertCell(0);

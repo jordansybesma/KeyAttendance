@@ -50,18 +50,22 @@ function addAttendant(first, last) {
 function addNewStudent() {
 
     var first = document.getElementById("newStudentFirst").value;
+    alert("first: " + first);
     var firstChar = first[0];
+    alert("firstChar: " + firstChar);
     firstChar = firstChar.toUpperCase();
+    alert("firstChar: " + firstChar);
     first = lastChar + first.slice(1);
+    alert("first: " + first);
+
+
     var last = document.getElementById("newStudentLast").value;
     var lastChar = first[0];
     lastChar = lastChar.toUpperCase();
     last = lastChar + last.slice(1);
-    alert("first: " + first);
-    alert("firstChar: " + firstChar);
 
-    alert("last: " + last);
-    alert("lastChar: " + lastChar);
+    // alert("last: " + last);
+    // alert("lastChar: " + lastChar);
     if (first == "") {
         alert("Please enter a first name");
         return;
@@ -330,14 +334,15 @@ function onAddRow() {
     var date = document.getElementById("storeDate").innerHTML;
     if (optionFound)  {
         document.getElementById("keyword").value = "";
-        fields = [keywordElement, 'art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
+        fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
         var row = table.insertRow(1);
-        for(var i = 0; i < 9; i++)  {
-            var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "'," + fields[i] + ", '" + date + "')\">";
-            row.insertCell(i).innerHTML = str;
+        row.insertCell(0).innerHTML = keywordElement;
+        for(var i = 0; i < 8; i++)  {
+            var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "','" + fields[i] + "', '" + date + "')\">";
+            row.insertCell(i + 1).innerHTML = str;
         }
             var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
-            row.insertCell(10).innerHTML = str;
+            row.insertCell(9).innerHTML = str;
         /*
         var row = table.insertRow(1);
         var cell1 = row.insertCell(0);

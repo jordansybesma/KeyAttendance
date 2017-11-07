@@ -208,13 +208,8 @@ function showStudentAttendance(_, data) {
     console.log(JSON.parse(data));
 
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {
-=======
-=======
 
->>>>>>> fcd4a3d58099fca4fc3395885be81551ab80014f
+
 
 function fillProfileTable()  {
 
@@ -227,13 +222,13 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     //var date = getCurrentDate();
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
-<<<<<<< HEAD
-    var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exercise', 'mentalHealth', 'volunteering', 'oneOnOne'];
+
+    var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
     var checked = [art, madeFood, recievedFood, leadership, exercise, mentalHealth, volunteering, oneOnOne];
-=======
+
     var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
     var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne]
->>>>>>> 15b9faf215be5409cb0a13c85b31bbddcb4fe74b
+
     var row = table.insertRow(1);
     var fullName = first + " " + last;
     row.insertCell(0).innerHTML = fullName;

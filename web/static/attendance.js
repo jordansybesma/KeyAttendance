@@ -334,7 +334,7 @@ function onAddRow() {
         var row = table.insertRow(1);
         row.insertCell(0).innerHTML = keywordElement;
         for(var i = 0; i < 8; i++)  {
-            var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "'," + fields[i] + ", '" + date + "')\">";
+            var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "','" + fields[i] + "', '" + date + "')\">";
             row.insertCell(i + 1).innerHTML = str;
         }
             var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"

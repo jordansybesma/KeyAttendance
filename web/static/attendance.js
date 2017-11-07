@@ -795,6 +795,23 @@ function createFileHelper(_, attendance) {
 
 }
 
+function downloadAllMaster() {
+    getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
+}
+
+function downloadAllMasterHelper(_, data) {
+    var rows = [];
+    rows.push(["Date", "Number Attended", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One"]);
+
+    var myData = JSON.parse(data);
+    for (i in myData) {
+        rows.push(myData[i]);
+    }
+    var date = getCurrentDate;
+    var filename = "Master_Attendance_" + date + ".csv";
+    exportToCsv(filename, rows);
+}
+
 // source: https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
 function exportToCsv(filename, rows) {
     var processRow = function (row) {

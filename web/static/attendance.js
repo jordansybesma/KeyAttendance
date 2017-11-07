@@ -226,8 +226,11 @@ function showStudentAttendance(_, data) {
       dateCounts[day] = dateCounts[day] + 1;
       console.log(myDate.getDay());
       var time = parsedData[i][13];
+      console.log(time);
       var timeList = time.split(":");
-      var baseTenTime = parseInt(timeList[0]) + (parseInt[1] / 60);
+      console.log(timeList);
+      var baseTenTime = parseInt(timeList[0]) + (parseInt(timeList[1]) / 60);
+      console.log(baseTenTime);
       dateTimes[myDate.getDay()].push(baseTenTime);
     }
     console.log(dateTimes);

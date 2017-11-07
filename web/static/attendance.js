@@ -831,11 +831,11 @@ function downloadMasterDates() {
     console.log(start);
     console.log(end);
     console.log(typeof start);
-    if (start = ""){
+    if (start == ""){
         alert("Please enter a start date");
         return false;
     }
-    if (end = ""){
+    if (end == ""){
         alert("Please enter an end date");
         return false;
     }

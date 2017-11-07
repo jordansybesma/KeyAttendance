@@ -830,6 +830,7 @@ function downloadMasterDates() {
     var end = document.getElementById("endDate").value;
     console.log(start);
     console.log(end);
+    console.log(typeof start);
     if (start = ""){
         alert("Please enter a start date");
         return false;

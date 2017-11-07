@@ -55,7 +55,7 @@ function addNewStudent() {
     alert("firstChar: " + firstChar);
     firstChar = firstChar.toUpperCase();
     alert("firstChar: " + firstChar);
-    first = lastChar + first.slice(1);
+    first = firstChar + first.slice(1);
     alert("first: " + first);
 
 

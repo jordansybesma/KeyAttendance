@@ -98,7 +98,6 @@ function deleteAttendant(date, name) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&date=" + date);
     displayAttendanceTable(date);
-    console.log("got to deleteAttendant");
 }
 
 function getRequest(urlAddon, callbackState, callback) {
@@ -120,16 +119,11 @@ function getRequest(urlAddon, callbackState, callback) {
 
 function sendSubmitForm()  {
     theirText = document.getElementById("someRandoText").value
-    console.log(theirText)
 
-    console.log('theirText:' + sendRequest(true, theirText, "attendance-json", "application/json", "/addText"));
 }
 function fillAttendance(_, attendance) {
-    console.log(attendance);
     var myData = JSON.parse(attendance);
     for (i in myData) {
-        console.log(myData[i]);
-        console.log("doing this");
         addRowHelper(myData[i][1], myData[i][2], myData[i][3], myData[i][4], myData[i][5],myData[i][6],myData[i][7],myData[i][8],myData[i][9],myData[i][10])
     }
 }
@@ -218,7 +212,6 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     document.getElementById("keyword").value = "";
     var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
     var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne]
-    console.log(checked)
     var row = table.insertRow(1);
     row.insertCell(0).innerHTML = first + " " + last;
     
@@ -317,9 +310,7 @@ function createNewAttendance() {
 
 
 function displayAttendanceTable(table_date) {
-    console.log(table_date);
     document.getElementById("storeDate").innerHTML = table_date;
-    console.log(document.getElementById("storeDate").innerHTML);
     var table = document.getElementById("Attendance-Table");
     table.innerHTML = "";
     var row = table.insertRow(0);
@@ -343,13 +334,11 @@ function displayAttendanceTable(table_date) {
     cell9.innerHTML = "One On One";
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);
-    console.log(sql);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet " +readable;
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
-    console.log("got to displayAttendanceTable");
     /*var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/tempFeedback");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
@@ -361,7 +350,6 @@ function displayAttendanceTable(table_date) {
 }
 
 function createListOfAttendanceDates(_, dates) {
-    console.log(dates);
     var myData = JSON.parse(dates);
     var list = document.getElementById("attendanceList");
     list.innerHTML = "";
@@ -393,7 +381,6 @@ function displayMasterAttendance() {
 }
 
 function masterAttendanceHelper(_, masterData) {
-    console.log(masterData);
     var myData = JSON.parse(masterData);
     var table = document.getElementById("masterAttendanceTable");
     table.innerHTML = "";
@@ -482,8 +469,6 @@ function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxis
     //var min = Math.min.apply(Math, yaxis);
     //var change = Math.ceil((max - min) / xaxis.lenth);
     var change = 10;
-    console.log(max);
-    console.log(change);
 
     var trace1 = {
         x: xaxis,
@@ -590,14 +575,10 @@ function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxis
 }
 
 function masterDataPlot(xaxis, yaxis) {
-    console.log(xaxis);
-    console.log(yaxis);
     var max = Math.max.apply(Math, yaxis);
     var min = Math.min.apply(Math, yaxis);
     var change = Math.ceil((max - min) / xaxis.lenth);
     change = 10;
-    console.log(max);
-    console.log(change);
 
     var trace1 = {
         x: xaxis,
@@ -648,7 +629,6 @@ function checkLogin() {
 }
 
 function checkLoginHelper(_, loginData) {
-    console.log(loginData);
     var myData = JSON.parse(loginData);
     if (myData.length > 0) {
         var hide = document.getElementById('login');
@@ -700,7 +680,6 @@ function getCurrentDate() {
 //used with date picker
 function getDate() {
     var date = document.getElementById("datePicker").value;
-    console.log(date);
     displayAttendanceTable(date);
 }
 
@@ -728,7 +707,6 @@ function createFileHelper(_, attendance) {
     var rows = [];
     rows.push(["ID", "First Name", "Last Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One", "Comments", "Date", "Time"]);
 
-    console.log(attendance);
     var myData = JSON.parse(attendance);
     for (i in myData){
         rows.push(myData[i]);

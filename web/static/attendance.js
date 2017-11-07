@@ -753,7 +753,8 @@ function getCurrentDate() {
 //used with date picker
 function getDate() {
     var date = document.getElementById("datePicker").value;
-    displayAttendanceTable(date);
+    console.log(date);
+    //displayAttendanceTable(date);
 }
 
 /*function runPHP() {

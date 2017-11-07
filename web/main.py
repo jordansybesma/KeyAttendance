@@ -69,7 +69,7 @@ def getLogin(login):
         fetch = True), indent=4, sort_keys=True, default=str)
 @app.route('/getMasterAttendance')
 def getMasterAttendance():
-    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;",
+    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date ASC;",
         fetch = True), indent=4, sort_keys=True, default=str)
 
 def decreaseActivityCount(column, date, increase):

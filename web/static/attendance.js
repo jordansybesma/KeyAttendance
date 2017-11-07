@@ -394,6 +394,7 @@ function createNewAttendance() {
 function displayAttendanceTable(table_date) {
     console.log(table_date);
     document.getElementById("storeDate").innerHTML = table_date;
+    console.log(document.getElementById("storeDate").value);
     var table = document.getElementById("Attendance-Table");
     table.innerHTML = "";
     var row = table.insertRow(0);

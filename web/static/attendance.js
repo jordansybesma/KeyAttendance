@@ -50,9 +50,9 @@ function addAttendant(first, last) {
 function addNewStudent() {
 
     var first = document.getElementById("newStudentFirst").value;
-    first[0] = first[0].upper();
+    first[0] = (first[0]).upper();
     var last = document.getElementById("newStudentLast").value;
-    last[0] = last[0].upper();
+    last[0] = (last[0]).upper();
     if (first == "") {
         alert("Please enter a first name");
         return;

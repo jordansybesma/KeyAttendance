@@ -786,3 +786,18 @@ function sendFeedback() {
     document.getElementById("feedback").value = "";
 
 }
+function login() {
+    var user = document.getElementById("username").value;
+    var pass = document.getElementById("password").value;
+    getRequest("/getLogin/" + user + " " + pass, "", loginHelper);
+
+}
+function loginHelper(_, loginData) {
+    var myData = JSON.parse(loginData);
+    if (myData.length > 0) {
+        var url = '/main/';
+        window.location = url;
+    } else {
+        alert("Incorrect Login");
+    }
+}

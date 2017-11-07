@@ -479,6 +479,7 @@ function createListOfAttendanceDates(_, dates) {
 function displayAttendanceList() {
     getRequest("/getDates", "", createListOfAttendanceDates);
 }
+
 function returnAttendance() {
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "none";

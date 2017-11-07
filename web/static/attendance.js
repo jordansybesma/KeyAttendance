@@ -40,7 +40,7 @@ function addAttendant(first, last) {
     var time = hour + ":" + minute + ":" + seconds;
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exercise=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
+    xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
 
 
 }
@@ -209,7 +209,7 @@ function showStudentAttendance(_, data) {
 
 }
 <<<<<<< HEAD
-function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exercise, mentalHealth, volunteering, oneOnOne) {
+function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {
 =======
 
 function fillProfileTable()  {
@@ -223,8 +223,8 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     //var date = getCurrentDate();
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
-    var fields = ['art','madeFood','recievedFood','leadership','exercise','mentalHealth','volunteering','oneOnOne']
-    var checked = [art, madeFood, recievedFood, leadership, exercise, mentalHealth, volunteering, oneOnOne]
+    var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
+    var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne]
     var row = table.insertRow(1);
     var fullName = first + " " + last;
     row.insertCell(0).innerHTML = fullName;
@@ -269,7 +269,7 @@ function onAddRow() {
     var date = document.getElementById("storeDate").innerHTML;
     if (optionFound)  {
         document.getElementById("keyword").value = "";
-        fields = ['art','madeFood','recievedFood','leadership','exercise','mentalHealth','volunteering','oneOnOne']
+        fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
         var row = table.insertRow(1);
         row.insertCell(0).innerHTML = keywordElement;
         
@@ -311,7 +311,7 @@ function createNewAttendance() {
     cell3.innerHTML = "Made Food";
     cell4.innerHTML = "Recieved Food";
     cell5.innerHTML = "Leadership";
-    cell6.innerHTML = "Exercise";
+    cell6.innerHTML = "Exersize";
     cell7.innerHTML = "Mental Health";
     cell8.innerHTML = "Volunteering";
     cell9.innerHTML = "One On One";
@@ -342,7 +342,7 @@ function displayAttendanceTable(table_date) {
     cell3.innerHTML = "Made Food";
     cell4.innerHTML = "Recieved Food";
     cell5.innerHTML = "Leadership";
-    cell6.innerHTML = "Exercise";
+    cell6.innerHTML = "Exersize";
     cell7.innerHTML = "Mental Health";
     cell8.innerHTML = "Volunteering";
     cell9.innerHTML = "One On One";
@@ -415,7 +415,7 @@ function masterAttendanceHelper(_, masterData) {
     cell4.innerHTML = "# Make Food";
     cell5.innerHTML = "# Recieved Food";
     cell6.innerHTML = "# Leadership";
-    cell7.innerHTML = "# Exercise";
+    cell7.innerHTML = "# Exersize";
     cell8.innerHTML = "# Mental Health";
     cell9.innerHTML = "# Volunteering";
     cell10.innerHTML = "# One On One";
@@ -425,7 +425,7 @@ function masterAttendanceHelper(_, masterData) {
     var yaxisMadeFood = [];
     var yaxisRecievedFood = [];
     var yaxisLeadership = [];
-    var yaxisExercise = [];
+    var yaxisExersize = [];
     var yaxisMentalHealth = [];
     var yaxisVolunteering = [];
     var yaxisOneOnOne = [];
@@ -436,7 +436,7 @@ function masterAttendanceHelper(_, masterData) {
         yaxisMadeFood.push(myData[i][3]);
         yaxisRecievedFood.push(myData[i][4]);
         yaxisLeadership.push(myData[i][5]);
-        yaxisExercise.push(myData[i][6]);
+        yaxisExersize.push(myData[i][6]);
         yaxisMentalHealth.push(myData[i][7]);
         yaxisVolunteering.push(myData[i][8]);
         yaxisOneOnOne.push(myData[i][9]);
@@ -464,18 +464,18 @@ function masterAttendanceHelper(_, masterData) {
     }
 
     masterDataPlot(xaxis, yaxis);
-    activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxisLeadership, yaxisExercise, yaxisMentalHealth, yaxisVolunteering, yaxisOneOnOne);
+    activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxisLeadership, yaxisExersize, yaxisMentalHealth, yaxisVolunteering, yaxisOneOnOne);
 
 
 }
 
-function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxisLeadership, yaxisExercise, yaxisMentalHealth, yaxisVolunteering, yaxisOneOnOne){
+function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxisLeadership, yaxisExersize, yaxisMentalHealth, yaxisVolunteering, yaxisOneOnOne){
     var maxList = [];
     maxList.push(Math.max.apply(Math, yaxisArt));
     maxList.push(Math.max.apply(Math, yaxisMadeFood));
     maxList.push(Math.max.apply(Math, yaxisRecievedFood));
     maxList.push(Math.max.apply(Math, yaxisLeadership));
-    maxList.push(Math.max.apply(Math, yaxisExercise));
+    maxList.push(Math.max.apply(Math, yaxisExersize));
     maxList.push(Math.max.apply(Math, yaxisMentalHealth));
     maxList.push(Math.max.apply(Math, yaxisVolunteering));
     maxList.push(Math.max.apply(Math, yaxisOneOnOne));
@@ -522,9 +522,9 @@ function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxis
     };
     var trace5 = {
         x: xaxis,
-        y: yaxisExercise,
+        y: yaxisExersize,
         mode: 'lines',
-        name: "Exercise",
+        name: "Exersize",
         line: {
             width: 3
         }
@@ -719,7 +719,7 @@ function createFile() {
 
 function createFileHelper(_, attendance) {
     var rows = [];
-    rows.push(["ID", "First Name", "Last Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exercise", "Mental Health", "Volunteering", "One on One", "Comments", "Date", "Time"]);
+    rows.push(["ID", "First Name", "Last Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One", "Comments", "Date", "Time"]);
 
     var myData = JSON.parse(attendance);
     for (i in myData){

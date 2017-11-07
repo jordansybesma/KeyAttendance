@@ -228,6 +228,20 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
 
     //var date = getCurrentDate();
     var date = document.getElementById("storeDate").innerHTML;
+    document.getElementById("keyword").value = "";
+    var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
+    var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne]
+    var row = table.insertRow(1);
+    row.insertCell(0).innerHTML = keywordElement;
+    
+    for(var i = 0; i < 8; i++)  {
+        var str = "<input type=\"checkbox\"" + checked[i]? "checked": "" + " onclick=\"selectActivity('" + keywordElement + "','" + fields[i] + "', '" + date + "')\">";
+        row.insertCell(i + 1).innerHTML = str;
+    }
+    
+    var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
+    row.insertCell(9).innerHTML = str;
+    /*
     //document.getElementById("keyword").value = "";
     var row = table.insertRow(1);
     var cell1 = row.insertCell(0);
@@ -297,6 +311,7 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     cell8.innerHTML = str7;
     cell9.innerHTML = str8;
     cell10.innerHTML = str9;
+    */
 }
 
 function makeChecks(art, artID, madeFood, madeFoodID) {
@@ -333,49 +348,14 @@ function onAddRow() {
         fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
         var row = table.insertRow(1);
         row.insertCell(0).innerHTML = keywordElement;
+        
         for(var i = 0; i < 8; i++)  {
             var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "','" + fields[i] + "', '" + date + "')\">";
             row.insertCell(i + 1).innerHTML = str;
         }
-            var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
-            row.insertCell(9).innerHTML = str;
-        /*
-        var row = table.insertRow(1);
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-        var cell4 = row.insertCell(3);
-        var cell5 = row.insertCell(4);
-        var cell6 = row.insertCell(5);
-        var cell7 = row.insertCell(6);
-        var cell8 = row.insertCell(7);
-        var cell9 = row.insertCell(8);
-        var cell10 = row.insertCell(9);
-        str = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'art', '" + date + "')\">";
-        str2 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'madeFood', '" + date + "')\">";
-        str3 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'recievedFood', '" + date + "')\">";
-        str4 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'leadership', '" + date + "')\">";
-        str5 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'exersize', '" + date + "')\">";
-        str6 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'mentalHealth', '" + date + "')\">";
-        str7 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'volunteering', '" + date + "')\">";
-        str8 = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "', 'oneOnOne', '" + date + "')\">";
-
-        var entry = document.createElement('button');
-        entry.innerHTML = 'onclick=\"deleteAttendant(\"' + date + '\", \"' + keywordElement + '\")\">Delete\"';
-        //list.appendChild(entry);
-
-        str9 = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
-        cell1.innerHTML = keywordElement;
-        cell2.innerHTML = str;
-        cell3.innerHTML = str2;
-        cell4.innerHTML = str3;
-        cell5.innerHTML = str4;
-        cell6.innerHTML = str5;
-        cell7.innerHTML = str6;
-        cell8.innerHTML = str7;
-        cell9.innerHTML = str8;
-        cell10.innerHTML = str9;
-        */
+        
+        var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
+        row.insertCell(9).innerHTML = str;
         var names = keywordElement.split(" ");
         addAttendant(names[0], names[1]);
     } else {

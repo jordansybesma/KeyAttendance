@@ -323,7 +323,7 @@ def getJustID(string):
     databaseResult = executeSingleQuery(query, fetch = True)
     print("6")
     print(databaseResult[0][0])
-    return databaseResult[0]
+    return databaseResult[0][0]
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "local":

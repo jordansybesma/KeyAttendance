@@ -839,6 +839,7 @@ function downloadMasterDates() {
         alert("Please enter an end date");
         return false;
     }
+    console.log(start + " " + end);
     console.log("/getMasterAttendanceDate/" + start + " " + end);
     getRequest("/getMasterAttendanceDate/" + start + " " + end, "", downloadAllMasterHelper);
     return false;

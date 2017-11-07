@@ -222,7 +222,7 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
     var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
     var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne]
     var row = table.insertRow(1);
-    fullName = first + " " + last;
+    var fullName = first + " " + last;
     row.insertCell(0).innerHTML = fullName;
     
     for(var i = 0; i < 8; i++)  {

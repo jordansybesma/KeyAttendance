@@ -52,9 +52,9 @@ function addNewStudent() {
     var first = document.getElementById("newStudentFirst").value;
     var firstChar = first[0];
     firstChar = firstChar.toUpperCase();
-    first = lastChar + first[1:];
+    first = lastChar + first.slice(1);
     var last = document.getElementById("newStudentLast").value;
-    var lastChar = first[0];
+    var lastChar = first.slice(1);
     lastChar = lastChar.toUpperCase();
     last = lastChar + last[1:];
     alert("first: " + first);
@@ -481,6 +481,7 @@ function createListOfAttendanceDates(_, dates) {
 function displayAttendanceList() {
     getRequest("/getDates", "", createListOfAttendanceDates);
 }
+
 function returnAttendance() {
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "none";

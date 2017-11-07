@@ -191,6 +191,7 @@ def tempLogin():
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
     executeSingleQuery(query3, [])
+    return ""
     
 @app.route('/tempFeedback', methods=["Post"])
 def tempFeedback():
@@ -198,6 +199,7 @@ def tempFeedback():
     query2 = "CREATE TABLE feedback (date date, comment varchar(2000));"
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
+    return ""
 
 @app.route('/selectActivity', methods=["POST"])
 def selectActivity():
@@ -279,6 +281,7 @@ def addAttendant():
         if newResult == []:
             newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1', '0', '0', '0', '0', '0', '0', '0', '0');"
             executeSingleQuery(newQuery, [])
+            return "false"
         else:
             print(newResult)
             numAttend = newResult[0][0]
@@ -287,6 +290,7 @@ def addAttendant():
             newNumAttend = numAttend + 1
             alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
             executeSingleQuery(alterQuery, [])
+        return "true"
 
 
 # If more than one "same name" student is available, return students
@@ -296,20 +300,6 @@ def addAttendant():
         elif len(databaseResult) == 0:
             return "false"
 
-# Roughly informed by https://www.postgresql.org/docs/9.6/static/app-psql.html#APP-PSQL-META-COMMANDS-COPY
-@app.route('/download/<tableName>')
-def downloadAttendanceSheet(tableName):
-    query = "SELECT * FROM " + tableName + ";"
-    databaseResult = executeSingleQuery(query, fetch = True)
-    result = json.dumps(databaseResult)
-
-    # csv = ""
-    # for attendee in result:
-    #     csv = "#" + attendee[0] + "," + attendee[1] + "," + attendee[2] + csv
-    # csv = csv[1:]
-    # csv = csv.replace("#", "\n")
-
-    return result
 
 """
     Literally just takes a string. Compares both first and last name.

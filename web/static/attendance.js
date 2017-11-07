@@ -50,15 +50,15 @@ function addAttendant(first, last) {
 function addNewStudent() {
 
     var first = document.getElementById("newStudentFirst").value;
+    alert("first: " + first);
     var firstChar = first[0];
+    alert("firstChar: " + firstChar);
     firstChar = firstChar.toUpperCase();
     first = lastChar + first.slice(1);
     var last = document.getElementById("newStudentLast").value;
     var lastChar = first[0];
     lastChar = lastChar.toUpperCase();
     last = lastChar + last.slice(1);
-    alert("first: " + first);
-    alert("firstChar: " + firstChar);
 
     alert("last: " + last);
     alert("lastChar: " + lastChar);

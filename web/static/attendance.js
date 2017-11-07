@@ -798,6 +798,21 @@ function createFileHelper(_, attendance) {
 function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
 }
+function downloadAllMasterDates() {
+    var start = document.getElementById("startDate").value;
+    var end = document.getElementById("endDate").value;
+    if (start = ""){
+        alert("Please enter a start date");
+        return false;
+    }
+    if (end = ""){
+        alert("Please enter an end date");
+        return false;
+    }
+    getRequest("/getMasterAttendanceDate/" + start + " " + end, "", downloadAllMasterHelper);
+}
+
+
 
 function downloadAllMasterHelper(_, data) {
     var rows = [];

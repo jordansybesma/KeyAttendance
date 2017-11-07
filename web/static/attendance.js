@@ -339,7 +339,7 @@ function onAddRow() {
             row.insertCell(i + 1).innerHTML = str;
         }
             var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
-            row.insertCell(10).innerHTML = str;
+            row.insertCell(9).innerHTML = str;
         /*
         var row = table.insertRow(1);
         var cell1 = row.insertCell(0);

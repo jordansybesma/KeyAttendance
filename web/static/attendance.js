@@ -284,6 +284,12 @@ function graphStudentAttendance(yaxis) {
 
 function fillProfileTable(attendance)  {
     var table = document.getElementById("profileAttendanceTable");
+    table.innerHTML = ""
+    var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne', 'date', 'time'];
+    row = table.insertRow(-1);
+    for (header of fields)  {
+        row.insertCell(-1).innerHTML = header;
+    }
 
     for (i in attendance)  {
         currRow = table.insertRow(-1);
@@ -788,6 +794,21 @@ function createFileHelper(_, attendance) {
 function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
 }
+function downloadAllMasterDates() {
+    var start = document.getElementById("startDate").value;
+    var end = document.getElementById("endDate").value;
+    if (start = ""){
+        alert("Please enter a start date");
+        return false;
+    }
+    if (end = ""){
+        alert("Please enter an end date");
+        return false;
+    }
+    getRequest("/getMasterAttendanceDate/" + start + " " + end, "", downloadAllMasterHelper);
+}
+
+
 
 function downloadAllMasterHelper(_, data) {
     var rows = [];

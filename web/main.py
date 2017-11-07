@@ -307,6 +307,7 @@ def studentProfile(string):
 
 @app.route('/getID/<string>')
 def getStudentID(string):
+    print("GetID called")
     return autofill(string)
 
 @app.route('/getJustID/<string>')

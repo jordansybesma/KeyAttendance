@@ -33,7 +33,7 @@
 <button class = "tablinks" onclick = "openTab(event, 'Data'); displayAttendanceList();"> Attendance Sheets </button>
 <button class = "tablinks" onclick = "openTab(event, 'AttendanceOverview'); displayMasterAttendance();"> Attendance Overview </button>
 <button class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</button>
-<button class = "tablinks" onclick = "openTab(event, 'Staff Schedules'); showLogin();"> Staff Schedules</button>
+<button class = "tablinks" onclick = "openTab(event, 'StaffSchedules'); showLogin();"> Staff Schedules</button>
 <button class = "tablinks" onclick = "openTab(event, 'Edit Attendance Sheets')"> Edit Attendance Sheets </button>
 </div>
 
@@ -182,19 +182,19 @@
     </div>
 </div>
 
-    <div id="Staff Schedules" class="tabcontent">
-        <div id="login">
-            <form>
-                <input id="username" type="text" placeholder="Username" />
-                <input id="password" type="text" placeholder="Password" />
-                <input id="submitLogin" type="button" value="Submit" onclick="checkLogin()" />
-            </form>
-        </div>
-        <div id="dontShow">
-            <h3>Staff Schedules</h3>
-            <p>Staff Schedules</p>
-        </div>
-    </div>
+<div id="StaffSchedules" class="tabcontent">
+<div id="login">
+    <form>
+	<input id="username" type="text" placeholder="Username" />
+	<input id="password" type="text" placeholder="Password" />
+	<input id="submitLogin" type="button" value="Submit" onclick="checkLogin()" />
+    </form>
+</div>
+<div id="dontShow">
+    <h3>Staff Schedules</h3>
+    <p>Staff Schedules</p>
+</div>
+</div>
 
 <div id="Edit Attendance Sheets" class="tabcontent">
   <h3>Edit Attendance Sheets</h3>

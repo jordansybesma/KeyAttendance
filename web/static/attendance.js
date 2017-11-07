@@ -212,13 +212,18 @@ function showStudentAttendance(_, data) {
     //
     // var x = [];
 
+    var dateCounts = [0, 0, 0, 0, 0, 0, 0]
     for(i = 0; i < parsedData.length; i++) {
       var dateString = parsedData[i][12];
       console.log(dateString);
       var dateList = dateString.split("-")
       var myDate = new Date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
+      var day = myDate.getDay();
+      dateCounts[day] = dateCounts[day] + 1;
       console.log(myDate.getDay());
     }
+    
+    graphStudentAttendance(dateCounts);
 
     // var trace1 = {
     //   x: [1, 2, 3, 4, 5],
@@ -232,6 +237,29 @@ function showStudentAttendance(_, data) {
 
 
     fillProfileTable(parsedData);
+}
+
+function graphStudentAttendance(yaxis) {
+    var max = Math.max.apply(Math, yaxis);
+    //var min = Math.min.apply(Math, yaxis);
+    //var change = Math.ceil((max - min) / xaxis.lenth);
+    change = 1;
+    xaxis = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var trace1 = {
+        x: xaxis,
+        y: yaxis,
+        type: 'bar'
+    };
+    var data = [trace1];
+
+    var layout = {
+        autosize: false,
+        width: 500,
+        height: 500,
+        title: 'Recent Attendance'
+    };
+
+    Plotly.newPlot('graphStudent', data, layout);
 }
 
 function fillProfileTable(attendance)  {

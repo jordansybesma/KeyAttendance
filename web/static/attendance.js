@@ -205,7 +205,6 @@ function showStudentProfile() {
 }
 
 function showStudentAttendance(_, data) {
-    console.log("got to showStudentAttendance")
     console.log(JSON.parse(data));
 
 }

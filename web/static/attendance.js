@@ -820,6 +820,7 @@ function createFileHelper(_, attendance) {
 
 function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
+    return false;
 }
 function downloadMasterDates() {
     console.log("got here");

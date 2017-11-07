@@ -13,6 +13,14 @@ app = flask.Flask(__name__)
 @app.route('/')
 def send_index():
     return flask.redirect("static/index.html", code=302)
+    
+'''@app.route('/')
+def loginPage():
+    return flask.redirect("static/login.html", code=302)
+    
+@app.route('/main')
+def main():
+    return flask.redirect("static/index.html", code=302)'''
 
 @app.route('/addText/', methods=['POST'])
 def foo():

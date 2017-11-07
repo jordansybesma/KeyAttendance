@@ -249,7 +249,7 @@ def addAttendant():
         [id] + activities)
         return "true"
     else:
-        firstQuery = "SELECT * FROM testStudents WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "' AND date = '" + date + "';"
+        firstQuery = "SELECT * FROM dailyAttendance WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "' AND date = '" + date + "';"
         existingEntry = json.dumps(executeSingleQuery(firstQuery, fetch = True))
         entries = json.loads(existingEntry)
         if entries != []:

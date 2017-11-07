@@ -819,7 +819,8 @@ function createFileHelper(_, attendance) {
 function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
 }
-function downloadAllMasterDates() {
+function downloadMasterDates() {
+    console.log("got here");
     var start = document.getElementById("startDate").value;
     var end = document.getElementById("endDate").value;
     if (start = ""){
@@ -830,6 +831,7 @@ function downloadAllMasterDates() {
         alert("Please enter an end date");
         return false;
     }
+    console.log("/getMasterAttendanceDate/" + start + " " + end);
     getRequest("/getMasterAttendanceDate/" + start + " " + end, "", downloadAllMasterHelper);
 }
 

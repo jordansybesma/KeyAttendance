@@ -52,11 +52,11 @@ function addNewStudent() {
     var first = document.getElementById("newStudentFirst").value;
     var firstChar = first[0];
     firstChar = firstChar.toUpperCase();
-    first[0] = firstChar;
+    first = lastChar + first[1:];
     var last = document.getElementById("newStudentLast").value;
     var lastChar = first[0];
     lastChar = lastChar.toUpperCase();
-    last[0] = lastChar;
+    last = lastChar + last[1:];
     alert("first: " + first);
     alert("firstChar: " + firstChar);
 

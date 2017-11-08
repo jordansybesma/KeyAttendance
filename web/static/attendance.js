@@ -568,7 +568,7 @@ function masterAttendanceHelper(_, masterData) {
         yaxisMentalHealth.push(myData[i][7]);
         yaxisVolunteering.push(myData[i][8]);
         yaxisOneOnOne.push(myData[i][9]);
-        var row = table.insertRow(1);
+        var row = table.insertRow(-1);
         for (j in myData[i])  {
             row.insertCell(-1).innerHTML = myData[i][j];
         }

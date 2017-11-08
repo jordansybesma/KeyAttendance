@@ -296,7 +296,7 @@ function scatterStudentAttendance(xList, yList) {
         type: 'scatter'
     };
 
-    var data = [trace1];
+    var data = [trace0, trace1];
 
     var layout = {
         autosize: false,

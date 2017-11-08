@@ -284,7 +284,7 @@ function scatterStudentAttendance(xList, yList) {
     var trace0 = {
         x: ["Sunday","Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
         y: [0,0,0,0,0,0,0],
-        mode: 'markers',
+        mode: 'lines',
         type: 'scatter',
         marker: {
             size: 0,

@@ -539,6 +539,7 @@ function displayMasterAttendance() {
 
 function masterAttendanceHelper(_, masterData) {
     var myData = JSON.parse(masterData);
+    console.log(masterData);
     var table = document.getElementById("masterAttendanceTable");
     table.innerHTML = "";
     var row = table.insertRow(-1);

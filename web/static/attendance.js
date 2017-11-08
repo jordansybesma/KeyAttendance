@@ -286,7 +286,7 @@ function scatterStudentAttendance(xList, yList) {
         y: [0,0,0,0,0,0,0],
         mode: 'markers',
         type: 'scatter',
-        visible: legendonly,
+        visible: 'legendonly',
         marker: {size: 0}
     };
 

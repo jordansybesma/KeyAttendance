@@ -281,6 +281,14 @@ function convertDay(day) {
 }
 
 function scatterStudentAttendance(xList, yList) {
+    var trace0 = {
+        x: ["Sunday","Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        y: [0,0,0,0,0,0,0],
+        mode: 'markers',
+        type: 'scatter',
+        marker: {size: 0}
+    };
+
     var trace1 = {
         x: xList,
         y: yList,

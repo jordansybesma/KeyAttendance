@@ -286,8 +286,10 @@ function scatterStudentAttendance(xList, yList) {
         y: [0,0,0,0,0,0,0],
         mode: 'markers',
         type: 'scatter',
-        visible: 'legendonly',
-        marker: {size: 0}
+        marker: {
+            size: 0,
+            color: 'black'
+        }
     };
 
     var trace1 = {

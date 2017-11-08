@@ -100,31 +100,21 @@ div.tab button.active {
 #Home  {
     #homeContent  {
         display: grid !important;
-        padding-top: 6px;
-        grid-template-columns: 25% auto 25%;
-        grid-template-rows: 30% 30%;
-        grid-column-gap: 6px;
+        grid-template-columns: 33% auto 33%;
+        grid-template-rows: 500px auto;
         grid-row-gap: 6px;
 
-        #Notifications {
+        #masterGraph {
             grid-column: 1;
             grid-row: 1;
         }
 
-        #content {
+        #activityGraph {
             grid-column: 2;
-            grid-row: 1 / span 2;
+            grid-row: 1;
         }
 
-        #PastAttendanceSheets {
-            grid-column: 3;
-            grid-row: 3;
-        }
-
-        #Activities {
-            grid-column: 3;
-            grid-row: 1 / span 2;
-        }
+        
     }
 }
 

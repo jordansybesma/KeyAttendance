@@ -95,7 +95,7 @@ def getStudentAttendance(student):
 @app.route('/getMasterAttendance')
 def getMasterAttendance():
     return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date ASC;",
-        fetch = True)[:10], indent=4, sort_keys=True, default=str)
+        fetch = True)[:9], indent=4, sort_keys=True, default=str)
         
 # must give start and end date separated by a space
 @app.route('/getMasterAttendanceDate/<dates>')

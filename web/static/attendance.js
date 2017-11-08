@@ -302,10 +302,10 @@ function scatterStudentAttendance(xList, yList) {
     var data = [trace0, trace1];
 
     var layout = {
+        showlegend: false,
         autosize: false,
         width: 500,
         height: 500,
-        showLegend: false,
         title: 'Attendance Times'
     };
 

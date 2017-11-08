@@ -232,7 +232,7 @@ function showStudentAttendance(_, data) {
       console.log(time);
       var timeList = time.split(":");
       var hour = parseInt(timeList[0]);
-      scatterx.push(day);
+      scatterx.push(convertDay(day));
       scattery.push(hour);
       /*console.log(timeList);
       var baseTenTime = parseInt(timeList[0]) + (parseInt(timeList[1]) / 60);
@@ -260,6 +260,24 @@ function showStudentAttendance(_, data) {
 
 
     fillProfileTable(parsedData);
+}
+
+function convertDay(day) {
+    if (day == 0) {
+        return "Sunday";
+    } else if (day == 1) {
+        return "Monday"
+    } else if (day == 2) {
+        return "Tuesday"
+    } else if (day == 3) {
+        return "Wednesday"
+    } else if (day == 4) {
+        return "Thursday"
+    } else if (day == 5) {
+        return "Friday"
+    } else if (day == 6) {
+        return "Saturday"
+    }
 }
 
 function scatterStudentAttendance(xList, yList) {

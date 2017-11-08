@@ -89,22 +89,32 @@
     </div>
 
     <div id="attendanceDiv">
-        <button id="returnAttendanceList" onclick="returnAttendance()">
-            Return
-        </button>
-        <button type="button" id="download" onclick="createFile()">Download Attendance Sheet</button>
+        <div id="aboveTable">
+            <div id="leftStuff">
+                <button id="returnAttendanceList" onclick="returnAttendance()">
+                    Return
+                </button>
 
-        <h2 id="attendanceName"> Attendance Sheet 10/19/2017 </h2>
+                <h2 id="attendanceName"> Attendance Sheet 10/19/2017 </h2>
 
-        <div>
 
-        <aside>
-            <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required /></label>
-            <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
-            <datalist id="suggestedStudents"></datalist>
-        </aside>
-            <p id="storeDate"></p>
-        <button id="addStudent" onclick="openAddStudent()">Add New Student</button>
+                <p id="storeDate"></p>
+
+                <form onsubmit="return false;" id="suggestForm">
+                    <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required /></label>
+                    <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
+                    <datalist id="suggestedStudents"></datalist>
+                </form>
+            </div>
+            <div id="middle">
+
+            </div>
+            <div id="rightStuff">
+                <button type="button" id="download" onclick="createFile()">Download Attendance Sheet</button>
+
+                <button id="addStudent" onclick="openAddStudent()">Add New Student</button>
+            </div>
+        </div>
             <div id="studentDiv" class="addStudentContent">
                 <div class="addStudentHeader">
                     <h2 id="popUpHeader">Add Student</h2>
@@ -137,7 +147,7 @@
 
 
             </table>
-        </div>
+        
     </div>
 </div>
 

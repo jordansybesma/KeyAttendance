@@ -104,7 +104,7 @@ def getMasterAttendanceDate(dates):
     start = dateList[0]
     end = dateList[1]
     return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance WHERE date >= '" + start + "' AND date <= '" + end + "' ORDER BY date DESC;",
-        fetch = True)[:10], indent=4, sort_keys=True, default=str)
+        fetch = True)[:8], indent=4, sort_keys=True, default=str)
         
 
 

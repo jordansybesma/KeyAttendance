@@ -369,7 +369,7 @@ function graphStudentAttendance(yaxis) {
 function fillProfileTable(attendance)  {
     var table = document.getElementById("profileAttendanceTable");
     table.innerHTML = ""
-    var fields = ['ID', 'First', 'Last', 'Art', 'Made Food', 'Recieved Food', 'Leadership', 'Exersize', 'Mental Health', 'Volunteering', 'One On One', 'Date', 'Time'];
+    var fields = ['ID', 'First', 'Last', 'Art', 'Made Food', 'Recieved Food', 'Leadership', 'Exersize', 'Mental Health', 'Volunteering', 'One On One', 'Comments', 'Date', 'Time'];
     row = table.insertRow(-1);
     for (header of fields)  {
         row.insertCell(-1).innerHTML = header;

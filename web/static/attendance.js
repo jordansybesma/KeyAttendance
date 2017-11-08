@@ -217,6 +217,9 @@ function showStudentAttendance(_, data) {
 
     var dateTimes = [[], [], [], [], [], [], []];
 
+    var scatterx = [];
+    var scattery = [];
+
     for(i = 0; i < parsedData.length; i++) {
       var dateString = parsedData[i][12];
       console.log(dateString);
@@ -228,10 +231,13 @@ function showStudentAttendance(_, data) {
       var time = parsedData[i][13];
       console.log(time);
       var timeList = time.split(":");
-      console.log(timeList);
+      var hour = parseInt(timeList[0]);
+      scatterx.push(day);
+      scattery.push(hour);
+      /*console.log(timeList);
       var baseTenTime = parseInt(timeList[0]) + (parseInt(timeList[1]) / 60);
       console.log(baseTenTime);
-      dateTimes[myDate.getDay()].push(baseTenTime);
+      dateTimes[myDate.getDay()].push(baseTenTime);*/
     }
     console.log(dateTimes);
 
@@ -239,7 +245,8 @@ function showStudentAttendance(_, data) {
 
     graphStudentAttendance(dateCounts);
 
-    scatterStudentAttendance(dateTimes);
+    //scatterStudentAttendance(dateTimes);
+    scatterStudentAttendance(scatterx, scattery);
 
     // var trace1 = {
     //   x: [1, 2, 3, 4, 5],
@@ -255,7 +262,27 @@ function showStudentAttendance(_, data) {
     fillProfileTable(parsedData);
 }
 
-function scatterStudentAttendance(dateTimes){
+function scatterStudentAttendance(xList, yList) {
+    var trace1 = {
+        x: xList,
+        y: yList,
+        mode: 'markers',
+        type: 'scatter'
+    };
+
+    var data = [trace1];
+
+    var layout = {
+        autosize: false,
+        width: 500,
+        height: 500,
+        title: 'Attendance Times'
+    };
+
+    Plotly.newPlot('studentTimes', data, layout);
+}
+
+/*function scatterStudentAttendance(dateTimes){
     var xList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     var yList = [[], [], [], [], [], [], []];
 
@@ -285,7 +312,7 @@ function scatterStudentAttendance(dateTimes){
 
     Plotly.newPlot('studentTimes', data, layout);
 }
-
+*/
 function graphStudentAttendance(yaxis) {
     var max = Math.max.apply(Math, yaxis);
     //var min = Math.min.apply(Math, yaxis);

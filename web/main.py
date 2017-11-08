@@ -193,7 +193,12 @@ def tempMaster():
     query2 = "CREATE TABLE masterAttendance (date date, numAttend int, art int, madeFood int, recievedFood int, leadership int, exersize int, mentalHealth int, volunteering int, oneOnOne int);"
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
-
+    
+@app.route('/tempFiller', methods=["POST"])
+def tempFiller():
+    query = "INSERT INTO dailyAttendance VALUES ('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-30','16:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-29','18:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-27','18:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-25','16:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-21','15:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-19','17:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-15','17:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-12','16:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-11','19:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-10','15:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-06','17:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-05','18:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-01','16:00:00');"
+    executeSingleQuery(query, [])
+    return ""
 @app.route('/tempLogin', methods=["POST"])
 def tempLogin():
     query = "DROP TABLE IF EXISTS login;"
@@ -371,3 +376,5 @@ if __name__ == "__main__":
         app.run()
     else:
         app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')
+        
+        

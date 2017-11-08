@@ -94,8 +94,8 @@ def getStudentAttendance(student):
 
 @app.route('/getMasterAttendance')
 def getMasterAttendance():
-    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date ASC;",
-        fetch = True), indent=4, sort_keys=True, default=str)
+    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;",
+        fetch = True)[:10], indent=4, sort_keys=True, default=str)
         
 # must give start and end date separated by a space
 @app.route('/getMasterAttendanceDate/<dates>')
@@ -103,8 +103,8 @@ def getMasterAttendanceDate(dates):
     dateList = dates.split()
     start = dateList[0]
     end = dateList[1]
-    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance WHERE date >= '" + start + "' AND date <= '" + end + "' ORDER BY date DESC;",
-        fetch = True)[:8], indent=4, sort_keys=True, default=str)
+    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance WHERE date >= '" + start + "' AND date <= '" + end + "' ORDER BY date ASC;",
+        fetch = True), indent=4, sort_keys=True, default=str)
         
 
 

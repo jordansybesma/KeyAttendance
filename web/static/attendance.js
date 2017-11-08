@@ -286,6 +286,7 @@ function scatterStudentAttendance(xList, yList) {
         y: [0,0,0,0,0,0,0],
         mode: 'markers',
         type: 'scatter',
+        visible: false,
         marker: {size: 0}
     };
 
@@ -302,6 +303,7 @@ function scatterStudentAttendance(xList, yList) {
         autosize: false,
         width: 500,
         height: 500,
+        showLegend: false,
         title: 'Attendance Times'
     };
 

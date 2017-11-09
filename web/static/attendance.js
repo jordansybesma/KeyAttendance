@@ -694,7 +694,7 @@ function makeMasterTableHeader(_, columns) {
     document.getElementById("columnData").innerHTML = columns;
     row.insertCell(-1).innerHTML = "Date";
     row.insertCell(-1).innerHTML = "Attendees";
-    var myData = JSON.parse(data);
+    var myData = JSON.parse(columns);
     for (i in myData) {
         if (myData[i][1] == true) {
             var newHeader = makeHeaderReadable(myData[i][2]);

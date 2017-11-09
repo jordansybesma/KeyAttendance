@@ -495,7 +495,7 @@ function makeTableHeaderHelper(_, data) {
     row.insertCell(-1).innerHTML = "Name";
     var myData = JSON.parse(data);
     for (i in myData){
-        if (myData[i][1]=='true'){
+        if (myData[i][1]==true){
             row.insertCell(-1).innerHTML = myData[i][2];
         }
 

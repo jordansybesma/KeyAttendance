@@ -199,6 +199,7 @@ function showAttendanceManage() {
 function showAttendanceManageHelper(_, data){
     var myData = JSON.parse(data);
     for (i in myData) {
+        console.log(myData[i]);
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = myData[i][2];
         var str = "<input type=\"checkbox\" "

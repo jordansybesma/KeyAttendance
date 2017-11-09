@@ -132,8 +132,31 @@ def getAttendanceColumns():
     query = "SELECT * FROM attendanceColumns"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
     
+@app.route('/tempAlter', methods=["POST"])
+def tempAlter():
+    query = "ALTER TABLE attendanceColumns ADD priority int;"
+    query2 = "UPDATE attendanceColumns set priority = '1' WHERE name = 'art';"
+    query3 = "UPDATE attendanceColumns set priority = '2' WHERE name = 'madeFood';"
+    query4 = "UPDATE attendanceColumns set priority = '3' WHERE name = 'recievedFood';"
+    query5 = "UPDATE attendanceColumns set priority = '4' WHERE name = 'leadership';"
+    query6 = "UPDATE attendanceColumns set priority = '5' WHERE name = 'exersize';"
+    query7 = "UPDATE attendanceColumns set priority = '6' WHERE name = 'mentalHealth';"
+    query8 = "UPDATE attendanceColumns set priority = '7' WHERE name = 'volunteering';"
+    query9 = "UPDATE attendanceColumns set priority = '8' WHERE name = 'oneOnOne';"
+    query10 = "UPDATE attendanceColumns set priority = '9' WHERE name = 'comments';"
+    query11 = "UPDATE attendanceColumns set isShowing = 'false' WHERE name = 'comments';"
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])
+    executeSingleQuery(query3, [])
+    executeSingleQuery(query4, [])
+    executeSingleQuery(query5, [])
+    executeSingleQuery(query6, [])
+    executeSingleQuery(query7, [])
+    executeSingleQuery(query8, [])
+    executeSingleQuery(query9, [])
+    executeSingleQuery(query10, [])
+    executeSingleQuery(query11, [])
     
-
 # must give start and end date separated by a space
 @app.route('/getMasterAttendanceDate/<dates>')
 def getMasterAttendanceDate(dates):

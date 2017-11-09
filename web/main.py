@@ -378,7 +378,11 @@ def addAttendant():
         columnsData = json.loads(columns)
         numCols = len(columnsData);
         
-        newString = "INSERT INTO dailyAttendance VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
+        newString = "INSERT INTO dailyAttendance (id, firstName, lastName"
+        for i in range(0, numCols):
+            newString = newString + ", "+ columnsData[i][0]
+        
+        newString = newString + ", date, time) VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
         for i in range(0, numCols):
             newString = newString + "'FALSE', "
         newString = newString + "'" + date + "','" + time + "');"

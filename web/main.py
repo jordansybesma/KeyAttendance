@@ -133,7 +133,7 @@ def addAttendanceColumn():
     
     query = "INSERT INTO attendanceColumns VALUES ('true','true', '" + name + "', '"+ colType + "', '"+ isParent + "', '" + isChild + "', '" + parent + "');"
     queryAttendance = "ALTER TABLE dailyAttendance ADD " + name + " " + colType + ";"
-    queryMaster = "ALTER TABLE masterAttendance ADD " + name + " " + colType + ";"
+    queryMaster = "ALTER TABLE masterAttendance ADD " + name + " int;"
     executeSingleQuery(query, [])
     executeSingleQuery(queryAttendance, [])
     executeSingleQuery(queryMaster, [])

@@ -70,7 +70,15 @@ def sendFeedback():
 # going to get today's data later
 @app.route('/getAttendance/<date>')
 def getAttendance(date):
-    queryResult = executeSingleQuery("SELECT * FROM dailyAttendance WHERE date= '" + date + "' ORDER BY lastName ASC;", fetch = True)
+    queryColumns = "SELECT name FROM attendanceColumns ORDER BY priority;"
+    cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
+    colList = json.loads(cols)
+    query = "SELECT firstName, lastName, " + colList[0];
+    for i in range(1, len(colList)):
+        query = query + ", " + colList[i]
+    query = query + " FROM dailyAttendance WHERE date= '" + date + "' ORDER BY lastName ASC;"
+    
+    queryResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(queryResult, indent=4, sort_keys=True, default=str)
     return result
 

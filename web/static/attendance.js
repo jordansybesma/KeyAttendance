@@ -198,6 +198,7 @@ function showAttendanceManage() {
 }
 function showAttendanceManageHelper(_, data){
     var myData = JSON.parse(data);
+    var table = document.getElementById("attendanceColumnsTable");
     for (i in myData) {
         console.log(myData[i]);
         var row = table.insertRow(-1);
@@ -214,6 +215,27 @@ function selectColumn(name) {
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/updateAttendanceColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
+}
+
+function addColumn() {
+    var name = document.getElementById("newColumn");
+    if (name.includes(" ")) {
+        alert("Please enter a column name with no spaces")
+        return;
+    }
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendanceColumn");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name + "&type=boolean");
+
+
+    var table = document.getElementById("attendanceColumnsTable");
+    var row = table.insertRow(-1);
+    row.insertCell(-1).innerHTML = name;
+    var str = "<input type=\"checkbox\" "
+            + (myData[i][1] ? "checked" : "")
+            + " onclick=\"selectColumn('" + name + "')\">";
+    row.insertCell(-1).innerHTML = str;
 }
 
 function modifyAutofillList(_ , studentNames) {

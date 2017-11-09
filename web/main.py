@@ -122,11 +122,19 @@ def addAttendanceColumn():
     #make sure column name not in use
     name = request.form.get("name")
     colType = request.form.get("type")
-    isParent = request.form.get("isParent")
-    isChild = request.form.get("isChild")
-    parent = request.form.get("parent")
+    #isParent = request.form.get("isParent")
+    isParent = "false"
+    #isChild = request.form.get("isChild")
+    isChild = "false"
+    #parent = request.form.get("parent")
+    parent = ""
+    if (colType == "varchar"):
+        colType = colType + "(255)"
+    
     query = "INSERT INTO attendanceColumns VALUES ('true','true', '" + name + "', '"+ colType + "', '"+ isParent + "', '" + isChild + "', '" + parent + "');"
+    queryAttendance = "ALTER TABLE dailyAttendance ADD " + name + " " + colType + ";"
     executeSingleQuery(query, [])
+    executeSingleQuery(queryAttendance, [])
 
 @app.route('/updateAttendanceColumn', methods=["POST"])
 def updateAttendanceColumn():

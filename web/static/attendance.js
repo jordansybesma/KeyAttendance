@@ -124,9 +124,48 @@ function sendSubmitForm()  {
 }
 function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
+    var columnData = document.getElementById("columns").innerHTML;
+    var myColumns = JSON.parse(columnData);
     for (i in myData) {
-        addRowHelper(myData[i][1], myData[i][2], myData[i][3], myData[i][4], myData[i][5],myData[i][6],myData[i][7],myData[i][8],myData[i][9],myData[i][10])
+        addRowHelper2(myColumns, myData[i]);
     }
+    /*for (i in myData) {
+        addRowHelper(myData[i][1], myData[i][2], myData[i][3], myData[i][4], myData[i][5],myData[i][6],myData[i][7],myData[i][8],myData[i][9],myData[i][10])
+    }*/
+}
+
+function addRowHelper2(columns, row) {
+    var table = document.getElementById("Attendance-Table");
+
+    //var date = getCurrentDate();
+    var date = document.getElementById("storeDate").innerHTML;
+    document.getElementById("keyword").value = "";
+
+
+    var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
+    var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
+
+    var row = table.insertRow(1);
+    fullName = first + " " + last;
+    row.insertCell(-1).innerHTML = fullName;
+    for (i in columns) {
+        if (columns[i][1] == true) {
+            var index = columns[i][7];
+            var str = "<input type=\"checkbox\" "
+            + (row[index + 2] ? "checked" : "")
+            + " onclick=\"selectActivity('" + fullName + "','" + columns[i][2] + "', '" + date + "')\">";
+            row.insertCell(-1).innerHTML = str;
+        }
+    }
+    /*for (var i = 0; i < 8; i++) {
+        var str = "<input type=\"checkbox\" "
+            + (checked[i] ? "checked" : "")
+            + " onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
+        row.insertCell(i + 1).innerHTML = str;
+    }*/
+
+    var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
+    row.insertCell(-1).innerHTML = str;
 }
 
 function modifyAutofillList(_ , studentNames) {
@@ -490,6 +529,7 @@ function makeTableHeader(table) {
 function makeTableHeaderHelper(_, data) {
     console.log("got to helper");
     console.log(data);
+    document.getElementById("columns").innerHTML = data;
     table = document.getElementById("Attendance-Table");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";

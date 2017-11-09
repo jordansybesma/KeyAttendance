@@ -129,7 +129,7 @@ def deleteAttendanceColumn():
     
 @app.route('/getAttendanceColumns')
 def getAttendanceColumns():
-    query = "SELECT * FROM attendanceColumns"
+    query = "SELECT * FROM attendanceColumns ORDER BY priority"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
     
 @app.route('/tempAlter', methods=["POST"])

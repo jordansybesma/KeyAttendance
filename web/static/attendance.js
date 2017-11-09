@@ -478,12 +478,27 @@ function createNewAttendance() {
 
 function makeTableHeader(table) {
     table.innerHTML = "";
-    var row = table.insertRow(0);
+    /*var row = table.insertRow(0);
     cellNames = ["Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One On One"];
     for (header of cellNames) {
         row.insertCell(-1).innerHTML = header;
+    }*/
+    getRequest("/getAttendanceColumns/", "", makeTableHeaderHelper);
+}
+
+function makeTableHeaderHelper(_, data) {
+    table = document.getElementById("Attendance-Table");
+    var row = table.insertRow(0);
+    row.insertCell(-1).innerHTML = "Name";
+    var myData = JSON.parse(data);
+    for (i in myData){
+        if (myData[i][1]=='true'){
+            row.insertCell(-1).innerHTML = myData[i][2];
+        }
+        
     }
 }
+
 
 function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;

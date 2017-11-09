@@ -129,9 +129,20 @@ def addAttendanceColumn():
     executeSingleQuery(query, [])
 
 @app.route('/deleteAttendanceColumn', methods=["POST"])
-def deleteAttendanceColumn():
+def updateAttendanceColumn():
     name = request.form.get("name")
     query = "UPDATE attendanceColumns SET isShowing = 'false' WHERE name = '" + name + "';"
+    executeSingleQuery(query, [])
+    
+    queryMaster = "SELECT isShowing FROM attendanceColumns WHERE name = '" + name + "';"
+    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+    newResult =json.loads(result)
+    isShowing = newResult[0][0]
+    if (isShowing):
+        query = "UPDATE attendanceColumns SET isShowing = 'false' WHERE name = '" + name + "';"
+    else:
+        query = "UPDATE attendanceColumns SET isShowing = 'true' WHERE name = '" + name + "';"
+    
     executeSingleQuery(query, [])
     
     

@@ -187,6 +187,33 @@ function addRowHelper2(columns, entry) {
     row.insertCell(-1).innerHTML = str;
 }
 
+function showAttendanceManage() {
+    table = document.getElementById("attendanceColumnsTable");
+    table.innerHTML = "";
+    var row = table.insertRow(-1);
+    row.insertCell(-1).innerHTML = "Column Name";
+    row.insertCell(-1).innerHTML = "Currently in Use";
+    getRequest("/getAttendanceColumns", "", showAttendanceManageHelper);
+
+}
+function showAttendanceManageHelper(_, data){
+    var myData = JSON.parse(data);
+    for (i in myData) {
+        var row = table.insertRow(-1);
+        row.insertCell(-1).innerHTML = myData[i][2];
+        var str = "<input type=\"checkbox\" "
+            + (myData[1] ? "checked" : "")
+            + " onclick=\"selectColumn('" + myData[i][2] + "')\">";
+        row.insertCell(-1).innerHTML = str;
+    }
+}
+function selectColumn(name) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/tempColumns");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name);
+}
+
 function modifyAutofillList(_ , studentNames) {
   var list = document.getElementById("suggestedStudents");
   var myData = JSON.parse(studentNames);

@@ -178,7 +178,7 @@ function addRowHelper2(columns, entry) {
         
         if (columns[i][1] == true) {
             console.log((i+ 2));
-            var index = i + 2;
+            var index = parseInt(i) + 2;
             var str = "<input type=\"checkbox\" "
             + (entry[index] ? "checked" : "")
             + " onclick=\"selectActivity('" + fullName + "','" + columns[i][2] + "', '" + date + "')\">";

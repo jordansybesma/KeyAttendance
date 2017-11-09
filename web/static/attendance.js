@@ -422,7 +422,7 @@ function scatterStudentAttendance(xList, yList) {
         y: yList,
         mode: 'markers',
         type: 'scatter',
-        opacity: .5
+        marker: {opacity: 0.5, size: 14}
     };
 
     var data = [trace0, trace1];

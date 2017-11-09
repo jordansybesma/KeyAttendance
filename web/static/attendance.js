@@ -174,8 +174,9 @@ function addRowHelper2(columns, entry) {
     fullName = entry[0] + " " + entry[1];
     row.insertCell(-1).innerHTML = fullName;
     for (i in columns) {
-        console.log(entry[i + 2]);
+        
         if (columns[i][1] == true) {
+            console.log(entry[i + 2]);
             var index = columns[i][7];
             var str = "<input type=\"checkbox\" "
             + (entry[i + 2] ? "checked" : "")

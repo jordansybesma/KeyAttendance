@@ -679,19 +679,40 @@ function returnAttendance() {
 }
 
 function displayMasterAttendance() {
+    var table = document.getElementById("masterAttendanceTable");
+    table.innerHTML = "";
+    getRequest("/getAttendanceColumns", "", makeMasterTableHeader);
+    
+}
+function makeMasterTableHeader(_, columns) {
+    table = document.getElementById("masterAttendanceTable");
+    var row = table.insertRow(-1);
+    document.getElementById("columnData").innerHTML = columns;
+    row.insertCell(-1).innerHTML = "Date";
+    row.insertCell(-1).innerHTML = "Attendees";
+    var myData = JSON.parse(data);
+    for (i in myData) {
+        if (myData[i][1] == true) {
+            var newHeader = makeHeaderReadable(myData[i][2]);
+            row.insertCell(-1).innerHTML = newHeader;
+        }
+
+    }
+
+
     getRequest("/getMasterAttendance", "", masterAttendanceHelper);
 }
 
 function masterAttendanceHelper(_, masterData) {
     var myData = JSON.parse(masterData);
     console.log(masterData);
-    var table = document.getElementById("masterAttendanceTable");
-    table.innerHTML = "";
-    var row = table.insertRow(-1);
+    columns = document.getElementById("columnData").innerHTML;
+    columnData = JSON.parse(columns);
+    /*var row = table.insertRow(-1);
     headers = ["Date", "# Attendees", "# Art", "# Make Food", "# Recieved Food", "# Leadership", "# Exersize", "# Mental Health", "# Volunteering", "# One On One"];
     for (header of headers)  {
         row.insertCell(-1).innerHTML = header;
-    }
+    }*/
     var xaxis = [];
     var yaxis = [];
     var yaxisArt = [];
@@ -714,8 +735,11 @@ function masterAttendanceHelper(_, masterData) {
         yaxisVolunteering.push(myData[i][8]);
         yaxisOneOnOne.push(myData[i][9]);
         var row = table.insertRow(-1);
-        for (j in myData[i])  {
-            row.insertCell(-1).innerHTML = myData[i][j];
+        for (j in columnData) {
+            if (columnData[j][1] == true) {
+                row.insertCell(-1).innerHTML = myData[i][parseInt(j) + 1];
+            }
+            
         }
     }
 

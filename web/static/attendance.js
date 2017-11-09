@@ -304,8 +304,8 @@ function scatterStudentAttendance(xList, yList) {
     var layout = {
         showlegend: false,
         autosize: false,
-        width: 500,
-        height: 500,
+        width: 400,
+        height: 400,
         title: 'Attendance Times'
     };
 
@@ -358,8 +358,8 @@ function graphStudentAttendance(yaxis) {
 
     var layout = {
         autosize: false,
-        width: 500,
-        height: 500,
+        width: 400,
+        height: 400,
         title: 'Recent Attendance'
     };
 
@@ -498,7 +498,7 @@ function makeTableHeaderHelper(_, data) {
         if (myData[i][1]=='true'){
             row.insertCell(-1).innerHTML = myData[i][2];
         }
-        
+
     }
     var table_date = document.getElementById("storeDate").innerHTML;
     getRequest("/getAttendance/" + table_date, "", fillAttendance);

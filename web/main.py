@@ -510,6 +510,13 @@ def addAlert():
     query = ("INSERT INTO alerts VALUES (%s, %s, %s)", [id, alert, 'FALSE'])
     databaseResult = executeSingleQuery(query, fetch = True)
 
+@app.route('/checkAlert', methods = ["POST"])
+def checkAlert():
+    id = request.form.get('id')
+    alert = request.form.get('alert')
+    query = ("INSERT INTO alerts VALUES (%s, %s, %s)", [id, alert, 'FALSE'])
+    databaseResult = executeSingleQuery(query, fetch = True)
+
     
 
 if __name__ == "__main__":

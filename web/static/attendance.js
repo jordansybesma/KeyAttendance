@@ -144,7 +144,7 @@ function addRowHelper2(columns, row) {
 
     //var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
     //var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
-
+    console.log(row);
     var row = table.insertRow(1);
     fullName = row[1] + " " + row[2];
     row.insertCell(-1).innerHTML = fullName;

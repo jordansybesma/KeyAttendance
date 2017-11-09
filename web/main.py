@@ -130,7 +130,7 @@ def deleteAttendanceColumn():
 @app.route('/getAttendanceColumns')
 def getAttendanceColumns():
     query = "SELECT * FROM attendanceColumns"
-    executeSingleQuery(query, [])
+    return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
     
     
 

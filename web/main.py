@@ -456,7 +456,7 @@ def autofill(partialString):
 @app.route('/frequentPeers/<string>')
 def frequentPeers(string):
     studentID = getJustID(string)
-    query = "SELECT date, time, FROM dailyAttendance WHERE id = '" + studentID + "';"
+    query = "SELECT date FROM dailyAttendance WHERE id = '" + studentID + "';"
     databaseResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(databaseResult)
     print(result)

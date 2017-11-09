@@ -497,6 +497,13 @@ def getJustID(string):
     result = json.dumps(databaseResult[0][0])
     return result
 
+@app.route('/getAlerts')
+def getAlerts():
+    query = "select testStudents.firstName, testStudents.lastName, alerts.alert from testStudents, alerts where alerts.completed = TRUE;"
+    databaseResult = executeSingleQuery(query, fetch = True)
+    return json.dumps(databaseResult)
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "local":
         app.run()

@@ -218,7 +218,7 @@ function selectColumn(name) {
 }
 
 function addColumn() {
-    var name = document.getElementById("newColumn");
+    var name = document.getElementById("newColumn").value;
     var substring = " ";
     if (name.indexOf(substring)!= -1) {
         alert("Please enter a column name with no spaces")

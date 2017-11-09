@@ -70,7 +70,15 @@ def sendFeedback():
 # going to get today's data later
 @app.route('/getAttendance/<date>')
 def getAttendance(date):
-    queryResult = executeSingleQuery("SELECT * FROM dailyAttendance WHERE date= '" + date + "' ORDER BY lastName ASC;", fetch = True)
+    queryColumns = "SELECT name FROM attendanceColumns ORDER BY priority;"
+    cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
+    colList = json.loads(cols)
+    query = "SELECT firstName, lastName, " + colList[0][0];
+    for i in range(1, len(colList)):
+        query = query + ", " + colList[i][0]
+    query = query + " FROM dailyAttendance WHERE date= '" + date + "' ORDER BY lastName ASC;"
+    
+    queryResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(queryResult, indent=4, sort_keys=True, default=str)
     return result
 
@@ -101,8 +109,8 @@ def getMasterAttendance():
 @app.route('/tempColumns', methods=["POST"])
 def tempColumns():
     query = query = "DROP TABLE IF EXISTS attendanceColumns;"
-    query2 = "CREATE TABLE attendanceColumns (inUse boolean, isShowing boolean, name varchar(255), type varchar(255), isParent boolean, isChild boolean, parent varchar(255))"
-    query3 = "INSERT INTO attendanceColumns VALUES ('true','true','art','boolean','false','false',''),('true','true','madeFood','boolean','false','false',''),('true','true','recievedFood','boolean','false','false',''),('true','true','leadership','boolean','false','false',''),('true','true','exersize','boolean','false','false',''),('true','true','mentalHealth','boolean','false','false',''),('true','true','volunteering','boolean','false','false',''),('true','true','oneOnOne','boolean','false','false',''),('true','true','comments','varchar','false','false','');"
+    query2 = "CREATE TABLE attendanceColumns (inUse boolean, isShowing boolean, name varchar(255), type varchar(255), isParent boolean, isChild boolean, parent varchar(255), priority SERIAL UNIQUE)"
+    query3 = "INSERT INTO attendanceColumns (inUse, isShowing, name, type, isParent, isChild, parent) VALUES ('true','true','art','boolean','false','false',''),('true','true','madeFood','boolean','false','false',''),('true','true','recievedFood','boolean','false','false',''),('true','true','leadership','boolean','false','false',''),('true','true','exersize','boolean','false','false',''),('true','true','mentalHealth','boolean','false','false',''),('true','true','volunteering','boolean','false','false',''),('true','true','oneOnOne','boolean','false','false',''),('true','false','comments','varchar','false','false','');"
     
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
@@ -114,26 +122,85 @@ def addAttendanceColumn():
     #make sure column name not in use
     name = request.form.get("name")
     colType = request.form.get("type")
-    isParent = request.form.get("isParent")
-    isChild = request.form.get("isChild")
-    parent = request.form.get("parent")
+    #isParent = request.form.get("isParent")
+    isParent = "false"
+    #isChild = request.form.get("isChild")
+    isChild = "false"
+    #parent = request.form.get("parent")
+    parent = ""
+    if (colType == "varchar"):
+        colType = colType + "(255)"
+    
     query = "INSERT INTO attendanceColumns VALUES ('true','true', '" + name + "', '"+ colType + "', '"+ isParent + "', '" + isChild + "', '" + parent + "');"
+    queryAttendance = "ALTER TABLE dailyAttendance ADD " + name + " " + colType + ";"
+    queryMaster = "ALTER TABLE masterAttendance ADD " + name + " int;"
     executeSingleQuery(query, [])
-
+    executeSingleQuery(queryAttendance, [])
+    executeSingleQuery(queryMaster, [])
+    
+    queryCounts = "UPDATE masterAttendance SET "+ name+ "='0';"
+    
+    executeSingleQuery(queryCounts, [])
+    
 @app.route('/deleteAttendanceColumn', methods=["POST"])
 def deleteAttendanceColumn():
     name = request.form.get("name")
-    query = "UPDATE attendanceColumns SET isShowing = 'false' WHERE name = '" + name + "';"
+    query = "DELETE FROM attendanceColumns WHERE name = '" + name + "';"
+    queryAttendance = "ALTER TABLE dailyAttendance DROP COLUMN " + name + ";"
+    queryMaster = "ALTER TABLE masterAttendance DROP COLUMN " + name + ";"
+    
+    executeSingleQuery(query, [])
+    executeSingleQuery(queryAttendance, [])
+    executeSingleQuery(queryMaster, [])
+    
+
+@app.route('/updateAttendanceColumn', methods=["POST"])
+def updateAttendanceColumn():
+    name = request.form.get("name")
+    
+    
+    queryMaster = "SELECT isShowing FROM attendanceColumns WHERE name = '" + name + "';"
+    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+    newResult =json.loads(result)
+    isShowing = newResult[0][0]
+    if (isShowing):
+        query = "UPDATE attendanceColumns SET isShowing = 'false' WHERE name = '" + name + "';"
+    else:
+        query = "UPDATE attendanceColumns SET isShowing = 'true' WHERE name = '" + name + "';"
+    
     executeSingleQuery(query, [])
     
     
 @app.route('/getAttendanceColumns')
 def getAttendanceColumns():
-    query = "SELECT * FROM attendanceColumns"
+    query = "SELECT * FROM attendanceColumns ORDER BY priority"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
     
+@app.route('/tempAlter', methods=["POST"])
+def tempAlter():
+    query = "ALTER TABLE attendanceColumns ADD priority int;"
+    query2 = "UPDATE attendanceColumns set priority = '1' WHERE name = 'art';"
+    query3 = "UPDATE attendanceColumns set priority = '2' WHERE name = 'madeFood';"
+    query4 = "UPDATE attendanceColumns set priority = '3' WHERE name = 'recievedFood';"
+    query5 = "UPDATE attendanceColumns set priority = '4' WHERE name = 'leadership';"
+    query6 = "UPDATE attendanceColumns set priority = '5' WHERE name = 'exersize';"
+    query7 = "UPDATE attendanceColumns set priority = '6' WHERE name = 'mentalHealth';"
+    query8 = "UPDATE attendanceColumns set priority = '7' WHERE name = 'volunteering';"
+    query9 = "UPDATE attendanceColumns set priority = '8' WHERE name = 'oneOnOne';"
+    query10 = "UPDATE attendanceColumns set priority = '9' WHERE name = 'comments';"
+    query11 = "UPDATE attendanceColumns set isShowing = 'false' WHERE name = 'comments';"
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])
+    executeSingleQuery(query3, [])
+    executeSingleQuery(query4, [])
+    executeSingleQuery(query5, [])
+    executeSingleQuery(query6, [])
+    executeSingleQuery(query7, [])
+    executeSingleQuery(query8, [])
+    executeSingleQuery(query9, [])
+    executeSingleQuery(query10, [])
+    executeSingleQuery(query11, [])
     
-
 # must give start and end date separated by a space
 @app.route('/getMasterAttendanceDate/<dates>')
 def getMasterAttendanceDate(dates):
@@ -323,7 +390,20 @@ def addAttendant():
         query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
         databaseResult = executeSingleQuery(query, fetch = True)
         print(databaseResult[0][0])
-        newString = "INSERT INTO dailyAttendance VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName +"', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', '" + date + "','" + time + "');"
+        
+        queryRows = "SELECT name from attendanceColumns"
+        columns = json.dumps(executeSingleQuery(queryRows, fetch = True), indent=4, sort_keys=True, default=str)
+        columnsData = json.loads(columns)
+        numCols = len(columnsData);
+        
+        newString = "INSERT INTO dailyAttendance (id, firstName, lastName"
+        for i in range(0, numCols):
+            newString = newString + ", "+ columnsData[i][0]
+        
+        newString = newString + ", date, time) VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
+        for i in range(0, numCols):
+            newString = newString + "'FALSE', "
+        newString = newString + "'" + date + "','" + time + "');"
         #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
         executeSingleQuery(newString, [])
         queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"

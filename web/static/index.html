@@ -33,7 +33,7 @@
 <button class = "tablinks" onclick = "openTab(event, 'Data'); displayAttendanceList();"> Attendance Sheets </button>
 <button class = "tablinks" onclick = "openTab(event, 'AttendanceOverview') "> Attendance Overview </button>
 <button class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</button>
-<button class = "tablinks" onclick = "openTab(event, 'StaffSchedules'); showLogin();"> Staff Schedules</button>
+<button class = "tablinks" onclick = "openTab(event, 'StaffSchedules'); showAttendanceManage();">Manage Attendance</button>
 <button class = "tablinks" onclick = "openTab(event, 'Edit Attendance Sheets')"> Feedback Forum </button>
 </div>
 
@@ -106,7 +106,7 @@
                     <input type="button" onclick="addNewStudent()" id="submitStudent" value="Submit" />
                 </div>
             </div>
-
+            <p id="columns"></p>
             <table id="Attendance-Table" style="width:100%">
                 <tr>
                 <th>Name</th>
@@ -197,17 +197,12 @@
 </div>
 
 <div id="StaffSchedules" class="tabcontent">
-<div id="login">
-    <form>
-        <input id="username" type="text" placeholder="Username" />
-        <input id="password" type="password" placeholder="Password" />
-        <input id="submitLogin" type="button" value="Submit" onclick="checkLogin()" />
+<h2>Current Attendance Columns</h2>
+    <form onsubmit="return false;">
+        <input type="text" id="newColumn" />
+        <input type="submit" onclick="addColumn();" />
     </form>
-</div>
-<div id="dontShow">
-    <h3>Staff Schedules</h3>
-    <p>Staff Schedules</p>
-</div>
+    <table id="attendanceColumnsTable"></table>
 </div>
 
 <div id="Edit Attendance Sheets" class="tabcontent">

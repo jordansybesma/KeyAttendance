@@ -124,9 +124,131 @@ function sendSubmitForm()  {
 }
 function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
+    var columnData = document.getElementById("columns").innerHTML;
+    var myColumns = JSON.parse(columnData);
     for (i in myData) {
-        addRowHelper(myData[i][1], myData[i][2], myData[i][3], myData[i][4], myData[i][5],myData[i][6],myData[i][7],myData[i][8],myData[i][9],myData[i][10])
+        addRowHelper2(myColumns, myData[i]);
     }
+    /*for (i in myData) {
+        addRowHelper(myData[i][1], myData[i][2], myData[i][3], myData[i][4], myData[i][5],myData[i][6],myData[i][7],myData[i][8],myData[i][9],myData[i][10])
+    }*/
+}
+
+function makeHeaderReadable(header) {
+    var newHeader = "";
+    var newChar = "";
+    for (i in header) {
+        if (i == 0) {
+            newChar = header[i].toUpperCase();  
+        } else if (header[i] == header[i].toUpperCase()) {
+            if (header[i - 1] != "_") {
+                newHeader = newHeader + " ";
+                newChar = header[i];
+            }
+        } else if (header[i] == "_") {
+            newHeader = newHeader + " ";
+            newChar = "";
+        } else {
+            if (header[i - 1] == "_") {
+                newChar = header[i].toUpperCase();
+            }
+            newChar = header[i];
+        }
+        newHeader = newHeader + newChar;
+    }
+    return newHeader;
+}
+
+function addRowHelper2(columns, entry) {
+    var table = document.getElementById("Attendance-Table");
+
+    //var date = getCurrentDate();
+    var date = document.getElementById("storeDate").innerHTML;
+    document.getElementById("keyword").value = "";
+
+
+    //var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
+    //var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
+    console.log(entry);
+    console.log(entry[11]);
+    var row = table.insertRow(1);
+    fullName = entry[0] + " " + entry[1];
+    row.insertCell(-1).innerHTML = fullName;
+    for (i in columns) {
+        
+        if (columns[i][1] == true) {
+            console.log((i+ 2));
+            var index = parseInt(i) + 2;
+            var str = "<input type=\"checkbox\" "
+            + (entry[index] ? "checked" : "")
+            + " onclick=\"selectActivity('" + fullName + "','" + columns[i][2] + "', '" + date + "')\">";
+            row.insertCell(-1).innerHTML = str;
+        }
+    }
+
+    var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
+    row.insertCell(-1).innerHTML = str;
+}
+
+function showAttendanceManage() {
+    table = document.getElementById("attendanceColumnsTable");
+    table.innerHTML = "";
+    var row = table.insertRow(-1);
+    row.insertCell(-1).innerHTML = "Column Name";
+    row.insertCell(-1).innerHTML = "Currently in Use";
+    getRequest("/getAttendanceColumns", "", showAttendanceManageHelper);
+
+}
+function showAttendanceManageHelper(_, data){
+    var myData = JSON.parse(data);
+    var table = document.getElementById("attendanceColumnsTable");
+    for (i in myData) {
+        console.log(myData[i]);
+        var row = table.insertRow(-1);
+        row.insertCell(-1).innerHTML = myData[i][2];
+        var str = "<input type=\"checkbox\" "
+            + (myData[i][1] ? "checked" : "")
+            + " onclick=\"selectColumn('" + myData[i][2] + "')\">";
+        row.insertCell(-1).innerHTML = str;
+        var str2 = "<button type=\"button\" onclick=\"deleteColumn('" + myData[i][2]  + "')\">Delete </button>";
+        row.insertCell(-1).innerHTML = str2;
+    }
+}
+function deleteColumn(name) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/deleteAttendanceColumn");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name);
+    showAttendanceManage()
+}
+function selectColumn(name) {
+    console.log("got here");
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/updateAttendanceColumn");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name);
+}
+
+function addColumn() {
+    var name = document.getElementById("newColumn").value;
+    var substring = " ";
+    if (name.indexOf(substring)!= -1) {
+        alert("Please enter a column name with no spaces")
+        return;
+    }
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendanceColumn");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name + "&type=boolean");
+
+
+    var table = document.getElementById("attendanceColumnsTable");
+    var row = table.insertRow(-1);
+    row.insertCell(-1).innerHTML = name;
+    var str = "<input type=\"checkbox\" "
+            + "checked"
+            + " onclick=\"selectColumn('" + name + "')\">";
+    row.insertCell(-1).innerHTML = str;
 }
 
 function modifyAutofillList(_ , studentNames) {
@@ -490,13 +612,15 @@ function makeTableHeader(table) {
 function makeTableHeaderHelper(_, data) {
     console.log("got to helper");
     console.log(data);
+    document.getElementById("columns").innerHTML = data;
     table = document.getElementById("Attendance-Table");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
     var myData = JSON.parse(data);
     for (i in myData){
-        if (myData[i][1]=='true'){
-            row.insertCell(-1).innerHTML = myData[i][2];
+        if (myData[i][1] == true) {
+            var newHeader = makeHeaderReadable(myData[i][2]);
+            row.insertCell(-1).innerHTML = newHeader;
         }
 
     }

@@ -139,7 +139,7 @@ function makeHeaderReadable(header) {
     var newChar = "";
     for (i in header) {
         if (i == 0) {
-            newChar = header[i].toUpperCase();  
+            newChar = header[i].toUpperCase();
         } else if (header[i] == header[i].toUpperCase()) {
             if (header[i - 1] != "_") {
                 newHeader = newHeader + " ";
@@ -175,7 +175,7 @@ function addRowHelper2(columns, entry) {
     fullName = entry[0] + " " + entry[1];
     row.insertCell(-1).innerHTML = fullName;
     for (i in columns) {
-        
+
         if (columns[i][1] == true) {
             console.log((i+ 2));
             var index = parseInt(i) + 2;
@@ -302,6 +302,9 @@ function openAddStudent() {
 }
 
 function showStudentProfile() {
+    var peerSpace = document.getElementById("frequentPeers");
+    peerSpace.innerHTML += ("Frequently Attends With: \n")
+
     var profileSpace = document.getElementById('studentProfileText');
     profileSpace.innerHTML = ("");
     var nameSpace = document.getElementById('studentName');
@@ -418,7 +421,8 @@ function scatterStudentAttendance(xList, yList) {
         x: xList,
         y: yList,
         mode: 'markers',
-        type: 'scatter'
+        type: 'scatter',
+        marker: {opacity: 0.5, size: 14}
     };
 
     var data = [trace0, trace1];
@@ -645,7 +649,7 @@ function displayAttendanceTable(table_date) {
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/tempColumns");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send();*/
-    
+
 
     return false;
     // list.style.display = "none";

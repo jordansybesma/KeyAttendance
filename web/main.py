@@ -97,6 +97,43 @@ def getMasterAttendance():
     return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;",
         fetch = True)[:10], indent=4, sort_keys=True, default=str)
         
+        
+@app.route('/tempColumns', methods=["POST"])
+def tempColumns():
+    query = query = "DROP TABLE IF EXISTS attendanceColumns;"
+    query2 = "CREATE TABLE attendanceColumns (inUse boolean, isShowing boolean, name varchar(255), type varchar(255), isParent boolean, isChild boolean, parent varchar(255))"
+    query3 = "INSERT INTO attendanceColumns VALUES ('true','true','art','boolean','false','false',''),('true','true','madeFood','boolean','false','false',''),('true','true','recievedFood','boolean','false','false',''),('true','true','leadership','boolean','false','false',''),('true','true','exersize','boolean','false','false',''),('true','true','mentalHealth','boolean','false','false',''),('true','true','volunteering','boolean','false','false',''),('true','true','oneOnOne','boolean','false','false',''),('true','true','comments','varchar','false','false','');"
+    
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])
+    executeSingleQuery(query3, [])
+    
+    
+@app.route('/addAttendanceColumn', methods=["POST"])
+def addAttendanceColumn():
+    #make sure column name not in use
+    name = request.form.get("name")
+    colType = request.form.get("type")
+    isParent = request.form.get("isParent")
+    isChild = request.form.get("isChild")
+    parent = request.form.get("parent")
+    query = "INSERT INTO attendanceColumns VALUES ('true','true', '" + name + "', '"+ colType + "', '"+ isParent + "', '" + isChild + "', '" + parent + "');"
+    executeSingleQuery(query, [])
+
+@app.route('/deleteAttendanceColumn', methods=["POST"])
+def deleteAttendanceColumn():
+    name = request.form.get("name")
+    query = "UPDATE attendanceColumns SET isShowing = 'false' WHERE name = '" + name + "';"
+    executeSingleQuery(query, [])
+    
+    
+@app.route('/getAttendanceColumns')
+def getAttendanceColumns():
+    query = "SELECT * FROM attendanceColumns"
+    executeSingleQuery(query, [])
+    
+    
+
 # must give start and end date separated by a space
 @app.route('/getMasterAttendanceDate/<dates>')
 def getMasterAttendanceDate(dates):

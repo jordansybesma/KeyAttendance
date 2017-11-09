@@ -203,7 +203,7 @@ function showAttendanceManageHelper(_, data){
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = myData[i][2];
         var str = "<input type=\"checkbox\" "
-            + (myData[1] ? "checked" : "")
+            + (myData[i][1] ? "checked" : "")
             + " onclick=\"selectColumn('" + myData[i][2] + "')\">";
         row.insertCell(-1).innerHTML = str;
     }

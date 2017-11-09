@@ -138,18 +138,21 @@ def addAttendanceColumn():
     executeSingleQuery(queryAttendance, [])
     executeSingleQuery(queryMaster, [])
     
+    queryCounts = "UPDATE TABLE masterAttendance SET "+ name+ "='0';"
+    
+    executeSingleQuery(queryCounts, [])
+    
 @app.route('/deleteAttendanceColumn', methods=["POST"])
 def deleteAttendanceColumn():
     name = request.form.get("name")
     query = "DELETE FROM attendanceColumns WHERE name = '" + name + "';"
     queryAttendance = "ALTER TABLE dailyAttendance DROP COLUMN " + name + ";"
     queryMaster = "ALTER TABLE masterAttendance DROP COLUMN " + name + ";"
-    queryCounts = "UPDATE TABLE masterAttendance SET "+ name+ "='0';"
+    
     executeSingleQuery(query, [])
     executeSingleQuery(queryAttendance, [])
     executeSingleQuery(queryMaster, [])
-    executeSingleQuery(queryCounts, [])
-
+    
 
 @app.route('/updateAttendanceColumn', methods=["POST"])
 def updateAttendanceColumn():

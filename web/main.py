@@ -138,7 +138,7 @@ def addAttendanceColumn():
     executeSingleQuery(queryAttendance, [])
     executeSingleQuery(queryMaster, [])
     
-    queryCounts = "UPDATE TABLE masterAttendance SET "+ name+ "='0';"
+    queryCounts = "UPDATE masterAttendance SET "+ name+ "='0';"
     
     executeSingleQuery(queryCounts, [])
     

@@ -75,7 +75,7 @@ def getAttendance(date):
     colList = json.loads(cols)
     query = "SELECT firstName, lastName, " + colList[0];
     for i in range(1, len(colList)):
-        query = query + ", " + colList[i]
+        query = query + ", " + colList[i][0]
     query = query + " FROM dailyAttendance WHERE date= '" + date + "' ORDER BY lastName ASC;"
     
     queryResult = executeSingleQuery(query, fetch = True)

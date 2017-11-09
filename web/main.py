@@ -131,8 +131,7 @@ def addAttendanceColumn():
 @app.route('/updateAttendanceColumn', methods=["POST"])
 def updateAttendanceColumn():
     name = request.form.get("name")
-    query = "UPDATE attendanceColumns SET isShowing = 'false' WHERE name = '" + name + "';"
-    executeSingleQuery(query, [])
+    
     
     queryMaster = "SELECT isShowing FROM attendanceColumns WHERE name = '" + name + "';"
     result = json.dumps(executeSingleQuery(queryMaster,fetch = True))

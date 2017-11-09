@@ -739,6 +739,8 @@ function masterAttendanceHelper(_, masterData) {
         yaxisVolunteering.push(myData[i][8]);
         yaxisOneOnOne.push(myData[i][9]);
         var row = table.insertRow(-1);
+        row.insertCell(-1).innerHTML = myData[i][0];
+        row.insertCell(-1).innerHTML = myData[i][1];
         for (j in columnData) {
             if (columnData[j][1] == true) {
                 row.insertCell(-1).innerHTML = myData[i][parseInt(j) + 1];

@@ -233,7 +233,7 @@ function addColumn() {
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = name;
     var str = "<input type=\"checkbox\" "
-            + (myData[i][1] ? "checked" : "")
+            + "checked"
             + " onclick=\"selectColumn('" + name + "')\">";
     row.insertCell(-1).innerHTML = str;
 }

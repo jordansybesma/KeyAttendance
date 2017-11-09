@@ -458,6 +458,7 @@ def frequentPeers(string):
     studentID = getJustID(string)
     query = "SELECT date FROM dailyAttendance WHERE id = '" + studentID + "';"
     databaseResult = executeSingleQuery(query, fetch = True)
+    print(databaseResult)
     result = json.dumps(databaseResult)
     print(result)
 

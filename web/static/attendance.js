@@ -134,6 +134,31 @@ function fillAttendance(_, attendance) {
     }*/
 }
 
+function makeHeaderReadable(header) {
+    var newHeader = "";
+    var newChar = "";
+    for (i in header) {
+        if (i == 0) {
+            newChar = header[i].toUpperCase();  
+        } else if (header[i] == header[i].toUpperCase()) {
+            if (header[i - 1] != "_") {
+                newHeader = newHeader + " ";
+                newChar = header[i];
+            }
+        } else if (header[i] == "_") {
+            newHeader = newHeader + " ";
+            newChar = "";
+        } else {
+            if (header[i - 1] == "_") {
+                newChar = header[i].toUpperCase();
+            }
+            newChar = header[i];
+        }
+        newHeader = newHeader + newChar;
+    }
+    return newHeader;
+}
+
 function addRowHelper2(columns, entry) {
     var table = document.getElementById("Attendance-Table");
 
@@ -157,12 +182,6 @@ function addRowHelper2(columns, entry) {
             row.insertCell(-1).innerHTML = str;
         }
     }
-    /*for (var i = 0; i < 8; i++) {
-        var str = "<input type=\"checkbox\" "
-            + (checked[i] ? "checked" : "")
-            + " onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
-        row.insertCell(i + 1).innerHTML = str;
-    }*/
 
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
     row.insertCell(-1).innerHTML = str;
@@ -535,8 +554,9 @@ function makeTableHeaderHelper(_, data) {
     row.insertCell(-1).innerHTML = "Name";
     var myData = JSON.parse(data);
     for (i in myData){
-        if (myData[i][1]==true){
-            row.insertCell(-1).innerHTML = myData[i][2];
+        if (myData[i][1] == true) {
+            var newHeader = makeHeaderReadable(myData[i][2]);
+            row.insertCell(-1).innerHTML = newHeader;
         }
 
     }

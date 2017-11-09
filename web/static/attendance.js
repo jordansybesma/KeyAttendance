@@ -483,7 +483,8 @@ function makeTableHeader(table) {
     for (header of cellNames) {
         row.insertCell(-1).innerHTML = header;
     }*/
-    getRequest("/getAttendanceColumns/", "", makeTableHeaderHelper);
+    console.log("got here");
+    getRequest("/getAttendanceColumns", "", makeTableHeaderHelper);
 }
 
 function makeTableHeaderHelper(_, data) {
@@ -503,6 +504,7 @@ function makeTableHeaderHelper(_, data) {
 function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;
     var table = document.getElementById("Attendance-Table");
+    console.log("about to create header");
     makeTableHeader(table);
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);

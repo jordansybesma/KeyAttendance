@@ -355,7 +355,7 @@ def addAttendant():
         newString = "INSERT INTO dailyAttendance VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
         for i in range(0, numCols):
             newString = newString + "'FALSE', "
-        newString = newString + date + "','" + time + "');"
+        newString = newString + "'" + date + "','" + time + "');"
         #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
         executeSingleQuery(newString, [])
         queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"

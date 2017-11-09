@@ -207,7 +207,16 @@ function showAttendanceManageHelper(_, data){
             + (myData[i][1] ? "checked" : "")
             + " onclick=\"selectColumn('" + myData[i][2] + "')\">";
         row.insertCell(-1).innerHTML = str;
+        var str2 = "<button type=\"button\" onclick=\"deleteColumn('" + myData[i][2]  + "')\">Delete </button>";
+        row.insertCell(-1).innerHTML = str2;
     }
+}
+function deleteColumn(name) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/deleteAttendanceColumn");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name);
+    showAttendanceManage()
 }
 function selectColumn(name) {
     console.log("got here");

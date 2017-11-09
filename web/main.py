@@ -133,8 +133,21 @@ def addAttendanceColumn():
     
     query = "INSERT INTO attendanceColumns VALUES ('true','true', '" + name + "', '"+ colType + "', '"+ isParent + "', '" + isChild + "', '" + parent + "');"
     queryAttendance = "ALTER TABLE dailyAttendance ADD " + name + " " + colType + ";"
+    queryMaster = "ALTER TABLE masterAttendance ADD " + name + " " + colType + ";"
     executeSingleQuery(query, [])
     executeSingleQuery(queryAttendance, [])
+    executeSingleQuery(queryMaster, [])
+    
+@app.route('/deleteAttendanceColumn', methods=["POST"])
+def deleteAttendanceColumn():
+    name = request.form.get("name")
+    query = "DELETE FROM attendanceColumns WHERE name = '" + name + "';"
+    queryAttendance = "ALTER TABLE dailyAttendance DROP COLUMN " + name + ";"
+    queryMaster = "ALTER TABLE masterAttendance DROP COLUMN " + name + ";"
+    
+    executeSingleQuery(query, [])
+    executeSingleQuery(queryAttendance, [])
+    executeSingleQuery(queryMaster, [])
 
 @app.route('/updateAttendanceColumn', methods=["POST"])
 def updateAttendanceColumn():

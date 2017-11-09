@@ -128,7 +128,7 @@ def addAttendanceColumn():
     query = "INSERT INTO attendanceColumns VALUES ('true','true', '" + name + "', '"+ colType + "', '"+ isParent + "', '" + isChild + "', '" + parent + "');"
     executeSingleQuery(query, [])
 
-@app.route('/deleteAttendanceColumn', methods=["POST"])
+@app.route('/updateAttendanceColumn', methods=["POST"])
 def updateAttendanceColumn():
     name = request.form.get("name")
     query = "UPDATE attendanceColumns SET isShowing = 'false' WHERE name = '" + name + "';"

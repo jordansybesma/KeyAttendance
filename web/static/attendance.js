@@ -146,7 +146,7 @@ function addRowHelper2(columns, row) {
     //var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
 
     var row = table.insertRow(1);
-    fullName = first + " " + last;
+    fullName = row[1] + " " + row[2];
     row.insertCell(-1).innerHTML = fullName;
     for (i in columns) {
         if (columns[i][1] == true) {

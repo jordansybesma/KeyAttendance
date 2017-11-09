@@ -134,7 +134,7 @@ function fillAttendance(_, attendance) {
     }*/
 }
 
-function addRowHelper2(columns, row) {
+function addRowHelper2(columns, entry) {
     var table = document.getElementById("Attendance-Table");
 
     //var date = getCurrentDate();
@@ -144,15 +144,15 @@ function addRowHelper2(columns, row) {
 
     //var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
     //var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
-    console.log(row);
+    console.log(entry);
     var row = table.insertRow(1);
-    fullName = row[1] + " " + row[2];
+    fullName = entry[1] + " " + entry[2];
     row.insertCell(-1).innerHTML = fullName;
     for (i in columns) {
         if (columns[i][1] == true) {
             var index = columns[i][7];
             var str = "<input type=\"checkbox\" "
-            + (row[index + 2] ? "checked" : "")
+            + (entry[index + 2] ? "checked" : "")
             + " onclick=\"selectActivity('" + fullName + "','" + columns[i][2] + "', '" + date + "')\">";
             row.insertCell(-1).innerHTML = str;
         }

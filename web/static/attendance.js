@@ -500,6 +500,8 @@ function makeTableHeaderHelper(_, data) {
         }
         
     }
+    var table_date = document.getElementById("storeDate").innerHTML;
+    getRequest("/getAttendance/" + table_date, "", fillAttendance);
 }
 
 
@@ -519,7 +521,7 @@ function displayAttendanceTable(table_date) {
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/tempColumns");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send();*/
-    getRequest("/getAttendance/" + table_date, "", fillAttendance);
+    
 
     return false;
     // list.style.display = "none";

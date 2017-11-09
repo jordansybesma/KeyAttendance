@@ -170,13 +170,14 @@ function addRowHelper2(columns, entry) {
     //var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
     //var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
     console.log(entry);
+    console.log(entry[11]);
     var row = table.insertRow(1);
     fullName = entry[0] + " " + entry[1];
     row.insertCell(-1).innerHTML = fullName;
     for (i in columns) {
         
         if (columns[i][1] == true) {
-            console.log(entry[i + 2]);
+            console.log(i);
             var index = columns[i][7];
             var str = "<input type=\"checkbox\" "
             + (entry[i + 2] ? "checked" : "")

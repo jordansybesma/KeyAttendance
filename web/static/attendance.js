@@ -206,8 +206,9 @@ function showStudentManageHelper(_, data) {
         console.log(myData[i]);
         var row = table.insertRow(-1);
         name = myData[i][2];
-        newName = makeHeaderReadable(name);
-        row.insertCell(-1).innerHTML = newName;
+        //for some reason this breaks everthing - can't figure out why?
+        //newName = makeHeaderReadable(name);
+        row.insertCell(-1).innerHTML = name;
         var str = "<input type=\"checkbox\" "
             + (myData[i][0] ? "checked" : "")
             + " onclick=\"selectStudentColumn('" + myData[i][2] + "', 'isShowing')\">";

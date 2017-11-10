@@ -189,6 +189,50 @@ function addRowHelper2(columns, entry) {
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
     row.insertCell(-1).innerHTML = str;
 }
+function showProfileManage() {
+    table = document.getElementById("studentColumnsTable");
+    table.innerHTML = "";
+    var row = table.insertRow(-1);
+    row.insertCell(-1).innerHTML = "Column Name";
+    row.insertCell(-1).innerHTML = "Show in Profile";
+    row.insertCell(-1).innerHTML = "Show in Quick Add";
+    getRequest("/getStudentColumns", "", showStudentManageHelper);
+}
+
+function showStudentManageHelper(_, data) {
+    var myData = JSON.parse(data);
+    var table = document.getElementById("studentColumnsTable");
+    for (i in myData) {
+        console.log(myData[i]);
+        var row = table.insertRow(-1);
+        row.insertCell(-1).innerHTML = myData[i][2];
+        var str = "<input type=\"checkbox\" "
+            + (myData[i][0] ? "checked" : "")
+            + " onclick=\"selectStudentColumn('" + myData[i][2] + "', 'isShowing')\">";
+        row.insertCell(-1).innerHTML = str;
+        var str1 = "<input type=\"checkbox\" "
+            + (myData[i][1] ? "checked" : "")
+            + " onclick=\"selectStudentColumn('" + myData[i][2] + "', 'isQuick')\">";
+        row.insertCell(-1).innerHTML = str1;
+        var str2 = "<button type=\"button\" onclick=\"deleteStudentColumn('" + myData[i][2] + "')\">Delete </button>";
+        row.insertCell(-1).innerHTML = str2;
+    }
+}
+
+function selectStudentColumn(name, column) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/alterStudentColumn");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name + "&column=" + column);
+}
+
+function deleteStudentColumn(name) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/deleteStudentColumn");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name);
+    showProfileManage()
+}
 
 function showAttendanceManage() {
     table = document.getElementById("attendanceColumnsTable");

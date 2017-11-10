@@ -107,6 +107,10 @@ def deleteStudentColumn():
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
 
+@app.route('/getStudentColumns')
+def getStudentColumns():
+    query = "SELECT * FROM studentColumns ORDER BY priority"
+    return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
 @app.route('/sendFeedback', methods=["POST"])
 def sendFeedback():

@@ -415,9 +415,32 @@ function showDemographics(_, data) {
     var parsedData = JSON.parse(data);
     console.log(parsedData);
     document.getElementById("demographics").innerHTML = data;
-    var keywordElement = document.getElementById('keywordStudentSearch').value;
+    
+    getRequest("/getStudentColumns", "", demographicsHelper);
+    
+}
+function demographicsHelper(_, columns) {
 
+    var data = document.getElementById("demographics").innerHTML;
+    var studentInfo = JSON.parse(data);
+    var columnInfo = JSON.parse(columns);
+
+    for (i in columnInfo) {
+        if (columnInfo[i][0]) {
+            displayStudentInfo(columnInfo[i][2], studentInfo[0][parseInt(i) + 3], columnInfo[i][3]);
+        }
+    }
+
+    var keywordElement = document.getElementById('keywordStudentSearch').value;
     getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
+}
+
+function displayStudentInfo(catName, info, type) {
+    var parent = document.getElementById("demographics");
+    var node = document.createElement("p");
+    var text = document.createTextNode(catname + ": " + info);
+    node.appendChild(text);
+    parent.appendChild(node);
 }
 
 function showStudentAttendance(_, data) {

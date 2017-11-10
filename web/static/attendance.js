@@ -402,6 +402,7 @@ function showStudentProfile() {
     if (optionFound) {
         nameSpace.innerHTML += (keywordElement)
         profileSpace.innerHTML += ("\n")
+        console.log(keywordElement);
         getRequest("/getStudentInfo/" + keywordElement + "/", "", showDemographics);
         //getRequest("/getJustID/" + keywordElement, "", showProfile);
         

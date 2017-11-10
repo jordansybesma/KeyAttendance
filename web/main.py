@@ -64,7 +64,9 @@ def getStudentInfo(name):
     first = nameList[0]
     last = nameList[1]
     query = "SELECT * FROM testStudents WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
-    return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+    result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+    print(result)
+    return result
 
     
     

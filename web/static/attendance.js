@@ -424,6 +424,10 @@ function demographicsHelper(_, columns) {
     var data = document.getElementById("demographics").innerHTML;
     var studentInfo = JSON.parse(data);
     var columnInfo = JSON.parse(columns);
+    var keywordElement = document.getElementById('keywordStudentSearch').value;
+    var div = document.getElementById("demographics");
+    div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile('" + keywordElement + "', '" + data + "', '" + columns + "')\">Edit Profile</button>";
+
 
     for (i in columnInfo) {
         if (columnInfo[i][0]) {
@@ -431,10 +435,7 @@ function demographicsHelper(_, columns) {
         }
     }
 
-    var keywordElement = document.getElementById('keywordStudentSearch').value;
-    var div = document.getElementById("demographics");
-    div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile('" + keywordElement  + "', '" + data + "', '" + columns +"')\">Delete </button>";
-        
+   
     getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 }
 

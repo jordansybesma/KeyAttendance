@@ -438,7 +438,7 @@ function demographicsHelper(_, columns) {
 function displayStudentInfo(catName, info, type) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
-    var text = document.createTextNode(catname + ": " + info);
+    var text = document.createTextNode(catName + ": " + info);
     node.appendChild(text);
     parent.appendChild(node);
 }

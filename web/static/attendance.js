@@ -432,7 +432,14 @@ function demographicsHelper(_, columns) {
     }
 
     var keywordElement = document.getElementById('keywordStudentSearch').value;
+    var div = document.getElementById("demographics");
+    div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile('" + keywordElement  + "', '" + data + "', '" + columns +"')\">Delete </button>";
+        
     getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
+}
+
+function openEditProfile(name, studentInfo, columns) {
+
 }
 
 function displayStudentInfo(catName, info, type) {

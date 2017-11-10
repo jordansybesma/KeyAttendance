@@ -58,6 +58,15 @@ def addNewStudent():
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
     
+@app.route('/getStudentInfo/<name>')
+def getStudentInfo(name):
+    nameList = name.split()
+    first = nameList[0]
+    last = nameList[1]
+    query = "SELECT * FROM testStudents WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
+    return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+
+    
     
 @app.route('/tempStudentColumns', methods=["POST"])
 def tempStudentColumns():

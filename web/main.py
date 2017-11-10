@@ -60,6 +60,7 @@ def addNewStudent():
     
 @app.route('/getStudentInfo/<name>')
 def getStudentInfo(name):
+    print("got here")
     nameList = name.split()
     first = nameList[0]
     last = nameList[1]

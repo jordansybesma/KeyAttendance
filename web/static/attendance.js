@@ -206,7 +206,7 @@ function showStudentManageHelper(_, data) {
         console.log(myData[i]);
         var row = table.insertRow(-1);
         
-        row.insertCell(-1).innerHTML = makeHeaderReadable(myData[i][2]);
+        row.insertCell(-1).innerHTML = myData[i][2];
         var str = "<input type=\"checkbox\" "
             + (myData[i][0] ? "checked" : "")
             + " onclick=\"selectStudentColumn('" + myData[i][2] + "', 'isShowing')\">";

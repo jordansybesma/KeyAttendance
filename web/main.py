@@ -57,6 +57,56 @@ def addNewStudent():
     lastName  = request.form.get( 'lastName')
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
+    
+    
+@app.route('/tempStudentColumns', methods=["POST"])
+def tempStudentColumns():
+    query = query = "DROP TABLE IF EXISTS studentColumns;"
+    query2 = "CREATE TABLE studentColumns (isShowing boolean, isQuick boolean, name varchar(255), type varchar(255),definedOptions varchar(1000), priority SERIAL UNIQUE)"
+    
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])
+    
+    
+@app.route('/addStudentColumn', methods=["POST"])
+def addStudentColumn():
+    #make sure column name not in use
+    name = request.form.get("name")
+    colType = request.form.get("type")
+    definedOptions = request.form.get("definedOptions")
+    
+    if (colType == "varchar"):
+        colType = colType + "(500)"
+
+    query = "INSERT INTO studentColumns VALUES ('true','false', '" + name + "', '"+ colType + "', '" + definedOptions + "');"
+    queryAttendance = "ALTER TABLE testStudents ADD " + name + " " + colType + ";"
+    
+    executeSingleQuery(query, [])
+    executeSingleQuery(queryAttendance, [])
+   
+@app.route('/alterStudentColumn', methods=["POST"])
+def alterStudentColumn():
+    name = request.form.get("name")
+    column = request.form.get("column")
+    queryStatus = "SELECT "+ column + " FROM studentColumns WHERE name = '" + name + "';"
+    result = json.dumps(executeSingleQuery(queryStatus,fetch = True))
+    newResult =json.loads(result)
+    isChecked = newResult[0][0]
+    
+    if (isChecked):
+        query = "UPDATE studentColumns SET "+ column + " = 'false' WHERE name = '" + name + "';"
+    else:
+        query = "UPDATE studentColumns SET "+ column + " = 'true' WHERE name = '" + name + "';"
+    executeSingleQuery(query, [])
+
+@app.route('/deleteStudentColumn', methods=["POST"])
+def deleteStudentColumn():
+    name = request.form.get("name")
+    query = "DELETE FROM studentColumns WHERE name = '" + name + "';"
+    query2 = "ALTER TABLE studentColumns DROP COLUMN " + name + ";"
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])
+
 
 @app.route('/sendFeedback', methods=["POST"])
 def sendFeedback():

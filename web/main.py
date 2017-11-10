@@ -103,7 +103,7 @@ def alterStudentColumn():
 def deleteStudentColumn():
     name = request.form.get("name")
     query = "DELETE FROM studentColumns WHERE name = '" + name + "';"
-    query2 = "ALTER TABLE studentColumns DROP COLUMN " + name + ";"
+    query2 = "ALTER TABLE testStudents DROP COLUMN " + name + ";"
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
 

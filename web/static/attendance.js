@@ -228,7 +228,36 @@ function selectColumn(name) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
 }
+function addStudentColumn() {
+    var name = document.getElementById("studentColumnName").value;
+    var type = document.getElementById("studentColumnType").value;
+    if (name == "") {
+        alert("Please enter a name")
+        return;
+    }
+    var substring = " ";
+    if (name.indexOf(substring) != -1) {
+        alert("Please enter a column name with no spaces")
+        return;
+    }
+    if (type == "") {
+        alert("Please enter a type")
+        return;
+    }
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addStudentColumn");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name + "&type=" + type + "&definedOptions=");
 
+    /*var table = document.getElementById("attendanceColumnsTable");
+    var row = table.insertRow(-1);
+    row.insertCell(-1).innerHTML = name;
+    var str = "<input type=\"checkbox\" "
+            + "checked"
+            + " onclick=\"selectColumn('" + name + "')\">";
+    row.insertCell(-1).innerHTML = str;*/
+
+}
 function addColumn() {
     var name = document.getElementById("newColumn").value;
     var substring = " ";

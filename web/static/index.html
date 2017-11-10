@@ -35,6 +35,7 @@
 <button class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</button>
 <button class = "tablinks" onclick = "openTab(event, 'StaffSchedules'); showAttendanceManage();">Manage Attendance</button>
 <button class = "tablinks" onclick = "openTab(event, 'Edit Attendance Sheets')"> Feedback Forum </button>
+<button class="tablinks" onclick="openTab(event, 'Manage Student Profile')"> Manage Student Profile </button>
 </div>
 
 <div id="Home" class="tabcontent">
@@ -213,6 +214,22 @@
     </textarea>
 
         <button onclick = "sendFeedback()"> submit </button>
+</div>
+
+    <div id="Manage Student Profile" class="tabcontent">
+        <h2>Current Student Profile Columns</h2>
+        <form onsubmit="return false;">
+            <input type="text" id="studentColumnName" />
+            <select id="studentColumnType">
+                <option value="varchar">String</option>
+                <option value="boolean">True/False</option>
+                <option value="int">Number</option>
+                <option value="date">Date</option>
+            </select>
+            <input type="submit" onclick="addStudentColumn();" />
+        </form>
+        <table id="studentColumnsTable"></table>
+    </div>
 </div>
 </body>
 

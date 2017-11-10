@@ -168,7 +168,7 @@
 
     <div id="profileSearch">
         <h3>Student Profiles</h3>
-        <form>
+        <form onsubmit="return false;">
             <input list="suggestedStudents" name="nameEnter" onkeypress="handleProfileBox(event, this.value)" id="keywordStudentSearch" type="text" placeholder="Name" required /></label>
             <input onclick="showStudentProfile()" id="searchbutton" type="button" value="Submit">
         </form>

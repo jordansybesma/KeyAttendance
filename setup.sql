@@ -11,7 +11,7 @@ INSERT INTO teststudents VALUES('John', 'Snow');
 
 DROP TABLE IF EXISTS dailyAttendance;
 CREATE TABLE dailyAttendance (
-    id SERIAL,
+    id SERIAL UNIQUE,
     art BOOL,
     madeFood BOOL,
     receivedFood BOOL,

@@ -42,8 +42,6 @@ function addAttendant(first, last) {
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
-
-
 }
 
 // Called when a user clicks submit on the add new student dialogue. checks
@@ -118,7 +116,7 @@ function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest.send(null);
 }
 
-function sendSubmitForm()  {
+function sendSubmitForm() {
     theirText = document.getElementById("someRandoText").value
 
 }

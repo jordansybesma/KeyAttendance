@@ -438,7 +438,14 @@ function demographicsHelper(_, columns) {
 function displayStudentInfo(catName, info, type) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
-    var text = document.createTextNode(catName + ": " + info);
+    var diplayName = makeHeaderReadable(catName);
+    if (info == null) {
+        var text = document.createTextNode(displayName + ": " );
+    } else if (type = "varchar") {
+        var text = document.createTextNode(displayName + ": " + info);
+    } else if (type = "int") {
+        var text = document.createTextNode(displayName + ": " + info.toString());
+    }
     node.appendChild(text);
     parent.appendChild(node);
 }

@@ -722,7 +722,7 @@ function makeTableHeaderHelper(_, data) {
     getRequest("/getAttendance/" + table_date, "", fillAttendance);
 }
 function refreshAttendanceTable() {
-    var date = document.getElementById("storeDate");
+    var date = document.getElementById("storeDate").innerHTML;
     displayAttendanceTable(date);
 }
 

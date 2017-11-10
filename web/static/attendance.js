@@ -404,7 +404,7 @@ function showStudentProfile() {
         profileSpace.innerHTML += ("\n")
         getRequest("/getStudentInfo/" + keywordElement + "/", "", showDemographics);
         //getRequest("/getJustID/" + keywordElement, "", showProfile);
-        getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
+        
 
     }
 
@@ -414,6 +414,8 @@ function showDemographics(_, data) {
     var parsedData = JSON.parse(data);
     console.log(parsedData);
     document.getElementById("demographics").innerHTML = data;
+
+    getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 }
 
 function showStudentAttendance(_, data) {

@@ -99,32 +99,9 @@ div.tab button.active {
 
 #Home  {
     #homeContent  {
-        display: grid !important;
-        padding-top: 6px;
-        grid-template-columns: 25% auto 25%;
-        grid-template-rows: 30% 30%;
-        grid-column-gap: 6px;
-        grid-row-gap: 6px;
+        
 
-        #Notifications {
-            grid-column: 1;
-            grid-row: 1;
-        }
-
-        #content {
-            grid-column: 2;
-            grid-row: 1 / span 2;
-        }
-
-        #PastAttendanceSheets {
-            grid-column: 3;
-            grid-row: 3;
-        }
-
-        #Activities {
-            grid-column: 3;
-            grid-row: 1 / span 2;
-        }
+        
     }
 }
 
@@ -193,6 +170,9 @@ h4 {
         color: @base1;
         padding-left: 4px;
         padding-top:  4px;
+        //position: relative;
+        //top: 8px;
+        
     }
 
     #returnAttendanceList:hover {
@@ -206,12 +186,19 @@ h4 {
         border: 5px solid white;
         bottom: 0;
     }
+    
+//    #downloadCurrent {
+//        float: left;
+//        padding: 10px;
+////        margin-left: 20px;
+//        margin-bottom: 20px;   
+//    }
 
     #addStudent {
-        float: right;
-        padding: 10px;
-        margin-right: 20px;
-        margin-bottom: 20px;
+        //float: right;
+        //padding: 10px;
+        //margin-right: 20px;
+        margin-bottom: 5px;
     }
     #newStudentFirst{
         left: -10px;
@@ -267,12 +254,12 @@ h4 {
 
     #Attendance-Table {
         //border: 2px solid @base2;
-        border-collaps: collapse;
+        border-collapse: collapse;
     }
 
     #masterAttendanceTable {
         //border: 2px solid @base2;
-        border-collaps: collapse;
+        border-collapse: collapse;
     }
 }
 
@@ -298,4 +285,74 @@ span:hover {
     display: none;
 }
 
+//#download{
+  //  position: relative;
+  //  top: 8px;
+  //  float: right;
 
+//}
+
+#aboveTable{
+    width: 100%;
+}
+#leftStuff{
+    float: left;
+    width: 75%
+}
+
+#rightStuff{
+    float: left;
+    width: 25%;
+}
+#innerRight{
+    position: relative;
+}
+#download{
+    position: absolute;
+    //left: 130px;
+    top: 8px;
+    right: 0px;
+    font-size: 13pt;
+    padding-left: 4px;
+    padding-top:  4px;
+}
+#addStudent{
+    position: absolute;
+    right: 0px;
+    top: 60px;
+    
+}
+#refresh{
+    position: absolute;
+    right: 0px;
+    top: 90px;
+}
+#returnAttendanceList{
+    position: relative;
+    top: 8px;
+}
+#suggestForm{
+    position: relative;
+    bottom: 8px;
+}
+#profileAttendanceTable{
+    position: relative;
+    top: 32px;
+    width: 100%;
+}
+#attendanceColumnsTable{
+    position: relative;
+    top: 32px;
+    width: 100%;
+}
+#columns{
+    display: none;
+}
+#columnData{
+    display: none;
+}
+#studentColumnsTable{
+    position: relative;
+    top: 32px;
+    width: 100%;
+}

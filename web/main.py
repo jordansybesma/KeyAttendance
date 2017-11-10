@@ -13,11 +13,11 @@ app = flask.Flask(__name__)
 @app.route('/')
 def send_index():
     return flask.redirect("static/index.html", code=302)
-    
+
 '''@app.route('/')
 def loginPage():
     return flask.redirect("static/login.html", code=302)
-    
+
 @app.route('/main')
 def main():
     return flask.redirect("static/index.html", code=302)'''
@@ -57,6 +57,72 @@ def addNewStudent():
     lastName  = request.form.get( 'lastName')
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
+    
+@app.route('/getStudentInfo/<name>')
+def getStudentInfo(name):
+    print("got here")
+    nameList = name.split()
+    first = nameList[0]
+    last = nameList[1]
+    query = "SELECT * FROM testStudents WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
+    result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+    print(result)
+    return result
+
+    
+    
+@app.route('/tempStudentColumns', methods=["POST"])
+def tempStudentColumns():
+    query = query = "DROP TABLE IF EXISTS studentColumns;"
+    query2 = "CREATE TABLE studentColumns (isShowing boolean, isQuick boolean, name varchar(255), type varchar(255),definedOptions varchar(1000), priority SERIAL UNIQUE)"
+    
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])
+    
+    
+@app.route('/addStudentColumn', methods=["POST"])
+def addStudentColumn():
+    #make sure column name not in use
+    name = request.form.get("name")
+    colType = request.form.get("type")
+    definedOptions = request.form.get("definedOptions")
+    
+    if (colType == "varchar"):
+        colType = colType + "(500)"
+
+    query = "INSERT INTO studentColumns VALUES ('true','false', '" + name + "', '"+ colType + "', '" + definedOptions + "');"
+    queryAttendance = "ALTER TABLE testStudents ADD " + name + " " + colType + ";"
+    
+    executeSingleQuery(query, [])
+    executeSingleQuery(queryAttendance, [])
+   
+@app.route('/alterStudentColumn', methods=["POST"])
+def alterStudentColumn():
+    name = request.form.get("name")
+    column = request.form.get("column")
+    queryStatus = "SELECT "+ column + " FROM studentColumns WHERE name = '" + name + "';"
+    result = json.dumps(executeSingleQuery(queryStatus,fetch = True))
+    newResult =json.loads(result)
+    isChecked = newResult[0][0]
+    
+    if (isChecked):
+        query = "UPDATE studentColumns SET "+ column + " = 'false' WHERE name = '" + name + "';"
+    else:
+        query = "UPDATE studentColumns SET "+ column + " = 'true' WHERE name = '" + name + "';"
+    executeSingleQuery(query, [])
+
+@app.route('/deleteStudentColumn', methods=["POST"])
+def deleteStudentColumn():
+    name = request.form.get("name")
+    query = "DELETE FROM studentColumns WHERE name = '" + name + "';"
+    query2 = "ALTER TABLE testStudents DROP COLUMN " + name + ";"
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])
+
+@app.route('/getStudentColumns')
+def getStudentColumns():
+    query = "SELECT * FROM studentColumns ORDER BY priority"
+    return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
 @app.route('/sendFeedback', methods=["POST"])
 def sendFeedback():
@@ -64,13 +130,21 @@ def sendFeedback():
     date = request.form.get('date')
     query = "INSERT INTO feedback VALUES ('" + date +"', '" + feedback + "');"
     executeSingleQuery(query,[])
-    
-    
+
+
 # strictly test for now
 # going to get today's data later
 @app.route('/getAttendance/<date>')
 def getAttendance(date):
-    queryResult = executeSingleQuery("SELECT * FROM dailyAttendance WHERE date= '" + date + "' ORDER BY lastName ASC;", fetch = True)
+    queryColumns = "SELECT name FROM attendanceColumns ORDER BY priority;"
+    cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
+    colList = json.loads(cols)
+    query = "SELECT firstName, lastName, " + colList[0][0];
+    for i in range(1, len(colList)):
+        query = query + ", " + colList[i][0]
+    query = query + " FROM dailyAttendance WHERE date= '" + date + "' ORDER BY lastName ASC;"
+
+    queryResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(queryResult, indent=4, sort_keys=True, default=str)
     return result
 
@@ -88,15 +162,111 @@ def getStudentAttendance(student):
     nameList = student.split()
     first = nameList[0]
     last = nameList[1]
-    query = "SELECT * FROM dailyAttendance WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
+    query = "SELECT * FROM dailyAttendance WHERE firstName = '" + first + "' AND lastName = '" + last + "' ORDER BY date DESC;"
     return json.dumps(executeSingleQuery(query,
         fetch = True), indent=4, sort_keys=True, default=str)
 
 @app.route('/getMasterAttendance')
 def getMasterAttendance():
-    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date ASC;",
-        fetch = True), indent=4, sort_keys=True, default=str)
-        
+    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;",
+        fetch = True)[:10], indent=4, sort_keys=True, default=str)
+
+
+@app.route('/tempColumns', methods=["POST"])
+def tempColumns():
+    query = query = "DROP TABLE IF EXISTS attendanceColumns;"
+    query2 = "CREATE TABLE attendanceColumns (inUse boolean, isShowing boolean, name varchar(255), type varchar(255), isParent boolean, isChild boolean, parent varchar(255), priority SERIAL UNIQUE)"
+    query3 = "INSERT INTO attendanceColumns (inUse, isShowing, name, type, isParent, isChild, parent) VALUES ('true','true','art','boolean','false','false',''),('true','true','madeFood','boolean','false','false',''),('true','true','recievedFood','boolean','false','false',''),('true','true','leadership','boolean','false','false',''),('true','true','exersize','boolean','false','false',''),('true','true','mentalHealth','boolean','false','false',''),('true','true','volunteering','boolean','false','false',''),('true','true','oneOnOne','boolean','false','false',''),('true','false','comments','varchar','false','false','');"
+
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])
+    executeSingleQuery(query3, [])
+
+
+@app.route('/addAttendanceColumn', methods=["POST"])
+def addAttendanceColumn():
+    #make sure column name not in use
+    name = request.form.get("name")
+    colType = request.form.get("type")
+    #isParent = request.form.get("isParent")
+    isParent = "false"
+    #isChild = request.form.get("isChild")
+    isChild = "false"
+    #parent = request.form.get("parent")
+    parent = ""
+    if (colType == "varchar"):
+        colType = colType + "(255)"
+
+    query = "INSERT INTO attendanceColumns VALUES ('true','true', '" + name + "', '"+ colType + "', '"+ isParent + "', '" + isChild + "', '" + parent + "');"
+    queryAttendance = "ALTER TABLE dailyAttendance ADD " + name + " " + colType + ";"
+    queryMaster = "ALTER TABLE masterAttendance ADD " + name + " int;"
+    executeSingleQuery(query, [])
+    executeSingleQuery(queryAttendance, [])
+    executeSingleQuery(queryMaster, [])
+
+    queryCounts = "UPDATE masterAttendance SET "+ name+ "='0';"
+
+    executeSingleQuery(queryCounts, [])
+
+@app.route('/deleteAttendanceColumn', methods=["POST"])
+def deleteAttendanceColumn():
+    name = request.form.get("name")
+    query = "DELETE FROM attendanceColumns WHERE name = '" + name + "';"
+    queryAttendance = "ALTER TABLE dailyAttendance DROP COLUMN " + name + ";"
+    queryMaster = "ALTER TABLE masterAttendance DROP COLUMN " + name + ";"
+
+    executeSingleQuery(query, [])
+    executeSingleQuery(queryAttendance, [])
+    executeSingleQuery(queryMaster, [])
+
+
+@app.route('/updateAttendanceColumn', methods=["POST"])
+def updateAttendanceColumn():
+    name = request.form.get("name")
+
+
+    queryMaster = "SELECT isShowing FROM attendanceColumns WHERE name = '" + name + "';"
+    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+    newResult =json.loads(result)
+    isShowing = newResult[0][0]
+    if (isShowing):
+        query = "UPDATE attendanceColumns SET isShowing = 'false' WHERE name = '" + name + "';"
+    else:
+        query = "UPDATE attendanceColumns SET isShowing = 'true' WHERE name = '" + name + "';"
+
+    executeSingleQuery(query, [])
+
+
+@app.route('/getAttendanceColumns')
+def getAttendanceColumns():
+    query = "SELECT * FROM attendanceColumns ORDER BY priority"
+    return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+
+@app.route('/tempAlter', methods=["POST"])
+def tempAlter():
+    query = "ALTER TABLE attendanceColumns ADD priority int;"
+    query2 = "UPDATE attendanceColumns set priority = '1' WHERE name = 'art';"
+    query3 = "UPDATE attendanceColumns set priority = '2' WHERE name = 'madeFood';"
+    query4 = "UPDATE attendanceColumns set priority = '3' WHERE name = 'recievedFood';"
+    query5 = "UPDATE attendanceColumns set priority = '4' WHERE name = 'leadership';"
+    query6 = "UPDATE attendanceColumns set priority = '5' WHERE name = 'exersize';"
+    query7 = "UPDATE attendanceColumns set priority = '6' WHERE name = 'mentalHealth';"
+    query8 = "UPDATE attendanceColumns set priority = '7' WHERE name = 'volunteering';"
+    query9 = "UPDATE attendanceColumns set priority = '8' WHERE name = 'oneOnOne';"
+    query10 = "UPDATE attendanceColumns set priority = '9' WHERE name = 'comments';"
+    query11 = "UPDATE attendanceColumns set isShowing = 'false' WHERE name = 'comments';"
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])
+    executeSingleQuery(query3, [])
+    executeSingleQuery(query4, [])
+    executeSingleQuery(query5, [])
+    executeSingleQuery(query6, [])
+    executeSingleQuery(query7, [])
+    executeSingleQuery(query8, [])
+    executeSingleQuery(query9, [])
+    executeSingleQuery(query10, [])
+    executeSingleQuery(query11, [])
+
 # must give start and end date separated by a space
 @app.route('/getMasterAttendanceDate/<dates>')
 def getMasterAttendanceDate(dates):
@@ -105,7 +275,7 @@ def getMasterAttendanceDate(dates):
     end = dateList[1]
     return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance WHERE date >= '" + start + "' AND date <= '" + end + "' ORDER BY date ASC;",
         fetch = True), indent=4, sort_keys=True, default=str)
-        
+
 
 
 def decreaseActivityCount(column, date, increase):
@@ -194,6 +364,11 @@ def tempMaster():
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
 
+@app.route('/tempFiller', methods=["POST"])
+def tempFiller():
+    query = "INSERT INTO dailyAttendance VALUES ('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-30','16:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-29','18:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-27','18:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-25','16:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-21','15:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-19','17:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-15','17:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-12','16:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-11','19:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-10','15:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-06','17:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-05','18:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-01','16:00:00');"
+    executeSingleQuery(query, [])
+    return ""
 @app.route('/tempLogin', methods=["POST"])
 def tempLogin():
     query = "DROP TABLE IF EXISTS login;"
@@ -203,7 +378,7 @@ def tempLogin():
     executeSingleQuery(query2, [])
     executeSingleQuery(query3, [])
     return ""
-    
+
 @app.route('/tempFeedback', methods=["Post"])
 def tempFeedback():
     query = "DROP TABLE IF EXISTS feedback;"
@@ -276,12 +451,25 @@ def addAttendant():
         if entries != []:
             print("already added")
             return "false"
-        
-        
+
+
         query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
         databaseResult = executeSingleQuery(query, fetch = True)
         print(databaseResult[0][0])
-        newString = "INSERT INTO dailyAttendance VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName +"', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', 'FALSE', '" + date + "','" + time + "');"
+
+        queryRows = "SELECT name from attendanceColumns"
+        columns = json.dumps(executeSingleQuery(queryRows, fetch = True), indent=4, sort_keys=True, default=str)
+        columnsData = json.loads(columns)
+        numCols = len(columnsData);
+
+        newString = "INSERT INTO dailyAttendance (id, firstName, lastName"
+        for i in range(0, numCols):
+            newString = newString + ", "+ columnsData[i][0]
+
+        newString = newString + ", date, time) VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
+        for i in range(0, numCols):
+            newString = newString + "'FALSE', "
+        newString = newString + "'" + date + "','" + time + "');"
         #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
         executeSingleQuery(newString, [])
         queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"
@@ -331,6 +519,15 @@ def autofill(partialString):
     suggestions = json.dumps(databaseResult[:10])
     return suggestions
 
+@app.route('/frequentPeers/<string>')
+def frequentPeers(string):
+    studentID = getJustID(string)
+    query = "SELECT date FROM dailyAttendance WHERE id = '" + studentID + "';"
+    databaseResult = executeSingleQuery(query, fetch = True)
+    print(databaseResult)
+    result = json.dumps(databaseResult)
+    print(result)
+
 @app.route('/studentProfile/<string>')
 def studentProfile(string):
     nameList = string.split()
@@ -365,6 +562,28 @@ def getJustID(string):
     print(databaseResult[0][0])
     result = json.dumps(databaseResult[0][0])
     return result
+
+@app.route('/getAlerts')
+def getAlerts():
+    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert FROM testStudents, alerts WHERE alerts.completed = FALSE;"
+    databaseResult = executeSingleQuery(query, fetch = True)
+    return json.dumps(databaseResult)
+
+@app.route('/addAlert', methods = ["POST"])
+def addAlert():
+    id = request.form.get('id')
+    alert = request.form.get('alert')
+    query = ("INSERT INTO alerts VALUES (%s, %s, %s)", [id, alert, 'FALSE'])
+    databaseResult = executeSingleQuery(query, fetch = True)
+
+@app.route('/checkAlert', methods = ["POST"])
+def checkAlert():
+    id = request.form.get('id')
+    alert = request.form.get('alert')
+    query = ("INSERT INTO alerts VALUES (%s, %s, %s)", [id, alert, 'FALSE'])
+    databaseResult = executeSingleQuery(query, fetch = True)
+
+    
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "local":

@@ -31,45 +31,20 @@
 <div class="tab">
 <button id = "defaultOpen" class = "tablinks" onclick = "openTab(event, 'Home')" > Home </button>
 <button class = "tablinks" onclick = "openTab(event, 'Data'); displayAttendanceList();"> Attendance Sheets </button>
-<button class = "tablinks" onclick = "openTab(event, 'AttendanceOverview') "> Attendance Overview </button>
+<button class = "tablinks" onclick = "openTab(event, 'AttendanceOverview'); displayMasterAttendance()"> Attendance Overview </button>
 <button class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</button>
-<button class = "tablinks" onclick = "openTab(event, 'StaffSchedules'); showLogin();"> Staff Schedules</button>
+<button class = "tablinks" onclick = "openTab(event, 'StaffSchedules'); showAttendanceManage();">Manage Attendance</button>
 <button class = "tablinks" onclick = "openTab(event, 'Edit Attendance Sheets')"> Feedback Forum </button>
+<button class="tablinks" onclick="openTab(event, 'Manage Student Profile'); showProfileManage();"> Manage Profile </button>
 </div>
 
 <div id="Home" class="tabcontent">
-    <div id="homeContent">
-        <div id="Notifications" class="secondaryInfo">
-            <h4> Today's Notifications </h4>
-            <ul>
-                <li>It's Henry Kissinger's birthday in two days.</li>
-                <li>John Kerry Incident on 9/29.</li>
-                <li>Madeleine Albright has been coming for 30 days.</li>
-            </ul>
-        </div>
-        <div id="PastAttendanceSheets" class="secondaryInfo">
-            <h4> Past Attendance </h4>
-            <ul>
-                <li>9/27</li>
-                <li>9/28</li>
-                <li>9/29</li>
-            </ul>
-        </div>
-        <div id="Activities" class="secondaryInfo">
-            <h4> Activities This Week </h4>
-            Pulled from facebook.
-            <ul>
-                <li>9/27 Jam Night</li>
-                <li>9/28 State Dinner</li>
-                <li>9/29 Monkey Bar Night</li>
-            </ul>
-        </div>
-        <div id="content">
-        <div id="masterGraph">
-        </div>
-        <div id="activityGraph">
-        </div>
-        </div>
+    <h1> Welcome to the Key Attendance Portal!</h1>
+
+
+    <div style="width: 100%; overflow: hidden;">
+        <div id="masterGraph" style="width: 500px; float: left;"></div>
+        <div id="activityGraph" style="margin-left: 520px;"></div>
     </div>
 </div>
 
@@ -89,21 +64,33 @@
     </div>
 
     <div id="attendanceDiv">
-        <button id="returnAttendanceList" onclick="returnAttendance()">
-            Return
-        </button>
-        <h2 id="attendanceName"> Attendance Sheet 10/19/2017 </h2>
+        <div id="aboveTable">
+            <div id="leftStuff">
+                <button id="returnAttendanceList" onclick="returnAttendance()">
+                    Return
+                </button>
 
-        <div>
+                <h2 id="attendanceName"> Attendance Sheet 10/19/2017 </h2>
 
-        <aside>
-            <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required /></label>
-            <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
-            <datalist id="suggestedStudents"></datalist>
-        </aside>
-            <button type="button" onclick="createFile()">Download Attendance Sheet</button>
-            <p id="storeDate"></p>
-        <button id="addStudent" onclick="openAddStudent()">Add New Student</button>
+
+                <p id="storeDate"></p>
+
+                <form onsubmit="return false;" id="suggestForm">
+                    <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required /></label>
+                    <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
+                    <datalist id="suggestedStudents"></datalist>
+                </form>
+            </div>
+
+            <div id="rightStuff">
+                <div id="innerRight">
+                    <button type="button" id="download" onclick="createFile()">Download</button>
+
+                    <button id="addStudent" onclick="openAddStudent()">Add New Student</button>
+                    <button id="refresh" onclick="refreshAttendanceTable()">Refresh</button>
+                </div>
+            </div>
+        </div>
             <div id="studentDiv" class="addStudentContent">
                 <div class="addStudentHeader">
                     <h2 id="popUpHeader">Add Student</h2>
@@ -121,7 +108,7 @@
                     <input type="button" onclick="addNewStudent()" id="submitStudent" value="Submit" />
                 </div>
             </div>
-
+            <p id="columns"></p>
             <table id="Attendance-Table" style="width:100%">
                 <tr>
                 <th>Name</th>
@@ -136,7 +123,7 @@
 
 
             </table>
-        </div>
+
     </div>
 </div>
 
@@ -144,6 +131,7 @@
 <div id="AttendanceOverview" class="tabcontent">
     <h3>Statistics On Past Attendance Sheets</h3>
     <div id="attendanceOverviewContent">
+        <p id="columnData"></p>
         <div id="attendanceTable">
             <table id="masterAttendanceTable" style="width:100%">
                 <tr>
@@ -170,7 +158,7 @@
                 <input type="date" id="endDate" /><br>
                 <input type="submit" onclick="downloadMasterDates()" />
             </form>
-            
+
 
         </div>
     </div>
@@ -180,7 +168,7 @@
 
     <div id="profileSearch">
         <h3>Student Profiles</h3>
-        <form>
+        <form onsubmit="return false;">
             <input list="suggestedStudents" name="nameEnter" onkeypress="handleProfileBox(event, this.value)" id="keywordStudentSearch" type="text" placeholder="Name" required /></label>
             <input onclick="showStudentProfile()" id="searchbutton" type="button" value="Submit">
         </form>
@@ -188,6 +176,7 @@
             <h3 id = "studentName">
 
               </h3>
+            <div id="demographics" ></div>
             <p id="studentProfileText">
 
 
@@ -201,8 +190,9 @@
               </div>
             <aside> -->
             <div style="width: 100%; overflow: hidden;">
-                <div id="graphStudent" style="width: 500px; float: left;"> Left </div>
-                <div id="studentTimes" style="margin-left: 520px;"> Right </div>
+                <div id="graphStudent" style="width: 500px; float: left;"></div>
+                <div id="studentTimes" style="width: 500px; float: left;"></div>
+                <div id="frequentPeers" style="width: 200px; float: left;"></div>
             </div>
         <table id="profileAttendanceTable">
         </table>
@@ -211,17 +201,12 @@
 </div>
 
 <div id="StaffSchedules" class="tabcontent">
-<div id="login">
-    <form>
-        <input id="username" type="text" placeholder="Username" />
-        <input id="password" type="password" placeholder="Password" />
-        <input id="submitLogin" type="button" value="Submit" onclick="checkLogin()" />
+<h2>Current Attendance Columns</h2>
+    <form onsubmit="return false;">
+        <input type="text" id="newColumn" />
+        <input type="submit" onclick="addColumn();" />
     </form>
-</div>
-<div id="dontShow">
-    <h3>Staff Schedules</h3>
-    <p>Staff Schedules</p>
-</div>
+    <table id="attendanceColumnsTable"></table>
 </div>
 
 <div id="Edit Attendance Sheets" class="tabcontent">
@@ -232,13 +217,28 @@
 
         <button onclick = "sendFeedback()"> submit </button>
 </div>
+
+    <div id="Manage Student Profile" class="tabcontent">
+        <h2>Current Student Profile Columns</h2>
+        <form onsubmit="return false;">
+            <input type="text" id="studentColumnName" />
+            <select id="studentColumnType">
+                <option value="varchar">String</option>
+                <option value="boolean">True/False</option>
+                <option value="int">Number</option>
+                <option value="date">Date</option>
+            </select>
+            <input type="submit" onclick="addStudentColumn();" />
+        </form>
+        <table id="studentColumnsTable"></table>
+    </div>
+</div>
 </body>
 
 </html>
 
 <script>
     // Get the element with id="defaultOpen" and click on it
-    alert("got here");
     document.getElementById("defaultOpen").click();
     displayMasterAttendance();
 </script>

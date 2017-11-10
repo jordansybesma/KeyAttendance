@@ -438,13 +438,13 @@ function demographicsHelper(_, columns) {
 function displayStudentInfo(catName, info, type) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
-    var diplayName = makeHeaderReadable(catName);
+    //var diplayName = makeHeaderReadable(catName);
     if (info == null) {
-        var text = document.createTextNode(displayName + ": " );
+        var text = document.createTextNode(catName + ": " );
     } else if (type = "varchar") {
-        var text = document.createTextNode(displayName + ": " + info);
+        var text = document.createTextNode(catName + ": " + info);
     } else if (type = "int") {
-        var text = document.createTextNode(displayName + ": " + info.toString());
+        var text = document.createTextNode(catName + ": " + info.toString());
     }
     node.appendChild(text);
     parent.appendChild(node);

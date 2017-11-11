@@ -530,12 +530,16 @@ function displayStudentInfo(catName, info, type) {
     if (info == null) {
         var text = document.createTextNode(catName + ": " );
     } else if (type == "varchar") {
+        console.log("var");
         var text = document.createTextNode(catName + ": " + info);
     } else if (type == "int") {
+        console.log("int");
         var text = document.createTextNode(catName + ": " + info.toString());
     } else if (type == "date") {
+        console.log("date");
         var text = document.createTextNode(catName + ": " + makeDateReadable(info));
     } else if (type == "boolean") {
+        console.log("bool");
         if (info) {
             var text = document.createTextNode(catName + ": yes");
         } else {

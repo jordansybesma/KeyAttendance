@@ -1355,6 +1355,7 @@ function loginHelper(_, loginData) {
     }
 }
 
+
 function displayAlerts() {
     getRequest("/getAlerts", "", showAlerts);
 }

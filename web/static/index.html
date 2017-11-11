@@ -29,7 +29,7 @@
     </div>
 
 <div class="tab">
-<button id = "defaultOpen" class = "tablinks" onclick = "openTab(event, 'Home'); displayMasterAttendance(); displayAlerts();"> Home </button>
+<button id = "defaultOpen" class = "tablinks" onclick = "openTab(event, 'Home')"> Home </button>
 <button class = "tablinks" onclick = "openTab(event, 'Data'); displayAttendanceList();"> Attendance Sheets </button>
 <button class = "tablinks" onclick = "openTab(event, 'AttendanceOverview'); displayMasterAttendance()"> Attendance Overview </button>
 <button class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</button>
@@ -45,9 +45,9 @@
     <div style="width: 100%; overflow: hidden;">
         <div id="masterGraph" style="width: 500px; float: left;"></div>
         <div id="activityGraph" style="margin-left: 520px;"></div>
-        <div id="alertsListDiv" style="float: right; background-color:Orange;">
-            <ul id="alertsList">
-            </ul>  
+        <div id="alertsListDiv" style="background-color:Orange; float: right;">
+            <h1>Alerts</h1>
+            <ul id="alertsList"></ul>  
         </div>
         <div id="alertPopup">
             <h1>Alert</h1>
@@ -257,4 +257,6 @@
 <script>
     // Get the element with id="defaultOpen" and click on it
     document.getElementById("defaultOpen").click();
+    displayMasterAttendance();
+    displayAlerts();
 </script>

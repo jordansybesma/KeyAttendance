@@ -386,6 +386,7 @@ function showStudentProfile() {
     profileSpace.innerHTML = ("");
     var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
+    console.log("got here 2");
     //var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
@@ -398,6 +399,7 @@ function showStudentProfile() {
         }
     }
     if (optionFound) {
+        console.log("got here 3");
         nameSpace.innerHTML += (keywordElement);
         profileSpace.innerHTML += ("\n");
         console.log(keywordElement);
@@ -479,9 +481,7 @@ function openEditProfile() {
 
 function updateProfile(name, col, colid, type) {
     var value = document.getElementById(colid).value;
-    if (type = "int") {
-        //ensure 
-    }
+    
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/updateStudentInfo/");

@@ -376,7 +376,7 @@ function openAddStudent() {
 }
 
 function showStudentProfile() {
-
+    console.log("got here");
 
 
     var peerSpace = document.getElementById("frequentPeers");

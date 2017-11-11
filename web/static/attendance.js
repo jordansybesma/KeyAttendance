@@ -451,6 +451,7 @@ function openEditProfile() {
     var div = document.getElementById("editProfile");
     div.style.display = "block";
     var studentData = JSON.parse(studentInfo);
+    var studData = studentData[0];
     var columnData = JSON.parse(columns);
     for (i in columnData) {
         console.log("outer loop");
@@ -462,7 +463,7 @@ function openEditProfile() {
             if ((type == "varchar(500)")|| (type == "int")) {
                 console.log("got to last loop");
                 var col = columnData[i][2];
-                var str = col + ":<br> <input id='" + col + "colid' type='text' /> <br>";
+                var str = col + ":<br> <input id='" + col + "colid' type='text' value='" +studData[parseInt(i)+3] + "' /> <br>";
                 str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 console.log(str);
@@ -470,7 +471,7 @@ function openEditProfile() {
                 div.appendChild(form);
             } else if (type == "date") {
                 var col = columnData[i][2];
-                var str = col + ":<br> <input id='" + col + "colid' type='date' /> <br>";
+                var str = col + ":<br> <input id='" + col + "colid' type='date' value='" + studData[parseInt(i) + 3] + "'/> <br>";
                 str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 console.log(str);
@@ -479,7 +480,12 @@ function openEditProfile() {
             } else if (type == "boolean") {
                 var col = columnData[i][2];
                 var str = col + ": "
-                str = str + " <input type='checkbox' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
+                if (studData[parseInt(i) + 3]) {
+                    str = str + " <input type='checkbox' checked value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
+                } else {
+                    str = str + " <input type='checkbox' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
+
+                }
                 str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 console.log(str);
                 form.innerHTML = str;
@@ -503,7 +509,7 @@ function returnToProfile() {
 }
 
 function updateProfile(name, col, colid, type) {
-    if (type = "boolean") {
+    if (type == "boolean") {
         var value = "TRUE";
     } else {
         var value = document.getElementById(colid).value;
@@ -523,10 +529,18 @@ function displayStudentInfo(catName, info, type) {
     //var diplayName = makeHeaderReadable(catName);
     if (info == null) {
         var text = document.createTextNode(catName + ": " );
-    } else if (type = "varchar") {
+    } else if (type == "varchar") {
         var text = document.createTextNode(catName + ": " + info);
-    } else if (type = "int") {
+    } else if (type == "int") {
         var text = document.createTextNode(catName + ": " + info.toString());
+    } else if (type == "date") {
+        var text = document.createTextNode(catName + ": " + makeDateReadable(info));
+    } else if (type == "boolean") {
+        if (info) {
+            var text = document.createTextNode(catName + ": yes");
+        } else {
+            var text = document.createTextNode(catName + ": no");
+        }
     }
     node.appendChild(text);
     parent.appendChild(node);

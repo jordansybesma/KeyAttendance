@@ -544,6 +544,7 @@ def frequentPeers(string):
     result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
     for i in range(1, len(result)):
+        print(type(result[i]))
         print(result[i])
 
     return result

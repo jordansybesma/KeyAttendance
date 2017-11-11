@@ -554,8 +554,10 @@ def frequentPeers(string):
     result = result.split(",")
 
 
+    dict = {}
 
     for i in range(0, len(result)):
+        dict[result[i]] = []
         print(result[i])
         query2 = "SELECT id, time FROM dailyAttendance WHERE date = '" + result[i] + "';"
         print(query2)
@@ -564,7 +566,7 @@ def frequentPeers(string):
         curResult = curResult.split(",")
         print(curResult)
 
-    return "HELLO"
+    return str(dict)
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):

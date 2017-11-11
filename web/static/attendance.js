@@ -42,8 +42,6 @@ function addAttendant(first, last) {
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
-
-
 }
 
 // Called when a user clicks submit on the add new student dialogue. checks
@@ -118,7 +116,7 @@ function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest.send(null);
 }
 
-function sendSubmitForm()  {
+function sendSubmitForm() {
     theirText = document.getElementById("someRandoText").value
 
 }
@@ -189,6 +187,53 @@ function addRowHelper2(columns, entry) {
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
     row.insertCell(-1).innerHTML = str;
 }
+function showProfileManage() {
+    table = document.getElementById("studentColumnsTable");
+    table.innerHTML = "";
+    var row = table.insertRow(-1);
+    row.insertCell(-1).innerHTML = "Column Name";
+    row.insertCell(-1).innerHTML = "Show in Profile";
+    row.insertCell(-1).innerHTML = "Show in Quick Add";
+    getRequest("/getStudentColumns", "", showStudentManageHelper);
+}
+
+function showStudentManageHelper(_, data) {
+    var myData = JSON.parse(data);
+    var table = document.getElementById("studentColumnsTable");
+    for (i in myData) {
+        console.log(myData[i]);
+        var row = table.insertRow(-1);
+        name = myData[i][2];
+        //for some reason this breaks everthing - can't figure out why?
+        //newName = makeHeaderReadable(name);
+        row.insertCell(-1).innerHTML = name;
+        var str = "<input type=\"checkbox\" "
+            + (myData[i][0] ? "checked" : "")
+            + " onclick=\"selectStudentColumn('" + myData[i][2] + "', 'isShowing')\">";
+        row.insertCell(-1).innerHTML = str;
+        var str1 = "<input type=\"checkbox\" "
+            + (myData[i][1] ? "checked" : "")
+            + " onclick=\"selectStudentColumn('" + myData[i][2] + "', 'isQuick')\">";
+        row.insertCell(-1).innerHTML = str1;
+        var str2 = "<button type=\"button\" onclick=\"deleteStudentColumn('" + myData[i][2] + "')\">Delete </button>";
+        row.insertCell(-1).innerHTML = str2;
+    }
+}
+
+function selectStudentColumn(name, column) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/alterStudentColumn");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name + "&column=" + column);
+}
+
+function deleteStudentColumn(name) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/deleteStudentColumn");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name);
+    showProfileManage()
+}
 
 function showAttendanceManage() {
     table = document.getElementById("attendanceColumnsTable");
@@ -228,7 +273,36 @@ function selectColumn(name) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
 }
+function addStudentColumn() {
+    var name = document.getElementById("studentColumnName").value;
+    var type = document.getElementById("studentColumnType").value;
+    if (name == "") {
+        alert("Please enter a name")
+        return;
+    }
+    var substring = " ";
+    if (name.indexOf(substring) != -1) {
+        alert("Please enter a column name with no spaces")
+        return;
+    }
+    if (type == "") {
+        alert("Please enter a type")
+        return;
+    }
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addStudentColumn");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name + "&type=" + type + "&definedOptions=");
 
+    /*var table = document.getElementById("attendanceColumnsTable");
+    var row = table.insertRow(-1);
+    row.insertCell(-1).innerHTML = name;
+    var str = "<input type=\"checkbox\" "
+            + "checked"
+            + " onclick=\"selectColumn('" + name + "')\">";
+    row.insertCell(-1).innerHTML = str;*/
+
+}
 function addColumn() {
     var name = document.getElementById("newColumn").value;
     var substring = " ";
@@ -302,6 +376,9 @@ function openAddStudent() {
 }
 
 function showStudentProfile() {
+    console.log("got here");
+
+
     var peerSpace = document.getElementById("frequentPeers");
     peerSpace.innerHTML += ("Frequently Attends With: \n")
 
@@ -309,6 +386,7 @@ function showStudentProfile() {
     profileSpace.innerHTML = ("");
     var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
+    console.log("got here 2");
     //var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
@@ -321,13 +399,121 @@ function showStudentProfile() {
         }
     }
     if (optionFound) {
-        nameSpace.innerHTML += (keywordElement)
-        profileSpace.innerHTML += ("\n")
+        console.log("got here 3");
+        nameSpace.innerHTML += (keywordElement);
+        profileSpace.innerHTML += ("\n");
+        console.log(keywordElement);
+        getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
         //getRequest("/getJustID/" + keywordElement, "", showProfile);
-        getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
+        
 
     }
 
+}
+
+function showDemographics(_, data) {
+    var parsedData = JSON.parse(data);
+    console.log(parsedData);
+    document.getElementById("saveStudentData").innerHTML = data;
+    
+    getRequest("/getStudentColumns", "", demographicsHelper);
+    
+}
+function demographicsHelper(_, columns) {
+
+    var data = document.getElementById("saveStudentData").innerHTML;
+    document.getElementById("saveColumnData").innerHTML = columns;
+    var studentInfo = JSON.parse(data);
+    var columnInfo = JSON.parse(columns);
+    var keywordElement = document.getElementById('keywordStudentSearch').value;
+    var div = document.getElementById("demographics");
+    div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Edit Profile</button>";
+
+
+    for (i in columnInfo) {
+        if (columnInfo[i][0]) {
+            displayStudentInfo(columnInfo[i][2], studentInfo[0][parseInt(i) + 3], columnInfo[i][3]);
+        }
+    }
+
+   
+    getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
+}
+
+function openEditProfile() {
+    console.log("gets to here");
+    var name = document.getElementById('keywordStudentSearch').value;
+    var studentInfo = document.getElementById("saveStudentData").innerHTML;
+    var columns = document.getElementById("saveColumnData").innerHTML;
+    var keywordElement = document.getElementById('keywordStudentSearch').value;
+    var div = document.getElementById("editProfile");
+    div.style.display = "block";
+    var studentData = JSON.parse(studentInfo);
+    var columnData = JSON.parse(columns);
+    for (i in columnData) {
+        console.log("outer loop");
+        if (columnData[i][0]) {
+            console.log("next loop");
+            var form = document.createElement("form");
+            form.setAttribute('onSubmit', 'return false;');
+            if (columnData[i][3] == "varchar(500)") {
+                console.log("got to last loop");
+                var col = columnData[i][2];
+                var str = col + ":<br> <input id='" + col + "colid' type='text' /> <br>";
+                str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
+                str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
+                console.log(str);
+                form.innerHTML = str;
+                div.appendChild(form);
+            } else if (columnData[i][3] == "int") {
+                var col = columnData[i][2];
+                var str = col + ":<br> <input id='" + col + "colid' type='text' /> <br>";
+                str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
+                str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
+                console.log(str);
+                form.innerHTML = str;
+                div.appendChild(form);
+            }
+            
+        }
+
+    }
+    var returnButton = document.createElement('button');
+    returnButton.setAttribute('name', 'Return to Profile');
+    returnButton.setAttribute('onclick', 'returnToProfile()');
+    returnButton.innerHTML = "Return to Profile";
+    div.appendChild(returnButton);
+}
+
+function returnToProfile() {
+    var div = document.getElementById("editProfile");
+    div.innerHTML = "";
+    div.style.display = "none";
+}
+
+function updateProfile(name, col, colid, type) {
+    var value = document.getElementById(colid).value;
+    
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/updateStudentInfo/");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name + "&value=" + value + "&column=" + col);
+}
+
+function displayStudentInfo(catName, info, type) {
+    var parent = document.getElementById("demographics");
+    var node = document.createElement("p");
+    //var diplayName = makeHeaderReadable(catName);
+    if (info == null) {
+        var text = document.createTextNode(catName + ": " );
+    } else if (type = "varchar") {
+        var text = document.createTextNode(catName + ": " + info);
+    } else if (type = "int") {
+        var text = document.createTextNode(catName + ": " + info.toString());
+    }
+    node.appendChild(text);
+    parent.appendChild(node);
 }
 
 function showStudentAttendance(_, data) {
@@ -631,7 +817,10 @@ function makeTableHeaderHelper(_, data) {
     var table_date = document.getElementById("storeDate").innerHTML;
     getRequest("/getAttendance/" + table_date, "", fillAttendance);
 }
-
+function refreshAttendanceTable() {
+    var date = document.getElementById("storeDate").innerHTML;
+    displayAttendanceTable(date);
+}
 
 function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;
@@ -646,7 +835,7 @@ function displayAttendanceTable(table_date) {
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
     /*var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/tempColumns");
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/tempStudentColumns");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send();*/
 
@@ -683,19 +872,40 @@ function returnAttendance() {
 }
 
 function displayMasterAttendance() {
+    var table = document.getElementById("masterAttendanceTable");
+    table.innerHTML = "";
+    getRequest("/getAttendanceColumns", "", makeMasterTableHeader);
+    
+}
+function makeMasterTableHeader(_, columns) {
+    table = document.getElementById("masterAttendanceTable");
+    var row = table.insertRow(-1);
+    document.getElementById("columnData").innerHTML = columns;
+    row.insertCell(-1).innerHTML = "Date";
+    row.insertCell(-1).innerHTML = "Attendees";
+    var myData = JSON.parse(columns);
+    for (i in myData) {
+        if (myData[i][1] == true) {
+            var newHeader = makeHeaderReadable(myData[i][2]);
+            row.insertCell(-1).innerHTML = newHeader;
+        }
+
+    }
+
+
     getRequest("/getMasterAttendance", "", masterAttendanceHelper);
 }
 
 function masterAttendanceHelper(_, masterData) {
     var myData = JSON.parse(masterData);
     console.log(masterData);
-    var table = document.getElementById("masterAttendanceTable");
-    table.innerHTML = "";
-    var row = table.insertRow(-1);
+    columns = document.getElementById("columnData").innerHTML;
+    columnData = JSON.parse(columns);
+    /*var row = table.insertRow(-1);
     headers = ["Date", "# Attendees", "# Art", "# Make Food", "# Recieved Food", "# Leadership", "# Exersize", "# Mental Health", "# Volunteering", "# One On One"];
     for (header of headers)  {
         row.insertCell(-1).innerHTML = header;
-    }
+    }*/
     var xaxis = [];
     var yaxis = [];
     var yaxisArt = [];
@@ -718,8 +928,13 @@ function masterAttendanceHelper(_, masterData) {
         yaxisVolunteering.push(myData[i][8]);
         yaxisOneOnOne.push(myData[i][9]);
         var row = table.insertRow(-1);
-        for (j in myData[i])  {
-            row.insertCell(-1).innerHTML = myData[i][j];
+        row.insertCell(-1).innerHTML = myData[i][0];
+        row.insertCell(-1).innerHTML = myData[i][1];
+        for (j in columnData) {
+            if (columnData[j][1] == true) {
+                row.insertCell(-1).innerHTML = myData[i][parseInt(j) + 1];
+            }
+            
         }
     }
 

@@ -167,7 +167,7 @@ h4 {
         //height: 27px;
         font-size: 13pt;
         background-color: @base02;
-        color: @base01;
+        color: @base1;
         padding-left: 4px;
         padding-top:  4px;
         //position: relative;
@@ -180,6 +180,11 @@ h4 {
         color: @base1;
     }
 
+    #returnAttendanceList{
+        padding: 5px;
+        border: 5px @base3;
+    }
+
     #submitStudent {
         float: right;
         padding: 5px;
@@ -190,7 +195,7 @@ h4 {
 //    #downloadCurrent {
 //        float: left;
 //        padding: 10px;
-////        margin-left: 20px;
+//        margin-left: 20px;
 //        margin-bottom: 20px;   
 //    }
 
@@ -241,10 +246,6 @@ h4 {
         cursor:pointer;
     }
 
-    #returnAttendanceList{
-        padding: 5px;
-        border: 5px @base3;
-    }
 
     #nameEnter {
         width: 310px;
@@ -278,9 +279,11 @@ html {
 span:hover {
     color: red;
 }
+
 #dontShow {
     display: none;
 }
+
 #storeDate{
     display: none;
 }
@@ -295,6 +298,7 @@ span:hover {
 #aboveTable{
     width: 100%;
 }
+
 #leftStuff{
     float: left;
     width: 75%
@@ -304,9 +308,11 @@ span:hover {
     float: left;
     width: 25%;
 }
+
 #innerRight{
     position: relative;
 }
+
 #download{
     position: absolute;
     //left: 130px;
@@ -316,30 +322,82 @@ span:hover {
     padding-left: 4px;
     padding-top:  4px;
 }
+
 #addStudent{
     position: absolute;
     right: 0px;
-    top: 95px;
-    
+    top: 60px;
 }
+
+#refresh{
+    position: absolute;
+    right: 0px;
+    top: 90px;
+}
+
 #returnAttendanceList{
     position: relative;
     top: 8px;
 }
+
 #suggestForm{
     position: relative;
     bottom: 8px;
 }
+
 #profileAttendanceTable{
     position: relative;
     top: 32px;
     width: 100%;
 }
+
 #attendanceColumnsTable{
     position: relative;
     top: 32px;
     width: 100%;
 }
+
 #columns{
     display: none;
 }
+
+#columnData{
+    display: none;
+}
+
+#studentColumnsTable{
+    position: relative;
+    top: 32px;
+    width: 100%;
+}
+#editProfile{
+    position: absolute;
+        width: 400px;
+        height: 250px;
+        z-index: 15;
+        top: 50%;
+        left: 50%;
+        margin: -100px 0 0 -150px;
+        padding-top: 10px;
+        padding-bottom: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+        display: none; /* Hidden by default */
+        //position: fixed; /* Stay in place */
+        //z-index: 1; /* Sit on top */
+        //left: 0;
+        //top: 0;
+        //width: 50%; /* Full width */
+        //height: 50%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: white; /* Fallback color */
+        border: 2px solid black;
+        //margin: auto;
+}
+#saveStudentData{
+    display: none;
+}
+#saveColumnData{
+    display: none;
+}
+

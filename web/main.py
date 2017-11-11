@@ -58,6 +58,86 @@ def addNewStudent():
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
 
+@app.route('/updateStudentInfo/', methods = ["POST"])
+def updateStudentInfo():
+    name = request.form.get('name')
+    nameList = name.split()
+    first = nameList[0]
+    last = nameList[1]
+    column = request.form.get('column')
+    value = request.form.get('value')    
+    query = "UPDATE testStudents SET "+ column + " = '" + value +"' WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
+    executeSingleQuery(query, [])
+    return "all good"
+    
+    
+    
+@app.route('/getStudentInfo/<name>')
+def getStudentInfo(name):
+    print("got here")
+    nameList = name.split()
+    first = nameList[0]
+    last = nameList[1]
+    query = "SELECT * FROM testStudents WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
+    result = json.dumps(executeSingleQuery(query, fetch = True))
+    print(result)
+    return result
+
+    
+    
+@app.route('/tempStudentColumns', methods=["POST"])
+def tempStudentColumns():
+    query = query = "DROP TABLE IF EXISTS studentColumns;"
+    query2 = "CREATE TABLE studentColumns (isShowing boolean, isQuick boolean, name varchar(255), type varchar(255),definedOptions varchar(1000), priority SERIAL UNIQUE)"
+    
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])
+    
+    
+@app.route('/addStudentColumn', methods=["POST"])
+def addStudentColumn():
+    #make sure column name not in use
+    name = request.form.get("name")
+    colType = request.form.get("type")
+    definedOptions = request.form.get("definedOptions")
+    
+    if (colType == "varchar"):
+        colType = colType + "(500)"
+
+    query = "INSERT INTO studentColumns VALUES ('true','false', '" + name + "', '"+ colType + "', '" + definedOptions + "');"
+    queryAttendance = "ALTER TABLE testStudents ADD " + name + " " + colType + ";"
+    
+    executeSingleQuery(query, [])
+    executeSingleQuery(queryAttendance, [])
+   
+@app.route('/alterStudentColumn', methods=["POST"])
+def alterStudentColumn():
+    name = request.form.get("name")
+    column = request.form.get("column")
+    queryStatus = "SELECT "+ column + " FROM studentColumns WHERE name = '" + name + "';"
+    result = json.dumps(executeSingleQuery(queryStatus,fetch = True))
+    newResult =json.loads(result)
+    isChecked = newResult[0][0]
+    
+    if (isChecked):
+        query = "UPDATE studentColumns SET "+ column + " = 'false' WHERE name = '" + name + "';"
+    else:
+        query = "UPDATE studentColumns SET "+ column + " = 'true' WHERE name = '" + name + "';"
+    executeSingleQuery(query, [])
+
+@app.route('/deleteStudentColumn', methods=["POST"])
+def deleteStudentColumn():
+    name = request.form.get("name")
+    query = "DELETE FROM studentColumns WHERE name = '" + name + "';"
+    query2 = "ALTER TABLE testStudents DROP COLUMN " + name + ";"
+    executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])
+
+@app.route('/getStudentColumns')
+def getStudentColumns():
+    query = "SELECT * FROM studentColumns ORDER BY priority"
+    return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+
 @app.route('/sendFeedback', methods=["POST"])
 def sendFeedback():
     feedback = request.form.get('feedback')
@@ -496,6 +576,28 @@ def getJustID(string):
     print(databaseResult[0][0])
     result = json.dumps(databaseResult[0][0])
     return result
+
+@app.route('/getAlerts')
+def getAlerts():
+    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert FROM testStudents, alerts WHERE alerts.completed = FALSE;"
+    databaseResult = executeSingleQuery(query, fetch = True)
+    return json.dumps(databaseResult)
+
+@app.route('/addAlert', methods = ["POST"])
+def addAlert():
+    id = request.form.get('id')
+    alert = request.form.get('alert')
+    query = ("INSERT INTO alerts VALUES (%s, %s, %s)", [id, alert, 'FALSE'])
+    databaseResult = executeSingleQuery(query, fetch = True)
+
+@app.route('/checkAlert', methods = ["POST"])
+def checkAlert():
+    id = request.form.get('id')
+    alert = request.form.get('alert')
+    query = ("INSERT INTO alerts VALUES (%s, %s, %s)", [id, alert, 'FALSE'])
+    databaseResult = executeSingleQuery(query, fetch = True)
+
+    
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "local":

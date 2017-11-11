@@ -57,6 +57,20 @@ def addNewStudent():
     lastName  = request.form.get( 'lastName')
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
+
+@app.route('/updateStudentInfo/', methods = ["POST"])
+def updateStudentInfo():
+    name = request.form.get('name')
+    nameList = name.split()
+    first = nameList[0]
+    last = nameList[1]
+    column = request.form.get('column')
+    value = request.form.get('value')    
+    query = "UPDATE testStudents SET "+ column + " = '" + value +"' WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
+    executeSingleQuery(query, [])
+    return False
+    
+    
     
 @app.route('/getStudentInfo/<name>')
 def getStudentInfo(name):

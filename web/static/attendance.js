@@ -477,6 +477,18 @@ function openEditProfile() {
     }
 }
 
+function updateProfile(name, col, colid, type) {
+    var value = document.getElementById(colid).value;
+    if (type = "int") {
+        //ensure correct input
+    }
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/updateStudentInfo/");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name + "&value=" + value + "&column=" + col);
+}
+
 function displayStudentInfo(catName, info, type) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");

@@ -79,7 +79,7 @@ def getStudentInfo(name):
     first = nameList[0]
     last = nameList[1]
     query = "SELECT * FROM testStudents WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
-    result = json.dumps(executeSingleQuery(query, fetch = True))
+    result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
     print(result)
     return result
 
@@ -530,7 +530,7 @@ def autofill(partialString):
         q = partialString.upper()
         query = "SELECT * FROM testStudents WHERE UPPER(firstName) LIKE '%" + q + "%' OR UPPER(lastName) LIKE '%" + q + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
-    suggestions = json.dumps(databaseResult[:10])
+    suggestions = json.dumps(databaseResult[:10], indent=4, sort_keys=True, default=str)
     return suggestions
 
 @app.route('/frequentPeers/<string>')
@@ -541,20 +541,18 @@ def frequentPeers(string):
     # print(databaseResult)
     # result = str(databaseResult)
     # return(result)
-    print("#1")
     result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
-    print("#2")
-    result = result.replace("\n","").replace(" ","").replace("[", "").replace("]", "")
-    print("#2.5")
+    result = result.replace("\n","").replace(" ","").replace("[", "").replace("]", "").replace("\"","")
     result = result.split(",")
-    print("#3")
-    print(type(result))
-    print("#4")
-    print(str(result))
+
 
 
     for i in range(0, len(result)):
         print(result[i])
+        query2 = "SELECT id FROM dailyAttendance WHERE date = '" + result[i] + "';"
+        print(query2)
+        curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
+        print(curResult)
 
     return "HELLO"
 

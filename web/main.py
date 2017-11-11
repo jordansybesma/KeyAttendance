@@ -75,7 +75,7 @@ def updateStudentInfo():
             query = "UPDATE testStudents SET "+ column + " = 'FALSE' WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
         else:
             query = "UPDATE testStudents SET "+ column + " = 'TRUE' WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
-    else:         
+    else:
         query = "UPDATE testStudents SET "+ column + " = '" + value +"' WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
     return "all good"
@@ -559,7 +559,9 @@ def frequentPeers(string):
     dict = {}
 
     for i in range(0, len(result)):
-        dict[result[i]] = []
+        if result[1] not in dict.keys():
+            dict[result[i]] = []
+        dict[result[i]].append("I GOT HERE")
         print(result[i])
         query2 = "SELECT id, time FROM dailyAttendance WHERE date = '" + result[i] + "';"
         print(query2)

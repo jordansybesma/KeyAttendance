@@ -553,7 +553,7 @@ def frequentPeers(string):
     print(str(result))
 
 
-    for i in range(1, len(result)):
+    for i in range(0, len(result)):
         print(result[i])
 
     return "HELLO"

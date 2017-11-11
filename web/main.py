@@ -67,7 +67,7 @@ def updateStudentInfo():
     column = request.form.get('column')
     value = request.form.get('value')
     if (value == "TRUE"):
-        curVal = json.dumps(executeSingleQuery("SELECT " + column + " FROM testStudents WHERE firstName = '" + first + "' and lastName = '" + last + "';", []), indent=4, sort_keys=True, default=str)
+        curVal = json.dumps(executeSingleQuery("SELECT " + column + " FROM testStudents WHERE firstName = '" + first + "' AND lastName = '" + last + "';", []), indent=4, sort_keys=True, default=str)
         newResult =json.loads(curVal)
         isChecked = newResult[0][0]
         print(curVal)

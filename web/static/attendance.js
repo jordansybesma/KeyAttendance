@@ -1378,7 +1378,7 @@ function displayAlert(alert) {
     alert = alert.split(",");
     var list = document.getElementById('alertSpecifics');
     list.innerHTML = "";
-    var name = "Name: " + alert[0] + alert[1];
+    var name = "Name: " + alert[0] + " " + alert[1];
     var insertName = document.createElement('li');
     var message = "Message: " + alert[2];
     var insertMessage = document.createElement('li');
@@ -1391,6 +1391,6 @@ function displayAlert(alert) {
 }
 
 function closeAlert() {
-    
-
+    var popup = document.getElementById('alertPopup');
+    popup.style.display = "none";
 }

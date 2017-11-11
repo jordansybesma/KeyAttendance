@@ -453,7 +453,8 @@ function openEditProfile() {
         if (columnData[i][0]) {
             console.log("next loop");
             var form = document.createElement("form");
-            if (columnData[i][3] == "varchar") {
+            if (columnData[i][3] == "varchar(500)") {
+                console.log("got to last loop");
                 var col = columnData[i][2];
                 var str = keywordElement + ":<br> <input id='" + col + "COLID' type='text' /> <br>";
                 str = str + " <input type='submit' value='Save' onclick='updateProfile('" + keywordElement + "','" + col;

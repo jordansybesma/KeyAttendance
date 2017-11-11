@@ -456,9 +456,17 @@ function openEditProfile() {
             if (columnData[i][3] == "varchar(500)") {
                 console.log("got to last loop");
                 var col = columnData[i][2];
-                var str = keywordElement + ":<br> <input id='" + col + "COLID' type='text' /> <br>";
-                str = str + " <input type='submit' value='Save' onclick='updateProfile('" + keywordElement + "','" + col;
-                str = str + "','" + col + "COLID')'/>"
+                var str = col + ":<br> <input id='" + col + "colid' type='text' /> <br>";
+                str = str + " <input type='submit' value='Save' onclick='updateProfile(\"" + keywordElement + "','" + col;
+                str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/>"
+                console.log(str);
+                form.innerHTML = str;
+                div.appendChild(form);
+            } else if (columnData[i][3] == "int") {
+                var col = columnData[i][2];
+                var str = col + ":<br> <input id='" + col + "colid' type='text' /> <br>";
+                str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
+                str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/>"
                 console.log(str);
                 form.innerHTML = str;
                 div.appendChild(form);

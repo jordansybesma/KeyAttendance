@@ -481,6 +481,7 @@ function openEditProfile() {
     var returnButton = document.createElement('button');
     returnButton.setAttribute('name', 'Return to Profile');
     returnButton.setAttribute('onclick', '\"returnToProfile()\"');
+    returnButton.innerHTML = "Return to Profile";
     div.appendChild(returnButton);
 }
 

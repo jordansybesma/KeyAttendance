@@ -75,7 +75,7 @@
 
                 <p id="storeDate"></p>
 
-                <form onsubmit="return false;" id="suggestForm">
+                <form autocomplete="off" onsubmit="return false;" id="suggestForm">
                     <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required /></label>
                     <input onclick="onAddRow()" id="searchbutton" type="button" value="Add">
                     <datalist id="suggestedStudents"></datalist>
@@ -168,7 +168,7 @@
 
     <div id="profileSearch">
         <h3>Student Profiles</h3>
-        <form onsubmit="return false;">
+        <form autocomplete="off" onsubmit="return false;">
             <input list="suggestedStudents" name="nameEnter" onkeypress="handleProfileBox(event, this.value)" id="keywordStudentSearch" type="text" placeholder="Name" required /></label>
             <input onclick="showStudentProfile()" id="searchbutton" type="button" value="Submit">
         </form>

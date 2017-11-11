@@ -529,10 +529,18 @@ function displayStudentInfo(catName, info, type) {
     //var diplayName = makeHeaderReadable(catName);
     if (info == null) {
         var text = document.createTextNode(catName + ": " );
-    } else if (type = "varchar") {
+    } else if (type == "varchar") {
         var text = document.createTextNode(catName + ": " + info);
-    } else if (type = "int") {
+    } else if (type == "int") {
         var text = document.createTextNode(catName + ": " + info.toString());
+    } else if (type == "date") {
+        var text = document.createTextNode(catName + ": " + makeDateReadable(info));
+    } else if (type == "boolean") {
+        if (info) {
+            var text = document.createTextNode(catName + ": yes");
+        } else {
+            var text = document.createTextNode(catName + ": no");
+        }
     }
     node.appendChild(text);
     parent.appendChild(node);

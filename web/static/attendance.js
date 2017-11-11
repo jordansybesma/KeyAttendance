@@ -527,6 +527,7 @@ function displayStudentInfo(catName, info, type) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
     //var diplayName = makeHeaderReadable(catName);
+    console.log(type);
     if (info == null) {
         var text = document.createTextNode(catName + ": " );
     } else if (type == "varchar") {

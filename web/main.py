@@ -553,7 +553,13 @@ def frequentPeers(string):
     result = result.split(",")
 
 
-    dict = {}
+    studentDict = {}
+    peersDict = {}
+
+    for i in range(0, len(result), 2):
+        if result[i] not in studentDict.keys():
+            studentDict[result[i]] = []
+        studentDict[result[i]].append(result[i + 1])
 
     # for i in range(0, len(result)):
     #     if result[1] not in dict.keys():
@@ -570,7 +576,7 @@ def frequentPeers(string):
     #
     # return str(dict)
 
-    return str(result)
+    return str(studentDict)
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):

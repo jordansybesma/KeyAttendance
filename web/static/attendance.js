@@ -1374,7 +1374,7 @@ function showAlerts(_, alertList) {
 
 function displayAlert(alert) {
     console.log(alert);
-    
+    alert = JSON.parse(alert);
     var list = document.getElementById('alertSpecifics');
     list.innerHTML = "";
     var name = "Name: " + alert[0] + alert[1];

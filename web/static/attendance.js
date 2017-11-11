@@ -1338,4 +1338,26 @@ function displayAlerts() {
 function showAlerts(_, alertList) {
     console.log(alertList)
     var alerts = JSON.parse(alertList);
+    var list = document.getElementById("alertsList");
+    list.innerHTML = "";
+    for (i in alerts) {
+        var alert = alerts[i][0];
+        var entry = document.createElement('li');
+        entry.innerHTML = '<span>' + alert + '</span>';
+        list.appendChild(entry);
+    }
+}
+
+
+function createListOfAttendanceDates(_, dates) {
+    var myData = JSON.parse(dates);
+    var list = document.getElementById("attendanceList");
+    list.innerHTML = "";
+    for (i in myData) {
+        var date = myData[i][0];
+        var readable = makeDateReadable(date);
+        var entry = document.createElement('li');
+        entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
+        list.appendChild(entry);
+    }
 }

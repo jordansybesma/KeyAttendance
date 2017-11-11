@@ -478,6 +478,16 @@ function openEditProfile() {
         }
 
     }
+    var returnButton = document.createElement('button');
+    returnButton.setAttribute('name', 'Return to Profile');
+    returnButton.setAttribute('onclick', '\"returnToProfile()\"');
+    div.appendChild(returnButton);
+}
+
+function returnToProfile() {
+    var div = document.getElementById("editProfile");
+    div.innerHTML = "";
+    div.style.display = "none";
 }
 
 function updateProfile(name, col, colid, type) {

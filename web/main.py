@@ -68,7 +68,7 @@ def updateStudentInfo():
     value = request.form.get('value')    
     query = "UPDATE testStudents SET "+ column + " = '" + value +"' WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
-    return False
+    return "all good"
     
     
     

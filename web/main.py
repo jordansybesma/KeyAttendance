@@ -65,13 +65,13 @@ def updateStudentInfo():
     first = nameList[0]
     last = nameList[1]
     column = request.form.get('column')
-    value = request.form.get('value')    
+    value = request.form.get('value')
     query = "UPDATE testStudents SET "+ column + " = '" + value +"' WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
     return "all good"
-    
-    
-    
+
+
+
 @app.route('/getStudentInfo/<name>')
 def getStudentInfo(name):
     print("got here")
@@ -83,33 +83,33 @@ def getStudentInfo(name):
     print(result)
     return result
 
-    
-    
+
+
 @app.route('/tempStudentColumns', methods=["POST"])
 def tempStudentColumns():
     query = query = "DROP TABLE IF EXISTS studentColumns;"
     query2 = "CREATE TABLE studentColumns (isShowing boolean, isQuick boolean, name varchar(255), type varchar(255),definedOptions varchar(1000), priority SERIAL UNIQUE)"
-    
+
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
-    
-    
+
+
 @app.route('/addStudentColumn', methods=["POST"])
 def addStudentColumn():
     #make sure column name not in use
     name = request.form.get("name")
     colType = request.form.get("type")
     definedOptions = request.form.get("definedOptions")
-    
+
     if (colType == "varchar"):
         colType = colType + "(500)"
 
     query = "INSERT INTO studentColumns VALUES ('true','false', '" + name + "', '"+ colType + "', '" + definedOptions + "');"
     queryAttendance = "ALTER TABLE testStudents ADD " + name + " " + colType + ";"
-    
+
     executeSingleQuery(query, [])
     executeSingleQuery(queryAttendance, [])
-   
+
 @app.route('/alterStudentColumn', methods=["POST"])
 def alterStudentColumn():
     name = request.form.get("name")
@@ -118,7 +118,7 @@ def alterStudentColumn():
     result = json.dumps(executeSingleQuery(queryStatus,fetch = True))
     newResult =json.loads(result)
     isChecked = newResult[0][0]
-    
+
     if (isChecked):
         query = "UPDATE studentColumns SET "+ column + " = 'false' WHERE name = '" + name + "';"
     else:
@@ -541,6 +541,7 @@ def frequentPeers(string):
     print(databaseResult)
     result = str(databaseResult)
     print(result)
+    return(result)
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):
@@ -597,7 +598,7 @@ def checkAlert():
     query = ("INSERT INTO alerts VALUES (%s, %s, %s)", [id, alert, 'FALSE'])
     databaseResult = executeSingleQuery(query, fetch = True)
 
-    
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "local":

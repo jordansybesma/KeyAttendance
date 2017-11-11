@@ -41,22 +41,20 @@
 <div id="Home" class="tabcontent">
     <h1> Welcome to the Key Attendance Portal!</h1>
 
-
-    <div style="width: 100%; overflow: hidden;">
+    <nav id="alertsListDiv" style="float: right; background-color:Orange;">
+        <ul id="alertsList">
+        </ul>  
+    </nav>
+    <section>
         <div id="masterGraph" style="width: 500px; float: left;"></div>
         <div id="activityGraph" style="margin-left: 520px;"></div>
-        <div id="alertsListDiv" style="float: right; background-color:Orange;">
-            <ul id="alertsList">
-            </ul>  
-        </div>
         <div id="alertPopup">
             <h1>Alert</h1>
             <ul id="alertSpecifics">
             </ul>
             <button id="closeAlertButton" onclick="closeAlert()">Close</button>
         </div>
-
-    </div>
+    </section>
 </div>
 
 <div id="Data" class="tabcontent" >

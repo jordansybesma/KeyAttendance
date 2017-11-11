@@ -542,6 +542,7 @@ def frequentPeers(string):
     result = str(databaseResult)
     result = str.split("dateTime.date(")
     print(result)
+    result = str(result)
     return(result)
 
 @app.route('/studentProfile/<string>')

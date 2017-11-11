@@ -412,19 +412,20 @@ function showStudentProfile() {
 function showDemographics(_, data) {
     var parsedData = JSON.parse(data);
     console.log(parsedData);
-    document.getElementById("demographics").innerHTML = data;
+    document.getElementById("saveStudentData").innerHTML = data;
     
     getRequest("/getStudentColumns", "", demographicsHelper);
     
 }
 function demographicsHelper(_, columns) {
 
-    var data = document.getElementById("demographics").innerHTML;
+    var data = document.getElementById("saveStudentData").innerHTML;
+    document.getElementById("saveColumnData").innerHTML = columns;
     var studentInfo = JSON.parse(data);
     var columnInfo = JSON.parse(columns);
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("demographics");
-    div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile('" + keywordElement + "', '" + columns + "')\">Edit Profile</button>";
+    div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Edit Profile</button>";
 
 
     for (i in columnInfo) {
@@ -437,9 +438,11 @@ function demographicsHelper(_, columns) {
     getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 }
 
-function openEditProfile(name, columns) {
+function openEditProfile() {
     console.log("gets to here");
-    var studentInfo = document.getElementById("demographics").innerHTML;
+    var name = document.getElementById('keywordStudentSearch').value;
+    var studentInfo = document.getElementById("saveStudentData").innerHTML;
+    var columns = document.getElementById("saveColumnData").innerHTML;
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("editProfile");
     div.style.display = "block";

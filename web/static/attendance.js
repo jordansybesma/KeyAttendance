@@ -1375,7 +1375,7 @@ function showAlerts(_, alertList) {
 
 function displayAlert(alert) {
     console.log(alert);
-    alert = alert,split(",");
+    alert = alert.split(",");
     var list = document.getElementById('alertSpecifics');
     list.innerHTML = "";
     var name = "Name: " + alert[0] + alert[1];

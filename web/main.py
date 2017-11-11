@@ -542,7 +542,7 @@ def frequentPeers(string):
     # result = str(databaseResult)
     # return(result)
     print("#1")
-    result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True)
+    result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
     print("#2")
 
     print("#3")

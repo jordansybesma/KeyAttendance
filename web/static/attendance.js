@@ -1375,14 +1375,15 @@ function showAlerts(_, alertList) {
 
 function displayAlert(alert) {
     console.log(alert);
+    
     var list = document.getElementById('alertSpecifics');
     list.innerHTML = "";
     var name = "Name: " + alert[0] + alert[1];
     var insertName = document.createElement('li');
     var message = "Message: " + alert[2];
     var insertMessage = document.createElement('li');
-    insertName.innerHTML = '<span' + name +'</span>';
-    insertMessage.innerHTML = '<span' + message +'</span>';
+    insertName.innerHTML = '<span>' + name +'</span>';
+    insertMessage.innerHTML = '<span>' + message +'</span>';
     list.appendChild(insertName);
     list.appendChild(insertMessage);
     var popup = document.getElementById('alertPopup');

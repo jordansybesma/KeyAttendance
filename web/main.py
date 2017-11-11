@@ -540,6 +540,7 @@ def frequentPeers(string):
     databaseResult = executeSingleQuery(query, fetch = True)
     print(databaseResult)
     result = str(databaseResult)
+    result = str.split("dateTime.date(")
     print(result)
     return(result)
 

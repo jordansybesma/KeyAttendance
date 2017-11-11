@@ -303,6 +303,7 @@ function addStudentColumn() {
     row.insertCell(-1).innerHTML = str;*/
 
 }
+
 function addColumn() {
     var name = document.getElementById("newColumn").value;
     var substring = " ";
@@ -334,6 +335,7 @@ function modifyAutofillList(_ , studentNames) {
   }
   list.innerHTML = inner;
 }
+
 function showProfile(_, studentInfo) {
 
     document.getElementById("studentProfileText").innerHTML += ("ID Number: ")
@@ -455,8 +457,9 @@ function openEditProfile() {
         if (columnData[i][0]) {
             console.log("next loop");
             var form = document.createElement("form");
+            var type = columnData[i][3];
             form.setAttribute('onSubmit', 'return false;');
-            if (columnData[i][3] == "varchar(500)") {
+            if ((type == "varchar(500)")|| (type == "int")) {
                 console.log("got to last loop");
                 var col = columnData[i][2];
                 var str = col + ":<br> <input id='" + col + "colid' type='text' /> <br>";
@@ -465,10 +468,18 @@ function openEditProfile() {
                 console.log(str);
                 form.innerHTML = str;
                 div.appendChild(form);
-            } else if (columnData[i][3] == "int") {
+            } else if (type == "date") {
                 var col = columnData[i][2];
-                var str = col + ":<br> <input id='" + col + "colid' type='text' /> <br>";
+                var str = col + ":<br> <input id='" + col + "colid' type='date' /> <br>";
                 str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
+                str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
+                console.log(str);
+                form.innerHTML = str;
+                div.appendChild(form);
+            } else if (type == "boolean") {
+                var col = columnData[i][2];
+                var str = col + ": "
+                str = str + " <input type='checkbox' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 console.log(str);
                 form.innerHTML = str;
@@ -817,6 +828,7 @@ function makeTableHeaderHelper(_, data) {
     var table_date = document.getElementById("storeDate").innerHTML;
     getRequest("/getAttendance/" + table_date, "", fillAttendance);
 }
+
 function refreshAttendanceTable() {
     var date = document.getElementById("storeDate").innerHTML;
     displayAttendanceTable(date);
@@ -875,8 +887,8 @@ function displayMasterAttendance() {
     var table = document.getElementById("masterAttendanceTable");
     table.innerHTML = "";
     getRequest("/getAttendanceColumns", "", makeMasterTableHeader);
-    
 }
+
 function makeMasterTableHeader(_, columns) {
     table = document.getElementById("masterAttendanceTable");
     var row = table.insertRow(-1);
@@ -895,6 +907,8 @@ function makeMasterTableHeader(_, columns) {
 
     getRequest("/getMasterAttendance", "", masterAttendanceHelper);
 }
+
+
 
 function masterAttendanceHelper(_, masterData) {
     var myData = JSON.parse(masterData);
@@ -1315,4 +1329,13 @@ function loginHelper(_, loginData) {
     } else {
         alert("Incorrect Login");
     }
+}
+
+function displayAlerts() {
+    getRequest("/getAlerts", "", showAlerts);
+}
+
+function showAlerts(_, alertList) {
+    console.log(alertList)
+    var alerts = JSON.parse(alertList);
 }

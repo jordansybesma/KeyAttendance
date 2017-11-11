@@ -453,7 +453,6 @@ function openEditProfile() {
         if (columnData[i][0]) {
             console.log("next loop");
             var form = document.createElement("form");
-            //form.setAttribute('onSubmit', 'return false;');
             if (columnData[i][3] == "varchar(500)") {
                 console.log("got to last loop");
                 var col = columnData[i][2];
@@ -481,7 +480,7 @@ function openEditProfile() {
 function updateProfile(name, col, colid, type) {
     var value = document.getElementById(colid).value;
     if (type = "int") {
-        //ensure correct input
+        //ensure 
     }
 
     var xmlhttp = new XMLHttpRequest();

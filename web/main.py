@@ -541,20 +541,15 @@ def frequentPeers(string):
     # print(databaseResult)
     # result = str(databaseResult)
     # return(result)
-    print("#1")
     result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
-    print("#2")
     result = result.replace("\n","").replace(" ","").replace("[", "").replace("]", "")
-    print("#2.5")
     result = result.split(",")
-    print("#3")
-    print(type(result))
-    print("#4")
-    print(str(result))
+
 
 
     for i in range(0, len(result)):
         print(result[i])
+        query2 = "SELECT id FROM dailyAttendance WHERE date = '" + result[i] + "';"
 
     return "HELLO"
 

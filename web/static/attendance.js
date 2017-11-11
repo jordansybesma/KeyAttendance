@@ -424,7 +424,7 @@ function demographicsHelper(_, columns) {
     var columnInfo = JSON.parse(columns);
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("demographics");
-    div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile('" + keywordElement + "', '" + data + "', '" + columns + "')\">Edit Profile</button>";
+    div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile('" + keywordElement + "', '" + columns + "')\">Edit Profile</button>";
 
 
     for (i in columnInfo) {
@@ -437,7 +437,9 @@ function demographicsHelper(_, columns) {
     getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 }
 
-function openEditProfile(name, studentInfo, columns) {
+function openEditProfile(name, columns) {
+    console.log("gets to here");
+    var studentInfo = document.getElementById("demographics").innerHTML;
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("editProfile");
     div.style.display = "block";

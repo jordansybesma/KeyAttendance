@@ -1357,42 +1357,42 @@ function loginHelper(_, loginData) {
 }
 
 
-function displayAlerts() {
-    getRequest("/getAlerts", "", showAlerts);
-}
-
-function showAlerts(_, alertList) {
-    console.log(alertList)
-    var alerts = JSON.parse(alertList);
-    var list = document.getElementById("alertsList");
-    list.innerHTML = "";
-    for (i in alerts) {
-        var alert = alerts[i];
-        var name = alerts[i][0] + alerts[i][1];
-        var entry = document.createElement('li');
-        entry.innerHTML = '<span onclick="displayAlert(\'' + alert + '\')">' + name + '</span>';
-        list.appendChild(entry);
-    }
-}
-
-function displayAlert(alert) {
-    console.log(alert);
-    alert = alert.split(",");
-    var list = document.getElementById('alertSpecifics');
-    list.innerHTML = "";
-    var name = "Name: " + alert[0] + " " + alert[1];
-    var insertName = document.createElement('li');
-    var message = "Message: " + alert[2];
-    var insertMessage = document.createElement('li');
-    insertName.innerHTML = '<p>' + name +'</p>';
-    insertMessage.innerHTML = '<p>' + message +'</p>';
-    list.appendChild(insertName);
-    list.appendChild(insertMessage);
-    var popup = document.getElementById('alertPopup');
-    popup.style.display = "block";
-}
-
-function closeAlert() {
-    var popup = document.getElementById('alertPopup');
-    popup.style.display = "none";
-}
+//function displayAlerts() {
+//    getRequest("/getAlerts", "", showAlerts);
+//}
+//
+//function showAlerts(_, alertList) {
+//    console.log(alertList)
+//    var alerts = JSON.parse(alertList);
+//    var list = document.getElementById("alertsList");
+//    list.innerHTML = "";
+//    for (i in alerts) {
+//        var alert = alerts[i];
+//        var name = alerts[i][0] + " " + alerts[i][1];
+//        var entry = document.createElement('li');
+//        entry.innerHTML = '<span onclick="displayAlert(\'' + alert + '\')">' + name + '</span>';
+//        list.appendChild(entry);
+//    }
+//}
+//
+//function displayAlert(alert) {
+//    console.log(alert);
+//    alert = alert.split(",");
+//    var list = document.getElementById('alertSpecifics');
+//    list.innerHTML = "";
+//    var name = "Name: " + alert[0] + " " + alert[1];
+//    var insertName = document.createElement('li');
+//    var message = "Message: " + alert[2];
+//    var insertMessage = document.createElement('li');
+//    insertName.innerHTML = '<p>' + name +'</p>';
+//    insertMessage.innerHTML = '<p>' + message +'</p>';
+//    list.appendChild(insertName);
+//    list.appendChild(insertMessage);
+//    var popup = document.getElementById('alertPopup');
+//    popup.style.display = "block";
+//}
+//
+//function closeAlert() {
+//    var popup = document.getElementById('alertPopup');
+//    popup.style.display = "none";
+//}

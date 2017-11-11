@@ -438,7 +438,27 @@ function demographicsHelper(_, columns) {
 }
 
 function openEditProfile(name, studentInfo, columns) {
+    var keywordElement = document.getElementById('keywordStudentSearch').value;
+    var div = document.getElementById("editProfile");
+    div.style.display = "block";
+    var studentData = JSON.parse(studentInfo);
+    var columnData = JSON.parse(columns);
+    for (i in columnData) {
+        if (columnData[i][0]) {
+            var form = document.createElement("form");
+            if (columnData[i][3] == "varchar") {
+                var col = columnData[i][2];
+                var str = keywordElement + ":<br> <input id='" + col + "COLID' type='text' /> <br>";
+                str = str + " <input type='submit' value='Save' onclick='updateProfile('" + keywordElement + "','" + col;
+                str = str + "','" + col + "COLID')'/>"
+                console.log(str);
+                form.innerHTML = str;
+                div.appendChild(form);
+            }
+            
+        }
 
+    }
 }
 
 function displayStudentInfo(catName, info, type) {

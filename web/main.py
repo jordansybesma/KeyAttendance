@@ -66,7 +66,7 @@ def updateStudentInfo():
     last = nameList[1]
     column = request.form.get('column')
     value = request.form.get('value')
-    if (value == True):
+    if (value == "TRUE"):
         curVal = json.dumps(executeSingleQuery("SELECT " + column + " FROM testStudents WHERE firstname = '" + first + "' and lastName = '" + last + "';", []))
         print(curVal)
         if "true" in curVal:

@@ -545,7 +545,7 @@ def frequentPeers(string):
 
     for i in range(1, len(result)):
         print(type(result))
-        print(result[i])
+        print(result)
 
     return result
 

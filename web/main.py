@@ -547,7 +547,7 @@ def frequentPeers(string):
     for i in range(1, len(result)):
         print(type(result))
 
-    return str(result)
+    return "HELLO"
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):

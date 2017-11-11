@@ -530,7 +530,7 @@ function displayStudentInfo(catName, info, type) {
     console.log(type);
     if (info == null) {
         var text = document.createTextNode(catName + ": " );
-    } else if (type == "varchar") {
+    } else if (type == "varchar(500)") {
         console.log("var");
         var text = document.createTextNode(catName + ": " + info);
     } else if (type == "int") {

@@ -546,11 +546,8 @@ def autofill(partialString):
 @app.route('/frequentPeers/<string>')
 def frequentPeers(string):
     studentID = getJustID(string)
-    query = "SELECT date FROM dailyAttendance WHERE id = '" + studentID + "';"
-    # databaseResult = executeSingleQuery(query, fetch = True)
-    # print(databaseResult)
-    # result = str(databaseResult)
-    # return(result)
+    query = "SELECT date, time FROM dailyAttendance WHERE id = '" + studentID + "';"
+
     result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
     result = result.replace("\n","").replace(" ","").replace("[", "").replace("]", "").replace("\"","")
     result = result.split(",")
@@ -558,19 +555,22 @@ def frequentPeers(string):
 
     dict = {}
 
-    for i in range(0, len(result)):
-        if result[1] not in dict.keys():
-            dict[result[i]] = []
-        dict[result[i]].append("I GOT HERE")
-        print(result[i])
-        query2 = "SELECT id, time FROM dailyAttendance WHERE date = '" + result[i] + "';"
-        print(query2)
-        curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
-        curResult = curResult.replace("\n", "").replace("[", "").replace(" ", "").replace("]","")
-        curResult = curResult.split(",")
-        print(curResult)
+    # for i in range(0, len(result)):
+    #     if result[1] not in dict.keys():
+    #         dict[result[i]] = []
+    #
+    #     print(result[i])
+    #     query2 = "SELECT id, time FROM dailyAttendance WHERE date = '" + result[i] + "';"
+    #     print(query2)
+    #     curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
+    #     curResult = curResult.replace("\n", "").replace("[", "").replace(" ", "").replace("]","")
+    #     curResult = curResult.split(",")
+    #     print(curResult)
+    #
+    #
+    # return str(dict)
 
-    return str(dict)
+    return str(result)
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):

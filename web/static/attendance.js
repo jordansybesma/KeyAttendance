@@ -509,7 +509,7 @@ function returnToProfile() {
 }
 
 function updateProfile(name, col, colid, type) {
-    if (type = "boolean") {
+    if (type == "boolean") {
         var value = "TRUE";
     } else {
         var value = document.getElementById(colid).value;

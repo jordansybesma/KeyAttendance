@@ -503,7 +503,12 @@ function returnToProfile() {
 }
 
 function updateProfile(name, col, colid, type) {
-    var value = document.getElementById(colid).value;
+    if (type = "boolean") {
+        var value = "TRUE";
+    } else {
+        var value = document.getElementById(colid).value;
+    }
+    
     
 
     var xmlhttp = new XMLHttpRequest();

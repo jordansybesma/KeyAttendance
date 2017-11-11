@@ -1364,23 +1364,31 @@ function showAlerts(_, alertList) {
     var list = document.getElementById("alertsList");
     list.innerHTML = "";
     for (i in alerts) {
-        var alert = alerts[i][0];
+        var alert = alerts[i];
+        var name = alerts[i][0] + alerts[i][1];
         var entry = document.createElement('li');
-        entry.innerHTML = '<span>' + alert + '</span>';
+        entry.innerHTML = '<span onclick="displayAlert(\'' + alert + '\')">' + name + '</span>';
         list.appendChild(entry);
     }
 }
 
-
-function createListOfAttendanceDates(_, dates) {
-    var myData = JSON.parse(dates);
-    var list = document.getElementById("attendanceList");
+function displayAlert(alert) {
+    console.log(alert);
+    var list = document.getElementById('alertSpecifics');
     list.innerHTML = "";
-    for (i in myData) {
-        var date = myData[i][0];
-        var readable = makeDateReadable(date);
-        var entry = document.createElement('li');
-        entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
-        list.appendChild(entry);
-    }
+    var name = "Name: " + alert[0] + alert[1];
+    var insertName = document.createElement('li');
+    var message = "Message: " + alert[2];
+    var insertMessage = document.createElement('li');
+    insertName.innerHTML = '<span' + name +'</span>';
+    insertMessage.innerHTML = '<span' + message +'</span>';
+    list.appendChild(insertName);
+    list.appendChild(insertMessage);
+    var popup = document.getElementById('alertPopup');
+    popup.style.display = "block";
+}
+
+function closeAlert() {
+    
+
 }

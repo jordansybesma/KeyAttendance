@@ -506,6 +506,7 @@ function returnToProfile() {
     var div = document.getElementById("editProfile");
     div.innerHTML = "";
     div.style.display = "none";
+    showStudentProfile();
 }
 
 function updateProfile(name, col, colid, type) {

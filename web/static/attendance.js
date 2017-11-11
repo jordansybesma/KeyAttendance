@@ -1383,8 +1383,8 @@ function displayAlert(alert) {
     var insertName = document.createElement('li');
     var message = "Message: " + alert[2];
     var insertMessage = document.createElement('li');
-    insertName.innerHTML = '<span>' + name +'</span>';
-    insertMessage.innerHTML = '<span>' + message +'</span>';
+    insertName.innerHTML = '<p>' + name +'</p>';
+    insertMessage.innerHTML = '<p>' + message +'</p>';
     list.appendChild(insertName);
     list.appendChild(insertMessage);
     var popup = document.getElementById('alertPopup');

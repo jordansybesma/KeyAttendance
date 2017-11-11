@@ -390,7 +390,7 @@ function showStudentProfile() {
     //var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
-    var optionFound = false;
+    var optionFound = true;
     datalist = document.getElementById("suggestedStudents");
     for (var j = 0; j < datalist.options.length; j++) {
         if (keywordElement == datalist.options[j].value) {

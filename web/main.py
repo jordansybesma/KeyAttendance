@@ -544,11 +544,12 @@ def frequentPeers(string):
     print("#1")
     result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
     print("#2")
-
+    result = result.split("\n")
     print("#3")
     print(type(result))
     print("#4")
     print(str(result))
+
 
     for i in range(1, len(result)):
         print(i)

@@ -553,7 +553,7 @@ def frequentPeers(string):
         print(query2)
         curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
         print(curResult)
-        curResult = curResult.replace("\n", "").replace("[", "").replace(" ", "")
+        curResult = curResult.replace("\n", "").replace("[", "").replace(" ", "").replace("]","")
         print(curResult)
 
     return "HELLO"

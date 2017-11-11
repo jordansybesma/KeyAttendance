@@ -459,7 +459,7 @@ def frequentPeers(string):
     query = "SELECT date FROM dailyAttendance WHERE id = '" + studentID + "';"
     databaseResult = executeSingleQuery(query, fetch = True)
     print(databaseResult)
-    result = json.dumps(databaseResult)
+    result = str(databaseResult)
     print(result)
 
 @app.route('/studentProfile/<string>')

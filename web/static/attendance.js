@@ -449,7 +449,9 @@ function openEditProfile() {
     var studentData = JSON.parse(studentInfo);
     var columnData = JSON.parse(columns);
     for (i in columnData) {
+        console.log("outer loop");
         if (columnData[i][0]) {
+            console.log("next loop");
             var form = document.createElement("form");
             if (columnData[i][3] == "varchar") {
                 var col = columnData[i][2];

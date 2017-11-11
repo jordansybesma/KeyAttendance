@@ -79,7 +79,7 @@ def getStudentInfo(name):
     first = nameList[0]
     last = nameList[1]
     query = "SELECT * FROM testStudents WHERE firstName = '" + first + "' AND lastName = '" + last + "';"
-    result = json.dumps(executeSingleQuery(query, fetch = True))
+    result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
     print(result)
     return result
 
@@ -530,7 +530,7 @@ def autofill(partialString):
         q = partialString.upper()
         query = "SELECT * FROM testStudents WHERE UPPER(firstName) LIKE '%" + q + "%' OR UPPER(lastName) LIKE '%" + q + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
-    suggestions = json.dumps(databaseResult[:10])
+    suggestions = json.dumps(databaseResult[:10], indent=4, sort_keys=True, default=str)
     return suggestions
 
 @app.route('/frequentPeers/<string>')

@@ -503,7 +503,12 @@ function returnToProfile() {
 }
 
 function updateProfile(name, col, colid, type) {
-    var value = document.getElementById(colid).value;
+    if (type = "boolean") {
+        var value = "TRUE";
+    } else {
+        var value = document.getElementById(colid).value;
+    }
+    
     
 
     var xmlhttp = new XMLHttpRequest();
@@ -1338,4 +1343,26 @@ function displayAlerts() {
 function showAlerts(_, alertList) {
     console.log(alertList)
     var alerts = JSON.parse(alertList);
+    var list = document.getElementById("alertsList");
+    list.innerHTML = "";
+    for (i in alerts) {
+        var alert = alerts[i][0];
+        var entry = document.createElement('li');
+        entry.innerHTML = '<span>' + alert + '</span>';
+        list.appendChild(entry);
+    }
+}
+
+
+function createListOfAttendanceDates(_, dates) {
+    var myData = JSON.parse(dates);
+    var list = document.getElementById("attendanceList");
+    list.innerHTML = "";
+    for (i in myData) {
+        var date = myData[i][0];
+        var readable = makeDateReadable(date);
+        var entry = document.createElement('li');
+        entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
+        list.appendChild(entry);
+    }
 }

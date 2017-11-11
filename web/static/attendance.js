@@ -1355,6 +1355,12 @@ function loginHelper(_, loginData) {
     }
 }
 
+
+function displayHomepage() {
+    displayMasterAttendance();
+    displayAlerts();
+}
+
 function displayAlerts() {
     getRequest("/getAlerts", "", showAlerts);
 }

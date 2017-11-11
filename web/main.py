@@ -537,10 +537,11 @@ def autofill(partialString):
 def frequentPeers(string):
     studentID = getJustID(string)
     query = "SELECT date FROM dailyAttendance WHERE id = '" + studentID + "';"
-    databaseResult = executeSingleQuery(query, fetch = True)
-    print(databaseResult)
-    result = str(databaseResult)
-    return(result)
+    # databaseResult = executeSingleQuery(query, fetch = True)
+    # print(databaseResult)
+    # result = str(databaseResult)
+    # return(result)
+    return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):

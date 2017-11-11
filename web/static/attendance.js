@@ -1369,6 +1369,7 @@ function showAlerts(_, alertList) {
 }
 
 function displayAlert(alert) {
+    console.log(alert);
     var list = document.getElementById('alertSpecifics');
     list.innerHTML = "";
     var name = "Name: " + alert[0] + alert[1];
@@ -1381,4 +1382,9 @@ function displayAlert(alert) {
     list.appendChild(insertMessage);
     var popup = document.getElementById('alertPopup');
     popup.style.display = "block";
+}
+
+function closeAlert() {
+    
+
 }

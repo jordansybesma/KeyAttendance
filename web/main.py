@@ -541,7 +541,12 @@ def frequentPeers(string):
     # print(databaseResult)
     # result = str(databaseResult)
     # return(result)
-    return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+    result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+
+    for i in range(1, len(result)):
+        print(result[i])
+
+    return result
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):

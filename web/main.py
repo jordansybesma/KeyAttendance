@@ -560,7 +560,7 @@ def frequentPeers(string):
         if result[i] not in studentDict.keys():
             studentDict[result[i]] = []
         studentDict[result[i]].append(result[i + 1])
- 
+
     for key in studentDict:
         print(key)
         if key not in peersDict.keys():
@@ -570,6 +570,8 @@ def frequentPeers(string):
         print(query2)
         curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
         curResult = curResult.replace("\n", "").replace("[q", "").replace(" ", "").replace("]","")
+
+        print(curResult)
     #     curResult = curResult.split(",")
     #     print(curResult)
     #

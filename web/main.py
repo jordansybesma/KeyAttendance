@@ -564,19 +564,21 @@ def frequentPeers(string):
     for key in studentDict:
         print(key)
         if key not in peersDict.keys():
-            peersDict[key] = []
+            peersDict[key] = {}
 
         query2 = "SELECT id, time FROM dailyAttendance WHERE date = '" + key + "';"
         print(query2)
         curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
         curResult = curResult.replace("\n", "").replace("[q", "").replace(" ", "").replace("]","").replace("[","")
 
-        print(curResult)
-    #     curResult = curResult.split(",")
-    #     print(curResult)
-    #
-    #
-    # return str(dict)
+        curResult = curResult.split(",")
+
+        for i in range(0, len(curResult), 2):
+            if curResult[i] not in peersDict[key].keys():
+                peersDict[curResult[i]] = []
+            peersDict[curResult[i]].append[curResult[i + 1]]
+
+
 
     return str(studentDict) + "\n" + str(peersDict)
 

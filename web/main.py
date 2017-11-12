@@ -580,7 +580,7 @@ def frequentPeers(string):
 
 
 
-    return str(studentDict) + "\n" + str(peersDict)
+    return str(studentDict) + "\n \n \n" + str(peersDict)
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):

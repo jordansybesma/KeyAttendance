@@ -1377,15 +1377,21 @@ function displayAlert(alert) {
     alert = alert.split(",");
     var list = document.getElementById('alertSpecifics');
     list.innerHTML = "";
+    
     var name = "Name: " + alert[0] + " " + alert[1];
     var insertName = document.createElement('li');
+    insertName.innerHTML = '<p>' + name +'</p>';
+    list.appendChild(insertName);
+    
     var message = "Message: " + alert[2];
     var insertMessage = document.createElement('li');
-    insertName.innerHTML = '<p>' + name +'</p>';
     insertMessage.innerHTML = '<p>' + message +'</p>';
-    list.appendChild(insertName);
     list.appendChild(insertMessage);
+    
+    var id = alert[3];
+    var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Delete </button>";
     var popup = document.getElementById('alertPopup');
+    popup.innerHTML += completeButton;
     popup.style.display = "block";
 }
 
@@ -1394,10 +1400,13 @@ function closeAlert() {
     popup.style.display = "none";
 }
 
-function checkAlert() {
-    var id = document.getElementById("magical magic").value;
-    getRequest("/checkAlert/" + id, "", sillyLittleFunction);
+function checkAlert(id) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/checkAlert");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("id=" + id);
 }
+
 
 // I don't really need a function as part of my getRequest, I just need to alter the data.
 function sillyLittleFunction() {}

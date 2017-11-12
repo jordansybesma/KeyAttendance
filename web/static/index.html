@@ -29,7 +29,7 @@
     </div>
 
 <div class="tab">
-<button id = "defaultOpen" class = "tablinks" onclick = "openTab(event, 'Home')"> Home </button>
+<button id = "defaultOpen" class = "tablinks" onclick = "openTab(event, 'Home'); displayAlerts(); displayMasterAttendance();"> Home </button>
 <button class = "tablinks" onclick = "openTab(event, 'Data'); displayAttendanceList();"> Attendance Sheets </button>
 <button class = "tablinks" onclick = "openTab(event, 'AttendanceOverview'); displayMasterAttendance()"> Attendance Overview </button>
 <button class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</button>
@@ -257,7 +257,4 @@
 <script>
     // Get the element with id="defaultOpen" and click on it
     document.getElementById("defaultOpen").click();
-    displayAlerts();
-    displayMasterAttendance();
-
 </script>

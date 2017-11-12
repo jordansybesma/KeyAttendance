@@ -926,10 +926,7 @@ function makeMasterTableHeader(_, columns) {
             var newHeader = makeHeaderReadable(myData[i][2]);
             row.insertCell(-1).innerHTML = newHeader;
         }
-
     }
-
-
     getRequest("/getMasterAttendance", "", masterAttendanceHelper);
 }
 

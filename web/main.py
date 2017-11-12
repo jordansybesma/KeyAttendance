@@ -569,7 +569,7 @@ def frequentPeers(string):
         query2 = "SELECT id, time FROM dailyAttendance WHERE date = '" + key + "';"
         print(query2)
         curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
-        curResult = curResult.replace("\n", "").replace("[q", "").replace(" ", "").replace("]","")
+        curResult = curResult.replace("\n", "").replace("[q", "").replace(" ", "").replace("]","").replace("[","")
 
         print(curResult)
     #     curResult = curResult.split(",")

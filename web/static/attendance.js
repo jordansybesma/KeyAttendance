@@ -1393,3 +1393,8 @@ function closeAlert() {
     var popup = document.getElementById('alertPopup');
     popup.style.display = "none";
 }
+
+function deleteAlert() {
+    
+
+}

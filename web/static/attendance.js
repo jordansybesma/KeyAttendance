@@ -1403,13 +1403,9 @@ function closeAlert() {
 
 function checkAlert(id) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/checkAlert");
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/checkAlert/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("id=" + id);
     console.log(id);
     closeAlert();
 }
-
-
-// I don't really need a function as part of my getRequest, I just need to alter the data.
-function sillyLittleFunction() {}

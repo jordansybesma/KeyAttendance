@@ -572,6 +572,7 @@ def frequentPeers(string):
         curResult = curResult.replace("\n", "").replace("[q", "").replace(" ", "").replace("]","").replace("[","")
 
         curResult = curResult.split(",")
+        print(curResult)
 
         for i in range(0, len(curResult), 2):
             if curResult[i] not in peersDict[key].keys():

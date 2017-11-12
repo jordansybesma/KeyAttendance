@@ -615,7 +615,7 @@ def getJustID(string):
 
 @app.route('/getAlerts')
 def getAlerts():
-    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert FROM testStudents, alerts WHERE alerts.completed = FALSE;"
+    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id;"
     databaseResult = executeSingleQuery(query, fetch = True)
     return json.dumps(databaseResult)
 
@@ -629,11 +629,10 @@ def addAlert():
 @app.route('/checkAlert', methods = ["POST"])
 def checkAlert():
     id = request.form.get('id')
-    alert = request.form.get('alert')
-    query = ("INSERT INTO alerts VALUES (%s, %s, %s)", [id, alert, 'FALSE'])
+    query = ("UPDATE alerts completed = 't' WHERE id = (%s);", [id])
     databaseResult = executeSingleQuery(query, fetch = True)
 
-
+    
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "local":

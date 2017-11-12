@@ -1394,7 +1394,10 @@ function closeAlert() {
     popup.style.display = "none";
 }
 
-function deleteAlert() {
-    
-
+function checkAlert() {
+    var id = document.getElementById("magical magic").value;
+    getRequest("/checkAlert/" + id, "", sillyLittleFunction);
 }
+
+// I don't really need a function as part of my getRequest, I just need to alter the data.
+function sillyLittleFunction() {}

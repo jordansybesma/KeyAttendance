@@ -560,7 +560,7 @@ def frequentPeers(string):
         if result[i] not in studentDict.keys():
             studentDict[result[i]] = []
         studentDict[result[i]].append(result[i + 1])
-
+ 
     for key in studentDict:
         print(key)
         if key not in peersDict.keys():

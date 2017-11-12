@@ -561,22 +561,27 @@ def frequentPeers(string):
             studentDict[result[i]] = []
         studentDict[result[i]].append(result[i + 1])
 
-    # for i in range(0, len(result)):
-    #     if result[1] not in dict.keys():
-    #         dict[result[i]] = []
-    #
-    #     print(result[i])
-    #     query2 = "SELECT id, time FROM dailyAttendance WHERE date = '" + result[i] + "';"
-    #     print(query2)
-    #     curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
-    #     curResult = curResult.replace("\n", "").replace("[", "").replace(" ", "").replace("]","")
-    #     curResult = curResult.split(",")
-    #     print(curResult)
-    #
-    #
-    # return str(dict)
+    for key in studentDict:
+        print(key)
+        if key not in peersDict.keys():
+            peersDict[key] = {}
 
-    return str(studentDict)
+        query2 = "SELECT id, time FROM dailyAttendance WHERE date = '" + key + "';"
+        print(query2)
+        curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
+        curResult = curResult.replace("\n", "").replace("[q", "").replace(" ", "").replace("]","").replace("[","")
+
+        curResult = curResult.split(",")
+        print(curResult)
+
+        for i in range(0, len(curResult), 2):
+            if curResult[i] not in peersDict[key].keys():
+                peersDict[key][curResult[i]] = []
+            peersDict[key][curResult[i]].append([curResult[i + 1]])
+
+
+
+    return str(studentDict) + "\n \n \n" + str(peersDict)
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):

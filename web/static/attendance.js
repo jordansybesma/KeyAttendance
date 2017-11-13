@@ -1410,6 +1410,7 @@ function closeAlert() {
 
 function checkAlert(id) {
     var spock = toString(id);
+    console.log(spock);
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/checkAlert/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");

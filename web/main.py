@@ -35,7 +35,8 @@ def executeSingleQuery(query, params = [], fetch = False):
     dbName = 'compsTestDB'
     user = 'ubuntu'
     password = 'keyComps'
-    conn = psycopg2.connect(database=dbName, user=user, password=password)
+    hostName = '172.31.23.11'
+    conn = psycopg2.connect(database=dbName, user=user, password=password, host=hostName)
     cur = conn.cursor()
     if len(params) == 0:
         cur.execute(query)

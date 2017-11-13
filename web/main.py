@@ -192,8 +192,8 @@ def getStudentAttendance(student):
     last = nameList[1]
     query = "SELECT * FROM dailyAttendance WHERE firstName = '" + first + "' AND lastName = '" + last + "' ORDER BY date DESC;"
     query = """SELECT testStudents.firstName, testStudents.LastName, dailyAttendance.* FROM dailyAttendance, testStudents WHERE
-                testStudents.firstName = %s AND
-                testStudents.lastName = %s AND
+                testStudents.firstName = '%s' AND
+                testStudents.lastName = '%s' AND
                 dailyAttendance.id = testStudents.id
                 ORDER BY date DESC;""" % (first, last)
     return json.dumps(executeSingleQuery(query,

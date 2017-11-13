@@ -1408,4 +1408,5 @@ function checkAlert(id) {
     xmlhttp.send(JSON.stringify(id));
     console.log(id);
     closeAlert();
+    return "";
 }

@@ -559,7 +559,10 @@ def frequentPeers(string):
     for i in range(0, len(result), 2):
         if result[i] not in studentDict.keys():
             studentDict[result[i]] = []
-        studentDict[result[i]].append(result[i + 1])
+        # studentDict[result[i]].append(result[i + 1])
+        timeList = result[i + 1].replace("\"", "").replace("\'","").split(":")
+        timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
+        studentDict[result[i]] = timeNum
 
     for key in studentDict:
         print(key)

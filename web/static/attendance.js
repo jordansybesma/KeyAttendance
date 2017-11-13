@@ -1409,6 +1409,7 @@ function closeAlert() {
 }
 
 function checkAlert(id) {
+    console.log(id);
     var spock = toString(id);
     console.log(spock);
     var xmlhttp = new XMLHttpRequest();

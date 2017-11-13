@@ -32,7 +32,7 @@ def foo():
 
 def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
-    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
+    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu host=localhost")
     cur = conn.cursor()
     if len(params) == 0:
         cur.execute(query)
@@ -188,9 +188,9 @@ def getStudentAttendance(student):
     last = nameList[1]
     query = "SELECT * FROM dailyAttendance WHERE firstName = '" + first + "' AND lastName = '" + last + "' ORDER BY date DESC;"
     query = """SELECT testStudents.firstName, testStudents.LastName, dailyAttendance.* FROM dailyAttendance, testStudents WHERE
-                testStudents.firstName = %s AND 
-                testStudents.lastName = %s AND 
-                dailyAttendance.id = testStudents.id 
+                testStudents.firstName = %s AND
+                testStudents.lastName = %s AND
+                dailyAttendance.id = testStudents.id
                 ORDER BY date DESC;""" % (firstName, lastName)
     return json.dumps(executeSingleQuery(query,
         fetch = True), indent=4, sort_keys=True, default=str)

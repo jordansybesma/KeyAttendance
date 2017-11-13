@@ -430,7 +430,8 @@ function demographicsHelper(_, columns) {
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("demographics");
     div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Edit Profile</button>";
-
+    
+    div.innerHTML += "<button type=\"button\" onclick=\"displayAlertPopup()\">Create Alert</button>";
 
     for (i in columnInfo) {
         if (columnInfo[i][0]) {
@@ -1414,7 +1415,29 @@ function checkAlert(id) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("id=" + spock);
     closeAlert();
-    return "";
+}
+
+function displayAlertPopup() {
+    var popup = document.getElementById("makeAlertPopup");
+    popup.style.display = "block"; 
+}
+
+function closeCreateAlert(){
+    var popup = document.getElementById("makeAlertPopup");
+    popup.style.display = "none";
+}
+
+function createAlert(){
+    var data = document.getElementById("saveStudentData").innerHTML;
+    var studentData = JSON.parse(data);
+    var id = studentData[2];
+    var alertText = document.getElementById("alertText").value;
+    
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAlert/");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("id=" + id + "&alertText=" + alertText);
+    closeCreateAlert();
 }
 
 // fills the code text box under the table in an attendance sheet

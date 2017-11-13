@@ -629,12 +629,11 @@ def getAlerts():
     databaseResult = executeSingleQuery(query, fetch = True)
     return json.dumps(databaseResult)
 
-@app.route('/addAlert', methods = ["POST"])
+@app.route('/addAlert/', methods = ["POST"])
 def addAlert():
     id = request.form.get('id')
-    alert = request.form.get('alert')
-    query = ("INSERT INTO alerts VALUES (%s, %s, %s);", [id, alert, 'FALSE'])
-    executeSingleQuery(query, fetch = True)
+    alert = request.form.get('alertText')
+    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [id, alert, 'f'])
 
 @app.route('/checkAlert/', methods=["POST"])
 def checkAlert():

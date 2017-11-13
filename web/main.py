@@ -638,9 +638,7 @@ def addAlert():
 @app.route('/checkAlert', methods = ["POST"])
 def checkAlert():
     id = request.form.get('id')
-    print(id)
-    query = ("UPDATE alerts SET completed = 't' WHERE id = %s;", [id])
-    executeSingleQuery(query, fetch = True)
+    executeSingleQuery("UPDATE alerts SET completed = 't' WHERE id = %s;", [id])
 
 
 

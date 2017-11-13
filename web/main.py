@@ -628,12 +628,13 @@ def getAlerts():
 def addAlert():
     id = request.form.get('id')
     alert = request.form.get('alert')
-    query = ("INSERT INTO alerts VALUES (%s, %s, %s)", [id, alert, 'FALSE'])
+    query = ("INSERT INTO alerts VALUES (%s, %s, %s);", [id, alert, 'FALSE'])
     databaseResult = executeSingleQuery(query, fetch = True)
 
 @app.route('/checkAlert', methods = ["POST"])
 def checkAlert():
     id = request.form.get('id')
+    print(id)
     query = ("UPDATE alerts SET completed = 't' WHERE id = (%s);", (id,))
     databaseResult = executeSingleQuery(query, fetch = True)
 

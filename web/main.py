@@ -32,7 +32,11 @@ def foo():
 
 def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
-    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
+    dbName = 'compsTestDB'
+    user = 'ubuntu'
+    password = 'keyComps'
+    hostName = 'ec2-35-160-216-144.us-west-2.compute.amazonaws.com'
+    conn = psycopg2.connect(database=dbName, user=user, password=password, host=hostName)
     cur = conn.cursor()
     if len(params) == 0:
         cur.execute(query)

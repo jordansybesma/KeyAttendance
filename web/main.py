@@ -32,7 +32,10 @@ def foo():
 
 def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
-    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu password=keyComps")
+    dbName = 'compsTestDB'
+    user = 'ubuntu'
+    password = 'keyComps'
+    conn = psycopg2.connect(database=dbName, user=user, password=password)
     cur = conn.cursor()
     if len(params) == 0:
         cur.execute(query)

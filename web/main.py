@@ -32,7 +32,11 @@ def foo():
 
 def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
-    conn = psycopg2.connect("dbname=compsTestDB user=ubuntu")
+    dbName = 'compsTestDB'
+    user = 'ubuntu'
+    password = 'keyComps'
+    hostName = 'ec2-35-160-216-144.us-west-2.compute.amazonaws.com'
+    conn = psycopg2.connect(database=dbName, user=user, password=password, host=hostName)
     cur = conn.cursor()
     if len(params) == 0:
         cur.execute(query)
@@ -188,10 +192,10 @@ def getStudentAttendance(student):
     last = nameList[1]
     query = "SELECT * FROM dailyAttendance WHERE firstName = '" + first + "' AND lastName = '" + last + "' ORDER BY date DESC;"
     query = """SELECT testStudents.firstName, testStudents.LastName, dailyAttendance.* FROM dailyAttendance, testStudents WHERE
-                testStudents.firstName = %s AND 
-                testStudents.lastName = %s AND 
-                dailyAttendance.id = testStudents.id 
-                ORDER BY date DESC;""" % (firstName, lastName)
+                testStudents.firstName = '%s' AND
+                testStudents.lastName = '%s' AND
+                dailyAttendance.id = testStudents.id
+                ORDER BY date DESC;""" % (first, last)
     return json.dumps(executeSingleQuery(query,
         fetch = True), indent=4, sort_keys=True, default=str)
 
@@ -629,12 +633,11 @@ def getAlerts():
     databaseResult = executeSingleQuery(query, fetch = True)
     return json.dumps(databaseResult)
 
-@app.route('/addAlert', methods = ["POST"])
+@app.route('/addAlert/', methods = ["POST"])
 def addAlert():
     id = request.form.get('id')
-    alert = request.form.get('alert')
-    query = ("INSERT INTO alerts VALUES (%s, %s, %s);", [id, alert, 'FALSE'])
-    executeSingleQuery(query, fetch = True)
+    alert = request.form.get('alertText')
+    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [id, alert, 'f'])
 
 @app.route('/checkAlert/', methods=["POST"])
 def checkAlert():

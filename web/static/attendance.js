@@ -1390,10 +1390,10 @@ function displayAlert(alert) {
 
     var popup = document.getElementById('alertPopup');
     var id = alert[3];
+    
     var button = popup.innerHTML.search("Complete");
     var notCreated = -1;
-    console.log(button);
-    console.log(notCreated);
+    
     if(button == notCreated) {
         var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
         popup.innerHTML += completeButton;
@@ -1409,7 +1409,7 @@ function closeAlert() {
 }
 
 function checkAlert(id) {
-    var spock = id;
+    var spock = toString(id);
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/checkAlert/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");

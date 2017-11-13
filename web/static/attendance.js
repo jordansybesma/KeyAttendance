@@ -1393,6 +1393,8 @@ function displayAlert(alert) {
     var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
     var button = popup.innerHTML.search(completeButton);
     var notCreated = -1;
+    console.log(button);
+    console.log(notCreated);
     if(button == notCreated) {
         popup.innerHTML += completeButton;
     }

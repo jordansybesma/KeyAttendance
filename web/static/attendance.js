@@ -1390,7 +1390,7 @@ function displayAlert(alert) {
 
     var popup = document.getElementById('alertPopup');
     var id = alert[3];
-    var button = popup.innerHTML.search("Complete);
+    var button = popup.innerHTML.search("Complete");
     var notCreated = -1;
     console.log(button);
     console.log(notCreated);

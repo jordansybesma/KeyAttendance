@@ -1391,11 +1391,12 @@ function displayAlert(alert) {
     var popup = document.getElementById('alertPopup');
     var id = alert[3];
     var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
+    var button = popup.innerHTML.search(completeButton);
+    var alreadyCreated = -1;
+    if(button != alreadyCreated) {
+        popup.innerHTML += completeButton;
+    }
     
-//    if(popup.innerHTML.search(completeButton) != -1) {
-//        popup.innerHTML += completeButton;
-//    }
-    popup.innerHTML += completeButton;
     popup.style.display = "block";
 }
 

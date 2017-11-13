@@ -1389,7 +1389,7 @@ function displayAlert(alert) {
     list.appendChild(insertMessage);
     
     var id = alert[3];
-    var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Delete </button>";
+    var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
     var popup = document.getElementById('alertPopup');
     popup.innerHTML += completeButton;
     popup.style.display = "block";
@@ -1402,10 +1402,11 @@ function closeAlert() {
 }
 
 function checkAlert(id) {
+    var spock = id;
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/checkAlert");
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/checkAlert/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("id=" + id);
+    xmlhttp.send("id=" + spock);
     closeAlert();
     return "";
 }

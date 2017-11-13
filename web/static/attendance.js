@@ -1409,3 +1409,13 @@ function checkAlert(id) {
     closeAlert();
     return "";
 }
+
+// fills the code text box under the table in an attendance sheet
+function fillTextBox() {
+    getRequest("static/cityspan.js", textBoxCallback)
+}
+
+// callback for fillTextBox
+function textBoxCallback(_, js)  {
+    document.getElementById("codeTextBox").innerHTML = js;
+}

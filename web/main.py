@@ -162,7 +162,7 @@ def sendFeedback():
 def getAttendance(date):
     queryColumns = "SELECT name FROM attendanceColumns ORDER BY priority;"
     cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
-    colList = json.loads(cols)
+    colList = json.loads(cols) # this is strange... anyone have any idea why?
     query = "SELECT firstName, lastName, " + colList[0][0];
     for i in range(1, len(colList)):
         query = query + ", " + colList[i][0]
@@ -187,6 +187,11 @@ def getStudentAttendance(student):
     first = nameList[0]
     last = nameList[1]
     query = "SELECT * FROM dailyAttendance WHERE firstName = '" + first + "' AND lastName = '" + last + "' ORDER BY date DESC;"
+    query = """SELECT testStudents.firstName, testStudents.LastName, dailyAttendance.* FROM dailyAttendance, testStudents WHERE
+                testStudents.firstName = %s AND 
+                testStudents.lastName = %s AND 
+                dailyAttendance.id = testStudents.id 
+                ORDER BY date DESC;""" % (firstName, lastName)
     return json.dumps(executeSingleQuery(query,
         fetch = True), indent=4, sort_keys=True, default=str)
 
@@ -268,28 +273,21 @@ def getAttendanceColumns():
 
 @app.route('/tempAlter', methods=["POST"])
 def tempAlter():
-    query = "ALTER TABLE attendanceColumns ADD priority int;"
-    query2 = "UPDATE attendanceColumns set priority = '1' WHERE name = 'art';"
-    query3 = "UPDATE attendanceColumns set priority = '2' WHERE name = 'madeFood';"
-    query4 = "UPDATE attendanceColumns set priority = '3' WHERE name = 'recievedFood';"
-    query5 = "UPDATE attendanceColumns set priority = '4' WHERE name = 'leadership';"
-    query6 = "UPDATE attendanceColumns set priority = '5' WHERE name = 'exersize';"
-    query7 = "UPDATE attendanceColumns set priority = '6' WHERE name = 'mentalHealth';"
-    query8 = "UPDATE attendanceColumns set priority = '7' WHERE name = 'volunteering';"
-    query9 = "UPDATE attendanceColumns set priority = '8' WHERE name = 'oneOnOne';"
-    query10 = "UPDATE attendanceColumns set priority = '9' WHERE name = 'comments';"
-    query11 = "UPDATE attendanceColumns set isShowing = 'false' WHERE name = 'comments';"
+    query = """
+        ALTER TABLE attendanceColumns ADD priority int;
+        UPDATE attendanceColumns set priority = '1' WHERE name = 'art';
+        UPDATE attendanceColumns set priority = '2' WHERE name = 'madeFood';
+        UPDATE attendanceColumns set priority = '3' WHERE name = 'recievedFood';
+        UPDATE attendanceColumns set priority = '4' WHERE name = 'leadership';
+        UPDATE attendanceColumns set priority = '5' WHERE name = 'exersize';
+        UPDATE attendanceColumns set priority = '6' WHERE name = 'mentalHealth';
+        UPDATE attendanceColumns set priority = '7' WHERE name = 'volunteering';
+        UPDATE attendanceColumns set priority = '8' WHERE name = 'oneOnOne';
+        UPDATE attendanceColumns set priority = '9' WHERE name = 'comments';
+        UPDATE attendanceColumns set isShowing = 'false' WHERE name = 'comments';
+    """
     executeSingleQuery(query, [])
-    executeSingleQuery(query2, [])
-    executeSingleQuery(query3, [])
-    executeSingleQuery(query4, [])
-    executeSingleQuery(query5, [])
-    executeSingleQuery(query6, [])
-    executeSingleQuery(query7, [])
-    executeSingleQuery(query8, [])
-    executeSingleQuery(query9, [])
-    executeSingleQuery(query10, [])
-    executeSingleQuery(query11, [])
+    return ""
 
 # must give start and end date separated by a space
 @app.route('/getMasterAttendanceDate/<dates>')

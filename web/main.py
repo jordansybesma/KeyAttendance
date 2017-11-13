@@ -195,7 +195,7 @@ def getStudentAttendance(student):
                 testStudents.firstName = %s AND
                 testStudents.lastName = %s AND
                 dailyAttendance.id = testStudents.id
-                ORDER BY date DESC;""" % (firstName, lastName)
+                ORDER BY date DESC;""" % (first, last)
     return json.dumps(executeSingleQuery(query,
         fetch = True), indent=4, sort_keys=True, default=str)
 

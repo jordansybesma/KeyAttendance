@@ -1387,11 +1387,18 @@ function displayAlert(alert) {
     var insertMessage = document.createElement('li');
     insertMessage.innerHTML = '<p>' + message +'</p>';
     list.appendChild(insertMessage);
-    
-    var id = alert[3];
-    var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Delete </button>";
+
     var popup = document.getElementById('alertPopup');
-    popup.innerHTML += completeButton;
+    var id = alert[3];
+    
+    var button = popup.innerHTML.search("Complete");
+    var notCreated = -1;
+    
+    if(button == notCreated) {
+        var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
+        popup.innerHTML += completeButton;
+    }
+    
     popup.style.display = "block";
 }
 
@@ -1403,16 +1410,16 @@ function closeAlert() {
 
 function checkAlert(id) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/checkAlert");
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/checkAlert/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("id=" + id);
+    xmlhttp.send("id=" + spock);
     closeAlert();
     return "";
 }
 
 // fills the code text box under the table in an attendance sheet
 function fillTextBox() {
-    getRequest("static/cityspan.js", textBoxCallback)
+    getRequest("/static/cityspan.js", "",  textBoxCallback)
 }
 
 // callback for fillTextBox

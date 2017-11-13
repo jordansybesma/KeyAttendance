@@ -636,11 +636,10 @@ def addAlert():
     query = ("INSERT INTO alerts VALUES (%s, %s, %s);", [id, alert, 'FALSE'])
     executeSingleQuery(query, fetch = True)
 
-@app.route('/checkAlert', methods = ["POST"])
+@app.route('/checkAlert/', methods=["POST"])
 def checkAlert():
     id = request.form.get('id')
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE id = %s;", [id])
-
 
 
 if __name__ == "__main__":

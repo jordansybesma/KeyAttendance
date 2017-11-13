@@ -577,7 +577,7 @@ def frequentPeers(string):
         for i in range(0, len(curResult), 2):
             if curResult[i] not in peersDict[key].keys():
                 peersDict[key][curResult[i]] = []
-            timeList = curResult[i + 1].replace("\"", "").split(":")
+            timeList = curResult[i + 1].replace("\"", "").replace("\'","").split(":")
             print(timeList)
             # peersDict[key][curResult[i]].append(curResult[i + 1])
             peersDict[key][curResult[i]] = curResult[i + 1]

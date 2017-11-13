@@ -1387,11 +1387,13 @@ function displayAlert(alert) {
     var insertMessage = document.createElement('li');
     insertMessage.innerHTML = '<p>' + message +'</p>';
     list.appendChild(insertMessage);
-    
-    var id = alert[3];
-    var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
+
     var popup = document.getElementById('alertPopup');
-    popup.innerHTML += completeButton;
+    if(popup.innerHTML.search(Complete) != -1):
+        var id = alert[3];
+        var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
+        popup.innerHTML += completeButton;
+    
     popup.style.display = "block";
 }
 

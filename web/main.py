@@ -640,6 +640,7 @@ def checkAlert():
     id = request.form.get('id')
     print(id)
     query = ("UPDATE alerts SET completed = 't' WHERE id = (%s);", [id])
+    print(query + "     WOOOOOOOOW")
     databaseResult = executeSingleQuery(query, fetch = True)
 
 

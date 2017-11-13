@@ -196,8 +196,9 @@ def getStudentAttendance(student):
                 testStudents.lastName = '%s' AND
                 dailyAttendance.id = testStudents.id
                 ORDER BY date DESC;""" % (first, last)
-    return json.dumps(executeSingleQuery(query,
-        fetch = True), indent=4, sort_keys=True, default=str)
+    queryResult = executeSingleQuery(query,fetch = True)
+    queryResult = [row[:2] + row[5:] for row in queryResult]
+    return json.dumps(queryResult, indent=4, sort_keys=True, default=str)
 
 @app.route('/getMasterAttendance')
 def getMasterAttendance():

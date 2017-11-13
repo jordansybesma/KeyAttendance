@@ -557,24 +557,36 @@ def frequentPeers(string):
     for i in range(0, len(result), 2):
         if result[i] not in studentDict.keys():
             studentDict[result[i]] = []
-        studentDict[result[i]].append(result[i + 1])
+        # studentDict[result[i]].append(result[i + 1])
+        timeList = result[i + 1].replace("\"", "").replace("\'","").split(":")
+        timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
+        studentDict[result[i]] = timeNum
 
-    # for i in range(0, len(result)):
-    #     if result[1] not in dict.keys():
-    #         dict[result[i]] = []
-    #
-    #     print(result[i])
-    #     query2 = "SELECT id, time FROM dailyAttendance WHERE date = '" + result[i] + "';"
-    #     print(query2)
-    #     curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
-    #     curResult = curResult.replace("\n", "").replace("[", "").replace(" ", "").replace("]","")
-    #     curResult = curResult.split(",")
-    #     print(curResult)
-    #
-    #
-    # return str(dict)
+    for key in studentDict:
+        print(key)
+        if key not in peersDict.keys():
+            peersDict[key] = {}
 
-    return str(studentDict)
+        query2 = "SELECT id, time FROM dailyAttendance WHERE date = '" + key + "';"
+        print(query2)
+        curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
+        curResult = curResult.replace("\n", "").replace("[q", "").replace(" ", "").replace("]","").replace("[","")
+
+        curResult = curResult.split(",")
+        print(curResult)
+
+        for i in range(0, len(curResult), 2):
+            if curResult[i] not in peersDict[key].keys():
+                peersDict[key][curResult[i]] = []
+            timeList = curResult[i + 1].replace("\"", "").replace("\'","").split(":")
+            timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
+            print(timeList)
+            # peersDict[key][curResult[i]].append(curResult[i + 1])
+            peersDict[key][curResult[i]] = timeNum
+
+
+
+    return str(studentDict) + "\n \n \n" + str(peersDict)
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):
@@ -613,7 +625,7 @@ def getJustID(string):
 
 @app.route('/getAlerts')
 def getAlerts():
-    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert FROM testStudents, alerts WHERE alerts.completed = FALSE;"
+    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.studentid FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id;"
     databaseResult = executeSingleQuery(query, fetch = True)
     return json.dumps(databaseResult)
 
@@ -621,15 +633,13 @@ def getAlerts():
 def addAlert():
     id = request.form.get('id')
     alert = request.form.get('alert')
-    query = ("INSERT INTO alerts VALUES (%s, %s, %s)", [id, alert, 'FALSE'])
-    databaseResult = executeSingleQuery(query, fetch = True)
+    query = ("INSERT INTO alerts VALUES (%s, %s, %s);", [id, alert, 'FALSE'])
+    executeSingleQuery(query, fetch = True)
 
 @app.route('/checkAlert', methods = ["POST"])
 def checkAlert():
     id = request.form.get('id')
-    alert = request.form.get('alert')
-    query = ("INSERT INTO alerts VALUES (%s, %s, %s)", [id, alert, 'FALSE'])
-    databaseResult = executeSingleQuery(query, fetch = True)
+    executeSingleQuery("UPDATE alerts SET completed = 't' WHERE id = %s;", [id])
 
 
 

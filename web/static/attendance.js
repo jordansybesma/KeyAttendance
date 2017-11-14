@@ -1429,7 +1429,7 @@ function closeCreateAlert(){
 function createAlert(){
     var data = document.getElementById("saveStudentData").innerHTML;
     var studentData = JSON.parse(data);
-    console.log(studentData);
+    var idNum = studentData[0];
     var id = idNum.toString();
     if (typeof id === "string"){
         console.log(id); 

@@ -1,4 +1,4 @@
-
+"use strict";
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -528,25 +528,25 @@ function updateProfile(name, col, colid, type) {
 function displayStudentInfo(catName, info, type) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
-    //var diplayName = makeHeaderReadable(catName);
+    var diplayName = makeHeaderReadable(catName);
     console.log(type);
     if (info == null) {
-        var text = document.createTextNode(catName + ": " );
+        var text = document.createTextNode(diplayName + ": ");
     } else if (type == "varchar(500)") {
         console.log("var");
-        var text = document.createTextNode(catName + ": " + info);
+        var text = document.createTextNode(diplayName + ": " + info);
     } else if (type == "int") {
         console.log("int");
-        var text = document.createTextNode(catName + ": " + info.toString());
+        var text = document.createTextNode(diplayName + ": " + info.toString());
     } else if (type == "date") {
         console.log("date");
-        var text = document.createTextNode(catName + ": " + makeDateReadable(info));
+        var text = document.createTextNode(diplayName + ": " + makeDateReadable(info));
     } else if (type == "boolean") {
         console.log("bool");
         if (info) {
-            var text = document.createTextNode(catName + ": yes");
+            var text = document.createTextNode(diplayName + ": yes");
         } else {
-            var text = document.createTextNode(catName + ": no");
+            var text = document.createTextNode(diplayName + ": no");
         }
     }
     node.appendChild(text);

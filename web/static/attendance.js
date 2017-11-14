@@ -1,4 +1,3 @@
-"use strict";
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {

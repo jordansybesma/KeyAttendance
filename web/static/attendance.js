@@ -1430,7 +1430,7 @@ function closeCreateAlert(){
 function createAlert(){
     var data = document.getElementById("saveStudentData").innerHTML;
     var studentData = JSON.parse(data);
-    var id = studentData[2];
+    var id = studentData[2].toString();
     var alertText = document.getElementById("alertText").value;
     
     var xmlhttp = new XMLHttpRequest();

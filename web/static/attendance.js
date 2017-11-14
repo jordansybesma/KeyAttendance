@@ -1430,7 +1430,12 @@ function closeCreateAlert(){
 function createAlert(){
     var data = document.getElementById("saveStudentData").innerHTML;
     var studentData = JSON.parse(data);
-    var id = studentData[2].toString();
+    var id = studentData[2];
+    if (typeof id === "string"){
+        console.log(id); 
+    } else {
+        console.log("id is not a string :9");
+    }
     var alertText = document.getElementById("alertText").value;
     
     var xmlhttp = new XMLHttpRequest();

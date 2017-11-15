@@ -638,7 +638,7 @@ def getAlerts():
 def addAlert():
     id = request.form.get('id')
     alert = request.form.get('alertText')
-    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [id, alert, 'f'])
+    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [alert, id, 'f'])
 
 @app.route('/checkAlert/', methods=["POST"])
 def checkAlert():

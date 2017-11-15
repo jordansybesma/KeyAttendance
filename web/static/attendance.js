@@ -1421,8 +1421,10 @@ function displayAlertPopup() {
 
 function closeCreateAlert(){
     var alertText = document.getElementById("alertText").value;
+    console.log("first: " + alertText.value);
     alertText.value = "";
-
+    console.log("but now it's: " + alertText.value);
+    
     var popup = document.getElementById("makeAlertPopup");
     popup.style.display = "none";
 }

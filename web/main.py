@@ -630,7 +630,7 @@ def getJustID(string):
 
 @app.route('/getAlerts')
 def getAlerts():
-    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.id FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id;"
+    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.id FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id ORDER BY testStudents.firstName ASC;"
     databaseResult = executeSingleQuery(query, fetch = True)
     return json.dumps(databaseResult)
 

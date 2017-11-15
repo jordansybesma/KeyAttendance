@@ -350,21 +350,22 @@ function showSuggestions(curText) {
 }
 
 function handleAddBox(e, curText) {
-  if(e.keyCode === 13){
-      onAddRow();
-}
-  else {
-    showSuggestions(curText);
-  }
+    var enterKey = 13;
+
+    if(e.keyCode === enterKey){
+        onAddRow();
+    } else {
+        showSuggestions(curText);
+    }
 }
 
 function handleProfileBox(e, curText) {
-  if(e.keyCode === 13){
+    var enterKey = 13;
+    if(e.keyCode === 13){
       showStudentProfile();
-}
-  else {
+    } else {
     showSuggestions(curText);
-  }
+    }
 }
 
 
@@ -404,6 +405,7 @@ function showStudentProfile() {
         nameSpace.innerHTML += (keywordElement);
         profileSpace.innerHTML += ("\n");
         console.log(keywordElement);
+        
         getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
         //getRequest("/getJustID/" + keywordElement, "", showProfile);
         

@@ -1388,18 +1388,14 @@ function displayAlert(alert) {
     insertMessage.innerHTML = '<p>' + message +'</p>';
     list.appendChild(insertMessage);
 
-    var popup = document.getElementById('alertPopup');
     var id = alert[3];
     console.log("the id is: " + id);
     
-    var button = popup.innerHTML.search("Complete");
-    var notCreated = -1;
+    var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
+    var completeButtonHTML = document.getElementById('completeButton');
+    completeButtonHTML.innerHTML = completeButton;    
     
-    if(button == notCreated) {
-        var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
-        popup.innerHTML += completeButton;
-    }
-    
+    var popup = document.getElementById('alertPopup');
     popup.style.display = "block";
 }
 

@@ -105,7 +105,7 @@ function getRequest(urlAddon, callbackState, callback) {
 
     xmlHttpRequest.onreadystatechange = function() {
         if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200)  {
-                if(callbackState == null)  {
+                if(callbackState == null) {
                     callback(xmlHttpRequest.responseText);
                 } else  {
                     callback(callbackState, xmlHttpRequest.responseText);
@@ -116,7 +116,7 @@ function getRequest(urlAddon, callbackState, callback) {
 }
 
 function sendSubmitForm() {
-    theirText = document.getElementById("someRandoText").value
+    theirText = document.getElementById("someRandoText").value;
 
 }
 function fillAttendance(_, attendance) {
@@ -1420,10 +1420,7 @@ function displayAlertPopup() {
 }
 
 function closeCreateAlert(){
-    var alertText = document.getElementById("alertText").value;
-    console.log("first: " + alertText.value);
-    alertText.innerHTML = "";
-    console.log("but now it's: " + alertText.value);
+    document.getElementById("alertText").value = "";
     
     var popup = document.getElementById("makeAlertPopup");
     popup.style.display = "none";

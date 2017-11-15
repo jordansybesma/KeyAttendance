@@ -1420,6 +1420,9 @@ function displayAlertPopup() {
 }
 
 function closeCreateAlert(){
+    var alertText = document.getElementById("alertText").value;
+    alertText.value = "";
+
     var popup = document.getElementById("makeAlertPopup");
     popup.style.display = "none";
 }
@@ -1427,13 +1430,7 @@ function closeCreateAlert(){
 function createAlert(){
     var data = document.getElementById("saveStudentData").innerHTML;
     var studentData = JSON.parse(data);
-    var idNum = studentData[0][2];
-    var id = idNum.toString();
-    if (typeof id === "string"){
-        console.log(id); 
-    } else {
-        console.log("id is not a string :9");
-    }
+    var id = studentData[0][2];
     var alertText = document.getElementById("alertText").value;
     
     var xmlhttp = new XMLHttpRequest();

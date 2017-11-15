@@ -1434,7 +1434,8 @@ function createAlert(){
     var studentData = JSON.parse(data);
     var id = studentData[0][2];
     var alertText = document.getElementById("alertText").value;
-    
+    console.log("when creating it: " + alertText.value);
+
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAlert/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");

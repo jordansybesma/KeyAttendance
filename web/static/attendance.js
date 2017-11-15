@@ -1391,7 +1391,7 @@ function displayAlert(alert) {
     var id = alert[3];
     console.log("the id is: " + id);
     
-    var completeButton = "<button type=\"button\" style=\"float: right\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
+    var completeButton = "<button style=\"float: right\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
     var completeButtonHTML = document.getElementById('completeButton');
     completeButtonHTML.innerHTML = completeButton;    
     

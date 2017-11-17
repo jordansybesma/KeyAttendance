@@ -20,12 +20,12 @@ function displayAlert(alert) {
     console.log(alert);
     alert = alert.split(",");
     var popup = document.getElementById('alertPopup');
-    
+    var alertText = document.getElementById('alertText');
     var name = alert[0] + " " + alert[1];    
     var message = "Message: " + alert[2];
     var nameHTML = '<h1>' + name +'</h1>';
     var messageHTML = '<p>' + message +'</p>';
-    popup.innerHTML = nameHTML + messageHTML + popup.innerHTML;
+    alertText.innerHTML = nameHTML + messageHTML + alertText.innerHTML;
 
     var id = alert[3];
     
@@ -47,7 +47,9 @@ function checkAlert(id) {
 
 function closeAlert() {
     var popup = document.getElementById('alertPopup');
+    var alertText = document.getElementById('alertText);
     popup.style.display = "none";
+    alertText.innerHTML = "";
     displayAlerts();
 }
 

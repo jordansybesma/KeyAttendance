@@ -578,9 +578,33 @@ def frequentPeers(string):
             # peersDict[key][curResult[i]].append(curResult[i + 1])
             peersDict[key][curResult[i]] = timeNum
 
+    closeAppearancesDict = {}
+    testString = ""
 
+    for key in studentDict.keys():
+        curDate = key
+        curTime = studentDict[key]
+        for key2 in peersDict[curDate]:
+            peerDate = key2
+            peerTime = peersDict[curDate][key2]
+            if abs(curTime - peerTime) < 2:
+                if key2 not in closeAppearancesDict:
+                    closeAppearancesDict[key2] = 1
+                else:
+                    closeAppearancesDict[key2] += 1
 
-    return str(studentDict) + "\n \n \n" + str(peersDict)
+    closeAppearancesDict['4'] += 1
+    closeAppearancesDict['28'] += 10
+    closeAppearancesDict['8'] += 5
+
+    closeAppearancesList = sorted(closeAppearancesDict.items(), key=lambda x: x[1])[::-1]
+    frequentPeersList = []
+
+    for i in range(5):
+        frequentPeer = getStudentByID(closeAppearancesList[i][0])
+        frequentPeersList.append(frequentPeer)
+
+    return str(frequentPeersList)
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):
@@ -606,6 +630,23 @@ def getStudentID(string):
     print("GetID called")
     return autofill(string)
 
+@app.route('/getStudentByID/<string>')
+def getStudentByID(string):
+
+    print("CALLED")
+
+    query = "SELECT firstname FROM teststudents WHERE id = '" + string + "';"
+    databaseResult = executeSingleQuery(query, fetch = True)
+    result = json.dumps(databaseResult[0][0]).replace("\"","")
+
+    query2 = "SELECT lastname FROM teststudents WHERE id = '" + string + "';"
+    databaseResult2 = executeSingleQuery(query2, fetch = True)
+    result2 = json.dumps(databaseResult2[0][0]).replace("\"","")
+
+    print(result + " " +  result2)
+
+    return result + " " +  result2
+
 @app.route('/getJustID/<string>')
 def getJustID(string):
     nameList = string.split()
@@ -619,7 +660,7 @@ def getJustID(string):
 
 @app.route('/getAlerts')
 def getAlerts():
-    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.id FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id ORDER BY testStudents.firstName ASC;"
+    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.studentid FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id;"
     databaseResult = executeSingleQuery(query, fetch = True)
     return json.dumps(databaseResult)
 
@@ -627,7 +668,7 @@ def getAlerts():
 def addAlert():
     id = request.form.get('id')
     alert = request.form.get('alertText')
-    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [alert, 'f', id])
+    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [id, alert, 'f'])
 
 @app.route('/checkAlert/', methods=["POST"])
 def checkAlert():

@@ -612,7 +612,7 @@ function showStudentAttendance(_, data) {
 function showFrequentPeers(_, data) {
   var peerSpace = document.getElementById("frequentPeers");
   peerSpace.innerHTML = (" ")
-  peerSpace.innerHTML += ("Frequently Attends With: \n")
+  peerSpace.innerHTML += ("Frequently Attends With: \n \n")
 
   // peerSpace.innerHTML += (data.join())
 

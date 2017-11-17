@@ -612,7 +612,7 @@ def frequentPeers(string):
     frequentPeersList = []
 
     for i in range(5):
-        frequentPeer = getStudentByID(int(closeAppearancesList[i][0]))
+        frequentPeer = getStudentByID(closeAppearancesList[i][0])
         frequentPeersList.append(getStudentByID)
 
     return str(frequentPeersList)

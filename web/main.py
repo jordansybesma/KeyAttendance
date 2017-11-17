@@ -579,7 +579,6 @@ def frequentPeers(string):
             peersDict[key][curResult[i]] = timeNum
 
     closeAppearancesDict = {}
-    testString = ""
 
     for key in studentDict.keys():
         curDate = key

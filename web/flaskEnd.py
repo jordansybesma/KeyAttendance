@@ -37,10 +37,6 @@ def updateStudentInfo():
 def getStudentInfo(name):
     return backEnd.getStudentInfo(name)
 
-@app.route('/tempStudentColumns', methods=["POST"])
-def tempStudentColumns():
-    return backEnd.tempStudentColumns()
-
 @app.route('/addStudentColumn', methods=["POST"])
 def addStudentColumn():
     return backEnd.addStudentColumn()
@@ -77,10 +73,6 @@ def getStudentAttendance(student):
 def getMasterAttendance():
     return backEnd.getMasterAttendance()
 
-@app.route('/tempColumns', methods=["POST"])
-def tempColumns():
-    return backEnd.tempColumns()
-
 @app.route('/addAttendanceColumn', methods=["POST"])
 def addAttendanceColumn():
     return backEnd.addAttendanceColumn()
@@ -97,10 +89,6 @@ def updateAttendanceColumn():
 def getAttendanceColumns():
     return backEnd.getAttendanceColumns()
 
-@app.route('/tempAlter', methods=["POST"])
-def tempAlter():
-    return backEnd.tempAlter()
-
 @app.route('/getMasterAttendanceDate/<dates>')
 def getMasterAttendanceDate(dates):
     return backEnd.getMasterAttendanceDate(dates)
@@ -112,30 +100,6 @@ def deleteAttendant():
 @app.route('/getDates')
 def getDates():
     return backEnd.getDates()
-
-@app.route('/temp', methods=["POST"])
-def temp():
-    return backEnd.temp()
-
-@app.route('/tempAdd', methods=["POST"])
-def tempAdd():
-    return backEnd.tempAdd()
-
-@app.route('/tempMaster', methods=["POST"])
-def tempMaster():
-    return backEnd.tempMaster()
-
-@app.route('/tempFiller', methods=["POST"])
-def tempFiller():
-    return backEnd.tempFiller()
-
-@app.route('/tempLogin', methods=["POST"])
-def tempLogin():
-    return backEnd.tempLogin()
-
-@app.route('/tempFeedback', methods=["Post"])
-def tempFeedback():
-    return backEnd.tempFeedback()
 
 @app.route('/selectActivity', methods=["POST"])
 def selectActivity():

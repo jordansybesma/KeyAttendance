@@ -333,21 +333,21 @@ def deleteAttendant():
     if rowData == []:
         print("this is strange")
     else:
-        if rowData[0][3]:
+        if rowData[0][3] == True:
             decreaseActivityCount("art", date, False)
-        if rowData[0][4]:
+        if rowData[0][4] == True:
             decreaseActivityCount("madeFood", date, False)
-        if rowData[0][5]:
+        if rowData[0][5] == True:
             decreaseActivityCount("recievedFood", date, False)
-        if rowData[0][6]:
+        if rowData[0][6] == True:
             decreaseActivityCount("leadership", date, False)
-        if rowData[0][7]:
+        if rowData[0][7] == True:
             decreaseActivityCount("exersize", date, False)
-        if rowData[0][8]:
+        if rowData[0][8] == True:
             decreaseActivityCount("mentalHealth", date, False)
-        if rowData[0][9]:
+        if rowData[0][9] == True:
             decreaseActivityCount("volunteering", date, False)
-        if rowData[0][10]:
+        if rowData[0][10] == True:
             decreaseActivityCount("oneOnOne", date, False)
 
 
@@ -589,6 +589,14 @@ def frequentPeers(string):
             # peersDict[key][curResult[i]].append(curResult[i + 1])
             peersDict[key][curResult[i]] = timeNum
 
+    closeAppearancesDict = {}
+
+    for key in studentDict.keys():
+        curDate = key
+        curTime = studentDict[key]
+
+
+
 
 
     return str(studentDict) + "\n \n \n" + str(peersDict)
@@ -630,7 +638,7 @@ def getJustID(string):
 
 @app.route('/getAlerts')
 def getAlerts():
-    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.id FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id ORDER BY testStudents.firstName ASC;"
+    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.studentid FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id;"
     databaseResult = executeSingleQuery(query, fetch = True)
     return json.dumps(databaseResult)
 
@@ -638,7 +646,7 @@ def getAlerts():
 def addAlert():
     id = request.form.get('id')
     alert = request.form.get('alertText')
-    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [alert, 'f', id])
+    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [id, alert, 'f'])
 
 @app.route('/checkAlert/', methods=["POST"])
 def checkAlert():

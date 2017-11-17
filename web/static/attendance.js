@@ -612,7 +612,7 @@ function showStudentAttendance(_, data) {
     var peerSpace = document.getElementById("frequentPeers");
     peerSpace.innerHTML = (" ")
     peerSpace.innerHTML += ("Frequently Attends With: \n")
-    getRequest("/frequentPeers/" + keywordElement, "", showFrequentPeers);
+    getRequest("/frequentPeers/" + document.getElementById("studentName").innerHTML, "", showFrequentPeers);
 }
 
 function convertDay(day) {

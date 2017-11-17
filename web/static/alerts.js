@@ -47,7 +47,7 @@ function checkAlert(id) {
 
 function closeAlert() {
     var popup = document.getElementById('alertPopup');
-    var alertText = document.getElementById('alertText);
+    var alertText = document.getElementById('alertText');
     popup.style.display = "none";
     alertText.innerHTML = "";
     displayAlerts();

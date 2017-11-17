@@ -617,7 +617,6 @@ function showFrequentPeers(_, data) {
   // peerSpace.innerHTML += (data.join())
 
   var nameString = data.replace(/\[/g,"").replace(/\'/g,"").replace(/\]/g,"")
-  nameString = nameString.replace(/,/g,"\n \n")
 
   console.log(nameString)
 

@@ -593,10 +593,10 @@ def frequentPeers(string):
     testString = ""
 
     for key in studentDict.keys():
-        if key != studentID:
-            curDate = key
-            curTime = studentDict[key]
-            for key2 in peersDict[curDate]:
+        curDate = key
+        curTime = studentDict[key]
+        for key2 in peersDict[curDate]:
+            if key2 != studentID
                 peerDate = key2
                 peerTime = peersDict[curDate][key2]
                 if abs(curTime - peerTime) < 2:

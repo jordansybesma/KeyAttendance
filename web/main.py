@@ -590,16 +590,19 @@ def frequentPeers(string):
             peersDict[key][curResult[i]] = timeNum
 
     closeAppearancesDict = {}
+    testString = ""
 
     for key in studentDict.keys():
         curDate = key
         curTime = studentDict[key]
+        for key2 in peersDict[curDate]:
+            print(key2)
+            testString += key2
 
 
 
 
-
-    return str(studentDict) + "\n \n \n" + str(peersDict)
+    return str(studentDict) + "\n \n \n" + str(peersDict) + "\n \n \n" + testString
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):

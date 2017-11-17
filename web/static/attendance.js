@@ -376,12 +376,18 @@ function openAddStudent() {
     popUp.style.display = "block";
 }
 
+function showFrequentPeers(_, data) {
+  console.log(data);
+}
+
 function showStudentProfile() {
     console.log("got here");
 
 
     var peerSpace = document.getElementById("frequentPeers");
+    peerSpace.innerHTML = (" ")
     peerSpace.innerHTML += ("Frequently Attends With: \n")
+    getRequest("/frequentPeers/" + keywordElement, "", showFrequentPeers);
 
     var profileSpace = document.getElementById('studentProfileText');
     profileSpace.innerHTML = ("");
@@ -406,7 +412,7 @@ function showStudentProfile() {
         console.log(keywordElement);
         getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
         //getRequest("/getJustID/" + keywordElement, "", showProfile);
-        
+
 
     }
 
@@ -416,9 +422,9 @@ function showDemographics(_, data) {
     var parsedData = JSON.parse(data);
     console.log(parsedData);
     document.getElementById("saveStudentData").innerHTML = data;
-    
+
     getRequest("/getStudentColumns", "", demographicsHelper);
-    
+
 }
 function demographicsHelper(_, columns) {
 
@@ -429,7 +435,7 @@ function demographicsHelper(_, columns) {
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("demographics");
     div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Edit Profile</button>";
-    
+
     div.innerHTML += "<button type=\"button\" onclick=\"displayAlertPopup()\">Create Alert</button>";
 
     for (i in columnInfo) {
@@ -438,7 +444,7 @@ function demographicsHelper(_, columns) {
         }
     }
 
-   
+
     getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 }
 
@@ -491,7 +497,7 @@ function openEditProfile() {
                 form.innerHTML = str;
                 div.appendChild(form);
             }
-            
+
         }
 
     }
@@ -515,8 +521,8 @@ function updateProfile(name, col, colid, type) {
     } else {
         var value = document.getElementById(colid).value;
     }
-    
-    
+
+
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/updateStudentInfo/");
@@ -970,7 +976,7 @@ function masterAttendanceHelper(_, masterData) {
             if (columnData[j][1] == true) {
                 row.insertCell(-1).innerHTML = myData[i][parseInt(j) + 1];
             }
-            
+
         }
     }
 

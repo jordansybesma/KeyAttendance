@@ -20,19 +20,14 @@ function displayAlert(alert) {
     console.log(alert);
     alert = alert.split(",");
     var popup = document.getElementById('alertPopup');
-    var list = document.getElementById('alertSpecifics');
-    list.innerHTML = "";
     
-    var name = alert[0] + " " + alert[1];
-    popup.innerHTML = '<h1>' + name +'</h1>' + popup.innerHTML;
-    
+    var name = alert[0] + " " + alert[1];    
     var message = "Message: " + alert[2];
-    var insertMessage = document.createElement('li');
-    insertMessage.innerHTML = '<p>' + message +'</p>';
-    list.appendChild(insertMessage);
+    var nameHTML = '<h1>' + name +'</h1>';
+    var messageHTML = '<p>' + message +'</p>';
+    popup.innerHTML = nameHTML + messageHTML + popup.innerHTML;
 
     var id = alert[3];
-    console.log("the id is: " + id);
     
     var completeButton = "<button style=\"float: right\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
     var completeButtonHTML = document.getElementById('completeButton');

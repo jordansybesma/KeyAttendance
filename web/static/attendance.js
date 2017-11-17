@@ -105,7 +105,7 @@ function getRequest(urlAddon, callbackState, callback) {
 
     xmlHttpRequest.onreadystatechange = function() {
         if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200)  {
-                if(callbackState == null)  {
+                if(callbackState == null) {
                     callback(xmlHttpRequest.responseText);
                 } else  {
                     callback(callbackState, xmlHttpRequest.responseText);
@@ -116,7 +116,7 @@ function getRequest(urlAddon, callbackState, callback) {
 }
 
 function sendSubmitForm() {
-    theirText = document.getElementById("someRandoText").value
+    theirText = document.getElementById("someRandoText").value;
 
 }
 function fillAttendance(_, attendance) {
@@ -1351,97 +1351,6 @@ function loginHelper(_, loginData) {
     } else {
         alert("Incorrect Login");
     }
-}
-
-
-function displayAlerts() {
-    getRequest("/getAlerts", "", showAlerts);
-}
-
-function showAlerts(_, alertList) {
-    console.log(alertList)
-    var alerts = JSON.parse(alertList);
-    var list = document.getElementById("alertsList");
-    list.innerHTML = "";
-    for (i in alerts) {
-        var alert = alerts[i];
-        var name = alerts[i][0] + " " + alerts[i][1];
-        var entry = document.createElement('li');
-        entry.innerHTML = '<span onclick="displayAlert(\'' + alert + '\')">' + name + '</span>';
-        list.appendChild(entry);
-    }
-}
-
-function displayAlert(alert) {
-    console.log(alert);
-    alert = alert.split(",");
-    var list = document.getElementById('alertSpecifics');
-    list.innerHTML = "";
-    
-    var name = "Name: " + alert[0] + " " + alert[1];
-    var insertName = document.createElement('li');
-    insertName.innerHTML = '<p>' + name +'</p>';
-    list.appendChild(insertName);
-    
-    var message = "Message: " + alert[2];
-    var insertMessage = document.createElement('li');
-    insertMessage.innerHTML = '<p>' + message +'</p>';
-    list.appendChild(insertMessage);
-
-    var popup = document.getElementById('alertPopup');
-    var id = alert[3];
-    
-    var button = popup.innerHTML.search("Complete");
-    var notCreated = -1;
-    
-    if(button == notCreated) {
-        var completeButton = "<button type=\"button\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
-        popup.innerHTML += completeButton;
-    }
-    
-    popup.style.display = "block";
-}
-
-function closeAlert() {
-    var popup = document.getElementById('alertPopup');
-    popup.style.display = "none";
-    displayAlerts();
-}
-
-function checkAlert(id) {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/checkAlert/");
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("id=" + id);
-    closeAlert();
-}
-
-function displayAlertPopup() {
-    var popup = document.getElementById("makeAlertPopup");
-    popup.style.display = "block"; 
-}
-
-function closeCreateAlert(){
-    var popup = document.getElementById("makeAlertPopup");
-    popup.style.display = "none";
-}
-
-function createAlert(){
-    var data = document.getElementById("saveStudentData").innerHTML;
-    var studentData = JSON.parse(data);
-    var id = studentData[2];
-    if (typeof id === "string"){
-        console.log(id); 
-    } else {
-        console.log("id is not a string :9");
-    }
-    var alertText = document.getElementById("alertText").value;
-    
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAlert/");
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("id=" + id + "&alertText=" + alertText);
-    closeCreateAlert();
 }
 
 // fills the code text box under the table in an attendance sheet

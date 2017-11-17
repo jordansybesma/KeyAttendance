@@ -630,7 +630,7 @@ def getJustID(string):
 
 @app.route('/getAlerts')
 def getAlerts():
-    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.studentid FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id;"
+    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.id FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id ORDER BY testStudents.firstName ASC;"
     databaseResult = executeSingleQuery(query, fetch = True)
     return json.dumps(databaseResult)
 
@@ -638,7 +638,7 @@ def getAlerts():
 def addAlert():
     id = request.form.get('id')
     alert = request.form.get('alertText')
-    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [id, alert, 'f'])
+    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [alert, 'f', id])
 
 @app.route('/checkAlert/', methods=["POST"])
 def checkAlert():

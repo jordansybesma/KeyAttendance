@@ -383,6 +383,8 @@ function showFrequentPeers(_, data) {
 function showStudentProfile() {
     console.log("got here");
 
+    console.log(document.getElementById("studentName").innerHTML)
+
 
     var peerSpace = document.getElementById("frequentPeers");
     peerSpace.innerHTML = (" ")

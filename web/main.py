@@ -613,7 +613,7 @@ def frequentPeers(string):
 
 
     for i in range(5):
-        print(closeAppearancesList[i])
+        print(closeAppearancesList[i][0])
 
     return str(studentDict) + "\n \n \n" + str(peersDict) + "\n \n \n" + str(closeAppearancesDict)
 

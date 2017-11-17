@@ -582,20 +582,18 @@ def frequentPeers(string):
     testString = ""
 
     for key in studentDict.keys():
-        curDate = key
-        curTime = studentDict[key]
-        for key2 in peersDict[curDate]:
-            peerDate = key2
-            peerTime = peersDict[curDate][key2]
-            if abs(curTime - peerTime) < 2:
-                if key2 not in closeAppearancesDict:
-                    closeAppearancesDict[key2] = 1
-                else:
-                    closeAppearancesDict[key2] += 1
+        if key != studentID:
+            curDate = key
+            curTime = studentDict[key]
+            for key2 in peersDict[curDate]:
+                peerDate = key2
+                peerTime = peersDict[curDate][key2]
+                if abs(curTime - peerTime) < 2:
+                    if key2 not in closeAppearancesDict:
+                        closeAppearancesDict[key2] = 1
+                    else:
+                        closeAppearancesDict[key2] += 1
 
-    closeAppearancesDict['4'] += 1
-    closeAppearancesDict['28'] += 10
-    closeAppearancesDict['8'] += 5
 
     closeAppearancesList = sorted(closeAppearancesDict.items(), key=lambda x: x[1])[::-1]
     frequentPeersList = []

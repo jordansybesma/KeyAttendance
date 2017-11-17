@@ -19,13 +19,12 @@ function showAlerts(_, alertList) {
 function displayAlert(alert) {
     console.log(alert);
     alert = alert.split(",");
+    var popup = document.getElementById('alertPopup');
     var list = document.getElementById('alertSpecifics');
     list.innerHTML = "";
     
-    var name = "Name: " + alert[0] + " " + alert[1];
-    var insertName = document.createElement('li');
-    insertName.innerHTML = '<p>' + name +'</p>';
-    list.appendChild(insertName);
+    var name = alert[0] + " " + alert[1];
+    popup.innerHTML = '<h1>' + name +'</h1>' + popup.innerHTML;
     
     var message = "Message: " + alert[2];
     var insertMessage = document.createElement('li');
@@ -39,7 +38,6 @@ function displayAlert(alert) {
     var completeButtonHTML = document.getElementById('completeButton');
     completeButtonHTML.innerHTML = completeButton;    
     
-    var popup = document.getElementById('alertPopup');
     popup.style.display = "block";
 }
 

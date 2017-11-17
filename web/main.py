@@ -333,22 +333,11 @@ def deleteAttendant():
     if rowData == []:
         print("this is strange")
     else:
-        if rowData[0][3] == True:
-            decreaseActivityCount("art", date, False)
-        if rowData[0][4] == True:
-            decreaseActivityCount("madeFood", date, False)
-        if rowData[0][5] == True:
-            decreaseActivityCount("recievedFood", date, False)
-        if rowData[0][6] == True:
-            decreaseActivityCount("leadership", date, False)
-        if rowData[0][7] == True:
-            decreaseActivityCount("exersize", date, False)
-        if rowData[0][8] == True:
-            decreaseActivityCount("mentalHealth", date, False)
-        if rowData[0][9] == True:
-            decreaseActivityCount("volunteering", date, False)
-        if rowData[0][10] == True:
-            decreaseActivityCount("oneOnOne", date, False)
+        headings = ["art", "madeFood", "recievedFood", "leadership", "exersize", "mentalHealth", "volunteering", "oneOnOne"]
+        for i in range(len(headings)):
+            rowIndex = i + 3
+            if rowData[0][rowIndex]:
+                decreaseActivityCount(headings[i], date, False)
 
 
     query = "DELETE FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"

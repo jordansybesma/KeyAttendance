@@ -648,7 +648,12 @@ def getStudentByID(string):
     databaseResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(databaseResult[0][0])
     print(type(result))
-    return result
+
+    query2 = "SELECT lastname FROM teststudents WHERE id = '" + string + "';"
+    databaseResult2 = executeSingleQuery(query2, fetch = True)
+    result2 = json.dumps(databaseResult[0][0])
+
+    return result + result2
 
 @app.route('/getJustID/<string>')
 def getJustID(string):

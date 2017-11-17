@@ -644,6 +644,8 @@ def getStudentID(string):
 @app.route('/getStudentByID/<string>')
 def getStudentByID(string):
 
+    print("CALLED")
+
     query = "SELECT firstname FROM teststudents WHERE id = '" + string + "';"
     databaseResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(databaseResult[0][0]).replace("\"","")
@@ -651,6 +653,8 @@ def getStudentByID(string):
     query2 = "SELECT lastname FROM teststudents WHERE id = '" + string + "';"
     databaseResult2 = executeSingleQuery(query2, fetch = True)
     result2 = json.dumps(databaseResult2[0][0]).replace("\"","")
+
+    print(result + " " +  result2)
 
     return result + " " +  result2
 

@@ -609,10 +609,11 @@ def frequentPeers(string):
     closeAppearancesDict['8'] += 5
 
     closeAppearancesList = sorted(closeAppearancesDict.items(), key=lambda x: x[1])[::-1]
-
+    frequentPeersList = []
 
     for i in range(5):
         print(int(closeAppearancesList[i][0]))
+        frequentPeer = "hellp"
 
     return str(studentDict) + "\n \n \n" + str(peersDict) + "\n \n \n" + str(closeAppearancesDict)
 
@@ -639,6 +640,10 @@ def studentProfile(string):
 def getStudentID(string):
     print("GetID called")
     return autofill(string)
+
+@app.route('/getStudentByID/<string>')
+def getStudentByID(string):
+    return string
 
 @app.route('/getJustID/<string>')
 def getJustID(string):

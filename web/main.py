@@ -596,13 +596,18 @@ def frequentPeers(string):
         curDate = key
         curTime = studentDict[key]
         for key2 in peersDict[curDate]:
-            print(key2)
-            testString += key2
+            peerDate = key2
+            peerTime = peersDict[curDate][key2]
+            if abs(curTime - peerTime) < 2:
+                if key2 not in closeAppearancesDict:
+                    closeAppearancesDict[key2] = 1
+                else:
+                    closeAppearancesDict[key2] += 1
 
 
 
 
-    return str(studentDict) + "\n \n \n" + str(peersDict) + "\n \n \n" + testString
+    return str(studentDict) + "\n \n \n" + str(peersDict) + "\n \n \n" + closeAppearancesDict
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):

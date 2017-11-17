@@ -643,7 +643,11 @@ def getStudentID(string):
 
 @app.route('/getStudentByID/<string>')
 def getStudentByID(string):
-    return string
+
+    query = "SELECT firstname, lastname FROM teststudents WHERE id = '" + string + "';"
+    databaseResult = executeSingleQuery(query, fetch = True)
+    result = json.dumps(databaseResult[0][0])
+    return result
 
 @app.route('/getJustID/<string>')
 def getJustID(string):

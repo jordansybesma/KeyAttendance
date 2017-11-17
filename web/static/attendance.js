@@ -408,11 +408,6 @@ function showStudentProfile() {
         getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
         //getRequest("/getJustID/" + keywordElement, "", showProfile);
 
-        console.log(document.getElementById("studentName").innerHTML)
-        var peerSpace = document.getElementById("frequentPeers");
-        peerSpace.innerHTML = (" ")
-        peerSpace.innerHTML += ("Frequently Attends With: \n")
-        getRequest("/frequentPeers/" + keywordElement, "", showFrequentPeers);
     }
 
 }
@@ -612,6 +607,12 @@ function showStudentAttendance(_, data) {
 
 
     fillProfileTable(parsedData);
+
+    console.log(document.getElementById("studentName").innerHTML)
+    var peerSpace = document.getElementById("frequentPeers");
+    peerSpace.innerHTML = (" ")
+    peerSpace.innerHTML += ("Frequently Attends With: \n")
+    getRequest("/frequentPeers/" + keywordElement, "", showFrequentPeers);
 }
 
 function convertDay(day) {

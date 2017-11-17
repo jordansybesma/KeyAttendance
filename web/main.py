@@ -612,10 +612,10 @@ def frequentPeers(string):
     frequentPeersList = []
 
     for i in range(5):
-        print(int(closeAppearancesList[i][0]))
-        frequentPeer = "hellp"
+        frequentPeer = getStudentByID(int(closeAppearancesList[i][0]))
+        frequentPeersList.append(getStudentByID)
 
-    return str(studentDict) + "\n \n \n" + str(peersDict) + "\n \n \n" + str(closeAppearancesDict)
+    return str(frequentPeersList)
 
 @app.route('/studentProfile/<string>')
 def studentProfile(string):

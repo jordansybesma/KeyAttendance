@@ -43,12 +43,6 @@ function displayAlert(alert) {
     popup.style.display = "block";
 }
 
-function closeAlert() {
-    var popup = document.getElementById('alertPopup');
-    popup.style.display = "none";
-    displayAlerts();
-}
-
 function checkAlert(id) {
     console.log(id);
     var xmlhttp = new XMLHttpRequest();
@@ -58,16 +52,15 @@ function checkAlert(id) {
     closeAlert();
 }
 
+function closeAlert() {
+    var popup = document.getElementById('alertPopup');
+    popup.style.display = "none";
+    displayAlerts();
+}
+
 function displayAlertPopup() {
     var popup = document.getElementById("makeAlertPopup");
     popup.style.display = "block"; 
-}
-
-function closeCreateAlert(){
-    document.getElementById("alertText").value = "";
-    
-    var popup = document.getElementById("makeAlertPopup");
-    popup.style.display = "none";
 }
 
 function createAlert(){
@@ -82,4 +75,11 @@ function createAlert(){
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("id=" + id + "&alertText=" + alertText);
     closeCreateAlert();
+}
+
+function closeCreateAlert(){
+    document.getElementById("alertText").value = "";
+    
+    var popup = document.getElementById("makeAlertPopup");
+    popup.style.display = "none";
 }

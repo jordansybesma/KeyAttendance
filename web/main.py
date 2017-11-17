@@ -605,6 +605,7 @@ def frequentPeers(string):
                     closeAppearancesDict[key2] += 1
 
     closeAppearancesDict['4'] += 1
+    closeAppearancesDict['28'] += 10
     print(sorted(closeAppearancesDict.items(), key=lambda x: x[1]))
 
     return str(studentDict) + "\n \n \n" + str(peersDict) + "\n \n \n" + str(closeAppearancesDict)

@@ -621,7 +621,7 @@ function showFrequentPeers(_, data) {
 
   console.log(nameString)
 
-  peerSpace.innerHTML += (data.replace(/\[/g,"").replace(/\'/g,"").replace(/,/g,"\n").replace(/\]/g,""));
+  peerSpace.innerHTML += nameString;
 }
 
 

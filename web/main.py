@@ -651,7 +651,7 @@ def getStudentByID(string):
 
     query2 = "SELECT lastname FROM teststudents WHERE id = '" + string + "';"
     databaseResult2 = executeSingleQuery(query2, fetch = True)
-    result2 = json.dumps(databaseResult[0][0])
+    result2 = json.dumps(databaseResult2[0][0])
 
     return result + result2
 

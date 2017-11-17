@@ -866,7 +866,7 @@ function displayAttendanceTable(table_date) {
     makeTableHeader(table);
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);
-    document.getElementById("attendanceName").innerHTML = "Attendance Sheet " +readable;
+    document.getElementById("attendanceName").innerHTML = "Attendance Sheet " + readable;
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');

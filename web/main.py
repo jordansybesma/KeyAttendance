@@ -333,21 +333,21 @@ def deleteAttendant():
     if rowData == []:
         print("this is strange")
     else:
-        if rowData[0][3] == True:
+        if rowData[0][3]:
             decreaseActivityCount("art", date, False)
-        if rowData[0][4] == True:
+        if rowData[0][4]:
             decreaseActivityCount("madeFood", date, False)
-        if rowData[0][5] == True:
+        if rowData[0][5]:
             decreaseActivityCount("recievedFood", date, False)
-        if rowData[0][6] == True:
+        if rowData[0][6]:
             decreaseActivityCount("leadership", date, False)
-        if rowData[0][7] == True:
+        if rowData[0][7]:
             decreaseActivityCount("exersize", date, False)
-        if rowData[0][8] == True:
+        if rowData[0][8]:
             decreaseActivityCount("mentalHealth", date, False)
-        if rowData[0][9] == True:
+        if rowData[0][9]:
             decreaseActivityCount("volunteering", date, False)
-        if rowData[0][10] == True:
+        if rowData[0][10]:
             decreaseActivityCount("oneOnOne", date, False)
 
 

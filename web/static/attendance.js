@@ -613,7 +613,7 @@ function showFrequentPeers(_, data) {
   var peerSpace = document.getElementById("frequentPeers");
   peerSpace.innerHTML = (" ")
   peerSpace.innerHTML += ("Frequently Attends With: \n")
-  peerSpace.innerHTML += (data)
+  peerSpace.innerHTML += (data.join())
   console.log(data);
 }
 

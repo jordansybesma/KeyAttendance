@@ -617,6 +617,8 @@ function showFrequentPeers(_, data) {
   // peerSpace.innerHTML += (data.join())
   console.log(data.replace(/\[/g,"").replace(/\'/g,"").replace(/,/g,"\n").replace(/\]/g,""))
   console.log(typeof data);
+
+  peerSpace.innerHTML += (data.replace(/\[/g,"").replace(/\'/g,"").replace(/,/g,"\n").replace(/\]/g,""))
 }
 
 

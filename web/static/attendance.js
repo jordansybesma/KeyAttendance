@@ -376,9 +376,7 @@ function openAddStudent() {
     popUp.style.display = "block";
 }
 
-function showFrequentPeers(_, data) {
-  console.log(data);
-}
+
 
 function showStudentProfile() {
     console.log("got here");
@@ -608,9 +606,17 @@ function showStudentAttendance(_, data) {
 
     fillProfileTable(parsedData);
 
-    console.log(document.getElementById("studentName").innerHTML)
     getRequest("/frequentPeers/" + document.getElementById("studentName").innerHTML, "", showFrequentPeers);
 }
+
+function showFrequentPeers(_, data) {
+  var peerSpace = document.getElementById("frequentPeers");
+  peerSpace.innerHTML = (" ")
+  peerSpace.innerHTML += ("Frequently Attends With: \n")
+  console.log(data);
+}
+
+
 
 function convertDay(day) {
     if (day == 0) {

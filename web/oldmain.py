@@ -2,6 +2,7 @@
 import json
 import psycopg2
 import datetime
+import sys
 
 def foo():
     #print(request.values)

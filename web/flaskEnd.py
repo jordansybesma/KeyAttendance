@@ -107,7 +107,8 @@ def selectActivity():
 
 @app.route('/addAttendant/', methods = ["POST"])
 def addAttendant():
-    print("addAttendant flaskEnd")
+    firstName = request.form.get('firstName')
+    print(firstName + "WOWOWOWOWOW")
     return backEnd.addAttendant()
 
 @app.route('/autofill/<partialString>')

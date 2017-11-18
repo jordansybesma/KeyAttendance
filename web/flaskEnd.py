@@ -109,7 +109,7 @@ def selectActivity():
 def addAttendant():
     firstName = request.form.get('firstName')
     print(firstName + "WOWOWOWOWOW")
-    return backEnd.addAttendant()
+    return backEnd.addAttendant(request)
 
 @app.route('/autofill/<partialString>')
 def autofill(partialString):

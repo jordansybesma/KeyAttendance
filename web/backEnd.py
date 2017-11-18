@@ -396,7 +396,7 @@ def selectActivity():
     return ""
 
 
-def addAttendant():
+def addAttendant(request):
     #print(json.decode(request.data))
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')

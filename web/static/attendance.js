@@ -1375,6 +1375,6 @@ function fillTextBox() {
 }
 
 // callback for fillTextBox
-window.onload = function textBoxCallback(_, js)  {
+function textBoxCallback(_, js)  {
     document.getElementById("codeTextBox").innerHTML = js;
 }

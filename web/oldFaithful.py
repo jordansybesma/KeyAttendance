@@ -1,7 +1,27 @@
+import flask
+from flask import request
 import json
 import psycopg2
+import sys
 import datetime
 
+
+
+#flask automatically serves everything in the static folder for us, which is really nice
+app = flask.Flask(__name__)
+
+@app.route('/')
+def send_index():
+    return flask.redirect("static/index.html", code=302)
+
+'''@app.route('/')
+def loginPage():
+    return flask.redirect("static/login.html", code=302)
+@app.route('/main')
+def main():
+    return flask.redirect("static/index.html", code=302)'''
+
+@app.route('/addText/', methods=['POST'])
 def foo():
     #print(request.values)
     if request.method == 'POST':
@@ -13,6 +33,7 @@ def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
     dbName = 'compsTestDB'
     user = 'ubuntu'
+    password = 'keyComps'
     hostName = 'ec2-35-160-216-144.us-west-2.compute.amazonaws.com'
     conn = psycopg2.connect(database=dbName, user=user, password=password, host=hostName)
     cur = conn.cursor()
@@ -33,12 +54,14 @@ def executeSingleQuery(query, params = [], fetch = False):
     lastName : "Wines"
 }
 """
+@app.route('/addNewStudent/', methods = ["POST"])
 def addNewStudent():
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
 
+@app.route('/updateStudentInfo/', methods = ["POST"])
 def updateStudentInfo():
     name = request.form.get('name')
     nameList = name.split()
@@ -62,6 +85,7 @@ def updateStudentInfo():
 
 
 
+@app.route('/getStudentInfo/<name>')
 def getStudentInfo(name):
     print("got here")
     nameList = name.split()
@@ -74,6 +98,7 @@ def getStudentInfo(name):
 
 
 
+@app.route('/tempStudentColumns', methods=["POST"])
 def tempStudentColumns():
     query = query = "DROP TABLE IF EXISTS studentColumns;"
     query2 = "CREATE TABLE studentColumns (isShowing boolean, isQuick boolean, name varchar(255), type varchar(255),definedOptions varchar(1000), priority SERIAL UNIQUE)"
@@ -82,6 +107,7 @@ def tempStudentColumns():
     executeSingleQuery(query2, [])
 
 
+@app.route('/addStudentColumn', methods=["POST"])
 def addStudentColumn():
     #make sure column name not in use
     name = request.form.get("name")
@@ -97,6 +123,7 @@ def addStudentColumn():
     executeSingleQuery(query, [])
     executeSingleQuery(queryAttendance, [])
 
+@app.route('/alterStudentColumn', methods=["POST"])
 def alterStudentColumn():
     name = request.form.get("name")
     column = request.form.get("column")
@@ -111,6 +138,7 @@ def alterStudentColumn():
         query = "UPDATE studentColumns SET "+ column + " = 'true' WHERE name = '" + name + "';"
     executeSingleQuery(query, [])
 
+@app.route('/deleteStudentColumn', methods=["POST"])
 def deleteStudentColumn():
     name = request.form.get("name")
     query = "DELETE FROM studentColumns WHERE name = '" + name + "';"
@@ -118,10 +146,12 @@ def deleteStudentColumn():
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
 
+@app.route('/getStudentColumns')
 def getStudentColumns():
     query = "SELECT * FROM studentColumns ORDER BY priority"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
+@app.route('/sendFeedback', methods=["POST"])
 def sendFeedback():
     feedback = request.form.get('feedback')
     date = request.form.get('date')
@@ -131,6 +161,7 @@ def sendFeedback():
 
 # strictly test for now
 # going to get today's data later
+@app.route('/getAttendance/<date>')
 def getAttendance(date):
     queryColumns = "SELECT name FROM attendanceColumns ORDER BY priority;"
     cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
@@ -144,6 +175,7 @@ def getAttendance(date):
     result = json.dumps(queryResult, indent=4, sort_keys=True, default=str)
     return result
 
+@app.route('/getLogin/<login>')
 def getLogin(login):
     nameList = login.split()
     user = nameList[0]
@@ -152,6 +184,7 @@ def getLogin(login):
     return json.dumps(executeSingleQuery(query,
         fetch = True), indent=4, sort_keys=True, default=str)
 
+@app.route('/getStudentAttendance/<student>/')
 def getStudentAttendance(student):
     nameList = student.split()
     first = nameList[0]
@@ -166,11 +199,13 @@ def getStudentAttendance(student):
     queryResult = [row[:2] + row[5:] for row in queryResult]
     return json.dumps(queryResult, indent=4, sort_keys=True, default=str)
 
+@app.route('/getMasterAttendance')
 def getMasterAttendance():
     return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;",
         fetch = True)[:10], indent=4, sort_keys=True, default=str)
 
 
+@app.route('/tempColumns', methods=["POST"])
 def tempColumns():
     query = query = "DROP TABLE IF EXISTS attendanceColumns;"
     query2 = "CREATE TABLE attendanceColumns (inUse boolean, isShowing boolean, name varchar(255), type varchar(255), isParent boolean, isChild boolean, parent varchar(255), priority SERIAL UNIQUE)"
@@ -181,6 +216,7 @@ def tempColumns():
     executeSingleQuery(query3, [])
 
 
+@app.route('/addAttendanceColumn', methods=["POST"])
 def addAttendanceColumn():
     #make sure column name not in use
     name = request.form.get("name")
@@ -205,6 +241,7 @@ def addAttendanceColumn():
 
     executeSingleQuery(queryCounts, [])
 
+@app.route('/deleteAttendanceColumn', methods=["POST"])
 def deleteAttendanceColumn():
     name = request.form.get("name")
     query = "DELETE FROM attendanceColumns WHERE name = '" + name + "';"
@@ -216,6 +253,7 @@ def deleteAttendanceColumn():
     executeSingleQuery(queryMaster, [])
 
 
+@app.route('/updateAttendanceColumn', methods=["POST"])
 def updateAttendanceColumn():
     name = request.form.get("name")
 
@@ -232,10 +270,12 @@ def updateAttendanceColumn():
     executeSingleQuery(query, [])
 
 
+@app.route('/getAttendanceColumns')
 def getAttendanceColumns():
     query = "SELECT * FROM attendanceColumns ORDER BY priority"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
+@app.route('/tempAlter', methods=["POST"])
 def tempAlter():
     query = """
         ALTER TABLE attendanceColumns ADD priority int;
@@ -254,6 +294,7 @@ def tempAlter():
     return ""
 
 # must give start and end date separated by a space
+@app.route('/getMasterAttendanceDate/<dates>')
 def getMasterAttendanceDate(dates):
     dateList = dates.split()
     start = dateList[0]
@@ -278,6 +319,7 @@ def decreaseActivityCount(column, date, increase):
 
 
 
+@app.route('/deleteAttendant', methods = ["POST"])
 def deleteAttendant():
     name = request.form.get("name")
     date = request.form.get("date")
@@ -313,31 +355,36 @@ def deleteAttendant():
     alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
     executeSingleQuery(alterQuery, [])
 
+@app.route('/getDates')
 def getDates():
     query = "SELECT DISTINCT date FROM dailyAttendance ORDER BY date DESC"
     return json.dumps(executeSingleQuery(query,fetch = True)[:10], indent=4, sort_keys=True, default=str)
 
+@app.route('/temp', methods=["POST"])
 def temp():
     query = "DROP TABLE IF EXISTS dailyAttendance;"
     query2 = "CREATE TABLE dailyAttendance (id int, firstName varchar(255), lastName varchar(255), art boolean, madeFood boolean, recievedFood boolean, leadership boolean, exersize boolean, mentalHealth boolean, volunteering boolean, oneOnOne boolean, comments varchar(1000), date date, time time)"
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
 
+@app.route('/tempAdd', methods=["POST"])
 def tempAdd():
     query = "INSERT INTO masterAttendance VALUES ('2017-11-02', '55', '20', '4', '5', '2', '10', '5', '0', '1'), ('2017-11-01', '65', '23', '6', '5', '12', '5', '7', '2', '5'), ('2017-10-31', '88', '10', '30', '15', '0', '2', '6', '2', '0'), ('2017-10-30', '100', '22', '2', '10', '1', '11', '4', '1', '2');"
     executeSingleQuery(query, [])
 
+@app.route('/tempMaster', methods=["POST"])
 def tempMaster():
     query = "DROP TABLE IF EXISTS masterAttendance;"
     query2 = "CREATE TABLE masterAttendance (date date, numAttend int, art int, madeFood int, recievedFood int, leadership int, exersize int, mentalHealth int, volunteering int, oneOnOne int);"
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
 
+@app.route('/tempFiller', methods=["POST"])
 def tempFiller():
     query = "INSERT INTO dailyAttendance VALUES ('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-30','16:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-29','18:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-27','18:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-25','16:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-21','15:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-19','17:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-15','17:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-12','16:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-11','19:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-10','15:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-06','17:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-05','18:00:00'),('12', 'Albar','Acevedo', 'false', 'false', 'false','false','false','false','false','false','','2017-10-01','16:00:00');"
     executeSingleQuery(query, [])
     return ""
-
+@app.route('/tempLogin', methods=["POST"])
 def tempLogin():
     query = "DROP TABLE IF EXISTS login;"
     query2 = "CREATE TABLE login (username varchar(255), password varchar(255));"
@@ -347,6 +394,7 @@ def tempLogin():
     executeSingleQuery(query3, [])
     return ""
 
+@app.route('/tempFeedback', methods=["Post"])
 def tempFeedback():
     query = "DROP TABLE IF EXISTS feedback;"
     query2 = "CREATE TABLE feedback (date date, comment varchar(2000));"
@@ -354,6 +402,7 @@ def tempFeedback():
     executeSingleQuery(query2, [])
     return ""
 
+@app.route('/selectActivity', methods=["POST"])
 def selectActivity():
     column = request.form.get("column")
     date = request.form.get("date")
@@ -391,6 +440,7 @@ def selectActivity():
     return ""
 
 
+@app.route('/addAttendant/', methods = ["POST"])
 def addAttendant():
     #print(json.decode(request.data))
     firstName = request.form.get('firstName')
@@ -468,6 +518,7 @@ def addAttendant():
 """
     Literally just takes a string. Compares both first and last name.
 """
+@app.route('/autofill/<partialString>')
 def autofill(partialString):
     if(partialString == ""):
         return json.dumps([])
@@ -483,6 +534,7 @@ def autofill(partialString):
     suggestions = json.dumps(databaseResult[:10], indent=4, sort_keys=True, default=str)
     return suggestions
 
+@app.route('/frequentPeers/<string>')
 def frequentPeers(string):
     studentID = getJustID(string)
     query = "SELECT date, time FROM dailyAttendance WHERE id = '" + studentID + "';"
@@ -550,6 +602,7 @@ def frequentPeers(string):
 
     return str(frequentPeersList)
 
+@app.route('/studentProfile/<string>')
 def studentProfile(string):
     nameList = string.split()
     first = nameList[0]
@@ -559,7 +612,7 @@ def studentProfile(string):
     result = json.dumps(databaseResult)
     return result
 
-#
+# @app.route('/getID/<string>')
 # def getStudentID(string):
 #     nameList = string.split()
 #     first = nameList[0].upper()
@@ -568,10 +621,12 @@ def studentProfile(string):
 #     databaseResult = executeSingleQuery(query, fetch = True)
 #     return databaseResult;
 
+@app.route('/getID/<string>')
 def getStudentID(string):
     print("GetID called")
     return autofill(string)
 
+@app.route('/getStudentByID/<string>')
 def getStudentByID(string):
 
     print("CALLED")
@@ -588,6 +643,7 @@ def getStudentByID(string):
 
     return result + " " +  result2
 
+@app.route('/getJustID/<string>')
 def getJustID(string):
     nameList = string.split()
     first = nameList[0].upper()
@@ -598,16 +654,26 @@ def getJustID(string):
     result = json.dumps(databaseResult[0][0])
     return result
 
+@app.route('/getAlerts')
 def getAlerts():
     query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.studentid FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id;"
     databaseResult = executeSingleQuery(query, fetch = True)
     return json.dumps(databaseResult)
 
+@app.route('/addAlert/', methods = ["POST"])
 def addAlert():
     id = request.form.get('id')
     alert = request.form.get('alertText')
     executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [id, alert, 'f'])
 
+@app.route('/checkAlert/', methods=["POST"])
 def checkAlert():
     id = request.form.get('id')
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE id = %s;", [id])
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "local":
+        app.run()
+    else:
+        app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')

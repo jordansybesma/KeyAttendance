@@ -1,4 +1,5 @@
-
+import flask
+from flask import request
 import json
 import psycopg2
 import datetime

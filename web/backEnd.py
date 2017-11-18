@@ -1,4 +1,3 @@
-
 import json
 import psycopg2
 import sys
@@ -36,6 +35,8 @@ def executeSingleQuery(query, params = [], fetch = False):
     lastName : "Wines"
 }
 """
+
+
 def addNewStudent():
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
@@ -141,7 +142,7 @@ def getAttendance(date):
     query = "SELECT firstName, lastName, " + colList[0][0];
     for i in range(1, len(colList)):
         query = query + ", " + colList[i][0]
-    query = query + " FROM dailyAttendance WHERE date= '" + date + "' ORDER BY time ASC;"
+    query = query + " FROM dailyAttendance WHERE date= '" + date + "' ORDER BY time DESC;"
 
     queryResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(queryResult, indent=4, sort_keys=True, default=str)

@@ -58,7 +58,7 @@ function addNewStudent() {
     lastChar = lastChar.toUpperCase();
     last = lastChar + last.slice(1);
 
-    if (first == "") {
+    if (first === "") {
         alert("Please enter a first name");
         return;
     }
@@ -860,7 +860,7 @@ function makeTableHeaderHelper(_, data) {
     row.insertCell(-1).innerHTML = "Name";
     var myData = JSON.parse(data);
     for (i in myData){
-        if (myData[i][1] == true) {
+        if (myData[i][1]) {
             var newHeader = makeHeaderReadable(myData[i][2]);
             row.insertCell(-1).innerHTML = newHeader;
         }

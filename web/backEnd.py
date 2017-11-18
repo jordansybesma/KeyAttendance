@@ -616,3 +616,4 @@ def addAlert():
 def checkAlert():
     id = request.form.get('id')
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE id = %s;", [id])
+    

@@ -1185,13 +1185,11 @@ function showLogin() {
 }
 
 function makeDateReadable(date) {
-    var month = date.substr(5, 7);
-    console.log("the first month: " + month);
-    var othermonth = month.substr(0,2);
-    console.log("the othermonth: " + othermonth);
+    console.log(date);
+    var month = date.substr(5, 7).substr(0,2);
     var day = date.substr(8, 10);
     var year = date.substr(0, 4);
-    var newDate = month.substr(0, 2) + "/" + day + "/" + year;
+    var newDate = month + "/" + day + "/" + year;
     return newDate;
 }
 function makeDateSQL(date) {

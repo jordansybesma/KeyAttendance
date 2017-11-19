@@ -827,7 +827,7 @@ function createNewAttendance() {
     var date = getCurrentDate();
     document.getElementById("storeDate").innerHTML = date;
     var readable = makeDateReadable(date);
-    document.getElementById("attendanceName").innerHTML = "Attendance Sheet " + readable;
+    document.getElementById("attendanceName").innerHTML = "Attendance Sheet:   " + readable;
     var table = document.getElementById("Attendance-Table");
     makeTableHeader(table);
     var popUp = document.getElementById('attendanceDiv');

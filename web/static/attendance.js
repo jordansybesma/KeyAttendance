@@ -1186,7 +1186,7 @@ function showLogin() {
 
 function makeDateReadable(date) {
     console.log(date);
-    var month = date.substr(5, 7).substr(0,2);
+    var month = date.substr(5, 6);
     var day = date.substr(8, 10);
     var year = date.substr(0, 4);
     var newDate = month + "/" + day + "/" + year;

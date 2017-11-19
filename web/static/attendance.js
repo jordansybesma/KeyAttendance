@@ -1185,13 +1185,17 @@ function showLogin() {
 }
 
 function makeDateReadable(date) {
-    console.log(date);
     var monthRaw = date.substr(5, 7);
     var month = monthRaw.substr(0,2);
+    
+    if(typeof month === "string"){
+        console.log("yup it's a string");
+    }
+    
     var day = date.substr(8, 10);
     var year = date.substr(0, 4);
     
-    var months = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'August', 'Sep', 'Oct', 'Nov', 'Dec']
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     var newDate = months[month-1] + " " + day + ", " + year;
     return newDate;
 }

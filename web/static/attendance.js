@@ -428,14 +428,11 @@ function demographicsHelper(_, columns) {
     var div = document.getElementById("demographics");
     div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Edit Profile</button>";
 
-
-
     for (i in columnInfo) {
         if (columnInfo[i][0]) {
             displayStudentInfo(columnInfo[i][2], studentInfo[0][parseInt(i) + 3], columnInfo[i][3]);
         }
     }
-
 
     getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 }

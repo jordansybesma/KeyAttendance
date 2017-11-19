@@ -1186,10 +1186,13 @@ function showLogin() {
 
 function makeDateReadable(date) {
     console.log(date);
-    var month = date.substr(5, 6);
+    var monthRaw = date.substr(5, 7);
+    var month = monthRaw.substr(0,2);
     var day = date.substr(8, 10);
     var year = date.substr(0, 4);
-    var newDate = month + "/" + day + "/" + year;
+    
+    var months = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'August', 'Sep', 'Oct', 'Nov', 'Dec']
+    var newDate = months[month-1] + " " + day + ", " + year;
     return newDate;
 }
 function makeDateSQL(date) {

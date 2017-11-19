@@ -827,7 +827,7 @@ function createNewAttendance() {
     var date = getCurrentDate();
     document.getElementById("storeDate").innerHTML = date;
     var readable = makeDateReadable(date);
-    document.getElementById("attendanceName").innerHTML = "Attendance Sheet:   " + readable;
+    document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readable;
     var table = document.getElementById("Attendance-Table");
     makeTableHeader(table);
     var popUp = document.getElementById('attendanceDiv');
@@ -879,7 +879,7 @@ function displayAttendanceTable(table_date) {
     makeTableHeader(table);
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);
-    document.getElementById("attendanceName").innerHTML = "Attendance Sheet:   " + readable;
+    document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readable;
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');

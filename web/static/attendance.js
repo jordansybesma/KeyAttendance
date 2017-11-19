@@ -1194,7 +1194,8 @@ function makeDateReadable(date) {
     var year = date.substr(0, 4);
     
     var newDate = month + " " + day + ", " + year;
-    return newDate;
+    var newDateDashes = monthStr + "/" + day + "/" + year;
+    return newDateDashes;
 }
 function makeDateSQL(date) {
     var month = date.substr(0, 2);

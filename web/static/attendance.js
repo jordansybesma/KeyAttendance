@@ -1185,8 +1185,8 @@ function showLogin() {
 }
 
 function makeDateReadable(date) {
-    var monthRaw = date.substr(5, 7);
-    var month = monthRaw.substr(0,2);
+    var monthStr = date.substr(5, 7).substr(0,2);
+    var month = parseInt(monthStr);
     
     if(typeof month === "string"){
         console.log("yup it's a string");

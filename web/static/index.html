@@ -54,6 +54,10 @@
 Hey you, yeah you! 
 If you're thinking about setting this whole set of snarf into swing, add this back to the Home tab declaration above: "displayAlerts();"
 
+Also try adding the following line to demographicsHelper:
+    div.innerHTML += "<button type=\"button\" onclick=\"displayAlertPopup()\">Create Alert</button>";
+...you won't.
+
         <div id="alertsListDiv" style="background-color:WhiteSmoke; float: left;">
             <h1>Alerts</h1>
             <ul id="alertsList"></ul>  

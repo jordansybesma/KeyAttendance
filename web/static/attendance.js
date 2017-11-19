@@ -428,7 +428,7 @@ function demographicsHelper(_, columns) {
     var div = document.getElementById("demographics");
     div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Edit Profile</button>";
 
-    div.innerHTML += "<button type=\"button\" onclick=\"displayAlertPopup()\">Create Alert</button>";
+
 
     for (i in columnInfo) {
         if (columnInfo[i][0]) {

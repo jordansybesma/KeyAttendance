@@ -879,7 +879,7 @@ function displayAttendanceTable(table_date) {
     makeTableHeader(table);
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);
-    document.getElementById("attendanceName").innerHTML = "Attendance Sheet " + readable;
+    document.getElementById("attendanceName").innerHTML = "Attendance Sheet:   " + readable;
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
@@ -1186,17 +1186,14 @@ function showLogin() {
 
 function makeDateReadable(date) {
     var monthStr = date.substr(5, 7).substr(0,2);
-    var month = parseInt(monthStr);
-    
-    if(typeof month === "string"){
-        console.log("yup it's a string");
-    }
+    var monthInt = parseInt(monthStr);
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var month = months[monthInt-1];
     
     var day = date.substr(8, 10);
     var year = date.substr(0, 4);
     
-    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    var newDate = months[month-1] + " " + day + ", " + year;
+    var newDate = month + " " + day + ", " + year;
     return newDate;
 }
 function makeDateSQL(date) {

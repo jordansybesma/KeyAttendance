@@ -413,7 +413,7 @@ def addAttendant(request):
 
         # add two more %s's for timeIn and timeOut. You won't.
         executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        [id] + activities, fetch = True)
+        [id] + activities)
         return "true"
     else:
         firstQuery = "SELECT * FROM dailyAttendance WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "' AND date = '" + date + "';"
@@ -435,20 +435,6 @@ def addAttendant(request):
         newString = "INSERT INTO dailyAttendance (id, firstName, lastName"
         for i in range(0, numCols):
             newString = newString + ", "+ columnsData[i][0]
-
-            
-        if(databaseResult == None):
-            print("DATABASE RESULT IS NONE!!!")
-        elif(type(databaseResult) == list):
-            print("DATABASE RESULT IS LIST!!!")
-            if(databaseResult[0] == None):
-                print("database[0] IS NONE!!!")
-            elif(type(type(databaseResult[0])) == list):
-                print("database[0] IS Liszt!!!")
-            else:
-                print("db[0] is wonky")
-        else:
-            print("DATABASE RESULT ISN'T THOSE THINGS!!!")
             
         newString = newString + ", date, time) VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
         for i in range(0, numCols):

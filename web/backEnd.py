@@ -413,7 +413,7 @@ def addAttendant(request):
 
         # add two more %s's for timeIn and timeOut. You won't.
         executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        [id] + activities)
+        [id] + activities, fetch = True)
         return "true"
     else:
         firstQuery = "SELECT * FROM dailyAttendance WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "' AND date = '" + date + "';"

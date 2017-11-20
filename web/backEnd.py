@@ -625,12 +625,12 @@ def checkAlert(request):
 def sneakyTempAddingStudents():
     namesRaw = "Acevedo, Albar.Adams, Marie.Agapito Romero, Daherik	.Albrecht, Luke.Almendinger, Morgan.Anderson, Blake	.Anderson, Katelyn	.Anderson, Kiara.Anderson, Noah.Andrade, Abigail	.Andrew, Ella.Anfinson, Andrew	.Anthony, Charles	.Armstrong, Alex.Ascencio Bravo, Mindy	.Atkinson, Blake	.Ayers, James	.Bahm, Madelyn	.Bahm, Marissa.Baker, Seveth	.Baker, Taj	.Baker, Zoey.Bakken, Crystal.Baltazar, Luis (Angel).Baltazar, Michael	.Bamonte-Grebis, India	.Bandy, Raymond.Basina, Marcus.Basina, Savanna	.Bathen, Isabella.Bauernfeind, Gabe.Beardsley, Mason	.Beckstrom, Kathryn.Beimers, Ann.Beiser, Evra (Hailey).Bells, Katie.Benjamin, Alivia	.Benjamin, Connor	.Berg, Nicholas	.Bergman, Levi	.Bielenberg, Rachel.Billmeyer, Tori.Bolton, Hunter.Borene, Nick	.Boudreau, Jennifer	.Boutan, Noah.Bouton, Noah.Bradford, Gina.Branham, Alexis	.Branham, Amber"
 
-namesMediumRare = namesRaw.split('.')
-for nameUneditted in namesMediumRare:
-    nameMedium = nameUneditted.rstrip()
-    name = nameMedium.split(',')
-    firstName = name[1]
-    lastName = name[0]
-    executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
+    namesMediumRare = namesRaw.split('.')
+    for nameUneditted in namesMediumRare:
+        nameMedium = nameUneditted.rstrip()
+        name = nameMedium.split(',')
+        firstName = name[1]
+        lastName = name[0]
+        executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
 
     

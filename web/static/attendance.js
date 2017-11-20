@@ -71,6 +71,7 @@ function addNewStudent() {
         return;
     }
 
+    sendNewStudent(first, last);
     
     // Auto-populates new student into attendance sheet
     preprocessAddAttendant(first.trim() + " " + last.trim());
@@ -79,7 +80,6 @@ function addNewStudent() {
     document.getElementById("newStudentLast").value = "";
     closeAddStudent();
     //var response = addAttendant(data);
-    sendNewStudent(first, last);
 }
 
 

@@ -1354,14 +1354,14 @@ function sendFeedback() {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("date=" + date + "&feedback=" + feedback);
     document.getElementById("feedback").value = "";
-
 }
+
 function login() {
     var user = document.getElementById("username").value;
     var pass = document.getElementById("password").value;
     getRequest("/getLogin/" + user + " " + pass, "", loginHelper);
-
 }
+
 function loginHelper(_, loginData) {
     var myData = JSON.parse(loginData);
     if (myData.length > 0) {

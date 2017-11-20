@@ -42,6 +42,15 @@ def addNewStudent(request):
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
+    
+namesRaw = "'Albar', 'Acevedo'.'Adams', 'Marie'.'Romero', 'Daherik Agapito'.'Luke', 'Albrecht'.'Morgan', 'Almendinger'.'Blake', 'Anderson'.'Katelyn', 'Anderson'.'Kiara', 'Anderson' .'Noah', 'Anderson'.'Abigail', 'Andrade'.'Ella', 'Andrew'.'Andrew', 'Anfinson'.'Charles', 'Anthony'.'Alex', 'Armstrong'.'Mindy', 'Ascencio Bravo'.'Blake' 'Atkinson'.'James', 'Ayers'.'Madelyn', 'Bahm'.'Marissa', 'Bahm'.'Seveth', 'Baker'.'Taj', 'Baker'.'Zoey', 'Baker'.'Crystal', 'Bakken'.'Luis (Angel)', 'Baltazar'.'Michael', 'Baltazar'.'India', 'Bamonte-Grebis'.'Raymond', 'Bandy'.'Marcus', 'Basina'.'Savanna', 'Basina'.'Isabella', 'Bathen'.'Gabe', 'Bauernfeind'.'Mason', 'Beardsley'.'Kathryn', 'Beckstrom'.'Ann', 'Beimers'.'Evra (Hailey)', 'Beiser'.'Katie', 'Bells'.'Alivia', 'Benjamin'.'Connor', 'Benjamin'.'Nicholas', 'Berg'.'Levi', 'Bergman'.'Rachel', 'Bielenberg'.'Tori', 'Billmeyer'.'Hunter', 'Bolton'.'Nick', 'Borene'.'Jennifer', 'Boudreau'.'Noah', 'Boutan'.'Noah', 'Bouton'.'Gina', 'Bradford'.'Alexis', 'Branham'.'Amber', 'Branham'.'West', 'Quest'"
+    
+    namesList = names.split('.')
+    for name in namesList:
+        realName = name.split(',')
+        executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [realName[0], realName[1]])
+
+    
     return "\nHello frontend:)\n"
 
 def updateStudentInfo(request):

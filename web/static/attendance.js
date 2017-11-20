@@ -60,11 +60,11 @@ function addNewStudent() {
     lastChar = lastChar.toUpperCase();
     last = lastChar + last.slice(1);
 
-    if (first === "") {
+    if (first.trim() === "") {
         alert("Please enter a first name");
         return;
     }
-    if (last == "") {
+    if (last.trim() == "") {
         alert("Please enter a last name");
         return;
     }

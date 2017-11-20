@@ -47,6 +47,8 @@ function addAttendant(first, last) {
 //that both values have been entered then adds them to the database
 function addNewStudent() {
 
+//    onAddRow()(@(*#&*
+    
     var first = document.getElementById("newStudentFirst").value;
     var firstChar = first[0];
     firstChar = firstChar.toUpperCase();
@@ -789,7 +791,6 @@ function selectActivity(name, column, date) {
 }
 
 function onAddRow() {
-    var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keyword').value;
     var optionFound = false;
     datalist = document.getElementById("suggestedStudents");
@@ -800,26 +801,35 @@ function onAddRow() {
       }
     }
     //var date = getCurrentDate();
-    var date = document.getElementById("storeDate").innerHTML;
     if (optionFound)  {
+        
         document.getElementById("keyword").value = "";
-        fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
-        var row = table.insertRow(1);
-        row.insertCell(0).innerHTML = keywordElement;
-
-        for(var i = 0; i < 8; i++)  {
-            var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + keywordElement + "','" + fields[i] + "', '" + date + "')\">";
-            row.insertCell(i + 1).innerHTML = str;
-        }
-
-        var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + keywordElement + "')\">Delete </button>"
-        row.insertCell(9).innerHTML = str;
-        var names = keywordElement.split(" ");
-        addAttendant(names[0], names[1]);
+        preprocessAddAttendant(keywordElement);
+        
     } else {
         alert("Please enter an existing student");
     }
     //var str = "How are you doing today?";
+
+}
+
+function preprocessAddAttendant(fullName){
+    var table = document.getElementById("Attendance-Table");    
+    var date = document.getElementById("storeDate").innerHTML;
+
+    fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
+    var row = table.insertRow(1);
+    row.insertCell(0).innerHTML = fullName;
+
+    for(var i = 0; i < 8; i++)  {
+        var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
+        row.insertCell(i + 1).innerHTML = str;
+    }
+
+    var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete</button>"
+    row.insertCell(9).innerHTML = str;
+    var names = fullName.split(" ");
+    addAttendant(names[0], names[1]);  
 
 }
 

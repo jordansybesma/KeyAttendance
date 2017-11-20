@@ -143,7 +143,7 @@ def addAlert():
 
 @app.route('/checkAlert/', methods=["POST"])
 def checkAlert():
-    return backEnd.checkAlert()
+    return backEnd.checkAlert(request)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "local":

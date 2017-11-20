@@ -34,9 +34,9 @@
 <button id = "defaultOpen" class = "tablinks" onclick = "openTab(event, 'Data'); createNewAttendance();"> Attendance Sheets </button>
 <button class = "tablinks" onclick = "openTab(event, 'AttendanceOverview'); displayMasterAttendance()"> Attendance Overview </button>
 <button class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</button>
-<button class = "tablinks" onclick = "openTab(event, 'StaffSchedules'); showAttendanceManage();">Manage Attendance</button>
+<button class = "tablinks" onclick = "openTab(event, 'AttendanceCols'); showAttendanceManage();">Attendance Columns</button>
 <button class = "tablinks" onclick = "openTab(event, 'Feedback Forum')"> Feedback Forum </button>
-<button class="tablinks" onclick="openTab(event, 'Manage Student Profile'); showProfileManage();"> Manage Profile </button>
+<button class = "tablinks" onclick = "openTab(event, 'Manage Student Profile'); showProfileManage();"> Manage Profile </button>
 </div>
 
 <div id="Home" class="tabcontent">
@@ -239,7 +239,7 @@ Also try adding the following line to demographicsHelper:
 -->
 </div>
 
-<div id="StaffSchedules" class="tabcontent">
+<div id="AttendanceCols" class="tabcontent">
 <h2>Current Attendance Columns</h2>
     <form onsubmit="return false;">
         <input type="text" id="newColumn" />

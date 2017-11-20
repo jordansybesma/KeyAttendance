@@ -831,6 +831,7 @@ function preprocessAddAttendant(fullName){
 
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete</button>"
     row.insertCell(9).innerHTML = str;
+    console.log(fullName);
     var names = fullName.split(" ");
     console.log(names[0]);
     console.log(names[1]);

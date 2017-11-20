@@ -69,6 +69,11 @@ function addNewStudent() {
         return;
     }
 
+    
+    // Auto-populates new student into attendance sheet
+    var fullName = first + " " last;
+    preprocessAddAttendant(fullName);
+    
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
     closeAddStudent();
@@ -369,16 +374,14 @@ function handleProfileBox(e, curText) {
   }
 }
 
-
 function checkBox(checkbox, keyword) {
     var str = "got to checkBox " + checkbox.value + " " + keyword;
 }
+
 function openAddStudent() {
     var popUp = document.getElementById('studentDiv');
     popUp.style.display = "block";
 }
-
-
 
 function showStudentProfile() {
     console.log("got here");

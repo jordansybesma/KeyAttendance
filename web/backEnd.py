@@ -426,7 +426,6 @@ def addAttendant(request):
 
         query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
         databaseResult = executeSingleQuery(query, fetch = True)
-        print(databaseResult[0][0])
 
         queryRows = "SELECT name from attendanceColumns"
         columns = json.dumps(executeSingleQuery(queryRows, fetch = True), indent=4, sort_keys=True, default=str)

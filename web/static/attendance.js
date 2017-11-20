@@ -73,7 +73,7 @@ function addNewStudent() {
 
     
     // Auto-populates new student into attendance sheet
-    preprocessAddAttendant(first.trim(), last.trim());
+    preprocessAddAttendant(first.trim() + " " + last.trim());
     
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
@@ -809,9 +809,9 @@ function onAddRow() {
         
         document.getElementById("keyword").value = "";
         
-        get first and last name from keywordElement
+        // eventually pass an id or get first and last name from keywordElement
         
-        preprocessAddAttendant(first, last);
+        preprocessAddAttendant(keywordElement);
         
     } else {
         alert("Please enter an existing student");
@@ -820,10 +820,10 @@ function onAddRow() {
 
 }
 
-function preprocessAddAttendant(first, last){
+function preprocessAddAttendant(fullName){
     var table = document.getElementById("Attendance-Table");    
     var date = document.getElementById("storeDate").innerHTML;
-    var fullName = first + " " last;
+//    var fullName = first + " " last;
     fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
     var row = table.insertRow(1);
     row.insertCell(0).innerHTML = fullName;

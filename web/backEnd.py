@@ -439,11 +439,11 @@ def addAttendant(request):
             
         if(databaseResult == None):
             print("DATABASE RESULT IS NONE!!!")
-        elif(databaseResult == list):
+        elif(type(databaseResult) == list):
             print("DATABASE RESULT IS LIST!!!")
             if(databaseResult[0] == None):
                 print("database[0] IS NONE!!!")
-            elif(databaseResult[0] == list):
+            elif(type(databaseResult[0]) == list):
                 print("database[0] IS Liszt!!!")
             else:
                 print("db[0] is wonky")

@@ -23,15 +23,15 @@ def main():
 
 @app.route('/addText/', methods=['POST'])
 def foo():
-    return backEnd.foo()
+    return backEnd.foo(request)
 
 @app.route('/addNewStudent/', methods = ["POST"])
 def addNewStudent():
-    return backEnd.addNewStudent()
+    return backEnd.addNewStudent(request)
 
 @app.route('/updateStudentInfo/', methods = ["POST"])
 def updateStudentInfo():
-    return backEnd.updateStudentInfo()
+    return backEnd.updateStudentInfo(request)
 
 @app.route('/getStudentInfo/<name>')
 def getStudentInfo(name):
@@ -39,15 +39,15 @@ def getStudentInfo(name):
 
 @app.route('/addStudentColumn', methods=["POST"])
 def addStudentColumn():
-    return backEnd.addStudentColumn()
+    return backEnd.addStudentColumn(request)
 
 @app.route('/alterStudentColumn', methods=["POST"])
 def alterStudentColumn():
-    return backEnd.alterStudentColumn()
+    return backEnd.alterStudentColumn(request)
 
 @app.route('/deleteStudentColumn', methods=["POST"])
 def deleteStudentColumn():
-    return backEnd.deleteStudentColumn()
+    return backEnd.deleteStudentColumn(request)
 
 @app.route('/getStudentColumns')
 def getStudentColumns():
@@ -55,7 +55,7 @@ def getStudentColumns():
 
 @app.route('/sendFeedback', methods=["POST"])
 def sendFeedback():
-    return backEnd.sendFeedback()
+    return backEnd.sendFeedback(request)
 
 @app.route('/getAttendance/<date>')
 def getAttendance(date):
@@ -75,15 +75,15 @@ def getMasterAttendance():
 
 @app.route('/addAttendanceColumn', methods=["POST"])
 def addAttendanceColumn():
-    return backEnd.addAttendanceColumn()
+    return backEnd.addAttendanceColumn(request)
 
 @app.route('/deleteAttendanceColumn', methods=["POST"])
 def deleteAttendanceColumn():
-    return backEnd.deleteAttendanceColumn()
+    return backEnd.deleteAttendanceColumn(request)
 
 @app.route('/updateAttendanceColumn', methods=["POST"])
 def updateAttendanceColumn():
-    return backEnd.updateAttendanceColumn()
+    return backEnd.updateAttendanceColumn(request)
 
 @app.route('/getAttendanceColumns')
 def getAttendanceColumns():
@@ -95,7 +95,7 @@ def getMasterAttendanceDate(dates):
 
 @app.route('/deleteAttendant', methods = ["POST"])
 def deleteAttendant():
-    return backEnd.deleteAttendant()
+    return backEnd.deleteAttendant(request)
 
 @app.route('/getDates')
 def getDates():
@@ -103,7 +103,7 @@ def getDates():
 
 @app.route('/selectActivity', methods=["POST"])
 def selectActivity():
-    return backEnd.selectActivity()
+    return backEnd.selectActivity(request)
 
 @app.route('/addAttendant/', methods = ["POST"])
 def addAttendant():
@@ -139,7 +139,7 @@ def getAlerts():
 
 @app.route('/addAlert/', methods = ["POST"])
 def addAlert():
-    return backEnd.addAlert()
+    return backEnd.addAlert(request)
 
 @app.route('/checkAlert/', methods=["POST"])
 def checkAlert():

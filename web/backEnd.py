@@ -4,7 +4,7 @@ import sys
 import datetime
 import flaskEnd
 
-def foo():
+def foo(request):
     #print(request.values)
     if request.method == 'POST':
         f = request.data
@@ -38,13 +38,13 @@ def executeSingleQuery(query, params = [], fetch = False):
 """
 
 
-def addNewStudent():
+def addNewStudent(request):
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
     return "\nHello frontend:)\n"
 
-def updateStudentInfo():
+def updateStudentInfo(request):
     name = request.form.get('name')
     nameList = name.split()
     first = nameList[0]
@@ -87,7 +87,7 @@ def tempStudentColumns():
     executeSingleQuery(query2, [])
 
 
-def addStudentColumn():
+def addStudentColumn(request):
     #make sure column name not in use
     name = request.form.get("name")
     colType = request.form.get("type")
@@ -102,7 +102,7 @@ def addStudentColumn():
     executeSingleQuery(query, [])
     executeSingleQuery(queryAttendance, [])
 
-def alterStudentColumn():
+def alterStudentColumn(request):
     name = request.form.get("name")
     column = request.form.get("column")
     queryStatus = "SELECT "+ column + " FROM studentColumns WHERE name = '" + name + "';"
@@ -116,7 +116,7 @@ def alterStudentColumn():
         query = "UPDATE studentColumns SET "+ column + " = 'true' WHERE name = '" + name + "';"
     executeSingleQuery(query, [])
 
-def deleteStudentColumn():
+def deleteStudentColumn(request):
     name = request.form.get("name")
     query = "DELETE FROM studentColumns WHERE name = '" + name + "';"
     query2 = "ALTER TABLE testStudents DROP COLUMN " + name + ";"
@@ -127,7 +127,7 @@ def getStudentColumns():
     query = "SELECT * FROM studentColumns ORDER BY priority"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
-def sendFeedback():
+def sendFeedback(request):
     feedback = request.form.get('feedback')
     date = request.form.get('date')
     query = "INSERT INTO feedback VALUES ('" + date +"', '" + feedback + "');"
@@ -186,7 +186,7 @@ def tempColumns():
     executeSingleQuery(query3, [])
 
 
-def addAttendanceColumn():
+def addAttendanceColumn(request):
     #make sure column name not in use
     name = request.form.get("name")
     colType = request.form.get("type")
@@ -210,7 +210,7 @@ def addAttendanceColumn():
 
     executeSingleQuery(queryCounts, [])
 
-def deleteAttendanceColumn():
+def deleteAttendanceColumn(request):
     name = request.form.get("name")
     query = "DELETE FROM attendanceColumns WHERE name = '" + name + "';"
     queryAttendance = "ALTER TABLE dailyAttendance DROP COLUMN " + name + ";"
@@ -221,7 +221,7 @@ def deleteAttendanceColumn():
     executeSingleQuery(queryMaster, [])
 
 
-def updateAttendanceColumn():
+def updateAttendanceColumn(request):
     name = request.form.get("name")
 
 
@@ -283,7 +283,7 @@ def decreaseActivityCount(column, date, increase):
 
 
 
-def deleteAttendant():
+def deleteAttendant(request):
     name = request.form.get("name")
     date = request.form.get("date")
     nameList = name.split()
@@ -359,7 +359,7 @@ def tempFeedback():
     executeSingleQuery(query2, [])
     return ""
 
-def selectActivity():
+def selectActivity(request):
     column = request.form.get("column")
     date = request.form.get("date")
     name = request.form.get("name")
@@ -609,7 +609,7 @@ def getAlerts():
     databaseResult = executeSingleQuery(query, fetch = True)
     return json.dumps(databaseResult)
 
-def addAlert():
+def addAlert(request):
     id = request.form.get('id')
     alert = request.form.get('alertText')
     executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [id, alert, 'f'])

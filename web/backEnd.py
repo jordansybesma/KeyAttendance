@@ -436,7 +436,7 @@ def addAttendant(request):
         for i in range(0, numCols):
             newString = newString + ", "+ columnsData[i][0]
 
-        print(databaseResult)    
+        print("The databaseResult for addAttendant:  " + databaseResult)    
             
         newString = newString + ", date, time) VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
         for i in range(0, numCols):

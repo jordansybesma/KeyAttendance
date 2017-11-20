@@ -437,7 +437,7 @@ def addAttendant(request):
             newString = newString + ", "+ columnsData[i][0]
 
             
-        if(databaseResult = None):
+        if(databaseResult == None):
             print("DATABASE RESULT IS NONE!!!")    
             
         newString = newString + ", date, time) VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "

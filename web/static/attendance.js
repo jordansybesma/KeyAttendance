@@ -71,7 +71,7 @@ function addNewStudent() {
 
     
     // Auto-populates new student into attendance sheet
-    var fullName = first + " " last;
+    var fullName = first + " " + last;
     preprocessAddAttendant(fullName);
     
     document.getElementById("newStudentFirst").value = "";

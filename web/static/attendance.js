@@ -38,6 +38,7 @@ function addAttendant(first, last) {
     //var date = year + "-" + month + "-" + day;
     var time = hour + ":" + minute + ":" + seconds;
     var date = document.getElementById("storeDate").innerHTML;
+    console.log("addAttendant:  date = $$" + date); //log
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
@@ -831,6 +832,8 @@ function preprocessAddAttendant(fullName){
 
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete</button>"
     row.insertCell(9).innerHTML = str;
+    
+    //log
     console.log(fullName);
     var names = fullName.split(" ");
     console.log(names[0]);

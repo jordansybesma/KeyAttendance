@@ -41,6 +41,8 @@ function addAttendant(first, last) {
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
+    
+    
 }
 
 // Called when a user clicks submit on the add new student dialogue. checks
@@ -71,8 +73,7 @@ function addNewStudent() {
 
     
     // Auto-populates new student into attendance sheet
-    var fullName = first.trim() + " " + last.trim();
-    preprocessAddAttendant(fullName);
+    preprocessAddAttendant(first.trim(), last.trim());
     
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
@@ -807,7 +808,10 @@ function onAddRow() {
     if (optionFound)  {
         
         document.getElementById("keyword").value = "";
-        preprocessAddAttendant(keywordElement);
+        
+        get first and last name from keywordElement
+        
+        preprocessAddAttendant(first, last);
         
     } else {
         alert("Please enter an existing student");
@@ -816,10 +820,10 @@ function onAddRow() {
 
 }
 
-function preprocessAddAttendant(fullName){
+function preprocessAddAttendant(first, last){
     var table = document.getElementById("Attendance-Table");    
     var date = document.getElementById("storeDate").innerHTML;
-
+    var fullName = first + " " last;
     fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
     var row = table.insertRow(1);
     row.insertCell(0).innerHTML = fullName;
@@ -832,11 +836,7 @@ function preprocessAddAttendant(fullName){
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete</button>"
     row.insertCell(9).innerHTML = str;
     
-    //log
-    console.log(fullName);
     var names = fullName.split(" ");
-    console.log(names[0]);
-    console.log(names[1]);
     addAttendant(names[0], names[1]);  
 
 }

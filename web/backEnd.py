@@ -459,8 +459,14 @@ def addAttendant(request):
             newNumAttend = numAttend + 1
             alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
             executeSingleQuery(alterQuery, [])
+        
         return "true"
-
+        
+#        if(id != ""):
+#            return id
+#        else:
+#            return getJustID(firstName + " " + lastName)
+        
 
 # If more than one "same name" student is available, return students
 
@@ -594,6 +600,8 @@ def getStudentByID(string):
 
     return result + " " +  result2
 
+# WE SHOULD do a query that sees if fullName can be found from firstName+lastName in DB
+# This would account for problems with multiple spaces in students' names.
 def getJustID(string):
     nameList = string.split()
     first = nameList[0].upper()

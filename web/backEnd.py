@@ -438,7 +438,17 @@ def addAttendant(request):
 
             
         if(databaseResult == None):
-            print("DATABASE RESULT IS NONE!!!")    
+            print("DATABASE RESULT IS NONE!!!")
+        elif(databaseResult == list):
+            print("DATABASE RESULT IS LIST!!!")
+            if(databaseResult[0] == None):
+                print("database[0] IS NONE!!!")
+            elif(databaseResult[0] == list):
+                print("database[0] IS Liszt!!!")
+            else:
+                print("db[0] is wonky")
+        else:
+            print("DATABASE RESULT ISN'T THOSE THINGS!!!")
             
         newString = newString + ", date, time) VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
         for i in range(0, numCols):

@@ -290,7 +290,7 @@ def deleteAttendant(request):
     nameList = name.split()
     first = nameList[0]
     last = nameList[1]
-    query1 = "SELECT * FROM dailyAttendance WHERE date = " + date + " AND firstName = " + first + " AND lastName = " + last + ";"
+    query1 = "SELECT * FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     row = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
     rowData = json.loads(row)
     if rowData == []:
@@ -303,9 +303,9 @@ def deleteAttendant(request):
                 decreaseActivityCount(headings[i], date, False)
 
 
-    query = "DELETE FROM dailyAttendance WHERE date = " + date + " AND firstName = " + first + " AND lastName = " + last + ";"
+    query = "DELETE FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
-    queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = " + date + ";"
+    queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"
         #result = executeSingleQuery(queryMaster)
     result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
     newResult =json.loads(result)

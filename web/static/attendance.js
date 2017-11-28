@@ -869,7 +869,7 @@ function makeTableHeader(table) {
 
 function makeTableHeaderHelper(_, data) {
     console.log("got to helper");
-    console.log(data);
+//    console.log(data);
     document.getElementById("columns").innerHTML = data;
     table = document.getElementById("Attendance-Table");
     var row = table.insertRow(-1);

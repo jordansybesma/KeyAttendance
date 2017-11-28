@@ -99,10 +99,6 @@ function sendNewStudent(firstname, lastname) {
 }
 
 function deleteAttendant(date, name) {
-    console.log("date and name!!");
-    console.log(date);
-    console.log(name);
-    
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/deleteAttendant");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
@@ -179,7 +175,7 @@ function addRowHelper2(columns, entry) {
     //var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
     //var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
     console.log(entry);
-    console.log(entry[10]);
+    // console.log(entry[11]); This seems to be indexing out of bounds by one
     var row = table.insertRow(1);
     fullName = entry[0] + " " + entry[1];
     row.insertCell(-1).innerHTML = fullName;
@@ -198,6 +194,7 @@ function addRowHelper2(columns, entry) {
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
     row.insertCell(-1).innerHTML = str;
 }
+
 function showProfileManage() {
     table = document.getElementById("studentColumnsTable");
     table.innerHTML = "";

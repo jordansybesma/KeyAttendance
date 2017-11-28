@@ -98,6 +98,7 @@ function sendNewStudent(firstname, lastname) {
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
 
+// use ID
 function deleteAttendant(date, name) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/deleteAttendant");

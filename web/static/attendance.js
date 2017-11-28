@@ -99,6 +99,10 @@ function sendNewStudent(firstname, lastname) {
 }
 
 function deleteAttendant(date, name) {
+    console.log("date and name!!");
+    console.log(date);
+    console.log(name);
+    
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000/deleteAttendant");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");

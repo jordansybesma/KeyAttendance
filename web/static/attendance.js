@@ -85,7 +85,7 @@ function addNewStudent() {
 
 function sendRequest(isPost, data, header, value, urlAddOn) {
     var xhr = new XMLHttpRequest();
-    xhr.open(isPost? "POST": "GET", urlAddOn, true);
+    xhr.open(isPost ? "POST" : "GET", urlAddOn, true);
     // xhr.setRequestHeader(header, value);
     // var data = JSON.stringify({"text": theirText});
     xhr.send(data);
@@ -116,13 +116,13 @@ function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest.open('get', url);
 
     xmlHttpRequest.onreadystatechange = function() {
-        if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200)  {
-                if(callbackState == null) {
-                    callback(xmlHttpRequest.responseText);
-                } else  {
-                    callback(callbackState, xmlHttpRequest.responseText);
-                }
-           }
+        if (xmlHttpRequest.readyState == 4 && xmlHttpRequest.status == 200) {
+            if (callbackState == null) {
+                callback(xmlHttpRequest.responseText);
+            } else {
+                callback(callbackState, xmlHttpRequest.responseText);
+            }
+        }
     };
     xmlHttpRequest.send(null);
 }
@@ -136,6 +136,7 @@ function fillAttendance(_, attendance) {
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
     for (i in myData) {
+        console.log("i is:  " + i);
         addRowHelper2(myColumns, myData[i]);
     }
     /*for (i in myData) {

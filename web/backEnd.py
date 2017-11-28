@@ -298,7 +298,7 @@ def deleteAttendant(request):
     else:
         headings = ["art", "madeFood", "recievedFood", "leadership", "exersize", "mentalHealth", "volunteering", "oneOnOne"]
         for i in range(len(headings)):
-            rowIndex = i + 3
+            rowIndex = i + 2
             if rowData[0][rowIndex]:
                 decreaseActivityCount(headings[i], date, False)
 

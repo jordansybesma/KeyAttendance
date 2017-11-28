@@ -136,7 +136,6 @@ function fillAttendance(_, attendance) {
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
     for (i in myData) {
-        console.log("i is:  " + i);
         addRowHelper2(myColumns, myData[i]);
     }
     /*for (i in myData) {
@@ -181,6 +180,7 @@ function addRowHelper2(columns, entry) {
     //var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
     console.log(entry);
     console.log(entry[11]);
+    console.log(entry.length);
     var row = table.insertRow(1);
     fullName = entry[0] + " " + entry[1];
     row.insertCell(-1).innerHTML = fullName;

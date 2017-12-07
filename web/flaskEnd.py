@@ -37,15 +37,15 @@ def updateStudentInfo():
 def getStudentInfo(name):
     return backEnd.getStudentInfo(name)
 
-@app.route('/addStudentColumn', methods=["POST"])
+@app.route('/addStudentColumn', methods = ["POST"])
 def addStudentColumn():
     return backEnd.addStudentColumn(request)
 
-@app.route('/alterStudentColumn', methods=["POST"])
+@app.route('/alterStudentColumn', methods = ["POST"])
 def alterStudentColumn():
     return backEnd.alterStudentColumn(request)
 
-@app.route('/deleteStudentColumn', methods=["POST"])
+@app.route('/deleteStudentColumn', methods = ["POST"])
 def deleteStudentColumn():
     return backEnd.deleteStudentColumn(request)
 
@@ -53,7 +53,7 @@ def deleteStudentColumn():
 def getStudentColumns():
     return backEnd.getStudentColumns()
 
-@app.route('/sendFeedback', methods=["POST"])
+@app.route('/sendFeedback', methods = ["POST"])
 def sendFeedback():
     return backEnd.sendFeedback(request)
 
@@ -73,15 +73,15 @@ def getStudentAttendance(student):
 def getMasterAttendance():
     return backEnd.getMasterAttendance()
 
-@app.route('/addAttendanceColumn', methods=["POST"])
+@app.route('/addAttendanceColumn', methods = ["POST"])
 def addAttendanceColumn():
     return backEnd.addAttendanceColumn(request)
 
-@app.route('/deleteAttendanceColumn', methods=["POST"])
+@app.route('/deleteAttendanceColumn', methods = ["POST"])
 def deleteAttendanceColumn():
     return backEnd.deleteAttendanceColumn(request)
 
-@app.route('/updateAttendanceColumn', methods=["POST"])
+@app.route('/updateAttendanceColumn', methods = ["POST"])
 def updateAttendanceColumn():
     return backEnd.updateAttendanceColumn(request)
 
@@ -101,7 +101,7 @@ def deleteAttendant():
 def getDates():
     return backEnd.getDates()
 
-@app.route('/selectActivity', methods=["POST"])
+@app.route('/selectActivity', methods = ["POST"])
 def selectActivity():
     return backEnd.selectActivity(request)
 
@@ -141,7 +141,7 @@ def getAlerts():
 def addAlert():
     return backEnd.addAlert(request)
 
-@app.route('/checkAlert/', methods=["POST"])
+@app.route('/checkAlert/', methods = ["POST"])
 def checkAlert():
     return backEnd.checkAlert(request)
 

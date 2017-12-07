@@ -555,9 +555,9 @@ def getAlerts():
 def addAlert(request):
     id = request.form.get('id')
     alert = request.form.get('alertText')
-    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [id, alert, 'f'])
+    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [alert, 'f', id])
 
 def checkAlert(request):
     id = request.form.get('id')
-    executeSingleQuery("UPDATE alerts SET completed = 't' WHERE id = '%s';", [id])
+    executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = '%s';", [id])
     

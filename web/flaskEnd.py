@@ -141,7 +141,7 @@ def getAlerts():
 def addAlert():
     return backEnd.addAlert(request)
 
-@app.route('/checkAlert/', methods = ["POST"])
+@app.route('/checkAlert', methods = ["POST"])
 def checkAlert():
     return backEnd.checkAlert(request)
 

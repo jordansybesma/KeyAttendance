@@ -18,6 +18,7 @@ function showAlerts(_, alertList) {
 
 function displayAlert(alert) {
     console.log(alert);
+    
     alert = alert.split(",");
     var list = document.getElementById('alertSpecifics');
     list.innerHTML = "";
@@ -31,9 +32,6 @@ function displayAlert(alert) {
     var insertMessage = document.createElement('li');
     insertMessage.innerHTML = '<p>' + message +'</p>';
     list.appendChild(insertMessage);
-
-    var id = alert[3];
-    console.log("the id is: " + id);
     
     var completeButton = "<button style=\"float: right\" onclick=\"checkAlert('" + id + "')\">Complete</button>";
     var completeButtonHTML = document.getElementById('completeButton');
@@ -50,7 +48,6 @@ function closeAlert() {
 }
 
 function checkAlert(id) {
-    console.log(id);
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/checkAlert/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");

@@ -53,7 +53,7 @@ function closeAlert() {
 function checkAlert(id) {
     console.log(id);
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/static/index.html/checkAlert/", true);
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/checkAlert/", true);
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("id=" + id);
     closeAlert();

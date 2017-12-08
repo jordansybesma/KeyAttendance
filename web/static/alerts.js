@@ -1,13 +1,15 @@
 function displayAlerts() {
+    console.log("document.documentURI:\n" + document.documentURI);
+    console.log("document.documentURL:\n" + document.documentURL);
     getRequest("/getAlerts", "", showAlerts);
 }
 
 function showAlerts(_, alertList) {
-    console.log(alertList)
+    console.log(alertList);
     var alerts = JSON.parse(alertList);
     var list = document.getElementById("alertsList");
     list.innerHTML = "";
-    for (i in alerts) {
+    for (i = 0; i < alerts.length; i++) {
         var alert = alerts[i];
         var name = alerts[i][0] + " " + alerts[i][1];
         var entry = document.createElement('li');
@@ -24,12 +26,12 @@ function displayAlert(alert) {
     
     var name = "Name: " + alert[0] + " " + alert[1];
     var insertName = document.createElement('li');
-    insertName.innerHTML = '<p>' + name +'</p>';
+    insertName.innerHTML = '<p>' + name + '</p>';
     list.appendChild(insertName);
     
     var message = "Message: " + alert[2];
     var insertMessage = document.createElement('li');
-    insertMessage.innerHTML = '<p>' + message +'</p>';
+    insertMessage.innerHTML = '<p>' + message + '</p>';
     list.appendChild(insertMessage);
 
     var id = alert[3];
@@ -51,7 +53,7 @@ function closeAlert() {
 function checkAlert(id) {
     console.log(id);
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/checkAlert/");
+    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/checkAlert/", true);
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("id=" + id);
     closeAlert();
@@ -62,14 +64,14 @@ function displayAlertPopup() {
     popup.style.display = "block"; 
 }
 
-function closeCreateAlert(){
+function closeCreateAlert() {
     document.getElementById("alertText").value = "";
     
     var popup = document.getElementById("makeAlertPopup");
     popup.style.display = "none";
 }
 
-function createAlert(){
+function createAlert() {
     var data = document.getElementById("saveStudentData").innerHTML;
     var studentData = JSON.parse(data);
     var id = studentData[0][2];

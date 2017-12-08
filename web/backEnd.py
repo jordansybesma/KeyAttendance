@@ -212,7 +212,6 @@ def deleteAttendanceColumn(request):
 def updateAttendanceColumn(request):
     name = request.form.get("name")
 
-
     queryMaster = "SELECT isShowing FROM attendanceColumns WHERE name = '" + name + "';"
     result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
     newResult =json.loads(result)
@@ -228,7 +227,6 @@ def updateAttendanceColumn(request):
 def getAttendanceColumns():
     query = "SELECT * FROM attendanceColumns ORDER BY priority"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
-
 
 
 # must give start and end date separated by a space
@@ -559,5 +557,5 @@ def addAlert(request):
 
 def checkAlert(request):
     id = request.form.get('id')
-    executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = '530';", [])
+    executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])
     

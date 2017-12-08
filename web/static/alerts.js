@@ -1,5 +1,5 @@
 function displayAlerts() {
-    console.log("document.documentURI:\n" + document.documentURI);
+    console.log("document.baseURI:\n" + document.baseURI);
     console.log("document.documentURL:\n" + document.documentURL);
     getRequest("/getAlerts", "", showAlerts);
 }

@@ -1,6 +1,6 @@
 function displayAlerts() {
     console.log("document.baseURI:\n" + document.baseURI);
-    console.log("document.documentURL:\n" + document.documentURL);
+    console.log("document.domainL:\n" + document.domain);
     getRequest("/getAlerts", "", showAlerts);
 }
 

@@ -767,7 +767,7 @@ function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exer
 
     var row = table.insertRow(1);
     var fullName = first + " " + last;
-    row.insertCell(0).innerHTML = "71";
+    row.insertCell(0).innerHTML = fullName;
 
     for(var i = 0; i < 8; i++)  {
         var str = "<input type=\"checkbox\" "

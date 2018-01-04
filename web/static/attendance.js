@@ -826,7 +826,7 @@ function preprocessAddAttendant(fullName){
     var table = document.getElementById("Attendance-Table");    
     var date = document.getElementById("storeDate").innerHTML;
 //    var fullName = first + " " + last;
-    fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
+    var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne'];
     var row = table.insertRow(1);
     row.insertCell(0).innerHTML = fullName;
 

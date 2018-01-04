@@ -828,7 +828,7 @@ function preprocessAddAttendant(fullName){
 //    var fullName = first + " " + last;
     var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne'];
     var row = table.insertRow(1);
-    row.insertCell(0).innerHTML = fullName;
+    row.insertCell(0).innerHTML = "WOAH";
 
     for(var i = 0; i < 8; i++)  {
         var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";

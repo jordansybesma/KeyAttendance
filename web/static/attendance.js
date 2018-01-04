@@ -828,7 +828,6 @@ function preprocessAddAttendant(fullName){
 //    var fullName = first + " " + last;
     fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne']
     var row = table.insertRow(1);
-    
     row.insertCell(0).innerHTML = fullName;
 
     for(var i = 0; i < 8; i++)  {

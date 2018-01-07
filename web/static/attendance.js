@@ -1,3 +1,7 @@
+const url = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com";
+// Other Version: http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com:5000
+
+
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -38,7 +42,7 @@ function addAttendant(first, last) {
     //var date = year + "-" + month + "-" + day;
     var time = hour + ":" + minute + ":" + seconds;
     var date = document.getElementById("storeDate").innerHTML;
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/addAttendant/");
+    xmlhttp.open("POST", url + /addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
     
@@ -823,6 +827,10 @@ function onAddRow() {
 
 }
 
+function weeeee(fullName){
+    getRequest("/getStudentInfo/" + fullName, "", showDemographics);
+}
+
 function preprocessAddAttendant(fullName){
     var table = document.getElementById("Attendance-Table");    
     var date = document.getElementById("storeDate").innerHTML;
@@ -833,7 +841,7 @@ function preprocessAddAttendant(fullName){
     
     // Name is link to student profile
     
-    row.insertCell(0).innerHTML = '<span onclick="getRequest("/getStudentInfo/Albar Acevedo", "", showDemographics)">' + "WEEEE" + '</span>';
+    row.insertCell(0).innerHTML = 
 //    row.insertCell(0).innerHTML = fullName;
 //'<span onclick="getRequest("/getStudentInfo/"' + fullName + ', "", showDemographics)">' + fullName + '</span>';
     

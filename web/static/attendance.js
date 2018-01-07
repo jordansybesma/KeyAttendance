@@ -837,8 +837,8 @@ function preprocessAddAttendant(fullName){
     
     // Name is link to student profile
     
-    row.insertCell(0).innerHTML = '<span onclick="getRequest("/getStudentInfo/Albar Acevedo", "", showDemographics)">' + "WEEEE" + '</span>';
-//    row.insertCell(0).innerHTML = fullName;
+//    row.insertCell(0).innerHTML = '<span onclick="weeeee(' + fullName + ')">' + "WEEEE" + '</span>';
+    row.insertCell(0).innerHTML = fullName;
 //'<span onclick="getRequest("/getStudentInfo/"' + fullName + ', "", showDemographics)">' + fullName + '</span>';
     
     for(var i = 0; i < 8; i++)  {

@@ -832,9 +832,9 @@ function preprocessAddAttendant(fullName){
     
     // Name is link to student profile
     
-    row.insertCell(0).innerHTML = '<span onclick="getRequest("/getStudentInfo/"' + fullName + ', "", showDemographics)">' + fullName + '</span>';
+    row.insertCell(0).innerHTML = '<span onclick="getRequest("/getStudentInfo/Albar Acevedo", "", showDemographics)">' + fullName + '</span>';
 //    row.insertCell(0).innerHTML = fullName;
-
+//'<span onclick="getRequest("/getStudentInfo/"' + fullName + ', "", showDemographics)">' + fullName + '</span>';
     
     for(var i = 0; i < 8; i++)  {
         var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
@@ -932,6 +932,12 @@ function createListOfAttendanceDates(_, dates) {
         list.appendChild(entry);
     }
 }
+
+//'<span onclick="getRequest("/getStudentInfo/"' + fullName + ', "", showDemographics)">' + fullName + '</span>';
+//
+//'<span onclick="getRequest("/getStudentInfo/Albar Acevedo", "", showDemographics)">' + fullName + '</span>';
+//
+//'<span onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
 
 function displayAttendanceList() {
     getRequest("/getDates", "", createListOfAttendanceDates);

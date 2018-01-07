@@ -411,6 +411,7 @@ function showStudentProfile() {
         nameSpace.innerHTML += (keywordElement);
         profileSpace.innerHTML += ("\n");
         console.log(keywordElement);
+        console.log('getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);');
         getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
         //getRequest("/getJustID/" + keywordElement, "", showProfile);
 

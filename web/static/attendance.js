@@ -824,6 +824,7 @@ function onAddRow() {
 }
 
 function weeeee(fullName){
+    document.getElementById('keywordStudentSearch').value = fullName;
     getRequest("/getStudentInfo/" + fullName, "", showDemographics);
 }
 

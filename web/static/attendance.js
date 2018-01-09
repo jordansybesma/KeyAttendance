@@ -826,7 +826,7 @@ function weeeee(fullName){
     document.getElementById('keywordStudentSearch').value = fullName;
 //    document.getElementById('studentName').innerHTML = "";
 //    document.getElementById('studentName').innerHTML = fullName;
-    document.getElementById('suggestedStudents').innerHTML += "<option>" + fullName + "</option>\n";
+//    document.getElementById('suggestedStudents').innerHTML += "<option>" + fullName + "</option>\n";
     showStudentProfile();
     document.getElementById("studentProfileTab").click();
 //    getRequest("/getStudentInfo/" + fullName, "", showDemographics);

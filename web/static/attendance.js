@@ -825,8 +825,8 @@ function onAddRow() {
 
 function weeeee(fullName){
     document.getElementById('keywordStudentSearch').value = fullName;
-    document.getElementById('studentName').innerHTML = "";
-    document.getElementById('studentName').innerHTML = fullName;
+    document.getElementById('studentName').innerHTML = ("");
+    document.getElementById('studentName').innerHTML = (fullName);
     getRequest("/getStudentInfo/" + fullName, "", showDemographics);
 }
 

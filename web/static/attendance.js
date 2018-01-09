@@ -1265,6 +1265,7 @@ function getTimestamp() {
     var seconds = "0" + date.getSeconds();
 
     var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    console.log("type of is: " + typeof formattedTime);
     return formattedTime;
 }
 

@@ -822,14 +822,10 @@ function onAddRow() {
 
 }
 
-function weeeee(fullName){
+function showAttendeeProfile(fullName){
     document.getElementById('keywordStudentSearch').value = fullName;
-//    document.getElementById('studentName').innerHTML = "";
-//    document.getElementById('studentName').innerHTML = fullName;
-//    document.getElementById('suggestedStudents').innerHTML += "<option>" + fullName + "</option>\n";
     showStudentProfile();
     document.getElementById("studentProfileTab").click();
-//    getRequest("/getStudentInfo/" + fullName, "", showDemographics);
 }
 
 function preprocessAddAttendant(fullName){
@@ -842,7 +838,7 @@ function preprocessAddAttendant(fullName){
     
     // Name is link to student profile
     
-    row.insertCell(0).innerHTML = '<span onclick=\"weeeee(\'' + fullName + '\')\">' + "WEEEE" + '</span>';
+    row.insertCell(0).innerHTML = '<span onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
 //    row.insertCell(0).innerHTML = fullName;
 //'<span onclick="getRequest("/getStudentInfo/"' + fullName + ', "", showDemographics)">' + fullName + '</span>';
     

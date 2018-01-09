@@ -832,19 +832,6 @@ function weeeee(fullName){
 //    getRequest("/getStudentInfo/" + fullName, "", showDemographics);
 }
 
-
-if (optionFound) {
-        console.log("got here 3");
-        nameSpace.innerHTML += (keywordElement);
-        profileSpace.innerHTML += ("\n");
-        console.log(keywordElement);
-        console.log('getRequest("/getStudentInfo/"' + keywordElement + ', "", showDemographics);');
-        getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
-        //getRequest("/getJustID/" + keywordElement, "", showProfile);
-
-    }
-
-
 function preprocessAddAttendant(fullName){
     var table = document.getElementById("Attendance-Table");    
     var date = document.getElementById("storeDate").innerHTML;

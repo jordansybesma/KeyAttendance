@@ -835,8 +835,11 @@ function preprocessAddAttendant(fullName){
     var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne'];
     var row = table.insertRow(1);
     
-    // Name is link to student profile    
-    row.insertCell(0).innerHTML = '<span class="happy" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
+    // Adding student name, which is link to their profile    
+    row.insertCell(0).innerHTML = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + getTimestamp() + '</span>';
+    
+    // Adding timestamp
+    row.insertCell(1).innerHTML = 
     
     for(var i = 0; i < 8; i++)  {
         var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
@@ -1225,6 +1228,7 @@ function makeDateReadable(date) {
     var newDateDashes = monthStr + "/" + day + "/" + year;
     return newDateDashes;
 }
+
 function makeDateSQL(date) {
     var month = date.substr(0, 2);
     var day = date.substr(3, 4);
@@ -1232,6 +1236,7 @@ function makeDateSQL(date) {
     var newDate = year + "-" + month + "-" + day.substr(0,2);
     return newDate;
 }
+
 function getCurrentDate() {
     var dt = new Date();
     // Display the month, day, and year. getMonth() returns a 0-based number.
@@ -1249,6 +1254,20 @@ function getCurrentDate() {
     var date = year + "-" + month + "-" + day;
     return date;
 }
+
+// Display the current time HH:MM:SS.
+// https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript
+function getTimestamp() {
+    var dt = new Date(unix_timestamp*1000);
+    
+    var hours = dt.getHours();
+    var minutes = "0" + date.getMinutes();
+    var seconds = "0" + date.getSeconds();
+
+    var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return formattedTime;
+}
+
 //used with date picker
 function getDate() {
     var date = document.getElementById("datePicker").value;

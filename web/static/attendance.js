@@ -395,7 +395,7 @@ function showStudentProfile() {
     var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
     console.log("got here 2");
-    //var table = document.getElementById("Attendance-Table");
+//    var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
     var optionFound = false;
@@ -411,9 +411,8 @@ function showStudentProfile() {
         nameSpace.innerHTML += (keywordElement);
         profileSpace.innerHTML += ("\n");
         console.log(keywordElement);
-        console.log('getRequest(/"getStudentInfo/"' + keywordElement + '\", "", showDemographics);');
         getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
-        //getRequest("/getJustID/" + keywordElement, "", showProfile);
+//        getRequest("/getJustID/" + keywordElement, "", showProfile);
 
     }
 
@@ -829,6 +828,7 @@ function weeeee(fullName){
 //    document.getElementById('studentName').innerHTML = fullName;
     document.getElementById('suggestedStudents').innerHTML += "<option>" + fullName + "</option>\n";
     showStudentProfile();
+    document.getElementById("studentProfileTab").click();
 //    getRequest("/getStudentInfo/" + fullName, "", showDemographics);
 }
 

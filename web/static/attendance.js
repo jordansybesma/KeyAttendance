@@ -836,7 +836,7 @@ function preprocessAddAttendant(fullName){
     var row = table.insertRow(1);
     
     // Name is link to student profile    
-    row.insertCell(0).innerHTML = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
+    row.insertCell(0).innerHTML = '<span id="happy" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     
     for(var i = 0; i < 8; i++)  {
         var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";

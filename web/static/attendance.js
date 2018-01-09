@@ -825,6 +825,7 @@ function onAddRow() {
 function showAttendeeProfile(fullName){
     document.getElementById('keywordStudentSearch').value = fullName;
     showStudentProfile();
+    
     document.getElementById("studentProfileTab").click();
 }
 
@@ -838,7 +839,7 @@ function preprocessAddAttendant(fullName){
     
     // Name is link to student profile
     
-    row.insertCell(0).innerHTML = '<span onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
+    row.insertCell(0).innerHTML = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
 //    row.insertCell(0).innerHTML = fullName;
 //'<span onclick="getRequest("/getStudentInfo/"' + fullName + ', "", showDemographics)">' + fullName + '</span>';
     

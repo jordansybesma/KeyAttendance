@@ -825,8 +825,25 @@ function onAddRow() {
 
 function weeeee(fullName){
     document.getElementById('keywordStudentSearch').value = fullName;
-    showStudentProfile()
+//    document.getElementById('studentName').innerHTML = "";
+//    document.getElementById('studentName').innerHTML = fullName;
+    document.getElementById('suggestedStudents').innerHTML += "<option>" + fullName + "</option>\n";
+    showStudentProfile();
+//    getRequest("/getStudentInfo/" + fullName, "", showDemographics);
 }
+
+
+if (optionFound) {
+        console.log("got here 3");
+        nameSpace.innerHTML += (keywordElement);
+        profileSpace.innerHTML += ("\n");
+        console.log(keywordElement);
+        console.log('getRequest("/getStudentInfo/"' + keywordElement + ', "", showDemographics);');
+        getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
+        //getRequest("/getJustID/" + keywordElement, "", showProfile);
+
+    }
+
 
 function preprocessAddAttendant(fullName){
     var table = document.getElementById("Attendance-Table");    

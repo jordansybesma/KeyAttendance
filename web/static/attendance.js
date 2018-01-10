@@ -839,6 +839,7 @@ function preprocessAddAttendant(fullName){
     row.insertCell(0).innerHTML = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     
     // Adding timestamp
+    getCurrentTime();
 //    row.insertCell(1).innerHTML = 
     
     for(var i = 0; i < 8; i++)  {
@@ -1257,16 +1258,10 @@ function getCurrentDate() {
 
 // Display the current time HH:MM:SS.
 // https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript
-function getTimestamp() {
-    var dt = new Date(unix_timestamp*1000);
-    
-    var hours = dt.getHours();
-    var minutes = "0" + date.getMinutes();
-    var seconds = "0" + date.getSeconds();
-
-    var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-    console.log("type of is: " + typeof formattedTime);
-    return formattedTime;
+function getCurrentTime() {
+    var time = new Date().toLocaleTimeString();
+    console.log("the current time is: " + time);
+    return time;
 }
 
 //used with date picker

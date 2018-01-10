@@ -836,7 +836,7 @@ function preprocessAddAttendant(fullName){
     var row = table.insertRow(1);
     
     // Adding student name, which is link to their profile    
-    var nameAndTime = fullName + "\"" + getCurrentTime();
+    var nameAndTime = fullName + "\ " + getCurrentTime();
     row.insertCell(0).innerHTML = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + nameAndTime + '</span>';
     
     // Adding timestamp

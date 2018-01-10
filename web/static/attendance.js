@@ -836,11 +836,10 @@ function preprocessAddAttendant(fullName){
     var row = table.insertRow(1);
     
     // Adding student name, which is link to their profile    
-    var nameAndTime = fullName + "\ " + getCurrentTime();
-    row.insertCell(0).innerHTML = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + nameAndTime + '</span>';
+    row.insertCell(0).innerHTML = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     
     // Adding timestamp
-//    row.insertCell(1).innerHTML = '<p>' + getCurrentTime() + '</p>';
+    row.insertCell(1).innerHTML = '<td>' + getCurrentTime() + '</td>';
     
     for(var i = 0; i < 8; i++)  {
         var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
@@ -891,7 +890,8 @@ function makeTableHeaderHelper(_, data) {
     for (i in myData){
         if (myData[i][1]) {
             var newHeader = makeHeaderReadable(myData[i][2]);
-            row.insertCell(-1).innerHTML = newHeader;
+//            row.insertCell(-1).innerHTML = newHeader;
+            row.insertCell(-1).innerHTML = "WOAH";
         }
 
     }

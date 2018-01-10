@@ -839,16 +839,15 @@ function preprocessAddAttendant(fullName){
     row.insertCell(0).innerHTML = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     
     // Adding timestamp
-    getCurrentTime();
-//    row.insertCell(1).innerHTML = 
+    row.insertCell(1).innerHTML = getCurrentTime();
     
     for(var i = 0; i < 8; i++)  {
         var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
-        row.insertCell(i + 1).innerHTML = str;
+        row.insertCell(i + 2).innerHTML = str;
     }
 
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete</button>"
-    row.insertCell(9).innerHTML = str;
+    row.insertCell(10).innerHTML = str;
     
     var names = fullName.split(" ");
     addAttendant(names[0], names[1]);  

@@ -836,18 +836,17 @@ function preprocessAddAttendant(fullName){
     var row = table.insertRow(1);
     
     // Adding student name, which is link to their profile    
-    row.insertCell(0).innerHTML = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
-    
+    row.insertCell(0).innerHTML = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span> ' + getCurrentTime() ;
     // Adding timestamp
-    row.insertCell(1).innerHTML = '<td>' + getCurrentTime() + '</td>';
+//    row.insertCell(1).innerHTML = '<td>' + getCurrentTime() + '</td>';
     
     for(var i = 0; i < 8; i++)  {
         var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
-        row.insertCell(i + 2).innerHTML = str;
+        row.insertCell(i + 1).innerHTML = str;
     }
 
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete</button>"
-    row.insertCell(10).innerHTML = str;
+    row.insertCell(9).innerHTML = str;
     
     var names = fullName.split(" ");
     addAttendant(names[0], names[1]);  
@@ -886,7 +885,6 @@ function makeTableHeaderHelper(_, data) {
     table = document.getElementById("Attendance-Table");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
-    row.insertCell(-1).innerHTML = "Time";
     var myData = JSON.parse(data);
     for (i in myData){
         if (myData[i][1]) {

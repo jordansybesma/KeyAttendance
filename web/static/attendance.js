@@ -836,11 +836,11 @@ function preprocessAddAttendant(fullName){
     var row = table.insertRow(1);
     
     // Adding student name, which is link to their profile    
-    var nameAndTime = fullName + "\n" + getCurrentTime();
+    var nameAndTime = fullName + "\"" + getCurrentTime();
     row.insertCell(0).innerHTML = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + nameAndTime + '</span>';
     
     // Adding timestamp
-    row.insertCell(1).innerHTML = '<p>' + getCurrentTime() + '</p>';
+//    row.insertCell(1).innerHTML = '<p>' + getCurrentTime() + '</p>';
     
     for(var i = 0; i < 8; i++)  {
         var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";

@@ -839,7 +839,7 @@ function preprocessAddAttendant(fullName){
     row.insertCell(0).innerHTML = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     
     // Adding timestamp
-//    row.insertCell(1).innerHTML = '<td>' + getCurrentTime() + '</td>';
+    row.insertCell(1).innerHTML = '<td>' + getCurrentTime() + '</td>';
     
     for(var i = 0; i < 8; i++)  {
         var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
@@ -886,7 +886,7 @@ function makeTableHeaderHelper(_, data) {
     table = document.getElementById("Attendance-Table");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
-//    row.insertCell(-1).innerHTML = "Time";
+    row.insertCell(-1).innerHTML = "Time";
     var myData = JSON.parse(data);
     for (i in myData){
         if (myData[i][1]) {

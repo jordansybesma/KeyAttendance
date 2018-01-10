@@ -886,12 +886,12 @@ function makeTableHeaderHelper(_, data) {
     table = document.getElementById("Attendance-Table");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
+    row.insertCell(-1).innerHTML = "Time";
     var myData = JSON.parse(data);
     for (i in myData){
         if (myData[i][1]) {
             var newHeader = makeHeaderReadable(myData[i][2]);
-//            row.insertCell(-1).innerHTML = newHeader;
-            row.insertCell(-1).innerHTML = "WOAH";
+            row.insertCell(-1).innerHTML = newHeader;
         }
 
     }

@@ -1,3 +1,6 @@
+// Check me out
+var colNum, colsActive;
+var attendanceCols;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -842,13 +845,14 @@ function preprocessAddAttendant(fullName){
     row.insertCell(0).innerHTML = nameAndTime;
 //    row.insertCell(1).innerHTML = '<td>' + getCurrentTime() + '</td>';
     
-    for(var i = 0; i < 8; i++)  {
-        var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
+    // Check me out
+    for(var i = 0; i < colsActive; i++)  {
+        var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + attendanceCols[i] + "', '" + date + "')\">";
         row.insertCell(i + 1).innerHTML = str;
     }
 
     var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete</button>"
-    row.insertCell(9).innerHTML = str;
+    row.insertCell(colsActive+1).innerHTML = str;
     
     var names = fullName.split(" ");
     addAttendant(names[0], names[1]);  
@@ -880,10 +884,6 @@ function makeTableHeader(table) {
     getRequest("/getAttendanceColumns", "", makeTableHeaderHelper);
 }
 
-function getAttendanceColumns() {
-    getRequest("/getAttendanceColumns", "", makeTableHeaderHelper);
-}
-
 function makeTableHeaderHelper(_, data) {
     console.log("got to helper");
 //    console.log(data);
@@ -892,9 +892,17 @@ function makeTableHeaderHelper(_, data) {
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
     var myData = JSON.parse(data);
+    
+// Check me out
+    colNum = myData.length;
+    colsActive = 0;
+    attendanceCols = new Array(colNum);
+    
     for (i in myData){
         if (myData[i][1]) {
             var newHeader = makeHeaderReadable(myData[i][2]);
+            attendanceCols[i] = newHeader;
+            colsActive++;
             row.insertCell(-1).innerHTML = newHeader;
         }
 

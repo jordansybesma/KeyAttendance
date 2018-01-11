@@ -840,7 +840,6 @@ function preprocessAddAttendant(fullName){
     var time = getCurrentTime();
     var nameAndTime = time + "  -  " + name;
     row.insertCell(0).innerHTML = nameAndTime;
-    // Adding timestamp
 //    row.insertCell(1).innerHTML = '<td>' + getCurrentTime() + '</td>';
     
     for(var i = 0; i < 8; i++)  {
@@ -878,6 +877,10 @@ function makeTableHeader(table) {
         row.insertCell(-1).innerHTML = header;
     }*/
     console.log("got here");
+    getRequest("/getAttendanceColumns", "", makeTableHeaderHelper);
+}
+
+function getAttendanceColumns() {
     getRequest("/getAttendanceColumns", "", makeTableHeaderHelper);
 }
 

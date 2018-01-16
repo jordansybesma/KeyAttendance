@@ -1,10 +1,10 @@
 // Check me out
 var colsActive;
 var attendanceCols;
-var url, local, scott;
+//var url, local, scott;
 local = "http://127.0.0.1:5000";
 scott = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com";
-url = scott;
+url =local;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -45,6 +45,7 @@ function addAttendant(first, last) {
     //var date = year + "-" + month + "-" + day;
     var time = hour + ":" + minute + ":" + seconds;
     var date = document.getElementById("storeDate").innerHTML;
+    console.log(url);
     xmlhttp.open("POST", url + "/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
@@ -116,7 +117,7 @@ function deleteAttendant(date, name) {
 
 function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest = new XMLHttpRequest();
-    url = window.location.origin + urlAddon;
+    var url = window.location.origin + urlAddon;
     xmlHttpRequest.open('get', url);
 
     xmlHttpRequest.onreadystatechange = function() {

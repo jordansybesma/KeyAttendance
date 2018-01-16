@@ -1,10 +1,10 @@
 // Check me out
 var colsActive;
 var attendanceCols;
-//var url, local, scott;
+var url, local, scott;
 local = "http://127.0.0.1:5000";
 scott = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com";
-url =local;
+urlBase = local;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -46,7 +46,7 @@ function addAttendant(first, last) {
     var time = hour + ":" + minute + ":" + seconds;
     var date = document.getElementById("storeDate").innerHTML;
     console.log(url);
-    xmlhttp.open("POST", url + "/addAttendant/");
+    xmlhttp.open("POST", urlBase + "/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
     
@@ -101,7 +101,7 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
 }
 function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url + "/addNewStudent/");
+    xmlhttp.open("POST", urlBase + "/addNewStudent/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
@@ -109,7 +109,7 @@ function sendNewStudent(firstname, lastname) {
 // use ID
 function deleteAttendant(date, name) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url + "/deleteAttendant");
+    xmlhttp.open("POST", urlBase + "/deleteAttendant");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&date=" + date);
     displayAttendanceTable(date);
@@ -239,14 +239,14 @@ function showStudentManageHelper(_, data) {
 
 function selectStudentColumn(name, column) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url + "/alterStudentColumn");
+    xmlhttp.open("POST", urlBase + "/alterStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&column=" + column);
 }
 
 function deleteStudentColumn(name) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url + "/deleteStudentColumn");
+    xmlhttp.open("POST", urlBase + "/deleteStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
     showProfileManage()
@@ -278,7 +278,7 @@ function showAttendanceManageHelper(_, data){
 }
 function deleteColumn(name) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url + "/deleteAttendanceColumn");
+    xmlhttp.open("POST", urlBase + "/deleteAttendanceColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
     showAttendanceManage()
@@ -286,7 +286,7 @@ function deleteColumn(name) {
 function selectColumn(name) {
     console.log("got here");
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url + "/updateAttendanceColumn");
+    xmlhttp.open("POST", urlBase + "/updateAttendanceColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
 }
@@ -307,7 +307,7 @@ function addStudentColumn() {
         return;
     }
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url + "/addStudentColumn");
+    xmlhttp.open("POST", urlBase + "/addStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&type=" + type + "&definedOptions=");
 
@@ -329,7 +329,7 @@ function addColumn() {
         return;
     }
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url + "/addAttendanceColumn");
+    xmlhttp.open("POST", urlBase + "/addAttendanceColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&type=boolean");
 
@@ -530,7 +530,7 @@ function updateProfile(name, col, colid, type) {
 
 
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url + "/updateStudentInfo/");
+    xmlhttp.open("POST", urlBase + "/updateStudentInfo/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&value=" + value + "&column=" + col);
 }
@@ -799,7 +799,7 @@ function makeChecks(art, artID, madeFood, madeFoodID) {
 
 function selectActivity(name, column, date) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url + "/selectActivity");
+    xmlhttp.open("POST", urlBase + "/selectActivity");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&column=" + column + "&date=" + date);
 }
@@ -840,7 +840,9 @@ function showAttendeeProfile(fullName){
 function preprocessAddAttendant(fullName){
     var table = document.getElementById("Attendance-Table");    
     var date = document.getElementById("storeDate").innerHTML;
-    var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne'];
+    
+//    var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne'];
+    
     var row = table.insertRow(1);
     
     // Adding student name, which is link to their profile    
@@ -934,7 +936,7 @@ function displayAttendanceTable(table_date) {
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
     /*var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url + "/tempStudentColumns");
+    xmlhttp.open("POST", urlBase + "/tempStudentColumns");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send();*/
 
@@ -1410,7 +1412,7 @@ function sendFeedback() {
     var feedback = document.getElementById("feedback").value;
     var date = getCurrentDate();
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", url + "/sendFeedback");
+    xmlhttp.open("POST", urlBase + "/sendFeedback");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("date=" + date + "&feedback=" + feedback);
     document.getElementById("feedback").value = "";

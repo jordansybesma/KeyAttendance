@@ -1,7 +1,7 @@
 // Check me out
 var colsActive;
 var attendanceCols;
-//var url, local, scott;
+var url, local, scott;
 local = "http://127.0.0.1:5000";
 scott = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com";
 urlBase = local;
@@ -840,7 +840,9 @@ function showAttendeeProfile(fullName){
 function preprocessAddAttendant(fullName){
     var table = document.getElementById("Attendance-Table");    
     var date = document.getElementById("storeDate").innerHTML;
-    var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne'];
+    
+//    var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne'];
+    
     var row = table.insertRow(1);
     
     // Adding student name, which is link to their profile    

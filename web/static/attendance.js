@@ -143,9 +143,6 @@ function fillAttendance(_, attendance) {
     for (i in myData) {
         addRowHelper2(myColumns, myData[i]);
     }
-    /*for (i in myData) {
-        addRowHelper(myData[i][1], myData[i][2], myData[i][3], myData[i][4], myData[i][5],myData[i][6],myData[i][7],myData[i][8],myData[i][9],myData[i][10])
-    }*/
 }
 
 function makeHeaderReadable(header) {

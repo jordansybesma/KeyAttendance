@@ -790,33 +790,6 @@ function fillProfileTable(attendance)  {
     }
 }
 
-function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {
-
-    var table = document.getElementById("Attendance-Table");
-
-    //var date = getCurrentDate();
-    var date = document.getElementById("storeDate").innerHTML;
-    document.getElementById("keyword").value = "";
-
-
-    var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
-    var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
-
-    var row = table.insertRow(1);
-    var fullName = first + " " + last;
-    row.insertCell(0).innerHTML = fullName;
-
-    for(var i = 0; i < 8; i++)  {
-        var str = "<input type=\"checkbox\" "
-            + (checked[i]? "checked": "")
-            + " onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
-        row.insertCell(i + 1).innerHTML = str;
-    }
-
-    var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
-    row.insertCell(9).innerHTML = str;
-}
-
 function makeChecks(art, artID, madeFood, madeFoodID) {
     if (art) {
         document.getElementById(artID).checked = true;

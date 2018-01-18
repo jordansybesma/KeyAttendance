@@ -49,7 +49,31 @@ function addAttendant(first, last) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
     
+    displayAttendant(first, last, time);
+
     
+}
+
+function displayAttendant(first, last, time) {
+    // Get data about columns
+    var columnData = document.getElementById("columns").innerHTML;
+    var myColumns = JSON.parse(columnData);
+    
+    // Make attendee array correct length
+    var colLength = myColumns.length;
+    var arrayLength = 3 + colLength;
+    var attendantData = new Array(arrayLength);
+    
+    // Add data to array
+    attendantData[0] = first;
+    attendantData[1] = last;
+    attendantData[2] = time;
+    for (var i=3; i<arrayLength; i++) {
+        attendantData[i] = false;
+    }
+    
+    displayRow(columnData, attendantData);
+
 }
 
 // Called when a user clicks submit on the add new student dialogue. checks
@@ -78,10 +102,11 @@ function addNewStudent() {
         return;
     }
 
+    // Adds student to student database
     sendNewStudent(first, last);
     
-    // Auto-populates new student into attendance sheet
-    preprocessAddAttendant(first.trim() + " " + last.trim());
+    // Adds student to attendance sheet database
+    addAttendant(first.trim(), last.trim());
     
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
@@ -140,7 +165,7 @@ function fillAttendance(_, attendance) {
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
     for (i in myData) {
-        addRowHelper2(myColumns, myData[i]);
+        displayRow(myColumns, myData[i]);
     }
 }
 
@@ -170,36 +195,73 @@ function makeHeaderReadable(header) {
 }
 
 
-function addRowHelper2(columns, entry) {
+//function displayRow(columns, entry) {
+//    var table = document.getElementById("Attendance-Table");
+//
+//    //var date = getCurrentDate();
+//    var date = document.getElementById("storeDate").innerHTML;
+//    document.getElementById("keyword").value = "";
+//
+//
+//    //var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
+//    //var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
+//    console.log("entry: " + entry);
+//    // console.log(entry[11]); This seems to be indexing out of bounds by one
+//    var row = table.insertRow(1);
+//    fullName = entry[0] + " " + entry[1];
+//    row.insertCell(-1).innerHTML = fullName;
+//    for (i in columns) {
+//
+//        if (columns[i][1] == true) {
+//            console.log((i+ 2));
+//            var index = parseInt(i) + 2;
+//            var str = "<input type=\"checkbox\" "
+//            + (entry[index] ? "checked" : "")
+//            + " onclick=\"selectActivity('" + fullName + "','" + columns[i][2] + "', '" + date + "')\">";
+//            row.insertCell(-1).innerHTML = str;
+//        }
+//    }
+//
+//    var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
+//    row.insertCell(-1).innerHTML = str;
+//}
+
+function displayRow(columns, entry) {
+    console.log("entry: " + entry);
     var table = document.getElementById("Attendance-Table");
 
-    //var date = getCurrentDate();
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
 
-
-    //var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
-    //var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
-    console.log("entry: " + entry);
-    // console.log(entry[11]); This seems to be indexing out of bounds by one
     var row = table.insertRow(1);
-    fullName = entry[0] + " " + entry[1];
-    row.insertCell(-1).innerHTML = fullName;
+    var fullName = entry[0] + " " + entry[1];
+    var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
+    var time = entry[2];
+    row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
     for (i in columns) {
-
-        if (columns[i][1] == true) {
-            console.log((i+ 2));
-            var index = parseInt(i) + 2;
-            var str = "<input type=\"checkbox\" "
-            + (entry[index] ? "checked" : "")
-            + " onclick=\"selectActivity('" + fullName + "','" + columns[i][2] + "', '" + date + "')\">";
-            row.insertCell(-1).innerHTML = str;
+        if (columns[i][1] == true) {           
+            addCheckbox(i, entry, columns, date, row, fullName);
         }
     }
 
-    var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
-    row.insertCell(-1).innerHTML = str;
+    var deleteStr = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
+    row.insertCell(-1).innerHTML = deleteStr;
 }
+
+
+function addCheckbox(i, entry, columns, date, row, fullName) {
+    var index = parseInt(i) + 3;
+    var col = columns[i][2];
+    
+    var checked = "";
+    if (entry[index]) {
+        checked = "checked";
+    }
+    
+    var box = "<input type=\"checkbox\" " + checked + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
+    row.insertCell(-1).innerHTML = box;
+}
+
 
 function showProfileManage() {
     table = document.getElementById("studentColumnsTable");
@@ -818,7 +880,8 @@ function onAddRow() {
         
         // eventually pass an id or get first and last name from keywordElement
         
-        preprocessAddAttendant(keywordElement);
+        var name = keywordElement.split(" ");
+        addAttendant(name[0], name[1]);
         
     } else {
         alert("Please enter an existing student");
@@ -832,35 +895,6 @@ function showAttendeeProfile(fullName){
     showStudentProfile();
     
     document.getElementById("studentProfileTab").click();
-}
-
-function preprocessAddAttendant(fullName){
-    var table = document.getElementById("Attendance-Table");    
-    var date = document.getElementById("storeDate").innerHTML;
-    
-//    var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne'];
-    
-    var row = table.insertRow(1);
-    
-    // Adding student name, which is link to their profile    
-    var name = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
-    var time = getCurrentTime();
-    var nameAndTime = time + "  -  " + name;
-    row.insertCell(0).innerHTML = nameAndTime;
-//    row.insertCell(1).innerHTML = '<td>' + getCurrentTime() + '</td>';
-    
-    // Check me out
-    for(var i = 0; i < colsActive; i++)  {
-        var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + attendanceCols[i] + "', '" + date + "')\">";
-        row.insertCell(i + 1).innerHTML = str;
-    }
-
-    var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete</button>"
-    row.insertCell(colsActive+1).innerHTML = str;
-    
-    var names = fullName.split(" ");
-    addAttendant(names[0], names[1]);  
-
 }
 
 function createNewAttendance() {
@@ -1272,14 +1306,6 @@ function getCurrentDate() {
     return date;
 }
 
-// Display the current time HH:MM:SS.
-// https://stackoverflow.com/questions/847185/convert-a-unix-timestamp-to-time-in-javascript
-function getCurrentTime() {
-    var time = new Date().toLocaleTimeString();
-    console.log("the current time is: " + time);
-    return time;
-}
-
 //used with date picker
 function getDate() {
     var date = document.getElementById("datePicker").value;
@@ -1287,15 +1313,6 @@ function getDate() {
     displayAttendanceTable(date);
     return false;
 }
-
-/*function runPHP() {
-    $.ajax({
-        url: 'makeFile.php',
-        type: 'post',
-        data: { "callFunc1": "1" },
-        success: function (response) { console.log(response); }
-    });
-}*/
 
 function createFile() {
     //var date = getCurrentDate();

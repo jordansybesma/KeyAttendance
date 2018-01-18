@@ -49,12 +49,12 @@ function addAttendant(first, last) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
     
-    displayAttendant(first, last, time);
+    displayNewAttendant(first, last, time);
 
     
 }
 
-function displayAttendant(first, last, time) {
+function displayNewAttendant(first, last, time) {
     // Get data about columns
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
@@ -68,11 +68,12 @@ function displayAttendant(first, last, time) {
     attendantData[0] = first;
     attendantData[1] = last;
     attendantData[2] = time;
-    for (var i=3; i<arrayLength; i++) {
+    var i;
+    for (i=3; i<arrayLength; i++) {
         attendantData[i] = false;
     }
     
-    displayRow(columnData, attendantData);
+    displayRow(myColumns, attendantData);
 
 }
 
@@ -157,7 +158,7 @@ function getRequest(urlAddon, callbackState, callback) {
 }
 
 function sendSubmitForm() {
-    theirText = document.getElementById("someRandoText").value;
+    var theirText = document.getElementById("someRandoText").value;
 
 }
 function fillAttendance(_, attendance) {
@@ -194,42 +195,10 @@ function makeHeaderReadable(header) {
     return newHeader;
 }
 
-
-//function displayRow(columns, entry) {
-//    var table = document.getElementById("Attendance-Table");
-//
-//    //var date = getCurrentDate();
-//    var date = document.getElementById("storeDate").innerHTML;
-//    document.getElementById("keyword").value = "";
-//
-//
-//    //var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
-//    //var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
-//    console.log("entry: " + entry);
-//    // console.log(entry[11]); This seems to be indexing out of bounds by one
-//    var row = table.insertRow(1);
-//    fullName = entry[0] + " " + entry[1];
-//    row.insertCell(-1).innerHTML = fullName;
-//    for (i in columns) {
-//
-//        if (columns[i][1] == true) {
-//            console.log((i+ 2));
-//            var index = parseInt(i) + 2;
-//            var str = "<input type=\"checkbox\" "
-//            + (entry[index] ? "checked" : "")
-//            + " onclick=\"selectActivity('" + fullName + "','" + columns[i][2] + "', '" + date + "')\">";
-//            row.insertCell(-1).innerHTML = str;
-//        }
-//    }
-//
-//    var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
-//    row.insertCell(-1).innerHTML = str;
-//}
-
+// Inserts a row into the attendance table with name, timestamp, checkboxes, and delete button.
+// The name links to a student profile.
 function displayRow(columns, entry) {
-    console.log("entry: " + entry);
     var table = document.getElementById("Attendance-Table");
-
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
 
@@ -248,7 +217,8 @@ function displayRow(columns, entry) {
     row.insertCell(-1).innerHTML = deleteStr;
 }
 
-
+// Helper function for displayRow.
+// Adds a checkbox to the row with the correct status (checked or unchecked).
 function addCheckbox(i, entry, columns, date, row, fullName) {
     var index = parseInt(i) + 3;
     var col = columns[i][2];

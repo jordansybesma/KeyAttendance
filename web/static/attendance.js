@@ -233,7 +233,6 @@ function addCheckbox(i, entry, columns, date, row, fullName) {
     row.insertCell(-1).innerHTML = box;
 }
 
-
 function showProfileManage() {
     table = document.getElementById("studentColumnsTable");
     table.innerHTML = "";
@@ -383,6 +382,7 @@ function modifyAutofillList(_ , studentNames) {
   list.innerHTML = inner;
 }
 
+// Obsolete?
 function showProfile(_, studentInfo) {
 
     document.getElementById("studentProfileText").innerHTML += ("ID Number: ")
@@ -392,10 +392,6 @@ function showProfile(_, studentInfo) {
 
 }
 
-
-function showSuggestions(curText) {
-    getRequest("/autofill/" + curText, "", modifyAutofillList);
-}
 
 function handleAddBox(e, curText) {
   if(e.keyCode === 13){
@@ -415,6 +411,11 @@ function handleProfileBox(e, curText) {
   }
 }
 
+function showSuggestions(curText) {
+    getRequest("/autofill/" + curText, "", modifyAutofillList);
+}
+
+// Obsolete?
 function checkBox(checkbox, keyword) {
     var str = "got to checkBox " + checkbox.value + " " + keyword;
 }
@@ -452,7 +453,6 @@ function showStudentProfile() {
 //        getRequest("/getJustID/" + keywordElement, "", showProfile);
 
     }
-
 }
 
 function showDemographics(_, data) {

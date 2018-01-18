@@ -45,7 +45,6 @@ function addAttendant(first, last) {
     //var date = year + "-" + month + "-" + day;
     var time = hour + ":" + minute + ":" + seconds;
     var date = document.getElementById("storeDate").innerHTML;
-    console.log(url);
     xmlhttp.open("POST", urlBase + "/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
@@ -170,6 +169,7 @@ function makeHeaderReadable(header) {
     return newHeader;
 }
 
+
 function addRowHelper2(columns, entry) {
     var table = document.getElementById("Attendance-Table");
 
@@ -180,7 +180,7 @@ function addRowHelper2(columns, entry) {
 
     //var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
     //var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
-    console.log(entry);
+    console.log("entry: " + entry);
     // console.log(entry[11]); This seems to be indexing out of bounds by one
     var row = table.insertRow(1);
     fullName = entry[0] + " " + entry[1];

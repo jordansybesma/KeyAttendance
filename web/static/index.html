@@ -24,13 +24,11 @@
 
 <!-- tab information gotten from https://www.w3schools.com/howto/howto_js_tabs.asp !-->
 
-
     <div id = "the-key-heading">
         The Key
     </div>
 
 <div class="tab">
-<!--<button class = "tablinks" onclick = "openTab(event, 'Home');"> Home </button>-->
 <button id = "defaultOpen" class = "tablinks" onclick = "openTab(event, 'Data'); createNewAttendance();"> Attendance Sheets </button>
 <button class = "tablinks" onclick = "openTab(event, 'AttendanceOverview'); displayMasterAttendance()"> Attendance Overview </button>
 <button id = "studentProfileTab" class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</button>
@@ -38,43 +36,6 @@
 <button class = "tablinks" onclick = "openTab(event, 'Feedback Forum')"> Feedback Forum </button>
 <button class = "tablinks" onclick = "openTab(event, 'Manage Student Profile'); showProfileManage();"> Manage Profile </button>
 </div>
-
-<!--    displayMasterAttendance();-->
-    
-<!--
-<div id="Home" class="tabcontent">
-    <h1> Welcome to the Key Attendance Portal!</h1>
-
-
-    <div style="width: 100%; overflow: auto;">
-        <div id="graphs" style="float: right;">
-            <div id="masterGraph" style="width: 500px; float: left;"></div>
-            <div id="activityGraph" style="margin-left: 520px;"></div>
-        </div>
-            
-
-
-Also try adding the following line to demographicsHelper:
-    div.innerHTML += "<button type=\"button\" onclick=\"displayAlertPopup()\">Create Alert</button>";
-
-
-        <div id="alertsListDiv" style="background-color:WhiteSmoke; float: left;">
-            <h1>Alerts</h1>
-            <ul id="alertsList"></ul>  
-        </div>
-        <div id="alertPopup">
-            <h1>Alert</h1>
-            <ul id="alertSpecifics">
-            </ul>
-            <div id=completeButton></div>
-            <button id="closeAlertButton" onclick="closeAlert()" style="float: left">Hide</button>
-        </div>
-
-        
-    </div>
-</div>
--->
-
 
 
 <div id="Data" class="tabcontent" >
@@ -149,11 +110,6 @@ Also try adding the following line to demographicsHelper:
                     <th>One On One</th>
                 </tr>
             </table>
-<!--        <div id = "codeTextBoxContainer">
-            <div id = "codeTextBox">
-                this is a code text box
-                </div>
-        </div> --!>
     </div>
 </div>
 
@@ -202,23 +158,14 @@ Also try adding the following line to demographicsHelper:
             <input list="suggestedStudents" name="nameEnter" onkeypress="handleProfileBox(event, this.value)" id="keywordStudentSearch" type="text" placeholder="Name" required /></label>
             <input onclick="showStudentProfile()" id="searchbutton" type="button" value="Submit">
         </form>
+    
         <div id="studentInfo">
-            <h3 id = "studentName">
-
-              </h3>
+            <h3 id = "studentName"></h3>
             <p id="saveStudentData"></p>
             <p id="saveColumnData"></p>
             <div id="demographics" ></div>
-            <p id="studentProfileText">
-
-
-            </p>
-            <!-- <aside>
-              <div id="graphStudent">
-              </div>
-              <div id="studentTimes">
-              </div>
-            <aside> -->
+            <p id="studentProfileText"></p>
+            
             <div style="width: 100%; overflow: hidden;">
                 <div id="graphStudent" style="width: 500px; float: left;"></div>
                 <div id="studentTimes" style="width: 500px; float: left;"></div>
@@ -230,15 +177,6 @@ Also try adding the following line to demographicsHelper:
     </div>
 
     <div id="editProfile"></div>
-<!--
-    <div id="makeAlert"></div>
-    <div id="makeAlertPopup" style="">
-        <h2>Text:</h2>
-        <textarea id="alertText" rows="4" cols="50"></textarea>
-        <button id="addAlertButton" onclick="createAlert()">Add</button>
-        <button id="closeAlertPopup" onclick="closeCreateAlert()">Cancel</button>
-    </div>
--->
 </div>
 
 <div id="AttendanceCols" class="tabcontent">

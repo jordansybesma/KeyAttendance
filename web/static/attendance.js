@@ -54,6 +54,7 @@ function addAttendant(first, last) {
     
 }
 
+// Adds a new attendant to the daily attendance table
 function displayNewAttendant(first, last, time) {
     // Get data about columns
     var columnData = document.getElementById("columns").innerHTML;
@@ -103,10 +104,10 @@ function addNewStudent() {
         return;
     }
 
-    // Adds student to student database
-    sendNewStudent(first, last);
+    // Adds student to student table
+    sendNewStudent(first.trim(), last.trim());
     
-    // Adds student to attendance sheet database
+    // Adds student to daily attendance table
     addAttendant(first.trim(), last.trim());
     
     document.getElementById("newStudentFirst").value = "";
@@ -425,7 +426,6 @@ function openAddStudent() {
 
 function showStudentProfile() {
     console.log("got here");
-
 
     var profileSpace = document.getElementById('studentProfileText');
     profileSpace.innerHTML = ("");

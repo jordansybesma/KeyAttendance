@@ -36,7 +36,11 @@
     to {opacity: 1;}
 }
 
-div.tab {
+div.tab  {
+    .tablinks  {
+        width: 14%;
+    }
+    
     overflow: hidden;
     //border: 1px solid #ccc;
     background-color: @base03
@@ -53,11 +57,13 @@ div.tab button {
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 14px 16px;
+    padding: 1% 1%;
     transition: 0.3s;
     color: @base0;
     background-color: @base03;
-    font-size: 20px;
+    // https://stackoverflow.com/questions/15649244/responsive-font-size
+    // for mobile
+    font-size: 2vw;
 }
 
 div.tab button.active {
@@ -156,7 +162,6 @@ h4 {
         display: none;
     }
 }
-
 
 
 #Data  {

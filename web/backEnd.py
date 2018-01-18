@@ -40,7 +40,7 @@ def executeSingleQuery(query, params = [], fetch = False):
 
 def addNewStudent(request):
     firstName = request.form.get('firstName')
-    lastName  = request.form.get( 'lastName')
+    lastName  = request.form.get('lastName')
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
         
     return "\nHello frontend:)\n"
@@ -135,7 +135,7 @@ def getAttendance(date):
     queryColumns = "SELECT name FROM attendanceColumns ORDER BY priority;"
     cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
     colList = json.loads(cols) # this is strange... anyone have any idea why?
-    query = "SELECT firstName, lastName, " + colList[0][0];
+    query = "SELECT firstName, lastName, time, " + colList[0][0];
     for i in range(1, len(colList)):
         query = query + ", " + colList[i][0]
     query = query + " FROM dailyAttendance WHERE date= '" + date + "' ORDER BY time ASC;"
@@ -225,7 +225,7 @@ def updateAttendanceColumn(request):
 
 
 def getAttendanceColumns():
-    query = "SELECT * FROM attendanceColumns ORDER BY priority"
+    query = "SELECT * FROM attendanceColumns ORDER BY priority;"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
 

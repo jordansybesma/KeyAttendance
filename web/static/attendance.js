@@ -1,3 +1,10 @@
+// Check me out
+var colsActive;
+var attendanceCols;
+var url, local, scott;
+local = "http://127.0.0.1:5000";
+scott = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com";
+urlBase = local;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -38,11 +45,37 @@ function addAttendant(first, last) {
     //var date = year + "-" + month + "-" + day;
     var time = hour + ":" + minute + ":" + seconds;
     var date = document.getElementById("storeDate").innerHTML;
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/addAttendant/");
+    xmlhttp.open("POST", urlBase + "/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
     
+    displayNewAttendant(first, last, time);
+
     
+}
+
+// Adds a new attendant to the daily attendance table
+function displayNewAttendant(first, last, time) {
+    // Get data about columns
+    var columnData = document.getElementById("columns").innerHTML;
+    var myColumns = JSON.parse(columnData);
+    
+    // Make attendee array correct length
+    var colLength = myColumns.length;
+    var arrayLength = 3 + colLength;
+    var attendantData = new Array(arrayLength);
+    
+    // Add data to array
+    attendantData[0] = first;
+    attendantData[1] = last;
+    attendantData[2] = time;
+    var i;
+    for (i=3; i<arrayLength; i++) {
+        attendantData[i] = false;
+    }
+    
+    displayRow(myColumns, attendantData);
+
 }
 
 // Called when a user clicks submit on the add new student dialogue. checks
@@ -71,10 +104,11 @@ function addNewStudent() {
         return;
     }
 
-    sendNewStudent(first, last);
+    // Adds student to student table
+    sendNewStudent(first.trim(), last.trim());
     
-    // Auto-populates new student into attendance sheet
-    preprocessAddAttendant(first.trim() + " " + last.trim());
+    // Adds student to daily attendance table
+    addAttendant(first.trim(), last.trim());
     
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
@@ -93,7 +127,7 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
 }
 function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/addNewStudent/");
+    xmlhttp.open("POST", urlBase + "/addNewStudent/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
@@ -101,7 +135,7 @@ function sendNewStudent(firstname, lastname) {
 // use ID
 function deleteAttendant(date, name) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/deleteAttendant");
+    xmlhttp.open("POST", urlBase + "/deleteAttendant");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&date=" + date);
     displayAttendanceTable(date);
@@ -109,7 +143,7 @@ function deleteAttendant(date, name) {
 
 function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest = new XMLHttpRequest();
-    url = window.location.origin + urlAddon;
+    var url = window.location.origin + urlAddon;
     xmlHttpRequest.open('get', url);
 
     xmlHttpRequest.onreadystatechange = function() {
@@ -125,7 +159,7 @@ function getRequest(urlAddon, callbackState, callback) {
 }
 
 function sendSubmitForm() {
-    theirText = document.getElementById("someRandoText").value;
+    var theirText = document.getElementById("someRandoText").value;
 
 }
 function fillAttendance(_, attendance) {
@@ -133,11 +167,8 @@ function fillAttendance(_, attendance) {
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
     for (i in myData) {
-        addRowHelper2(myColumns, myData[i]);
+        displayRow(myColumns, myData[i]);
     }
-    /*for (i in myData) {
-        addRowHelper(myData[i][1], myData[i][2], myData[i][3], myData[i][4], myData[i][5],myData[i][6],myData[i][7],myData[i][8],myData[i][9],myData[i][10])
-    }*/
 }
 
 function makeHeaderReadable(header) {
@@ -165,35 +196,41 @@ function makeHeaderReadable(header) {
     return newHeader;
 }
 
-function addRowHelper2(columns, entry) {
+// Inserts a row into the attendance table with name, timestamp, checkboxes, and delete button.
+// The name links to a student profile.
+function displayRow(columns, entry) {
     var table = document.getElementById("Attendance-Table");
-
-    //var date = getCurrentDate();
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
 
-
-    //var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
-    //var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
-    console.log(entry);
-    // console.log(entry[11]); This seems to be indexing out of bounds by one
     var row = table.insertRow(1);
-    fullName = entry[0] + " " + entry[1];
-    row.insertCell(-1).innerHTML = fullName;
+    var fullName = entry[0] + " " + entry[1];
+    var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
+    var time = entry[2];
+    row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
     for (i in columns) {
-
-        if (columns[i][1] == true) {
-            console.log((i+ 2));
-            var index = parseInt(i) + 2;
-            var str = "<input type=\"checkbox\" "
-            + (entry[index] ? "checked" : "")
-            + " onclick=\"selectActivity('" + fullName + "','" + columns[i][2] + "', '" + date + "')\">";
-            row.insertCell(-1).innerHTML = str;
+        if (columns[i][1] == true) {           
+            addCheckbox(i, entry, columns, date, row, fullName);
         }
     }
 
-    var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
-    row.insertCell(-1).innerHTML = str;
+    var deleteStr = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
+    row.insertCell(-1).innerHTML = deleteStr;
+}
+
+// Helper function for displayRow.
+// Adds a checkbox to the row with the correct status (checked or unchecked).
+function addCheckbox(i, entry, columns, date, row, fullName) {
+    var index = parseInt(i) + 3;
+    var col = columns[i][2];
+    
+    var checked = "";
+    if (entry[index]) {
+        checked = "checked";
+    }
+    
+    var box = "<input type=\"checkbox\" " + checked + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
+    row.insertCell(-1).innerHTML = box;
 }
 
 function showProfileManage() {
@@ -231,14 +268,14 @@ function showStudentManageHelper(_, data) {
 
 function selectStudentColumn(name, column) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/alterStudentColumn");
+    xmlhttp.open("POST", urlBase + "/alterStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&column=" + column);
 }
 
 function deleteStudentColumn(name) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/deleteStudentColumn");
+    xmlhttp.open("POST", urlBase + "/deleteStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
     showProfileManage()
@@ -264,13 +301,13 @@ function showAttendanceManageHelper(_, data){
             + (myData[i][1] ? "checked" : "")
             + " onclick=\"selectColumn('" + myData[i][2] + "')\">";
         row.insertCell(-1).innerHTML = str;
-        var str2 = "<button type=\"button\" onclick=\"deleteColumn('" + myData[i][2]  + "')\">Delete </button>";
+        var str2 = "<button type=\"button\" onclick=\"deleteColumn('" + myData[i][2]  + "')\">Delete</button>";
         row.insertCell(-1).innerHTML = str2;
     }
 }
 function deleteColumn(name) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/deleteAttendanceColumn");
+    xmlhttp.open("POST", urlBase + "/deleteAttendanceColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
     showAttendanceManage()
@@ -278,7 +315,7 @@ function deleteColumn(name) {
 function selectColumn(name) {
     console.log("got here");
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/updateAttendanceColumn");
+    xmlhttp.open("POST", urlBase + "/updateAttendanceColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
 }
@@ -299,7 +336,7 @@ function addStudentColumn() {
         return;
     }
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/addStudentColumn");
+    xmlhttp.open("POST", urlBase + "/addStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&type=" + type + "&definedOptions=");
 
@@ -321,7 +358,7 @@ function addColumn() {
         return;
     }
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/addAttendanceColumn");
+    xmlhttp.open("POST", urlBase + "/addAttendanceColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&type=boolean");
 
@@ -345,6 +382,7 @@ function modifyAutofillList(_ , studentNames) {
   list.innerHTML = inner;
 }
 
+// Obsolete?
 function showProfile(_, studentInfo) {
 
     document.getElementById("studentProfileText").innerHTML += ("ID Number: ")
@@ -354,10 +392,6 @@ function showProfile(_, studentInfo) {
 
 }
 
-
-function showSuggestions(curText) {
-    getRequest("/autofill/" + curText, "", modifyAutofillList);
-}
 
 function handleAddBox(e, curText) {
   if(e.keyCode === 13){
@@ -377,6 +411,11 @@ function handleProfileBox(e, curText) {
   }
 }
 
+function showSuggestions(curText) {
+    getRequest("/autofill/" + curText, "", modifyAutofillList);
+}
+
+// Obsolete?
 function checkBox(checkbox, keyword) {
     var str = "got to checkBox " + checkbox.value + " " + keyword;
 }
@@ -389,13 +428,12 @@ function openAddStudent() {
 function showStudentProfile() {
     console.log("got here");
 
-
     var profileSpace = document.getElementById('studentProfileText');
     profileSpace.innerHTML = ("");
     var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
     console.log("got here 2");
-    //var table = document.getElementById("Attendance-Table");
+//    var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
     var optionFound = false;
@@ -411,12 +449,10 @@ function showStudentProfile() {
         nameSpace.innerHTML += (keywordElement);
         profileSpace.innerHTML += ("\n");
         console.log(keywordElement);
-        console.log('getRequest("/getStudentInfo/"' + keywordElement + ', "", showDemographics);');
         getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
-        //getRequest("/getJustID/" + keywordElement, "", showProfile);
+//        getRequest("/getJustID/" + keywordElement, "", showProfile);
 
     }
-
 }
 
 function showDemographics(_, data) {
@@ -523,7 +559,7 @@ function updateProfile(name, col, colid, type) {
 
 
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/updateStudentInfo/");
+    xmlhttp.open("POST", urlBase + "/updateStudentInfo/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&value=" + value + "&column=" + col);
 }
@@ -572,14 +608,14 @@ function showStudentAttendance(_, data) {
     var scattery = [];
 
     for(i = 0; i < parsedData.length; i++) {
-      var dateString = parsedData[i][11];
+      var dateString = parsedData[i][7];
       console.log(dateString);
       var dateList = dateString.split("-")
       var myDate = new Date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
       var day = myDate.getDay();
       dateCounts[day] = dateCounts[day] + 1;
       console.log(myDate.getDay());
-      var time = parsedData[i][12];
+      var time = parsedData[i][8];
       console.log(time);
       var timeList = time.split(":");
       var hour = parseInt(timeList[0]);
@@ -754,33 +790,6 @@ function fillProfileTable(attendance)  {
     }
 }
 
-function addRowHelper(first, last, art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne) {
-
-    var table = document.getElementById("Attendance-Table");
-
-    //var date = getCurrentDate();
-    var date = document.getElementById("storeDate").innerHTML;
-    document.getElementById("keyword").value = "";
-
-
-    var fields = ['art', 'madeFood', 'recievedFood', 'leadership', 'exersize', 'mentalHealth', 'volunteering', 'oneOnOne'];
-    var checked = [art, madeFood, recievedFood, leadership, exersize, mentalHealth, volunteering, oneOnOne];
-
-    var row = table.insertRow(1);
-    var fullName = first + " " + last;
-    row.insertCell(0).innerHTML = fullName;
-
-    for(var i = 0; i < 8; i++)  {
-        var str = "<input type=\"checkbox\" "
-            + (checked[i]? "checked": "")
-            + " onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
-        row.insertCell(i + 1).innerHTML = str;
-    }
-
-    var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
-    row.insertCell(9).innerHTML = str;
-}
-
 function makeChecks(art, artID, madeFood, madeFoodID) {
     if (art) {
         document.getElementById(artID).checked = true;
@@ -792,7 +801,7 @@ function makeChecks(art, artID, madeFood, madeFoodID) {
 
 function selectActivity(name, column, date) {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/selectActivity");
+    xmlhttp.open("POST", urlBase + "/selectActivity");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&column=" + column + "&date=" + date);
 }
@@ -814,7 +823,8 @@ function onAddRow() {
         
         // eventually pass an id or get first and last name from keywordElement
         
-        preprocessAddAttendant(keywordElement);
+        var name = keywordElement.split(" ");
+        addAttendant(name[0], name[1]);
         
     } else {
         alert("Please enter an existing student");
@@ -823,35 +833,11 @@ function onAddRow() {
 
 }
 
-function weeeee(fullName){
-    getRequest("/getStudentInfo/" + fullName, "", showDemographics);
-}
-
-function preprocessAddAttendant(fullName){
-    var table = document.getElementById("Attendance-Table");    
-    var date = document.getElementById("storeDate").innerHTML;
-//    var fullName = first + " " + last;
-    var fields = ['art','madeFood','recievedFood','leadership','exersize','mentalHealth','volunteering','oneOnOne'];
-    var row = table.insertRow(1);
+function showAttendeeProfile(fullName){
+    document.getElementById('keywordStudentSearch').value = fullName;
+    showStudentProfile();
     
-    
-    // Name is link to student profile
-    
-//    row.insertCell(0).innerHTML = '<span onclick=\"weeeee(\'' + fullName + '\')\">' + "WEEEE" + '</span>';
-    row.insertCell(0).innerHTML = fullName;
-//'<span onclick="getRequest("/getStudentInfo/"' + fullName + ', "", showDemographics)">' + fullName + '</span>';
-    
-    for(var i = 0; i < 8; i++)  {
-        var str = "<input type=\"checkbox\" onclick=\"selectActivity('" + fullName + "','" + fields[i] + "', '" + date + "')\">";
-        row.insertCell(i + 1).innerHTML = str;
-    }
-
-    var str = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete</button>"
-    row.insertCell(9).innerHTML = str;
-    
-    var names = fullName.split(" ");
-    addAttendant(names[0], names[1]);  
-
+    document.getElementById("studentProfileTab").click();
 }
 
 function createNewAttendance() {
@@ -887,9 +873,17 @@ function makeTableHeaderHelper(_, data) {
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
     var myData = JSON.parse(data);
+    
+// Check me out
+    var colNum = myData.length;
+    colsActive = 0;
+    attendanceCols = new Array(colNum);
+    
     for (i in myData){
         if (myData[i][1]) {
             var newHeader = makeHeaderReadable(myData[i][2]);
+            attendanceCols[i] = newHeader;
+            colsActive++;
             row.insertCell(-1).innerHTML = newHeader;
         }
 
@@ -916,7 +910,7 @@ function displayAttendanceTable(table_date) {
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
     /*var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/tempStudentColumns");
+    xmlhttp.open("POST", urlBase + "/tempStudentColumns");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send();*/
 
@@ -933,16 +927,10 @@ function createListOfAttendanceDates(_, dates) {
         var date = myData[i][0];
         var readable = makeDateReadable(date);
         var entry = document.createElement('li');
-        entry.innerHTML = '<span onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
+        entry.innerHTML = '<span style="cursor:pointer" onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
         list.appendChild(entry);
     }
 }
-
-//'<span onclick="getRequest("/getStudentInfo/"' + fullName + ', "", showDemographics)">' + fullName + '</span>';
-//
-//'<span onclick="getRequest("/getStudentInfo/Albar Acevedo", "", showDemographics)">' + fullName + '</span>';
-//
-//'<span onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
 
 function displayAttendanceList() {
     getRequest("/getDates", "", createListOfAttendanceDates);
@@ -1234,6 +1222,7 @@ function makeDateReadable(date) {
     var newDateDashes = monthStr + "/" + day + "/" + year;
     return newDateDashes;
 }
+
 function makeDateSQL(date) {
     var month = date.substr(0, 2);
     var day = date.substr(3, 4);
@@ -1241,6 +1230,7 @@ function makeDateSQL(date) {
     var newDate = year + "-" + month + "-" + day.substr(0,2);
     return newDate;
 }
+
 function getCurrentDate() {
     var dt = new Date();
     // Display the month, day, and year. getMonth() returns a 0-based number.
@@ -1258,6 +1248,7 @@ function getCurrentDate() {
     var date = year + "-" + month + "-" + day;
     return date;
 }
+
 //used with date picker
 function getDate() {
     var date = document.getElementById("datePicker").value;
@@ -1265,15 +1256,6 @@ function getDate() {
     displayAttendanceTable(date);
     return false;
 }
-
-/*function runPHP() {
-    $.ajax({
-        url: 'makeFile.php',
-        type: 'post',
-        data: { "callFunc1": "1" },
-        success: function (response) { console.log(response); }
-    });
-}*/
 
 function createFile() {
     //var date = getCurrentDate();
@@ -1387,7 +1369,7 @@ function sendFeedback() {
     var feedback = document.getElementById("feedback").value;
     var date = getCurrentDate();
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com/sendFeedback");
+    xmlhttp.open("POST", urlBase + "/sendFeedback");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("date=" + date + "&feedback=" + feedback);
     document.getElementById("feedback").value = "";

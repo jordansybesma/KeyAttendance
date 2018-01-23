@@ -244,11 +244,11 @@ def decreaseActivityCount(column, date, increase):
     newResult =json.loads(result)
     numAttend = newResult[0][0]
     if increase:
-        newNumAttend = numAttend + 1
+        numAttend += 1
     else:
-        newNumAttend = numAttend - 1
+        numAttend -= 1
 
-    alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(numAttend) + "' WHERE date = '" + date + "';"
     executeSingleQuery(alterQuery, [])
 
 
@@ -264,7 +264,7 @@ def deleteAttendant(request):
     if rowData == []:
         print("this is strange")
     else:
-        headings = ["art", "madeFood", "recievedFood", "leadership", "exersize", "mentalHealth", "volunteering", "oneOnOne"]
+        headings = getActiveHeadings()
         for i in range(len(headings)):
             rowIndex = i + 2
             if rowData[0][rowIndex]:
@@ -287,6 +287,16 @@ def deleteAttendant(request):
     alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
     executeSingleQuery(alterQuery, [])
 
+
+def getActiveHeadings():
+    query = "SELECT name FROM attendanceColumns ORDER BY isshowing DESC;"
+    headings = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+    activeHeadings = []
+    for i in range(len(headings)):
+        if headings[i][0]:
+            activeHeadings += headings[i][0]
+    return activeHeadings
+    
 def getDates():
     query = "SELECT DISTINCT date FROM dailyAttendance ORDER BY date DESC"
     return json.dumps(executeSingleQuery(query,fetch = True)[:10], indent=4, sort_keys=True, default=str)

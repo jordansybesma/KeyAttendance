@@ -835,6 +835,7 @@ function onAddRow() {
 
 function showAttendeeProfile(fullName){
     document.getElementById('keywordStudentSearch').value = fullName;
+    document.getElementById("suggestedStudents").innerHTML = "<option>" + fullName + "</option>\n";
     showStudentProfile();
     
     document.getElementById("studentProfileTab").click();

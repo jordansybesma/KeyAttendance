@@ -258,7 +258,11 @@ def deleteAttendant(request):
     nameList = name.split()
     first = nameList[0]
     last = nameList[1]
-    query1 = "SELECT * FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    
+    cols = getActiveCols()
+    colsStr = getColsStr(cols)
+        
+    query1 = "SELECT " + colsStr + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     row = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
     rowData = json.loads(row)
     print("Wow!")
@@ -266,12 +270,9 @@ def deleteAttendant(request):
     if rowData == []:
         print("this is strange")
     else:
-        headings = getActiveHeadings()
-        for i in range(len(headings)):
-            rowIndex = i + 2
-            if rowData[0][rowIndex]:
-                decreaseActivityCount(headings[i], date, False)
-
+        for i in range(len(cols)):
+            if rowData[0][i]:
+                decreaseActivityCount(cols[i], date, False)
 
     query = "DELETE FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
@@ -290,14 +291,23 @@ def deleteAttendant(request):
     executeSingleQuery(alterQuery, [])
 
 
-def getActiveHeadings():
+def getActiveCols():
     query = "SELECT name FROM attendanceColumns ORDER BY isshowing DESC;"
-    headings = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
-    activeHeadings = []
-    for i in range(len(headings)):
-        if headings[i][0]:
-            activeHeadings += headings[i][0]
-    return activeHeadings
+    colsRaw = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+    cols = json.loads(colsRaw)
+    activeCols = []
+    for i in range(len(cols)):
+        if cols[i][0]:
+            activeCols.append(cols[i][0])
+    return activeCols
+    
+def getColsStr(cols):
+    colsStr = ""
+    for i in range(len(cols)-1):
+        colsStr += cols[i] + ", "
+    colsStr += cols[len(cols)-1]
+    return colsStr
+
     
 def getDates():
     query = "SELECT DISTINCT date FROM dailyAttendance ORDER BY date DESC"

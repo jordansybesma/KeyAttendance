@@ -261,6 +261,8 @@ def deleteAttendant(request):
     query1 = "SELECT * FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     row = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
     rowData = json.loads(row)
+    print("Wow!")
+    print(rowData)
     if rowData == []:
         print("this is strange")
     else:

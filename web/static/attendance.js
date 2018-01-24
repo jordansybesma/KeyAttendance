@@ -1,7 +1,7 @@
 var local, scott, urlBase;
 local = "http://127.0.0.1:5000";
 scott = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com";
-urlBase = scott;
+urlBase = local;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -431,7 +431,6 @@ function showStudentProfile() {
     var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
     console.log("got here 2");
-//    var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
     var optionFound = false;
@@ -1232,7 +1231,7 @@ function getCurrentDate() {
     return date;
 }
 
-//used with date picker
+//used with date picker in index.html
 function getDate() {
     var date = document.getElementById("datePicker").value;
     console.log(date);

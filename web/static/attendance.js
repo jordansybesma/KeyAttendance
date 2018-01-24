@@ -122,6 +122,7 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
     xhr.send(data);
     return xhr.responseText;
 }
+
 function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addNewStudent/");
@@ -129,7 +130,7 @@ function sendNewStudent(firstname, lastname) {
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
 
-// use ID
+// use ID (hard to do for adding new student to table without an ID)
 function deleteAttendant(date, name) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/deleteAttendant");
@@ -784,15 +785,6 @@ function fillProfileTable(attendance)  {
         for (i in currLine)  {
             currRow.insertCell(-1).innerHTML = currLine[i];
         }
-    }
-}
-
-function makeChecks(art, artID, madeFood, madeFoodID) {
-    if (art) {
-        document.getElementById(artID).checked = true;
-    }
-    if (madeFood) {
-        document.getElementById(checkIDmadeFood).checked = true;
     }
 }
 

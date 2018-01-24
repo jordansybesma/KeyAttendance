@@ -1,7 +1,7 @@
 var url, local, scott;
 local = "http://127.0.0.1:5000";
 scott = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com";
-urlBase = local;
+urlBase = scott;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {

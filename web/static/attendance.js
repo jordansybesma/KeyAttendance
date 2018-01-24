@@ -770,6 +770,7 @@ function graphStudentAttendance(yaxis) {
     Plotly.newPlot('graphStudent', data, layout);
 }
 
+// FIX HARDCODED STUFF
 function fillProfileTable(attendance)  {
     var table = document.getElementById("profileAttendanceTable");
     table.innerHTML = ""

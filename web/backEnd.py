@@ -255,6 +255,7 @@ def decreaseActivityCount(column, date, increase):
 def deleteAttendant(request):
     name = request.form.get("name")
     date = request.form.get("date")
+    
     nameList = name.split()
     first = nameList[0]
     last = nameList[1]
@@ -265,8 +266,6 @@ def deleteAttendant(request):
     query1 = "SELECT " + colsStr + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     row = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
     rowData = json.loads(row)
-    print("Wow!")
-    print(rowData)
     if rowData == []:
         print("this is strange")
     else:
@@ -283,11 +282,9 @@ def deleteAttendant(request):
     numAttend = newResult[0][0]
 
     print(numAttend)
-    if (numAttend == 0):
-        newNumAttend = 0
-    else:
-        newNumAttend = numAttend - 1
-    alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    if (numAttend != 0):
+        numAttend -= 1
+    alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(numAttend) + "' WHERE date = '" + date + "';"
     executeSingleQuery(alterQuery, [])
 
 

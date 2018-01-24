@@ -1,6 +1,3 @@
-// Check me out
-var colsActive;
-var attendanceCols;
 var url, local, scott;
 local = "http://127.0.0.1:5000";
 scott = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com";
@@ -873,18 +870,10 @@ function makeTableHeaderHelper(_, data) {
     table = document.getElementById("Attendance-Table");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
-    var myData = JSON.parse(data);
-    
-// Check me out
-    var colNum = myData.length;
-    colsActive = 0;
-    attendanceCols = new Array(colNum);
-    
+    var myData = JSON.parse(data);    
     for (i in myData){
         if (myData[i][1]) {
             var newHeader = makeHeaderReadable(myData[i][2]);
-            attendanceCols[i] = newHeader;
-            colsActive++;
             row.insertCell(-1).innerHTML = newHeader;
         }
 
@@ -1400,4 +1389,8 @@ function fillTextBox() {
 // callback for fillTextBox
 function textBoxCallback(_, js)  {
     document.getElementById("codeTextBox").innerHTML = js;
+}
+
+function sayHello() {
+    console.log("Hey there!");
 }

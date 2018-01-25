@@ -420,8 +420,9 @@ def autofill(partialString):
     suggestions = json.dumps(databaseResult[:10], indent=4, sort_keys=True, default=str)
     return suggestions
 
-def frequentPeers(string):
-    studentID = getJustID(string)
+def frequentPeers(name):
+    print("ENTER THE VORTEX")
+    studentID = getJustID(name)
     query = "SELECT date, time FROM dailyAttendance WHERE id = '" + studentID + "';"
 
     result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)

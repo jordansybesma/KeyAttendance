@@ -649,22 +649,22 @@ function showStudentAttendance(_, data) {
 }
 
 function showFrequentPeers(_, data) {
-  var peerSpace = document.getElementById("frequentPeers");
-  peerSpace.innerHTML = (" ")
-  peerSpace.innerHTML += ("Frequently Attends With: \n \n")
+    var peerSpace = document.getElementById("frequentPeers");
+    peerSpace.innerHTML = (" ");
+    peerSpace.innerHTML += ("Frequently Attends With: \n \n");
 
-  //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
+    //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
 
-  // peerSpace.innerHTML += (data.join())
+    // peerSpace.innerHTML += (data.join())
 
-  var nameString = data.replace(/\[/g,"").replace(/\'/g,"").replace(/\]/g,"")
+    var nameString = data.replace(/\[/g,"").replace(/\'/g,"").replace(/\]/g,"");
 
-  var nameList = nameString.split(", ")
+    var nameList = nameString.split(", ");
 
-  console.log(nameList)
+    console.log("nameList! " + nameList);
 
 
-  peerSpace.innerHTML += nameString;
+    peerSpace.innerHTML += nameString;
 }
 
 

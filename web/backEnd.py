@@ -421,7 +421,6 @@ def autofill(partialString):
     return suggestions
 
 def frequentPeers(name):
-    print("ENTER THE VORTEX")
     studentID = getJustID(name)
     query = "SELECT date, time FROM dailyAttendance WHERE id = '" + studentID + "';"
 

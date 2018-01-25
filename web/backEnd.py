@@ -355,78 +355,53 @@ def addAttendant(request):
     lastName  = request.form.get( 'lastName')
     date = request.form.get('date')
     time = request.form.get('time')
-    activityNames = ["art", "madeFood", "recievedFood", "leadership", "exercise", "mentalHealth", "volunteering", "oneOnOne", "comments"]
-    activities = [request.form.get(activityName) for activityName in activityNames]
-    print(firstName,lastName, activityNames)
-    id = request.form.get('id')
-    if id != "":
-        # time = datetime.datetime.now().time()
-        # activities = activities.append(time, None)
 
-        # add two more %s's for timeIn and timeOut. You won't.
-        executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        [id] + activities)
-        return "true"
+    firstQuery = "SELECT * FROM dailyAttendance WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "' AND date = '" + date + "';"
+    existingEntry = json.dumps(executeSingleQuery(firstQuery, fetch = True), indent=4, sort_keys=True, default=str)
+    entries = json.loads(existingEntry)
+    if entries != []:
+        print("already added")
+        return "false"
+
+
+    query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
+    databaseResult = executeSingleQuery(query, fetch = True)
+
+    queryRows = "SELECT name from attendanceColumns"
+    columns = json.dumps(executeSingleQuery(queryRows, fetch = True), indent=4, sort_keys=True, default=str)
+    columnsData = json.loads(columns)
+    numCols = len(columnsData);
+
+    newString = "INSERT INTO dailyAttendance (id, firstName, lastName"
+    for i in range(0, numCols):
+        newString = newString + ", "+ columnsData[i][0]
+
+    newString = newString + ", date, time) VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
+    for i in range(0, numCols):
+        newString = newString + "'FALSE', "
+    newString = newString + "'" + date + "','" + time + "');"
+    #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
+    executeSingleQuery(newString, [])
+    queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"
+    #result = executeSingleQuery(queryMaster)
+    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+    newResult =json.loads(result)
+
+    if newResult == []:
+        newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1', '0', '0', '0', '0', '0', '0', '0', '0');"
+        executeSingleQuery(newQuery, [])
+        return "false"
     else:
-        firstQuery = "SELECT * FROM dailyAttendance WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "' AND date = '" + date + "';"
-        existingEntry = json.dumps(executeSingleQuery(firstQuery, fetch = True), indent=4, sort_keys=True, default=str)
-        entries = json.loads(existingEntry)
-        if entries != []:
-            print("already added")
-            return "false"
+        print(newResult)
+        numAttend = newResult[0][0]
+        #print(result)
+        print(numAttend)
+        newNumAttend = numAttend + 1
+        alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+        executeSingleQuery(alterQuery, [])
 
-
-        query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
-        databaseResult = executeSingleQuery(query, fetch = True)
-
-        queryRows = "SELECT name from attendanceColumns"
-        columns = json.dumps(executeSingleQuery(queryRows, fetch = True), indent=4, sort_keys=True, default=str)
-        columnsData = json.loads(columns)
-        numCols = len(columnsData);
-
-        newString = "INSERT INTO dailyAttendance (id, firstName, lastName"
-        for i in range(0, numCols):
-            newString = newString + ", "+ columnsData[i][0]
-            
-        newString = newString + ", date, time) VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
-        for i in range(0, numCols):
-            newString = newString + "'FALSE', "
-        newString = newString + "'" + date + "','" + time + "');"
-        #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
-        executeSingleQuery(newString, [])
-        queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"
-        #result = executeSingleQuery(queryMaster)
-        result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
-        newResult =json.loads(result)
-
-        if newResult == []:
-            newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1', '0', '0', '0', '0', '0', '0', '0', '0');"
-            executeSingleQuery(newQuery, [])
-            return "false"
-        else:
-            print(newResult)
-            numAttend = newResult[0][0]
-            #print(result)
-            print(numAttend)
-            newNumAttend = numAttend + 1
-            alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
-            executeSingleQuery(alterQuery, [])
-        
-        return "true"
-        
-#        if(id != ""):
-#            return id
-#        else:
-#            return getJustID(firstName + " " + lastName)
-        
-
-# If more than one "same name" student is available, return students
-
-        if len(databaseResult) > 1:
-            return json.dumps(databaseResult[:10])
-        elif len(databaseResult) == 0:
-            return "false"
-
+    return "true"
+    
 
 """
     Literally just takes a string. Compares both first and last name.

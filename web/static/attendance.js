@@ -1,7 +1,7 @@
 var local, scott, urlBase;
 local = "http://127.0.0.1:5000";
 scott = "http://ec2-34-213-2-88.us-west-2.compute.amazonaws.com";
-urlBase = scott;
+urlBase = local;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -44,7 +44,7 @@ function addAttendant(first, last) {
     var date = document.getElementById("storeDate").innerHTML;
     xmlhttp.open("POST", urlBase + "/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
+    xmlhttp.send("firstName=" + first + "&lastName=" + last + "&date=" + date + "&time=" + time + "&id=");
 
     displayNewAttendant(first, last, time);
 
@@ -649,17 +649,17 @@ function showStudentAttendance(_, data) {
 }
 
 function showFrequentPeers(_, data) {
-  var peerSpace = document.getElementById("frequentPeers");
-  peerSpace.innerHTML = (" ")
-  peerSpace.innerHTML += ("Frequently Attends With: \n \n")
+    var peerSpace = document.getElementById("frequentPeers");
+    peerSpace.innerHTML = (" ");
+    peerSpace.innerHTML += ("Frequently Attends With: \n \n");
 
-  //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
+    //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
 
-  // peerSpace.innerHTML += (data.join())
+    // peerSpace.innerHTML += (data.join())
 
-  var nameString = data.replace(/\[/g,"").replace(/\'/g,"").replace(/\]/g,"")
+    var nameString = data.replace(/\[/g,"").replace(/\'/g,"").replace(/\]/g,"");
 
-  var nameList = nameString.split(", ")
+    var nameList = nameString.split(", ");
 
   var friendsList = []
 
@@ -672,7 +672,11 @@ function showFrequentPeers(_, data) {
     friendsList.push(nameButton)
 }
 
+<<<<<<< HEAD
   peerSpace.innerHTML += friendsList;
+=======
+    peerSpace.innerHTML += nameString;
+>>>>>>> a86b05efbd8c5dfdc4aa3c12484375c4f90617d5
 }
 
 

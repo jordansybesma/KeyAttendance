@@ -1,10 +1,7 @@
-// Check me out
-var colsActive;
-var attendanceCols;
-var url, local, scott;
+var local, scott, urlBase;
 local = "http://127.0.0.1:5000";
 scott = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com";
-urlBase = local;
+urlBase = scott;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -125,6 +122,7 @@ function sendRequest(isPost, data, header, value, urlAddOn) {
     xhr.send(data);
     return xhr.responseText;
 }
+
 function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addNewStudent/");
@@ -132,7 +130,7 @@ function sendNewStudent(firstname, lastname) {
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
 
-// use ID
+// use ID (hard to do for adding new student to table without an ID)
 function deleteAttendant(date, name) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/deleteAttendant");
@@ -433,7 +431,6 @@ function showStudentProfile() {
     var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
     console.log("got here 2");
-//    var table = document.getElementById("Attendance-Table");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
     var optionFound = false;
@@ -772,6 +769,7 @@ function graphStudentAttendance(yaxis) {
     Plotly.newPlot('graphStudent', data, layout);
 }
 
+// FIX HARDCODED STUFF
 function fillProfileTable(attendance)  {
     var table = document.getElementById("profileAttendanceTable");
     table.innerHTML = ""
@@ -787,15 +785,6 @@ function fillProfileTable(attendance)  {
         for (i in currLine)  {
             currRow.insertCell(-1).innerHTML = currLine[i];
         }
-    }
-}
-
-function makeChecks(art, artID, madeFood, madeFoodID) {
-    if (art) {
-        document.getElementById(artID).checked = true;
-    }
-    if (madeFood) {
-        document.getElementById(checkIDmadeFood).checked = true;
     }
 }
 
@@ -835,6 +824,7 @@ function onAddRow() {
 
 function showAttendeeProfile(fullName){
     document.getElementById('keywordStudentSearch').value = fullName;
+    document.getElementById("suggestedStudents").innerHTML = "<option>" + fullName + "</option>\n";
     showStudentProfile();
     
     document.getElementById("studentProfileTab").click();
@@ -872,18 +862,10 @@ function makeTableHeaderHelper(_, data) {
     table = document.getElementById("Attendance-Table");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
-    var myData = JSON.parse(data);
-    
-// Check me out
-    var colNum = myData.length;
-    colsActive = 0;
-    attendanceCols = new Array(colNum);
-    
+    var myData = JSON.parse(data);    
     for (i in myData){
         if (myData[i][1]) {
             var newHeader = makeHeaderReadable(myData[i][2]);
-            attendanceCols[i] = newHeader;
-            colsActive++;
             row.insertCell(-1).innerHTML = newHeader;
         }
 
@@ -1249,7 +1231,7 @@ function getCurrentDate() {
     return date;
 }
 
-//used with date picker
+//used with date picker in index.html
 function getDate() {
     var date = document.getElementById("datePicker").value;
     console.log(date);
@@ -1399,4 +1381,8 @@ function fillTextBox() {
 // callback for fillTextBox
 function textBoxCallback(_, js)  {
     document.getElementById("codeTextBox").innerHTML = js;
+}
+
+function sayHello() {
+    console.log("Hey there!");
 }

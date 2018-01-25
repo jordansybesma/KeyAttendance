@@ -363,7 +363,6 @@ def addAttendant(request):
         print("already added")
         return "false"
 
-
     query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
 

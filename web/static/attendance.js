@@ -670,13 +670,9 @@ function showFrequentPeers(_, data) {
   for (var i in nameList) {
     var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ nameList[i] +'\')\">'+  nameList[i] +'</span>';
     friendsList.push(nameButton)
-}
+  }
 
-<<<<<<< HEAD
   peerSpace.innerHTML += friendsList;
-=======
-    peerSpace.innerHTML += nameString;
->>>>>>> a86b05efbd8c5dfdc4aa3c12484375c4f90617d5
 }
 
 

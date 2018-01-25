@@ -42,7 +42,7 @@ def addNewStudent(request):
     firstName = request.form.get('firstName')
     lastName  = request.form.get('lastName')
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
-        
+
     return "\nHello frontend:)\n"
 
 def updateStudentInfo(request):
@@ -255,14 +255,14 @@ def decreaseActivityCount(column, date, increase):
 def deleteAttendant(request):
     name = request.form.get("name")
     date = request.form.get("date")
-    
+
     nameList = name.split()
     first = nameList[0]
     last = nameList[1]
-    
+
     cols = getActiveCols()
     colsStr = getColsStr(cols)
-        
+
     query1 = "SELECT " + colsStr + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     row = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
     rowData = json.loads(row)
@@ -297,7 +297,7 @@ def getActiveCols():
         if cols[i][0]:
             activeCols.append(cols[i][0])
     return activeCols
-    
+
 def getColsStr(cols):
     colsStr = ""
     for i in range(len(cols)-1):
@@ -305,7 +305,7 @@ def getColsStr(cols):
     colsStr += cols[len(cols)-1]
     return colsStr
 
-    
+
 def getDates():
     query = "SELECT DISTINCT date FROM dailyAttendance ORDER BY date DESC"
     return json.dumps(executeSingleQuery(query,fetch = True)[:10], indent=4, sort_keys=True, default=str)
@@ -400,7 +400,7 @@ def addAttendant(request):
         executeSingleQuery(alterQuery, [])
 
     return "true"
-    
+
 
 """
     Literally just takes a string. Compares both first and last name.
@@ -551,4 +551,3 @@ def addAlert(request):
 def checkAlert(request):
     id = request.form.get('id')
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])
-    

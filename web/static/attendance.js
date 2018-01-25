@@ -661,10 +661,18 @@ function showFrequentPeers(_, data) {
 
     var nameList = nameString.split(", ");
 
-    console.log("nameList! " + nameList);
+  var friendsList = []
 
+  console.log("Hello")
+  console.log(nameList)
+  console.log("Goodbye")
 
-    peerSpace.innerHTML += nameString;
+  for (var i in nameList) {
+    var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ nameList[i] +'\')\">'+  nameList[i] +'</span>';
+    friendsList.push(nameButton)
+  }
+
+  peerSpace.innerHTML += friendsList;
 }
 
 

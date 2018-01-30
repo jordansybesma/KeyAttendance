@@ -1,7 +1,7 @@
 var local, scott, urlBase;
 local = "http://127.0.0.1:5000";
-scott = "http://ec2-35-160-216-144.us-west-2.compute.amazonaws.com";
-urlBase = scott;
+scott = "http://ec2-34-213-2-88.us-west-2.compute.amazonaws.com";
+urlBase = local;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -44,11 +44,11 @@ function addAttendant(first, last) {
     var date = document.getElementById("storeDate").innerHTML;
     xmlhttp.open("POST", urlBase + "/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
-    
+    xmlhttp.send("firstName=" + first + "&lastName=" + last + "&date=" + date + "&time=" + time + "&id=");
+
     displayNewAttendant(first, last, time);
 
-    
+
 }
 
 // Adds a new attendant to the daily attendance table
@@ -56,12 +56,12 @@ function displayNewAttendant(first, last, time) {
     // Get data about columns
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
-    
+
     // Make attendee array correct length
     var colLength = myColumns.length;
     var arrayLength = 3 + colLength;
     var attendantData = new Array(arrayLength);
-    
+
     // Add data to array
     attendantData[0] = first;
     attendantData[1] = last;
@@ -70,7 +70,7 @@ function displayNewAttendant(first, last, time) {
     for (i=3; i<arrayLength; i++) {
         attendantData[i] = false;
     }
-    
+
     displayRow(myColumns, attendantData);
 
 }
@@ -80,7 +80,7 @@ function displayNewAttendant(first, last, time) {
 function addNewStudent() {
 
 //    onAddRow()(@(*#&*
-    
+
     var first = document.getElementById("newStudentFirst").value;
     var firstChar = first[0];
     firstChar = firstChar.toUpperCase();
@@ -103,10 +103,10 @@ function addNewStudent() {
 
     // Adds student to student table
     sendNewStudent(first.trim(), last.trim());
-    
+
     // Adds student to daily attendance table
     addAttendant(first.trim(), last.trim());
-    
+
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
     closeAddStudent();
@@ -207,7 +207,7 @@ function displayRow(columns, entry) {
     var time = entry[2];
     row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
     for (i in columns) {
-        if (columns[i][1] == true) {           
+        if (columns[i][1] == true) {
             addCheckbox(i, entry, columns, date, row, fullName);
         }
     }
@@ -221,12 +221,12 @@ function displayRow(columns, entry) {
 function addCheckbox(i, entry, columns, date, row, fullName) {
     var index = parseInt(i) + 3;
     var col = columns[i][2];
-    
+
     var checked = "";
     if (entry[index]) {
         checked = "checked";
     }
-    
+
     var box = "<input type=\"checkbox\" " + checked + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
     row.insertCell(-1).innerHTML = box;
 }
@@ -649,17 +649,30 @@ function showStudentAttendance(_, data) {
 }
 
 function showFrequentPeers(_, data) {
-  var peerSpace = document.getElementById("frequentPeers");
-  peerSpace.innerHTML = (" ")
-  peerSpace.innerHTML += ("Frequently Attends With: \n \n")
+    var peerSpace = document.getElementById("frequentPeers");
+    peerSpace.innerHTML = (" ");
+    peerSpace.innerHTML += ("Frequently Attends With: \n \n");
 
-  // peerSpace.innerHTML += (data.join())
+    //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
 
-  var nameString = data.replace(/\[/g,"").replace(/\'/g,"").replace(/\]/g,"")
+    // peerSpace.innerHTML += (data.join())
 
-  console.log(nameString)
+    var nameString = data.replace(/\[/g,"").replace(/\'/g,"").replace(/\]/g,"");
 
-  peerSpace.innerHTML += nameString;
+    var nameList = nameString.split(", ");
+
+  var friendsList = []
+
+  console.log("Hello")
+  console.log(nameList)
+  console.log("Goodbye")
+
+  for (var i in nameList) {
+    var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ nameList[i] +'\')\">'+  nameList[i] +'</span>';
+    friendsList.push(nameButton)
+  }
+
+  peerSpace.innerHTML += friendsList;
 }
 
 
@@ -807,14 +820,14 @@ function onAddRow() {
     }
     //var date = getCurrentDate();
     if (optionFound)  {
-        
+
         document.getElementById("keyword").value = "";
-        
+
         // eventually pass an id or get first and last name from keywordElement
-        
+
         var name = keywordElement.split(" ");
         addAttendant(name[0], name[1]);
-        
+
     } else {
         alert("Please enter an existing student");
     }
@@ -826,7 +839,7 @@ function showAttendeeProfile(fullName){
     document.getElementById('keywordStudentSearch').value = fullName;
     document.getElementById("suggestedStudents").innerHTML = "<option>" + fullName + "</option>\n";
     showStudentProfile();
-    
+
     document.getElementById("studentProfileTab").click();
 }
 
@@ -862,7 +875,7 @@ function makeTableHeaderHelper(_, data) {
     table = document.getElementById("Attendance-Table");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
-    var myData = JSON.parse(data);    
+    var myData = JSON.parse(data);
     for (i in myData){
         if (myData[i][1]) {
             var newHeader = makeHeaderReadable(myData[i][2]);
@@ -1196,10 +1209,10 @@ function makeDateReadable(date) {
     var monthInt = parseInt(monthStr);
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var month = months[monthInt-1];
-    
+
     var day = date.substr(8, 10);
     var year = date.substr(0, 4);
-    
+
     var newDate = month + " " + day + ", " + year;
     var newDateDashes = monthStr + "/" + day + "/" + year;
     return newDateDashes;

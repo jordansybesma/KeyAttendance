@@ -2,6 +2,7 @@ import backEnd
 import flask
 from flask import request
 import sys
+#sys.stdout = open('output.logs', 'a')
 
 #flask automatically serves everything in the static folder for us, which is really nice
 app = flask.Flask(__name__)
@@ -146,7 +147,8 @@ def checkAlert():
     return backEnd.checkAlert(request)
 
 if __name__ == "__main__":
+   # print("Site booting up...")
     if len(sys.argv) > 1 and sys.argv[1] == "local":
         app.run()
     else:
-        app.run(host='ec2-34-213-2-88.us-west-2.compute.amazonaws.com')
+        app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')

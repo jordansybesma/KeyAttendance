@@ -44,11 +44,11 @@ function addAttendant(first, last) {
     var date = document.getElementById("storeDate").innerHTML;
     xmlhttp.open("POST", urlBase + "/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("firstName=" + first + "&lastName=" + last + "&date=" + date + "&time=" + time + "&id=");
-
+    xmlhttp.send("firstName=" + first + "&lastName=" + last + "&art=FALSE&madeFood=FALSE&recievedFood=FALSE&leadership=FALSE&exersize=FALSE&mentalHealth=FALSE&volunteering=FALSE&oneOnOne=FALSE&comments=FALSE&date=" + date + "&time=" + time + "&id=");
+    
     displayNewAttendant(first, last, time);
 
-
+    
 }
 
 // Adds a new attendant to the daily attendance table
@@ -56,12 +56,12 @@ function displayNewAttendant(first, last, time) {
     // Get data about columns
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
-
+    
     // Make attendee array correct length
     var colLength = myColumns.length;
     var arrayLength = 3 + colLength;
     var attendantData = new Array(arrayLength);
-
+    
     // Add data to array
     attendantData[0] = first;
     attendantData[1] = last;
@@ -70,7 +70,7 @@ function displayNewAttendant(first, last, time) {
     for (i=3; i<arrayLength; i++) {
         attendantData[i] = false;
     }
-
+    
     displayRow(myColumns, attendantData);
 
 }
@@ -80,7 +80,7 @@ function displayNewAttendant(first, last, time) {
 function addNewStudent() {
 
 //    onAddRow()(@(*#&*
-
+    
     var first = document.getElementById("newStudentFirst").value;
     var firstChar = first[0];
     firstChar = firstChar.toUpperCase();
@@ -103,10 +103,10 @@ function addNewStudent() {
 
     // Adds student to student table
     sendNewStudent(first.trim(), last.trim());
-
+    
     // Adds student to daily attendance table
     addAttendant(first.trim(), last.trim());
-
+    
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
     closeAddStudent();
@@ -207,7 +207,7 @@ function displayRow(columns, entry) {
     var time = entry[2];
     row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
     for (i in columns) {
-        if (columns[i][1] == true) {
+        if (columns[i][1] == true) {           
             addCheckbox(i, entry, columns, date, row, fullName);
         }
     }
@@ -221,12 +221,12 @@ function displayRow(columns, entry) {
 function addCheckbox(i, entry, columns, date, row, fullName) {
     var index = parseInt(i) + 3;
     var col = columns[i][2];
-
+    
     var checked = "";
     if (entry[index]) {
         checked = "checked";
     }
-
+    
     var box = "<input type=\"checkbox\" " + checked + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
     row.insertCell(-1).innerHTML = box;
 }
@@ -288,21 +288,25 @@ function showAttendanceManage() {
     getRequest("/getAttendanceColumns", "", showAttendanceManageHelper);
 
 }
+
 function showAttendanceManageHelper(_, data){
     var myData = JSON.parse(data);
     var table = document.getElementById("attendanceColumnsTable");
     for (i in myData) {
         console.log(myData[i]);
         var row = table.insertRow(-1);
-        row.insertCell(-1).innerHTML = myData[i][2];
-        var str = "<input type=\"checkbox\" "
+        var name = myData[i][2];
+        var checkBox = "<input type=\"checkbox\" "
             + (myData[i][1] ? "checked" : "")
-            + " onclick=\"selectColumn('" + myData[i][2] + "')\">";
-        row.insertCell(-1).innerHTML = str;
-        var str2 = "<button type=\"button\" onclick=\"deleteColumn('" + myData[i][2]  + "')\">Delete</button>";
-        row.insertCell(-1).innerHTML = str2;
+            + " onclick=\"selectColumn('" + name + "')\">";
+        var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name  + "')\">Delete</button>";
+        
+        row.insertCell(-1).innerHTML = name;
+        row.insertCell(-1).innerHTML = checkBox;
+        row.insertCell(-1).innerHTML = deleteButton;
     }
 }
+
 function deleteColumn(name) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/deleteAttendanceColumn");
@@ -310,6 +314,7 @@ function deleteColumn(name) {
     xmlhttp.send("name=" + name);
     showAttendanceManage()
 }
+
 function selectColumn(name) {
     console.log("got here");
     var xmlhttp = new XMLHttpRequest();
@@ -317,16 +322,10 @@ function selectColumn(name) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
 }
+
 function addStudentColumn() {
     var name = document.getElementById("studentColumnName").value;
     var type = document.getElementById("studentColumnType").value;
-    var badSubstring = " .,<>/?':;\|]}[{=+-_)(*&^%$#@!~`";
-    if (stop(name) === false) {
-        alert("Please enter a valid column name")
-        document.getElementById("studentColumnName").value = "";
-        return;
-    }
-
     if (name == "") {
         alert("Please enter a name")
         return;
@@ -354,6 +353,7 @@ function addStudentColumn() {
     row.insertCell(-1).innerHTML = str;*/
 
 }
+
 
 function findOverlap(a, b) {
     if (b.length === 0) {
@@ -387,20 +387,11 @@ function stop(name) {
 
 }
 
-
-
 function addColumn() {
     var name = document.getElementById("newColumn").value;
-    var badSubstring = " .,<>/?':;\|]}[{=+-_)(*&^%$#@!~`";
-    //overlap = findOverlap(name, badSubstring);
-    if (stop(name) === false) {
-        alert("Please enter a valid column name")
-        document.getElementById("newColumn").value = "";
-        return;
-    }
-    
-    if (name == "") {
-        alert("Please enter a name")
+    var substring = " ";
+    if (name.indexOf(substring)!= -1) {
+        alert("Please enter a column name with no spaces")
         return;
     }
     var xmlhttp = new XMLHttpRequest();
@@ -408,14 +399,16 @@ function addColumn() {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&type=boolean");
 
-
     var table = document.getElementById("attendanceColumnsTable");
     var row = table.insertRow(-1);
-    row.insertCell(-1).innerHTML = name;
-    var str = "<input type=\"checkbox\" "
+    var checkbox = "<input type=\"checkbox\" "
             + "checked"
             + " onclick=\"selectColumn('" + name + "')\">";
-    row.insertCell(-1).innerHTML = str;
+    var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name  + "')\">Delete</button>";
+    
+    row.insertCell(-1).innerHTML = name;
+    row.insertCell(-1).innerHTML = checkbox;
+    row.insertCell(-1).innerHTML = deleteButton;
 }
 
 function modifyAutofillList(_ , studentNames) {
@@ -508,6 +501,7 @@ function showDemographics(_, data) {
     getRequest("/getStudentColumns", "", demographicsHelper);
 
 }
+
 function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;
@@ -697,33 +691,18 @@ function showStudentAttendance(_, data) {
 }
 
 function showFrequentPeers(_, data) {
-    var peerSpace = document.getElementById("frequentPeers");
-    peerSpace.innerHTML = (" ");
-    peerSpace.innerHTML += ("Frequently Attends With: \n \n");
+  var peerSpace = document.getElementById("frequentPeers");
+  peerSpace.innerHTML = (" ")
+  peerSpace.innerHTML += ("Frequently Attends With: \n \n")
 
-    //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
+  // peerSpace.innerHTML += (data.join())
 
-    // peerSpace.innerHTML += (data.join())
+  var nameString = data.replace(/\[/g,"").replace(/\'/g,"").replace(/\]/g,"")
 
-    var nameString = data.replace(/\[/g,"").replace(/\'/g,"").replace(/\]/g,"");
+  console.log(nameString)
 
-    var nameList = nameString.split(", ");
-
-  var friendsList = []
-
-  console.log("Hello")
-  console.log(nameList)
-  console.log("Goodbye")
-
-  for (var i in nameList) {
-    var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ nameList[i] +'\')\">'+  nameList[i] +'</span>';
-    friendsList.push(nameButton)
-  }
-
-  peerSpace.innerHTML += friendsList;
+  peerSpace.innerHTML += nameString;
 }
-
-
 
 function convertDay(day) {
     if (day == 0) {
@@ -776,37 +755,6 @@ function scatterStudentAttendance(xList, yList) {
     Plotly.newPlot('studentTimes', data, layout);
 }
 
-/*function scatterStudentAttendance(dateTimes){
-    var xList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    var yList = [[], [], [], [], [], [], []];
-
-    for (i = 0; i < dateTimes.length; i++) {
-      for (j = 0; j < dateTimes[i].length; i++) {
-        xList.push(xList[i]);
-        yList.push(dateTimes[i][j]);
-      }
-    }
-    console.log(xList);
-    console.log(yList);
-
-    var trace1 = {
-      x: xList,
-      y: yList,
-      type: 'scatter'
-    };
-
-    var data = [trace1];
-
-    var layout = {
-      autosize: false,
-      width: 500,
-      height: 500,
-      title: 'Attendance Times'
-    };
-
-    Plotly.newPlot('studentTimes', data, layout);
-}
-*/
 function graphStudentAttendance(yaxis) {
     var max = Math.max.apply(Math, yaxis);
     //var min = Math.min.apply(Math, yaxis);
@@ -868,14 +816,14 @@ function onAddRow() {
     }
     //var date = getCurrentDate();
     if (optionFound)  {
-
+        
         document.getElementById("keyword").value = "";
-
+        
         // eventually pass an id or get first and last name from keywordElement
-
+        
         var name = keywordElement.split(" ");
         addAttendant(name[0], name[1]);
-
+        
     } else {
         alert("Please enter an existing student");
     }
@@ -887,7 +835,7 @@ function showAttendeeProfile(fullName){
     document.getElementById('keywordStudentSearch').value = fullName;
     document.getElementById("suggestedStudents").innerHTML = "<option>" + fullName + "</option>\n";
     showStudentProfile();
-
+    
     document.getElementById("studentProfileTab").click();
 }
 
@@ -923,7 +871,7 @@ function makeTableHeaderHelper(_, data) {
     table = document.getElementById("Attendance-Table");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
-    var myData = JSON.parse(data);
+    var myData = JSON.parse(data);    
     for (i in myData){
         if (myData[i][1]) {
             var newHeader = makeHeaderReadable(myData[i][2]);
@@ -964,17 +912,14 @@ function displayAttendanceTable(table_date) {
 
 function createListOfAttendanceDates(_, dates) {
     var myData = JSON.parse(dates);
-    console.log(myData);
     var list = document.getElementById("attendanceList");
     list.innerHTML = "";
     for (i in myData) {
         var date = myData[i][0];
-        if (date != null) {
-            var readable = makeDateReadable(date);
-            var entry = document.createElement('li');
-            entry.innerHTML = '<span style="cursor:pointer" onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
-            list.appendChild(entry);
-        }
+        var readable = makeDateReadable(date);
+        var entry = document.createElement('li');
+        entry.innerHTML = '<span style="cursor:pointer" onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
+        list.appendChild(entry);
     }
 }
 
@@ -1267,10 +1212,10 @@ function makeDateReadable(date) {
     var monthInt = parseInt(monthStr);
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var month = months[monthInt-1];
-
+    
     var day = date.substr(8, 10);
     var year = date.substr(0, 4);
-
+    
     var newDate = month + " " + day + ", " + year;
     var newDateDashes = monthStr + "/" + day + "/" + year;
     return newDateDashes;

@@ -417,7 +417,6 @@ function addColumn() {
     var checkbox = "<input type=\"checkbox\" "
             + "checked"
             + " onclick=\"selectColumn('" + name + "')\">";
-    console.log("Phish Phood");
     var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name  + "')\">Delete</button>";
     
     row.insertCell(-1).innerHTML = name;

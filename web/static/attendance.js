@@ -412,7 +412,6 @@ function addColumn() {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&type=boolean");
 
-
     var table = document.getElementById("attendanceColumnsTable");
     var row = table.insertRow(-1);
     var checkbox = "<input type=\"checkbox\" "

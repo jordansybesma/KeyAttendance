@@ -964,14 +964,17 @@ function displayAttendanceTable(table_date) {
 
 function createListOfAttendanceDates(_, dates) {
     var myData = JSON.parse(dates);
+    console.log(myData);
     var list = document.getElementById("attendanceList");
     list.innerHTML = "";
     for (i in myData) {
         var date = myData[i][0];
-        var readable = makeDateReadable(date);
-        var entry = document.createElement('li');
-        entry.innerHTML = '<span style="cursor:pointer" onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
-        list.appendChild(entry);
+        if (date != null) {
+            var readable = makeDateReadable(date);
+            var entry = document.createElement('li');
+            entry.innerHTML = '<span style="cursor:pointer" onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
+            list.appendChild(entry);
+        }
     }
 }
 

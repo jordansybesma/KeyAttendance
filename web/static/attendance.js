@@ -1,7 +1,7 @@
 var local, scott, urlBase;
 local = "http://127.0.0.1:5000";
 scott = "http://ec2-34-213-2-88.us-west-2.compute.amazonaws.com";
-urlBase = local;
+urlBase = scott;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -320,6 +320,13 @@ function selectColumn(name) {
 function addStudentColumn() {
     var name = document.getElementById("studentColumnName").value;
     var type = document.getElementById("studentColumnType").value;
+    var badSubstring = " .,<>/?':;\|]}[{=+-_)(*&^%$#@!~`";
+    if (stop(name) === false) {
+        alert("Please enter a valid column name")
+        document.getElementById("studentColumnName").value = "";
+        return;
+    }
+
     if (name == "") {
         alert("Please enter a name")
         return;
@@ -348,11 +355,52 @@ function addStudentColumn() {
 
 }
 
+function findOverlap(a, b) {
+    if (b.length === 0) {
+        return "";
+    }
+ 
+    if (a.endsWith(b)) {
+        return b;
+    }
+ 
+    if (a.indexOf(b) >= 0) {
+        return b;
+    }
+ 
+    return findOverlap(a, b.substring(0, b.length - 1));
+}
+
+function stop(name) {
+    //alert("got here");
+    var badSubstring = " .,<>/?':;|]}[{=+-_)(*&^%$#@!~`";
+    for (var i = 0; i < badSubstring.length; i++) {
+        if (name.indexOf(badSubstring.charAt(i)) != -1) {
+            return false;
+        }
+
+    }
+    if (name.indexOf("\\") != -1) {
+        return false;
+    }
+    return true;
+
+}
+
+
+
 function addColumn() {
     var name = document.getElementById("newColumn").value;
-    var substring = " ";
-    if (name.indexOf(substring)!= -1) {
-        alert("Please enter a column name with no spaces")
+    var badSubstring = " .,<>/?':;\|]}[{=+-_)(*&^%$#@!~`";
+    //overlap = findOverlap(name, badSubstring);
+    if (stop(name) === false) {
+        alert("Please enter a valid column name")
+        document.getElementById("newColumn").value = "";
+        return;
+    }
+    
+    if (name == "") {
+        alert("Please enter a name")
         return;
     }
     var xmlhttp = new XMLHttpRequest();
@@ -916,14 +964,17 @@ function displayAttendanceTable(table_date) {
 
 function createListOfAttendanceDates(_, dates) {
     var myData = JSON.parse(dates);
+    console.log(myData);
     var list = document.getElementById("attendanceList");
     list.innerHTML = "";
     for (i in myData) {
         var date = myData[i][0];
-        var readable = makeDateReadable(date);
-        var entry = document.createElement('li');
-        entry.innerHTML = '<span style="cursor:pointer" onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
-        list.appendChild(entry);
+        if (date != null) {
+            var readable = makeDateReadable(date);
+            var entry = document.createElement('li');
+            entry.innerHTML = '<span style="cursor:pointer" onclick="displayAttendanceTable(\'' + date + '\')">' + readable + '</span>';
+            list.appendChild(entry);
+        }
     }
 }
 

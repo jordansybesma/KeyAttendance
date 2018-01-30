@@ -314,6 +314,7 @@ def getDates():
 
 def selectActivity(request):
     column = request.form.get("column")
+    column = column.lower()
     date = request.form.get("date")
     name = request.form.get("name")
     nameList = name.split()
@@ -323,14 +324,19 @@ def selectActivity(request):
     query1 = "SELECT "+ column + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     #currentStatus = executeSingleQuery(query1)
     result1 = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
-
+    print(column)
+    print(date)
     queryMaster = "SELECT "+ column + " FROM masterAttendance WHERE date = '" + date + "';"
     result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
     newResult =json.loads(result)
+    print(result)
     numAttend = newResult[0][0]
     print(result)
     print(numAttend)
-
+    if (result1 == None):
+        result1 = "false"
+    if (numAttend == None):
+        numAttend = 0
 
     if "true" in result1:
         if (numAttend == 0):
@@ -387,7 +393,7 @@ def addAttendant(request):
     newResult =json.loads(result)
 
     if newResult == []:
-        newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1', '0', '0', '0', '0', '0', '0', '0', '0');"
+        newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1');"
         executeSingleQuery(newQuery, [])
         return "false"
     else:

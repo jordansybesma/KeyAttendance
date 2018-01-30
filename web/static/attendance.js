@@ -1,7 +1,7 @@
 var local, scott, urlBase;
 local = "http://127.0.0.1:5000";
 scott = "http://ec2-34-213-2-88.us-west-2.compute.amazonaws.com";
-urlBase = scott;
+urlBase = local;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -1021,12 +1021,13 @@ function masterAttendanceHelper(_, masterData) {
     console.log(masterData);
     columns = document.getElementById("columnData").innerHTML;
     columnData = JSON.parse(columns);
+    console.log(columnData);
     /*var row = table.insertRow(-1);
     headers = ["Date", "# Attendees", "# Art", "# Make Food", "# Recieved Food", "# Leadership", "# Exersize", "# Mental Health", "# Volunteering", "# One On One"];
     for (header of headers)  {
         row.insertCell(-1).innerHTML = header;
     }*/
-    var xaxis = [];
+    /*var xaxis = [];
     var yaxis = [];
     var yaxisArt = [];
     var yaxisMadeFood = [];
@@ -1035,9 +1036,9 @@ function masterAttendanceHelper(_, masterData) {
     var yaxisExersize = [];
     var yaxisMentalHealth = [];
     var yaxisVolunteering = [];
-    var yaxisOneOnOne = [];
+    var yaxisOneOnOne = [];*/
     for (i in myData) {
-        xaxis.push(myData[i][0]);
+        /*xaxis.push(myData[i][0]);
         yaxis.push(myData[i][1]);
         yaxisArt.push(myData[i][2]);
         yaxisMadeFood.push(myData[i][3]);
@@ -1046,14 +1047,20 @@ function masterAttendanceHelper(_, masterData) {
         yaxisExersize.push(myData[i][6]);
         yaxisMentalHealth.push(myData[i][7]);
         yaxisVolunteering.push(myData[i][8]);
-        yaxisOneOnOne.push(myData[i][9]);
+        yaxisOneOnOne.push(myData[i][9]);*/
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = myData[i][0];
         row.insertCell(-1).innerHTML = myData[i][1];
         for (j in columnData) {
+       
             if (columnData[j][1] == true) {
-                row.insertCell(-1).innerHTML = myData[i][parseInt(j) + 1];
+                var val = myData[i][parseInt(j) + 2];
+                if (val == null){
+                    val = 0;
+                }
+                row.insertCell(-1).innerHTML = val;
             }
+            
 
         }
     }

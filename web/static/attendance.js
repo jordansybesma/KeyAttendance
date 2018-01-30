@@ -288,21 +288,25 @@ function showAttendanceManage() {
     getRequest("/getAttendanceColumns", "", showAttendanceManageHelper);
 
 }
+
 function showAttendanceManageHelper(_, data){
     var myData = JSON.parse(data);
     var table = document.getElementById("attendanceColumnsTable");
     for (i in myData) {
         console.log(myData[i]);
         var row = table.insertRow(-1);
-        row.insertCell(-1).innerHTML = myData[i][2];
-        var str = "<input type=\"checkbox\" "
+        var name = myData[i][2];
+        var checkBox = "<input type=\"checkbox\" "
             + (myData[i][1] ? "checked" : "")
-            + " onclick=\"selectColumn('" + myData[i][2] + "')\">";
-        row.insertCell(-1).innerHTML = str;
-        var str2 = "<button type=\"button\" onclick=\"deleteColumn('" + myData[i][2]  + "')\">Delete</button>";
-        row.insertCell(-1).innerHTML = str2;
+            + " onclick=\"selectColumn('" + name + "')\">";
+        var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name  + "')\">Delete</button>";
+        
+        row.insertCell(-1).innerHTML = name;
+        row.insertCell(-1).innerHTML = checkBox;
+        row.insertCell(-1).innerHTML = deleteButton;
     }
 }
+
 function deleteColumn(name) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/deleteAttendanceColumn");
@@ -310,6 +314,7 @@ function deleteColumn(name) {
     xmlhttp.send("name=" + name);
     showAttendanceManage()
 }
+
 function selectColumn(name) {
     console.log("got here");
     var xmlhttp = new XMLHttpRequest();
@@ -317,6 +322,7 @@ function selectColumn(name) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
 }
+
 function addStudentColumn() {
     var name = document.getElementById("studentColumnName").value;
     var type = document.getElementById("studentColumnType").value;
@@ -348,6 +354,39 @@ function addStudentColumn() {
 
 }
 
+
+function findOverlap(a, b) {
+    if (b.length === 0) {
+        return "";
+    }
+ 
+    if (a.endsWith(b)) {
+        return b;
+    }
+ 
+    if (a.indexOf(b) >= 0) {
+        return b;
+    }
+ 
+    return findOverlap(a, b.substring(0, b.length - 1));
+}
+
+function stop(name) {
+    //alert("got here");
+    var badSubstring = " .,<>/?':;|]}[{=+-_)(*&^%$#@!~`";
+    for (var i = 0; i < badSubstring.length; i++) {
+        if (name.indexOf(badSubstring.charAt(i)) != -1) {
+            return false;
+        }
+
+    }
+    if (name.indexOf("\\") != -1) {
+        return false;
+    }
+    return true;
+
+}
+
 function addColumn() {
     var name = document.getElementById("newColumn").value;
     var substring = " ";
@@ -363,11 +402,14 @@ function addColumn() {
 
     var table = document.getElementById("attendanceColumnsTable");
     var row = table.insertRow(-1);
-    row.insertCell(-1).innerHTML = name;
-    var str = "<input type=\"checkbox\" "
+    var checkbox = "<input type=\"checkbox\" "
             + "checked"
             + " onclick=\"selectColumn('" + name + "')\">";
-    row.insertCell(-1).innerHTML = str;
+    var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name  + "')\">Delete</button>";
+    
+    row.insertCell(-1).innerHTML = name;
+    row.insertCell(-1).innerHTML = checkbox;
+    row.insertCell(-1).innerHTML = deleteButton;
 }
 
 function modifyAutofillList(_ , studentNames) {
@@ -460,6 +502,7 @@ function showDemographics(_, data) {
     getRequest("/getStudentColumns", "", demographicsHelper);
 
 }
+
 function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;
@@ -662,8 +705,6 @@ function showFrequentPeers(_, data) {
   peerSpace.innerHTML += nameString;
 }
 
-
-
 function convertDay(day) {
     if (day == 0) {
         return "Sunday";
@@ -715,37 +756,6 @@ function scatterStudentAttendance(xList, yList) {
     Plotly.newPlot('studentTimes', data, layout);
 }
 
-/*function scatterStudentAttendance(dateTimes){
-    var xList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    var yList = [[], [], [], [], [], [], []];
-
-    for (i = 0; i < dateTimes.length; i++) {
-      for (j = 0; j < dateTimes[i].length; i++) {
-        xList.push(xList[i]);
-        yList.push(dateTimes[i][j]);
-      }
-    }
-    console.log(xList);
-    console.log(yList);
-
-    var trace1 = {
-      x: xList,
-      y: yList,
-      type: 'scatter'
-    };
-
-    var data = [trace1];
-
-    var layout = {
-      autosize: false,
-      width: 500,
-      height: 500,
-      title: 'Attendance Times'
-    };
-
-    Plotly.newPlot('studentTimes', data, layout);
-}
-*/
 function graphStudentAttendance(yaxis) {
     var max = Math.max.apply(Math, yaxis);
     //var min = Math.min.apply(Math, yaxis);

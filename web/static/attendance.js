@@ -288,22 +288,19 @@ function showAttendanceManage() {
     getRequest("/getAttendanceColumns", "", showAttendanceManageHelper);
 
 }
-
 function showAttendanceManageHelper(_, data){
     var myData = JSON.parse(data);
     var table = document.getElementById("attendanceColumnsTable");
     for (i in myData) {
         console.log(myData[i]);
         var row = table.insertRow(-1);
-        var name = myData[i][2];
-        var checkBox = "<input type=\"checkbox\" "
+        row.insertCell(-1).innerHTML = myData[i][2];
+        var str = "<input type=\"checkbox\" "
             + (myData[i][1] ? "checked" : "")
-            + " onclick=\"selectColumn('" + name + "')\">";
-        var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name  + "')\">Delete</button>";
-        
-        row.insertCell(-1).innerHTML = name;
-        row.insertCell(-1).innerHTML = checkBox;
-        row.insertCell(-1).innerHTML = deleteButton;
+            + " onclick=\"selectColumn('" + myData[i][2] + "')\">";
+        row.insertCell(-1).innerHTML = str;
+        var str2 = "<button type=\"button\" onclick=\"deleteColumn('" + myData[i][2]  + "')\">Delete</button>";
+        row.insertCell(-1).innerHTML = str2;
     }
 }
 

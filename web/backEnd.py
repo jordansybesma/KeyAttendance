@@ -361,7 +361,7 @@ def addAttendant(request):
     lastName  = request.form.get( 'lastName')
     date = request.form.get('date')
     time = request.form.get('time')
-<<<<<<< HEAD
+
 
     firstQuery = "SELECT * FROM dailyAttendance WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "' AND date = '" + date + "';"
     existingEntry = json.dumps(executeSingleQuery(firstQuery, fetch = True), indent=4, sort_keys=True, default=str)
@@ -397,7 +397,7 @@ def addAttendant(request):
         newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1');"
         executeSingleQuery(newQuery, [])
         return "false"
-=======
+
     activityNames = ["art", "madeFood", "recievedFood", "leadership", "exercise", "mentalHealth", "volunteering", "oneOnOne", "comments"]
     activities = [request.form.get(activityName) for activityName in activityNames]
     print(firstName,lastName, activityNames)
@@ -410,7 +410,7 @@ def addAttendant(request):
         executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         [id] + activities)
         return "true"
->>>>>>> 3d1f575d0669ce732faa28adfc2a185a43fbfd7b
+
     else:
         firstQuery = "SELECT * FROM dailyAttendance WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "' AND date = '" + date + "';"
         existingEntry = json.dumps(executeSingleQuery(firstQuery, fetch = True), indent=4, sort_keys=True, default=str)

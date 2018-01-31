@@ -221,13 +221,10 @@ function displayRow(columns, entry) {
 function addCheckbox(i, entry, columns, date, row, fullName) {
     var index = parseInt(i) + 3;
     var col = columns[i][2];
-
-    var checked = "";
-    if (entry[index]) {
-        checked = "checked";
-    }
-
-    var box = "<input type=\"checkbox\" " + checked + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
+    var box = "<input type=\"checkbox\" " 
+        + (entry[index] ? "checked" : "") 
+        + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
+    
     row.insertCell(-1).innerHTML = box;
 }
 
@@ -288,21 +285,26 @@ function showAttendanceManage() {
     getRequest("/getAttendanceColumns", "", showAttendanceManageHelper);
 
 }
+
 function showAttendanceManageHelper(_, data) {
     var myData = JSON.parse(data);
     var table = document.getElementById("attendanceColumnsTable");
     for (i in myData) {
         console.log(myData[i]);
-        var row = table.insertRow(-1);
-        row.insertCell(-1).innerHTML = myData[i][2];
-        var str = "<input type=\"checkbox\" "
+        
+        var name = myData[i][2];
+        var checkBox = "<input type=\"checkbox\" "
             + (myData[i][1] ? "checked" : "")
-            + " onclick=\"selectColumn('" + myData[i][2] + "')\">";
-        row.insertCell(-1).innerHTML = str;
-        var str2 = "<button type=\"button\" onclick=\"deleteColumn('" + myData[i][2] + "')\">Delete</button>";
-        row.insertCell(-1).innerHTML = str2;
+            + " onclick=\"selectColumn('" + name + "')\">";
+        var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
+        
+        var row = table.insertRow(-1);
+        row.insertCell(-1).innerHTML = name;
+        row.insertCell(-1).innerHTML = checkBox;
+        row.insertCell(-1).innerHTML = deleteButton;
     }
 }
+
 function deleteColumn(name) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/deleteAttendanceColumn");
@@ -409,13 +411,16 @@ function addColumn() {
     xmlhttp.send("name=" + name + "&type=boolean");
 
 
+    var checkBox = "<input type=\"checkbox\" "
+            + "checked"
+            + " onclick=\"selectColumn('" + name + "')\">";
+    var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
+
     var table = document.getElementById("attendanceColumnsTable");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = name;
-    var str = "<input type=\"checkbox\" "
-            + "checked"
-            + " onclick=\"selectColumn('" + name + "')\">";
-    row.insertCell(-1).innerHTML = str;
+    row.insertCell(-1).innerHTML = checkBox;
+    row.insertCell(-1).innerHTML = deleteButton;
 }
 
 function modifyAutofillList(_, studentNames) {

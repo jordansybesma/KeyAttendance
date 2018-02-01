@@ -245,22 +245,32 @@ function showStudentManageHelper(_, data) {
     var table = document.getElementById("studentColumnsTable");
     for (i in myData) {
         console.log(myData[i]);
+        
         var row = table.insertRow(-1);
-        name = myData[i][2];
-        //for some reason this breaks everthing - can't figure out why?
-        //newName = makeHeaderReadable(name);
-        row.insertCell(-1).innerHTML = name;
-        var str = "<input type=\"checkbox\" "
-            + (myData[i][0] ? "checked" : "")
-            + " onclick=\"selectStudentColumn('" + myData[i][2] + "', 'isShowing')\">";
-        row.insertCell(-1).innerHTML = str;
-        var str1 = "<input type=\"checkbox\" "
-            + (myData[i][1] ? "checked" : "")
-            + " onclick=\"selectStudentColumn('" + myData[i][2] + "', 'isQuick')\">";
-        row.insertCell(-1).innerHTML = str1;
-        var str2 = "<button type=\"button\" onclick=\"deleteStudentColumn('" + myData[i][2] + "')\">Delete </button>";
-        row.insertCell(-1).innerHTML = str2;
+        fillRow(row, myData);
     }
+}
+
+function fillRow(row, myData) {
+    
+    var name = myData[i][2];
+    var isShowing = myData[i][0];
+    var isQuick = myData[i][1];
+
+    var checkBoxIsShowing = "<input type=\"checkbox\" "
+        + (isShowing ? "checked" : "")
+        + " onclick=\"selectStudentColumn('" + name + "', 'isShowing')\">";
+
+    var checkBoxIsQuick = "<input type=\"checkbox\" "
+        + (isQuick ? "checked" : "")
+        + " onclick=\"selectStudentColumn('" + name + "', 'isQuick')\">";
+
+    var deleteButton = "<button type=\"button\" onclick=\"deleteStudentColumn('" + name + "')\">Delete </button>";
+
+    row.insertCell(-1).innerHTML = name;
+    row.insertCell(-1).innerHTML = checkBoxIsShowing;
+    row.insertCell(-1).innerHTML = checkBoxIsQuick;
+    row.insertCell(-1).innerHTML = deleteButton;
 }
 
 function selectStudentColumn(name, column) {

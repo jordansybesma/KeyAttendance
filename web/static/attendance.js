@@ -208,7 +208,8 @@ function displayRow(columns, entry) {
     var time = entry[2];
     row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
     for (i in columns) {
-        if (columns[i][1] == true) {
+        var colActive = columns[i][1];
+        if (colActive == true) {
             addCheckbox(i, entry, columns, date, row, fullName);
         }
     }
@@ -645,25 +646,25 @@ function updateProfile(name, col, colid, type) {
 function displayStudentInfo(catName, info, type) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
-    var diplayName = makeHeaderReadable(catName);
+    var displayName = makeHeaderReadable(catName);
     console.log(type);
     if (info == null) {
-        var text = document.createTextNode(diplayName + ": ");
+        var text = document.createTextNode(displayName + ": ");
     } else if (type == "varchar(500)") {
         console.log("var");
-        var text = document.createTextNode(diplayName + ": " + info);
+        var text = document.createTextNode(displayName + ": " + info);
     } else if (type == "int") {
         console.log("int");
-        var text = document.createTextNode(diplayName + ": " + info.toString());
+        var text = document.createTextNode(displayName + ": " + info.toString());
     } else if (type == "date") {
         console.log("date");
-        var text = document.createTextNode(diplayName + ": " + makeDateReadable(info));
+        var text = document.createTextNode(displayName + ": " + makeDateReadable(info));
     } else if (type == "boolean") {
         console.log("bool");
         if (info) {
-            var text = document.createTextNode(diplayName + ": yes");
+            var text = document.createTextNode(displayName + ": yes");
         } else {
-            var text = document.createTextNode(diplayName + ": no");
+            var text = document.createTextNode(displayName + ": no");
         }
     }
     node.appendChild(text);
@@ -861,6 +862,12 @@ function graphStudentAttendance(yaxis) {
 
 // FIX HARDCODED STUFF
 function fillProfileTable(attendance) {
+    
+//    var allCols = document.getElementById("columns").innerHTML;
+//    console.log("allcols: " + allCols);
+//    allCols = document.getElementById("saveColumnData").innerHTML;
+//    console.log("how'd u like me now? " + allCols);
+
     var table = document.getElementById("profileAttendanceTable");
     table.innerHTML = ""
     var fields = ['ID', 'First', 'Last', 'Art', 'Made Food', 'Recieved Food', 'Leadership', 'Exersize', 'Mental Health', 'Volunteering', 'One On One', 'Comments', 'Date', 'Time'];

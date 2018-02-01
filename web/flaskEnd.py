@@ -89,6 +89,10 @@ def updateAttendanceColumn():
 @app.route('/getAttendanceColumns')
 def getAttendanceColumns():
     return backEnd.getAttendanceColumns()
+    
+@app.route('/moveAttendanceColumnUp', methods = ["POST"])
+def moveAttendanceColumnUp():
+    return backEnd.moveAttendanceColumnUp(request)
 
 @app.route('/getMasterAttendanceDate/<dates>')
 def getMasterAttendanceDate(dates):

@@ -18,7 +18,6 @@ function addAttendant(first, last) {
     // Display the month, day, and year. getMonth() returns a 0-based number.
     var month = dt.getMonth() + 1;
     var day = dt.getDate();
-    var year = dt.getFullYear();
     var hour = dt.getHours();
     var minute = dt.getMinutes();
     var seconds = dt.getSeconds();
@@ -39,7 +38,7 @@ function addAttendant(first, last) {
     if (seconds < 10) {
         seconds = "0" + seconds;
     }
-    //var date = year + "-" + month + "-" + day;
+
     var time = hour + ":" + minute + ":" + seconds;
     var date = document.getElementById("storeDate").innerHTML;
     xmlhttp.open("POST", urlBase + "/addAttendant/");
@@ -655,7 +654,7 @@ function showStudentAttendance(_, data) {
 
     var parsedData = JSON.parse(data);
 
-    console.log(JSON.parse(data));
+    console.log(parsedData);
     //
     // var x = [];
 
@@ -667,14 +666,15 @@ function showStudentAttendance(_, data) {
     var scattery = [];
 
     for (i = 0; i < parsedData.length; i++) {
-        var dateString = parsedData[i][7];
+        var dateString = parsedData[i][2];
         console.log(dateString);
         var dateList = dateString.split("-")
         var myDate = new Date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
         var day = myDate.getDay();
         dateCounts[day] = dateCounts[day] + 1;
         console.log(myDate.getDay());
-        var time = parsedData[i][8];
+        
+        var time = parsedData[i][3];
         console.log(time);
         var timeList = time.split(":");
         var hour = parseInt(timeList[0]);
@@ -868,7 +868,7 @@ function selectActivity(name, column, date) {
 function onAddRow() {
     var keywordElement = document.getElementById('keyword').value;
     var optionFound = false;
-    datalist = document.getElementById("suggestedStudents");
+    var datalist = document.getElementById("suggestedStudents");
     for (var j = 0; j < datalist.options.length; j++) {
         if (keywordElement == datalist.options[j].value) {
             optionFound = true;

@@ -526,7 +526,8 @@ function showDemographics(_, data) {
 
     getRequest("/getStudentColumns", "", demographicsHelper);
 
-}e
+}
+
 function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;

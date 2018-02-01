@@ -1490,7 +1490,3 @@ function fillTextBox() {
 function textBoxCallback(_, js) {
     document.getElementById("codeTextBox").innerHTML = js;
 }
-
-function sayHello() {
-    console.log("Hey there!");
-}

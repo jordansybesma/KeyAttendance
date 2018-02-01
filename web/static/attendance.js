@@ -165,7 +165,9 @@ function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
+    console.log("MYDATA: " + myData);
     for (i in myData) {
+        console.log("i: " + i);
         displayRow(myColumns, myData[i]);
     }
 }
@@ -202,7 +204,9 @@ function displayRow(columns, entry) {
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
 
-    var row = table.insertRow(-1);
+    console.log("entry: " + entry);
+    
+    var row = table.insertRow(1);
     var fullName = entry[0] + " " + entry[1];
     var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     var time = entry[2];
@@ -226,7 +230,7 @@ function addCheckbox(i, entry, columns, date, row, fullName) {
     var col = columns[i][2];
     
     var box = "<input type=\"checkbox\" " 
-        + (hasDoneActivity ? "checked" : "") 
+        + (entry[index] ? "checked" : "") 
         + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
     
     row.insertCell(-1).innerHTML = box;

@@ -212,17 +212,19 @@ function displayRow(columns, entry) {
         }
     }
 
-    var deleteStr = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
-    row.insertCell(-1).innerHTML = deleteStr;
+    var deleteButton = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
+    row.insertCell(-1).innerHTML = deleteButton;
 }
 
 // Helper function for displayRow.
 // Adds a checkbox to the row with the correct status (checked or unchecked).
 function addCheckbox(i, entry, columns, date, row, fullName) {
     var index = parseInt(i) + 3;
+    var hasDoneActivity = entry[index];
     var col = columns[i][2];
+    
     var box = "<input type=\"checkbox\" " 
-        + (entry[index] ? "checked" : "") 
+        + (hasDoneActivity ? "checked" : "") 
         + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
     
     row.insertCell(-1).innerHTML = box;

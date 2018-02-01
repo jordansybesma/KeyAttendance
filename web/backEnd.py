@@ -236,6 +236,13 @@ def addAttendanceColumn(request):
     queryCounts = "UPDATE masterAttendance SET "+ name+ "='0';"
 
     executeSingleQuery(queryCounts, [])
+    
+    query2 = "SELECT priority FROM attendanceColumns WHERE name = \'" + name + "\'; "
+    result = json.dumps(executeSingleQuery(query2,fetch = True))
+    newResult =json.loads(result)
+    prio = newResult[0][0]
+    query3 = "UPDATE attendanceColumns SET ordering = " + str(prio) + " WHERE name = \'" + name + "\'; "
+    executeSingleQuery(query3, [])
 
 def deleteAttendanceColumn(request):
     name = request.form.get("name")

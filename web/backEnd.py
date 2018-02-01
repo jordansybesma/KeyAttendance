@@ -16,7 +16,7 @@ def executeSingleQuery(query, params = [], fetch = False):
     dbName = 'compsTestDB'
     user = 'ubuntu'
     password = 'keyComps'
-    hostName = 'ec2-35-160-216-144.us-west-2.compute.amazonaws.com'
+    hostName = 'ec2-34-213-2-88.us-west-2.compute.amazonaws.com'
     conn = psycopg2.connect(database=dbName, user=user, password=password, host=hostName)
     cur = conn.cursor()
     if len(params) == 0:
@@ -42,7 +42,7 @@ def addNewStudent(request):
     firstName = request.form.get('firstName')
     lastName  = request.form.get('lastName')
     executeSingleQuery("INSERT INTO testStudents VALUES (%s, %s)", [firstName, lastName])
-        
+
     return "\nHello frontend:)\n"
 
 def updateStudentInfo(request):
@@ -244,32 +244,34 @@ def decreaseActivityCount(column, date, increase):
     newResult =json.loads(result)
     numAttend = newResult[0][0]
     if increase:
-        newNumAttend = numAttend + 1
+        numAttend += 1
     else:
-        newNumAttend = numAttend - 1
+        numAttend -= 1
 
-    alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(numAttend) + "' WHERE date = '" + date + "';"
     executeSingleQuery(alterQuery, [])
 
 
 def deleteAttendant(request):
     name = request.form.get("name")
     date = request.form.get("date")
+
     nameList = name.split()
     first = nameList[0]
     last = nameList[1]
-    query1 = "SELECT * FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+
+    cols = getActiveCols()
+    colsStr = getColsStr(cols)
+
+    query1 = "SELECT " + colsStr + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     row = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
     rowData = json.loads(row)
     if rowData == []:
         print("this is strange")
     else:
-        headings = ["art", "madeFood", "recievedFood", "leadership", "exersize", "mentalHealth", "volunteering", "oneOnOne"]
-        for i in range(len(headings)):
-            rowIndex = i + 2
-            if rowData[0][rowIndex]:
-                decreaseActivityCount(headings[i], date, False)
-
+        for i in range(len(cols)):
+            if rowData[0][i]:
+                decreaseActivityCount(cols[i], date, False)
 
     query = "DELETE FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     executeSingleQuery(query, [])
@@ -280,12 +282,29 @@ def deleteAttendant(request):
     numAttend = newResult[0][0]
 
     print(numAttend)
-    if (numAttend == 0):
-        newNumAttend = 0
-    else:
-        newNumAttend = numAttend - 1
-    alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    if (numAttend != 0):
+        numAttend -= 1
+    alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(numAttend) + "' WHERE date = '" + date + "';"
     executeSingleQuery(alterQuery, [])
+
+
+def getActiveCols():
+    query = "SELECT name FROM attendanceColumns ORDER BY isshowing DESC;"
+    colsRaw = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+    cols = json.loads(colsRaw)
+    activeCols = []
+    for i in range(len(cols)):
+        if cols[i][0]:
+            activeCols.append(cols[i][0])
+    return activeCols
+
+def getColsStr(cols):
+    colsStr = ""
+    for i in range(len(cols)-1):
+        colsStr += cols[i] + ", "
+    colsStr += cols[len(cols)-1]
+    return colsStr
+
 
 def getDates():
     query = "SELECT DISTINCT date FROM dailyAttendance ORDER BY date DESC"
@@ -295,6 +314,7 @@ def getDates():
 
 def selectActivity(request):
     column = request.form.get("column")
+    column = column.lower()
     date = request.form.get("date")
     name = request.form.get("name")
     nameList = name.split()
@@ -304,14 +324,19 @@ def selectActivity(request):
     query1 = "SELECT "+ column + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
     #currentStatus = executeSingleQuery(query1)
     result1 = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
-
+    print(column)
+    print(date)
     queryMaster = "SELECT "+ column + " FROM masterAttendance WHERE date = '" + date + "';"
     result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
     newResult =json.loads(result)
+    print(result)
     numAttend = newResult[0][0]
     print(result)
     print(numAttend)
-
+    if (result1 == None):
+        result1 = "false"
+    if (numAttend == None):
+        numAttend = 0
 
     if "true" in result1:
         if (numAttend == 0):
@@ -330,83 +355,125 @@ def selectActivity(request):
     return ""
 
 
+
+
+def forsight():
+    column = request.form.get("column")
+    column = column.lower()
+    date = request.form.get("date")
+    name = request.form.get("name")
+    nameList = name.split()
+
+    first = nameList[0]
+    last = nameList[1]
+    query1 = "SELECT "+ column + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    #currentStatus = executeSingleQuery(query1)
+    result1 = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
+    print(column)
+    print(date)
+    queryMaster = "SELECT "+ column + " FROM masterAttendance WHERE date = '" + date + "';"
+    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+    newResult =json.loads(result)
+    print(result)
+    numAttend = newResult[0][0]
+    print(result)
+    print(numAttend)
+    if (result1 == None):
+        result1 = "false"
+    if (numAttend == None):
+        numAttend = 0
+
+    if "true" in result1:
+        if (numAttend == 0):
+            newNumAttend = 0
+        else:
+            newNumAttend = numAttend - 1
+
+        query = "UPDATE dailyAttendance SET " +  column + " = 'FALSE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    else:
+        newNumAttend = numAttend + 1
+        query = "UPDATE dailyAttendance SET " +  column + " = 'TRUE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    executeSingleQuery(query, [])
+
+    alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    executeSingleQuery(alterQuery, [])
+    return ""
+
+
+
+
+
 def addAttendant(request):
     #print(json.decode(request.data))
     firstName = request.form.get('firstName')
     lastName  = request.form.get( 'lastName')
     date = request.form.get('date')
     time = request.form.get('time')
-    activityNames = ["art", "madeFood", "recievedFood", "leadership", "exercise", "mentalHealth", "volunteering", "oneOnOne", "comments"]
-    activities = [request.form.get(activityName) for activityName in activityNames]
-    print(firstName,lastName, activityNames)
-    id = request.form.get('id')
-    if id != "":
-        # time = datetime.datetime.now().time()
-        # activities = activities.append(time, None)
 
-        # add two more %s's for timeIn and timeOut. You won't.
-        executeSingleQuery("INSERT INTO dailyAttendance VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        [id] + activities)
-        return "true"
-    else:
-        firstQuery = "SELECT * FROM dailyAttendance WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "' AND date = '" + date + "';"
-        existingEntry = json.dumps(executeSingleQuery(firstQuery, fetch = True), indent=4, sort_keys=True, default=str)
-        entries = json.loads(existingEntry)
-        if entries != []:
-            print("already added")
-            return "false"
+    firstQuery = "SELECT * FROM dailyAttendance WHERE firstName = '" + firstName + "' AND lastName = '" + lastName + "' AND date = '" + date + "';"
+    existingEntry = json.dumps(executeSingleQuery(firstQuery, fetch = True), indent=4, sort_keys=True, default=str)
+    entries = json.loads(existingEntry)
+    if entries != []:
+        print("already added")
+        return "false"
 
+    query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
+    databaseResult = executeSingleQuery(query, fetch = True)
 
-        query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
-        databaseResult = executeSingleQuery(query, fetch = True)
+    queryRows = "SELECT name from attendanceColumns"
+    columns = json.dumps(executeSingleQuery(queryRows, fetch = True), indent=4, sort_keys=True, default=str)
+    columnsData = json.loads(columns)
+    numCols = len(columnsData);
 
-        queryRows = "SELECT name from attendanceColumns"
-        columns = json.dumps(executeSingleQuery(queryRows, fetch = True), indent=4, sort_keys=True, default=str)
-        columnsData = json.loads(columns)
-        numCols = len(columnsData);
+    newString = "INSERT INTO dailyAttendance (id, firstName, lastName"
+    keyIndex = 0
+    for i in range(0, numCols):
+        newString = newString + ", "+ columnsData[i][0]
+        if (columnsData[i][0]=="Key" or columnsData[i][0]=="key"):
+            keyIndex = i
 
-        newString = "INSERT INTO dailyAttendance (id, firstName, lastName"
-        for i in range(0, numCols):
-            newString = newString + ", "+ columnsData[i][0]
-            
-        newString = newString + ", date, time) VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
-        for i in range(0, numCols):
-            newString = newString + "'FALSE', "
-        newString = newString + "'" + date + "','" + time + "');"
-        #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
-        executeSingleQuery(newString, [])
-        queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"
-        #result = executeSingleQuery(queryMaster)
-        result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
-        newResult =json.loads(result)
-
-        if newResult == []:
-            newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1', '0', '0', '0', '0', '0', '0', '0', '0');"
-            executeSingleQuery(newQuery, [])
-            return "false"
+    newString = newString + ", date, time) VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
+    for i in range(0, numCols):
+        if (i == keyIndex):
+            newString = newString + "'TRUE', "
         else:
-            print(newResult)
-            numAttend = newResult[0][0]
-            #print(result)
-            print(numAttend)
-            newNumAttend = numAttend + 1
-            alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
-            executeSingleQuery(alterQuery, [])
-        
-        return "true"
-        
-#        if(id != ""):
-#            return id
-#        else:
-#            return getJustID(firstName + " " + lastName)
-        
+            newString = newString + "'FALSE', "
+    newString = newString + "'" + date + "','" + time + "');"
+    print(newString)
+    #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
+    executeSingleQuery(newString, [])
+    queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"
+    #result = executeSingleQuery(queryMaster)
+    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+    newResult =json.loads(result)
 
-# If more than one "same name" student is available, return students
+    if newResult == []:
+        newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1');"
+        executeSingleQuery(newQuery, [])
+        return "false"
+    else:
+        print(newResult)
+        numAttend = newResult[0][0]
+        #print(result)
+        print(numAttend)
+        newNumAttend = numAttend + 1
+        alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+        executeSingleQuery(alterQuery, [])
 
-        if len(databaseResult) > 1:
-            return json.dumps(databaseResult[:10])
-        elif len(databaseResult) == 0:
-            return "false"
+    
+    queryMaster = "SELECT Key FROM masterAttendance WHERE date = '" + date + "';"
+    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+    newResult =json.loads(result)
+    
+    numAttend = newResult[0][0]
+    if (numAttend == None):
+        numAttend = 0
+    newNumAttend = numAttend + 1
+        
+    alterQuery = "UPDATE masterAttendance SET Key = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    executeSingleQuery(alterQuery, [])
+    
+    return "true"
 
 
 """
@@ -427,8 +494,8 @@ def autofill(partialString):
     suggestions = json.dumps(databaseResult[:10], indent=4, sort_keys=True, default=str)
     return suggestions
 
-def frequentPeers(string):
-    studentID = getJustID(string)
+def frequentPeers(name):
+    studentID = getJustID(name)
     query = "SELECT date, time FROM dailyAttendance WHERE id = '" + studentID + "';"
 
     result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
@@ -558,4 +625,3 @@ def addAlert(request):
 def checkAlert(request):
     id = request.form.get('id')
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])
-    

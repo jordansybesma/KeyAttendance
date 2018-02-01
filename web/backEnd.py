@@ -132,7 +132,7 @@ def sendFeedback(request):
 # strictly test for now
 # going to get today's data later
 def getAttendance(date):
-    queryColumns = "SELECT name FROM attendanceColumns ORDER BY priority;"
+    queryColumns = "SELECT name FROM attendanceColumns ORDER BY ordering;"
     cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
     colList = json.loads(cols) # this is strange... anyone have any idea why?
     query = "SELECT firstName, lastName, time, " + colList[0][0];

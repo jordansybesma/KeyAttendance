@@ -355,6 +355,54 @@ def selectActivity(request):
     return ""
 
 
+
+
+def forsight():
+    column = request.form.get("column")
+    column = column.lower()
+    date = request.form.get("date")
+    name = request.form.get("name")
+    nameList = name.split()
+
+    first = nameList[0]
+    last = nameList[1]
+    query1 = "SELECT "+ column + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    #currentStatus = executeSingleQuery(query1)
+    result1 = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
+    print(column)
+    print(date)
+    queryMaster = "SELECT "+ column + " FROM masterAttendance WHERE date = '" + date + "';"
+    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+    newResult =json.loads(result)
+    print(result)
+    numAttend = newResult[0][0]
+    print(result)
+    print(numAttend)
+    if (result1 == None):
+        result1 = "false"
+    if (numAttend == None):
+        numAttend = 0
+
+    if "true" in result1:
+        if (numAttend == 0):
+            newNumAttend = 0
+        else:
+            newNumAttend = numAttend - 1
+
+        query = "UPDATE dailyAttendance SET " +  column + " = 'FALSE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    else:
+        newNumAttend = numAttend + 1
+        query = "UPDATE dailyAttendance SET " +  column + " = 'TRUE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
+    executeSingleQuery(query, [])
+
+    alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    executeSingleQuery(alterQuery, [])
+    return ""
+
+
+
+
+
 def addAttendant(request):
     #print(json.decode(request.data))
     firstName = request.form.get('firstName')
@@ -378,13 +426,20 @@ def addAttendant(request):
     numCols = len(columnsData);
 
     newString = "INSERT INTO dailyAttendance (id, firstName, lastName"
+    keyIndex = 0
     for i in range(0, numCols):
         newString = newString + ", "+ columnsData[i][0]
+        if (columnsData[i][0]=="Key" or columnsData[i][0]=="key"):
+            keyIndex = i
 
     newString = newString + ", date, time) VALUES ('" + str(databaseResult[0][0]) + "', '" + firstName + "', '" +lastName + "', "
     for i in range(0, numCols):
-        newString = newString + "'FALSE', "
+        if (i == keyIndex):
+            newString = newString + "'TRUE', "
+        else:
+            newString = newString + "'FALSE', "
     newString = newString + "'" + date + "','" + time + "');"
+    print(newString)
     #newString = "INSERT INTO dailyAttendance VALUES " + databaseResult[0] + ", " + firstName + ", " + lastName
     executeSingleQuery(newString, [])
     queryMaster = "SELECT numAttend FROM masterAttendance WHERE date = '" + date + "';"
@@ -405,6 +460,19 @@ def addAttendant(request):
         alterQuery = "UPDATE masterAttendance SET numAttend = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
         executeSingleQuery(alterQuery, [])
 
+    
+    queryMaster = "SELECT Key FROM masterAttendance WHERE date = '" + date + "';"
+    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+    newResult =json.loads(result)
+    
+    numAttend = newResult[0][0]
+    if (numAttend == None):
+        numAttend = 0
+    newNumAttend = numAttend + 1
+        
+    alterQuery = "UPDATE masterAttendance SET Key = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    executeSingleQuery(alterQuery, [])
+    
     return "true"
 
 

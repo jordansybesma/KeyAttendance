@@ -244,18 +244,15 @@ function showStudentManageHelper(_, data) {
     var myData = JSON.parse(data);
     var table = document.getElementById("studentColumnsTable");
     for (i in myData) {
-        console.log(myData[i]);
-        
         var row = table.insertRow(-1);
-        fillRow(row, myData);
+        fillRow(row, myData[i]);
     }
 }
 
-function fillRow(row, myData) {
-    
-    var name = myData[i][2];
-    var isShowing = myData[i][0];
-    var isQuick = myData[i][1];
+function fillRow(row, rowData) {
+    var name = rowData[2];
+    var isShowing = rowData[0];
+    var isQuick = rowData[1];
 
     var checkBoxIsShowing = "<input type=\"checkbox\" "
         + (isShowing ? "checked" : "")

@@ -923,21 +923,17 @@ function createNewAttendance() {
     var readable = makeDateReadable(date);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readable;
     var table = document.getElementById("Attendance-Table");
+    
     makeTableHeader(table);
+    
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
-    //getRequest("/getAttendance/" + table_date, "", fillAttendance);??
 }
 
 function makeTableHeader(table) {
     table.innerHTML = "";
-    /*var row = table.insertRow(0);
-    cellNames = ["Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One On One"];
-    for (header of cellNames) {
-        row.insertCell(-1).innerHTML = header;
-    }*/
     console.log("got here");
     getRequest("/getAttendanceColumns", "", makeTableHeaderHelper);
 }
@@ -970,7 +966,9 @@ function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;
     var table = document.getElementById("Attendance-Table");
     console.log("about to create header");
+    
     makeTableHeader(table);
+    
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readable;
@@ -978,14 +976,8 @@ function displayAttendanceTable(table_date) {
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
-    /*var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", urlBase + "/tempStudentColumns");
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send();*/
-
 
     return false;
-    // list.style.display = "none";
 }
 
 function createListOfAttendanceDates(_, dates) {

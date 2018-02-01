@@ -389,11 +389,9 @@ function stop(name) {
     if (name.indexOf("\\") != -1) {
         return false;
     }
+    
     return true;
-
 }
-
-
 
 function addColumn() {
     var name = document.getElementById("newColumn").value;

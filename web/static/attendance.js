@@ -308,20 +308,48 @@ function showAttendanceManageHelper(_, data) {
             + (myData[i][1] ? "checked" : "")
             + " onclick=\"selectColumn('" + name + "')\">";
         var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
+        var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
+        var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
         
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = name;
         row.insertCell(-1).innerHTML = checkBox;
         row.insertCell(-1).innerHTML = deleteButton;
+        row.insertCell(-1).innerHTML = upButton;
+        row.insertCell(-1).innerHTML = downButton;
     }
 }
 
-function deleteColumn(name) {
+function moveAttendanceColumnUp(name) {
+    console.log("move column up");
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", urlBase + "/deleteAttendanceColumn");
+    console.log(urlBase);
+    xmlhttp.open("POST", urlBase + "/moveAttendanceColumnUp");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
-    showAttendanceManage()
+    showAttendanceManage();
+    //alert("you got it up");
+    return false;
+}
+
+function moveAttendanceColumnDown(name) {
+    alert("go down down down");
+    return false;
+}
+
+function deleteColumn(name) {
+    if (name == "Key" || name == "key") {
+        alert("You cannot delete the key column");
+        return false;
+    }
+    else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", urlBase + "/deleteAttendanceColumn");
+        xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        xmlhttp.send("name=" + name);
+        showAttendanceManage()
+    }
+    
 }
 function selectColumn(name) {
     console.log("got here");
@@ -359,15 +387,6 @@ function addStudentColumn() {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&type=" + type + "&definedOptions=");
     showProfileManage()
-
-    /*var table = document.getElementById("attendanceColumnsTable");
-    var row = table.insertRow(-1);
-    row.insertCell(-1).innerHTML = name;
-    var str = "<input type=\"checkbox\" "
-            + "checked"
-            + " onclick=\"selectColumn('" + name + "')\">";
-    row.insertCell(-1).innerHTML = str;*/
-
 }
 
 function findOverlap(a, b) {
@@ -514,8 +533,6 @@ function showStudentProfile() {
         profileSpace.innerHTML += ("\n");
         console.log(keywordElement);
         getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
-        //        getRequest("/getJustID/" + keywordElement, "", showProfile);
-
     }
 }
 
@@ -558,7 +575,7 @@ function openEditProfile() {
     var studentData = JSON.parse(studentInfo);
     var studData = studentData[0];
     var columnData = JSON.parse(columns);
-    updateString = "";
+    var updateString = "";
     for (i in columnData) {
         console.log("outer loop");
         
@@ -887,6 +904,7 @@ function fillProfileTable(attendance) {
 }
 
 function selectActivity(name, column, date) {
+    console.log("selecting activity");
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/selectActivity");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
@@ -934,21 +952,17 @@ function createNewAttendance() {
     var readable = makeDateReadable(date);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readable;
     var table = document.getElementById("Attendance-Table");
+    
     makeTableHeader(table);
+    
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
-    //getRequest("/getAttendance/" + table_date, "", fillAttendance);??
 }
 
 function makeTableHeader(table) {
     table.innerHTML = "";
-    /*var row = table.insertRow(0);
-    cellNames = ["Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One On One"];
-    for (header of cellNames) {
-        row.insertCell(-1).innerHTML = header;
-    }*/
     console.log("got here");
     getRequest("/getAttendanceColumns", "", makeTableHeaderHelper);
 }
@@ -981,7 +995,9 @@ function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;
     var table = document.getElementById("Attendance-Table");
     console.log("about to create header");
+    
     makeTableHeader(table);
+    
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readable;
@@ -989,14 +1005,8 @@ function displayAttendanceTable(table_date) {
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
-    /*var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", urlBase + "/tempStudentColumns");
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send();*/
-
 
     return false;
-    // list.style.display = "none";
 }
 
 function createListOfAttendanceDates(_, dates) {
@@ -1059,32 +1069,8 @@ function masterAttendanceHelper(_, masterData) {
     columns = document.getElementById("columnData").innerHTML;
     columnData = JSON.parse(columns);
     console.log(columnData);
-    /*var row = table.insertRow(-1);
-    headers = ["Date", "# Attendees", "# Art", "# Make Food", "# Recieved Food", "# Leadership", "# Exersize", "# Mental Health", "# Volunteering", "# One On One"];
-    for (header of headers)  {
-        row.insertCell(-1).innerHTML = header;
-    }*/
-    /*var xaxis = [];
-    var yaxis = [];
-    var yaxisArt = [];
-    var yaxisMadeFood = [];
-    var yaxisRecievedFood = [];
-    var yaxisLeadership = [];
-    var yaxisExersize = [];
-    var yaxisMentalHealth = [];
-    var yaxisVolunteering = [];
-    var yaxisOneOnOne = [];*/
+
     for (i in myData) {
-        /*xaxis.push(myData[i][0]);
-        yaxis.push(myData[i][1]);
-        yaxisArt.push(myData[i][2]);
-        yaxisMadeFood.push(myData[i][3]);
-        yaxisRecievedFood.push(myData[i][4]);
-        yaxisLeadership.push(myData[i][5]);
-        yaxisExersize.push(myData[i][6]);
-        yaxisMentalHealth.push(myData[i][7]);
-        yaxisVolunteering.push(myData[i][8]);
-        yaxisOneOnOne.push(myData[i][9]);*/
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = myData[i][0];
         row.insertCell(-1).innerHTML = myData[i][1];
@@ -1097,13 +1083,11 @@ function masterAttendanceHelper(_, masterData) {
                 }
                 row.insertCell(-1).innerHTML = val;
             }
-
-
         }
     }
 
-    masterDataPlot(xaxis, yaxis);
-    activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxisLeadership, yaxisExersize, yaxisMentalHealth, yaxisVolunteering, yaxisOneOnOne);
+    //masterDataPlot(xaxis, yaxis);
+    //activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxisLeadership, yaxisExersize, yaxisMentalHealth, yaxisVolunteering, yaxisOneOnOne);
 
 
 }
@@ -1489,8 +1473,4 @@ function fillTextBox() {
 // callback for fillTextBox
 function textBoxCallback(_, js) {
     document.getElementById("codeTextBox").innerHTML = js;
-}
-
-function sayHello() {
-    console.log("Hey there!");
 }

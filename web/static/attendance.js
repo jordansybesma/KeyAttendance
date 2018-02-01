@@ -842,8 +842,12 @@ function graphStudentAttendance(yaxis) {
 
 // FIX HARDCODED STUFF
 function fillProfileTable(attendance) {
+    
     var allCols = document.getElementById("columns").innerHTML;
     console.log("allcols: " + allCols);
+    allCols = document.getElementById("saveColumnData").innerHTML;
+    console.log("how'd u like me now? " + allCols);
+
     var table = document.getElementById("profileAttendanceTable");
     table.innerHTML = ""
     var fields = ['ID', 'First', 'Last', 'Art', 'Made Food', 'Recieved Food', 'Leadership', 'Exersize', 'Mental Health', 'Volunteering', 'One On One', 'Comments', 'Date', 'Time'];

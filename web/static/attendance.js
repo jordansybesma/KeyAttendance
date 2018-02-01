@@ -224,33 +224,17 @@ function displayRow(columns, entry) {
 
 // Helper function for displayRow.
 // Adds a checkbox to the row with the correct status (checked or unchecked).
-
 function addCheckbox(i, entry, columns, date, row, fullName) {
     var index = parseInt(i) + 3;
+    var hasDoneActivity = entry[index];
     var col = columns[i][2];
     
-    var checked = "";
-    if (entry[index]) {
-        checked = "checked";
-    }
+    var box = "<input type=\"checkbox\" " 
+        + (entry[index] ? "checked" : "") 
+        + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
     
-    var box = "<input type=\"checkbox\" " + checked + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
     row.insertCell(-1).innerHTML = box;
 }
-
-
-
-//function addCheckbox(i, entry, columns, date, row, fullName) {
-//    var index = parseInt(i) + 3;
-//    var hasDoneActivity = entry[index];
-//    var col = columns[i][2];
-//    
-//    var box = "<input type=\"checkbox\" " 
-//        + (entry[index] ? "checked" : "") 
-//        + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
-//    
-//    row.insertCell(-1).innerHTML = box;
-//}
 
 function showProfileManage() {
     table = document.getElementById("studentColumnsTable");

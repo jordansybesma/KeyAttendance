@@ -186,7 +186,7 @@ def moveAttendanceColumnUp(request):
     for i in range(1, len(ids)):
         print(ids[i][0])
         if (ids[i][0] == name):
-            if (i < 3):
+            if (i < 2):
                 return ""
             
             colID = ids[i][1]

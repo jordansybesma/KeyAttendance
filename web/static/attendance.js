@@ -308,8 +308,8 @@ function showAttendanceManageHelper(_, data) {
             + (myData[i][1] ? "checked" : "")
             + " onclick=\"selectColumn('" + name + "')\">";
         var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
-        var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">^^^</button>";
-        var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">vvv</button>";
+        var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
+        var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
         
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = name;

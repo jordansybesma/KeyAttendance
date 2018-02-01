@@ -165,7 +165,9 @@ function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
+    console.log("MYDATA: " + myData);
     for (i in myData) {
+        console.log("i: " + i);
         displayRow(myColumns, myData[i]);
     }
 }
@@ -202,7 +204,9 @@ function displayRow(columns, entry) {
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
 
-    var row = table.insertRow(-1);
+    console.log("entry: " + entry);
+    
+    var row = table.insertRow(1);
     var fullName = entry[0] + " " + entry[1];
     var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     var time = entry[2];
@@ -220,17 +224,33 @@ function displayRow(columns, entry) {
 
 // Helper function for displayRow.
 // Adds a checkbox to the row with the correct status (checked or unchecked).
+
 function addCheckbox(i, entry, columns, date, row, fullName) {
     var index = parseInt(i) + 3;
-    var hasDoneActivity = entry[index];
     var col = columns[i][2];
     
-    var box = "<input type=\"checkbox\" " 
-        + (hasDoneActivity ? "checked" : "") 
-        + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
+    var checked = "";
+    if (entry[index]) {
+        checked = "checked";
+    }
     
+    var box = "<input type=\"checkbox\" " + checked + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
     row.insertCell(-1).innerHTML = box;
 }
+
+
+
+//function addCheckbox(i, entry, columns, date, row, fullName) {
+//    var index = parseInt(i) + 3;
+//    var hasDoneActivity = entry[index];
+//    var col = columns[i][2];
+//    
+//    var box = "<input type=\"checkbox\" " 
+//        + (entry[index] ? "checked" : "") 
+//        + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
+//    
+//    row.insertCell(-1).innerHTML = box;
+//}
 
 function showProfileManage() {
     table = document.getElementById("studentColumnsTable");

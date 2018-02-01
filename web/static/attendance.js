@@ -206,7 +206,8 @@ function displayRow(columns, entry) {
     var time = entry[2];
     row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
     for (i in columns) {
-        if (columns[i][1] == true) {
+        var colActive = columns[i][1];
+        if (colActive == true) {
             addCheckbox(i, entry, columns, date, row, fullName);
         }
     }
@@ -841,6 +842,8 @@ function graphStudentAttendance(yaxis) {
 
 // FIX HARDCODED STUFF
 function fillProfileTable(attendance) {
+    var allCols = document.getElementById("columns").innerHTML;
+    console.log("allcols: " + allCols);
     var table = document.getElementById("profileAttendanceTable");
     table.innerHTML = ""
     var fields = ['ID', 'First', 'Last', 'Art', 'Made Food', 'Recieved Food', 'Leadership', 'Exersize', 'Mental Health', 'Volunteering', 'One On One', 'Comments', 'Date', 'Time'];

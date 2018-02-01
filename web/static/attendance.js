@@ -53,6 +53,7 @@ function addAttendant(first, last) {
 // Adds a new attendant to the daily attendance table
 function displayNewAttendant(first, last, time) {
     // Get data about columns
+    //refreshAttendanceTable()
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
 
@@ -65,8 +66,9 @@ function displayNewAttendant(first, last, time) {
     attendantData[0] = first;
     attendantData[1] = last;
     attendantData[2] = time;
+    attendantData[3] = true;
     var i;
-    for (i = 3; i < arrayLength; i++) {
+    for (i = 4; i < arrayLength; i++) {
         attendantData[i] = false;
     }
 
@@ -200,7 +202,7 @@ function displayRow(columns, entry) {
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
 
-    var row = table.insertRow(1);
+    var row = table.insertRow(-1);
     var fullName = entry[0] + " " + entry[1];
     var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     var time = entry[2];
@@ -350,10 +352,12 @@ function addStudentColumn() {
         alert("Please enter a type")
         return;
     }
+    document.getElementById("studentColumnName").value = "";
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&type=" + type + "&definedOptions=");
+    showProfileManage()
 
     /*var table = document.getElementById("attendanceColumnsTable");
     var row = table.insertRow(-1);
@@ -413,6 +417,7 @@ function addColumn() {
         alert("Please enter a name")
         return;
     }
+    document.getElementById("newColumn").value = "";
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addAttendanceColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
@@ -520,7 +525,7 @@ function showDemographics(_, data) {
 
     getRequest("/getStudentColumns", "", demographicsHelper);
 
-}
+}e
 function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;
@@ -551,8 +556,10 @@ function openEditProfile() {
     var studentData = JSON.parse(studentInfo);
     var studData = studentData[0];
     var columnData = JSON.parse(columns);
+    updateString = "";
     for (i in columnData) {
         console.log("outer loop");
+        
         if (columnData[i][0]) {
             console.log("next loop");
             var form = document.createElement("form");
@@ -561,18 +568,29 @@ function openEditProfile() {
             if ((type == "varchar(500)") || (type == "int")) {
                 console.log("got to last loop");
                 var col = columnData[i][2];
-                var str = col + ":<br> <input id='" + col + "colid' type='text' value='" + studData[parseInt(i) + 3] + "' /> <br>";
-                str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
-                str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
+                var value = studData[parseInt(i) + 3];
+                if (value == null) {
+                    value = "";
+                }
+                var str = col + ":<br> <input id='" + col + "colid' type='text' value='" + value + "' /> <br>";
+                //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
+                //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 console.log(str);
+                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
+                console.log(updateString);
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "date") {
                 var col = columnData[i][2];
-                var str = col + ":<br> <input id='" + col + "colid' type='date' value='" + studData[parseInt(i) + 3] + "'/> <br>";
-                str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
-                str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
+                var value = studData[parseInt(i) + 3];
+                if (value == null) {
+                    value = "";
+                }
+                var str = col + ":<br> <input id='" + col + "colid' type='date' value='" + value + "'/> <br>";
+                //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
+                //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 console.log(str);
+                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "boolean") {
@@ -585,6 +603,7 @@ function openEditProfile() {
 
                 }
                 str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
+                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
                 console.log(str);
                 form.innerHTML = str;
                 div.appendChild(form);
@@ -595,7 +614,8 @@ function openEditProfile() {
     }
     var returnButton = document.createElement('button');
     returnButton.setAttribute('name', 'Return to Profile');
-    returnButton.setAttribute('onclick', 'returnToProfile()');
+    console.log(updateString);
+    returnButton.setAttribute('onclick', updateString + 'returnToProfile();');
     returnButton.innerHTML = "Return to Profile";
     div.appendChild(returnButton);
 }
@@ -705,7 +725,7 @@ function showStudentAttendance(_, data) {
     // };
 
 
-    fillProfileTable(parsedData);
+    //fillProfileTable(parsedData);
 
     getRequest("/frequentPeers/" + document.getElementById("studentName").innerHTML, "", showFrequentPeers);
 }

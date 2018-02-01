@@ -16,6 +16,11 @@
 @cyan:      rgb(42, 161, 152);
 @green:     rgb(133, 153, 0);
 
+html {
+    font-size: calc(~"6pt + 0.5vw");
+    text-size-adjust: none;
+}
+
 .solarized-dark() {
     background-color: @base03;
     color: @base0;
@@ -36,39 +41,50 @@
     to {opacity: 1;}
 }
 
-div.tab  {
+#tabs  {
     .tablinks  {
-        width: 14%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        vertical-align:middle;
+        text-align:center; 
+        flex-grow: 1;
+        //width: 100% / 6;
+        overflow: visible;
+        //position: static;
+        background-color: inherit;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        transition: 0.3s;
+        color: @base0;
+        background-color: @base03;
+        // for mobile
+        // https://stackoverflow.com/questions/15649244/responsive-font-size
+        // https://css-tricks.com/viewport-sized-typography/
+        font-size: ~"calc(5pt + 0.6vw)";
+
     }
-    
-    overflow: hidden;
+    .tablinks:hover {
+        background-color: @base02;
+        color: @red;
+    }
+
+    .tablinks.active {
+        background-color: @base3;
+    }
+    max-height: 50px;
+    min-height: 30px;
+    //flex-direction: row;
+    //align-items: stretch;
+    display: flex;
+align-content: stretch;
     //border: 1px solid #ccc;
-    background-color: @base03
-}
-
-
-div.tab button:hover {
-    background-color: @base02
-}
-
-div.tab button {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 1% 1%;
-    transition: 0.3s;
-    color: @base0;
     background-color: @base03;
-    // https://stackoverflow.com/questions/15649244/responsive-font-size
-    // for mobile
-    font-size: 2vw;
+    width: 100%;
 }
 
-div.tab button.active {
-    background-color: @base3;
-}
+
 
 
 
@@ -86,9 +102,9 @@ div.tab button.active {
 }
 
 #the-key-heading {
-    height: 25px;
+    //height: 25px;
     margin-left: 2.5%;
-    font-size: 20px;
+    font-size: 1.25em;
     font-weight: bold;
     color: @red;
     text-align: left;
@@ -164,30 +180,49 @@ h4 {
 }
 
 
+.tabishButton  {
+    //max-height: 50px;
+    //width: 16.6666%;
+    font-size: ~"calc(5pt + 0.6vw)";
+    //padding-left: 2px;
+    //padding-top:  2px;
+    background-color: @base02;
+    color: @cyan;
+}
+
+.tabishButton:hover {
+    background-color: @base2;
+    //color: @base1;
+}
+
 #Data  {
-
-    #returnAttendanceList {
-        //width: 50px;
-        //height: 27px;
-        font-size: 13pt;
-        background-color: @base02;
-        color: @base1;
-        padding-left: 4px;
-        padding-top:  4px;
-        //position: relative;
-        //top: 8px;
-        
+    #leftStuff {
+        float: left;
+        width: 60%
     }
 
-    #returnAttendanceList:hover {
-        background-color: @base2;
-        color: @base1;
+    #rightStuff {
+        position: relative;
+        top: 5px;
+        display: flex;
+        width: 40%;
+        flex-flow: row-reverse wrap;
+        justify-content: space-around;
+        // right: 1%;
+       // height: 30%;
+    
+       #refresh {
+        }
+
+        #download {
+        }
+
+        #addStudent{
+        }
     }
 
-    #returnAttendanceList{
-        padding: 5px;
-        border: 5px @base3;
-    }
+
+
 
     #submitStudent {
         float: right;
@@ -221,12 +256,6 @@ h4 {
 //        margin-bottom: 20px;   
 //    }
 
-    #addStudent {
-        //float: right;
-        //padding: 10px;
-        //margin-right: 20px;
-        margin-bottom: 5px;
-    }
     #newStudentFirst{
         left: -10px;
     }
@@ -317,41 +346,11 @@ span:hover {
     width: 100%;
 }
 
-#leftStuff {
-    float: left;
-    width: 75%
-}
 
-#rightStuff {
-    float: left;
-    width: 25%;
-}
 
-#innerRight {
-    position: relative;
-}
 
-#download {
-    position: absolute;
-    //left: 130px;
-    top: 8px;
-    right: 0px;
-    font-size: 13pt;
-    padding-left: 4px;
-    padding-top:  4px;
-}
 
-#addStudent {
-    position: absolute;
-    right: 0px;
-    top: 60px;
-}
 
-#refresh {
-    position: absolute;
-    right: 0px;
-    top: 90px;
-}
 
 #returnAttendanceList {
     position: relative;

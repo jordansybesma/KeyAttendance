@@ -28,13 +28,13 @@
         The Key
     </div>
 
-<div class="tab">
-<button id = "defaultOpen" class = "tablinks" onclick = "openTab(event, 'Data'); createNewAttendance();"> Attendance Sheets </button>
-<button class = "tablinks" onclick = "openTab(event, 'AttendanceOverview'); displayMasterAttendance()"> Attendance Overview </button>
-<button id = "studentProfileTab" class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</button>
-<button class = "tablinks" onclick = "openTab(event, 'AttendanceCols'); showAttendanceManage();">Attendance Columns</button>
-<button class = "tablinks" onclick = "openTab(event, 'Feedback Forum')"> Feedback Forum </button>
-<button class = "tablinks" onclick = "openTab(event, 'Manage Student Profile'); showProfileManage();"> Manage Profile </button>
+<div id="tabs">
+<div id = "defaultOpen" class = "tablinks" onclick = "openTab(event, 'Data'); createNewAttendance();"> Attendance Sheets </div>
+<div class = "tablinks" onclick = "openTab(event, 'AttendanceOverview'); displayMasterAttendance()"> Attendance Overview </div>
+<div id = "studentProfileTab" class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</div>
+<div class = "tablinks" onclick = "openTab(event, 'AttendanceCols'); showAttendanceManage();">Attendance Columns</div>
+<div class = "tablinks" onclick = "openTab(event, 'Feedback Forum')"> Feedback Forum </div>
+<div class = "tablinks" onclick = "openTab(event, 'Manage Student Profile'); showProfileManage();"> Manage Profile </div>
 </div>
 
 
@@ -56,7 +56,7 @@
     <div id="attendanceDiv">
         <div id="aboveTable">
             <div id="leftStuff">
-                <button id="returnAttendanceList" onclick="returnAttendance()">All Dates</button>
+                <button id="returnAttendanceList" onclick="returnAttendance()" type="button" class="tabishButton">All Dates</button>
 
                 <h2 id="attendanceName"> Attendance Sheet 10/19/2017 </h2>
 
@@ -71,12 +71,9 @@
             </div>
 
             <div id="rightStuff">
-                <div id="innerRight">
-                    <button type="button" id="download" onclick="createFile()">Download</button>
-
-                    <button id="addStudent" onclick="openAddStudent()">Add New Student</button>
-                    <button id="refresh" onclick="refreshAttendanceTable()">Refresh</button>
-                </div>
+                <button class="tabishButton" type="button" id="download" onclick="createFile()">Download</button>
+                <button id="refresh" class="tabishButton" type="button" onclick="refreshAttendanceTable()">Refresh</button>
+                <button id="addStudent" class="tabishButton" type="button" onclick="openAddStudent()">Add New Student</button>
             </div>
         </div>
             <div id="studentDiv" class="addStudentContent">

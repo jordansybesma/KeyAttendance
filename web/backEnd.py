@@ -172,7 +172,36 @@ def getMasterAttendance():
 
 
 
-
+def moveAttendanceColumnUp(request):
+    print("got to column up")
+    name = request.form.get("name")
+    query = "SELECT name, ordering FROM attendanceColumns ORDER BY ordering;"
+    result = json.dumps(executeSingleQuery(query,fetch = True))
+    print(result)
+    ids =json.loads(result)
+    colID = 0
+    prevCol = ""
+    prevID = 0
+    print(name)
+    for i in range(1, len(ids)):
+        print(ids[i][0])
+        if (ids[i][0] == name):
+            if (i < 2):
+                return ""
+            
+            colID = ids[i][1]
+            prevCol = ids[i-1][0]
+            prevID = ids[i-1][1]
+    if (colID == 0 or prevID == 0):
+        print("did not find... oops!")
+        return 
+    query1 = "UPDATE attendanceColumns SET ordering = " + str(prevID) + " WHERE name = \'" + name + "\';"
+    query2 = "UPDATE attendanceColumns SET ordering = " + str(colID) + " WHERE name = \'" + prevCol + "\';"
+    executeSingleQuery(query1, [])
+    executeSingleQuery(query2, [])
+            
+    return ""
+#inUse isShowing, name, type isparent ischild parent priority
 
 def addAttendanceColumn(request):
     #make sure column name not in use
@@ -225,7 +254,7 @@ def updateAttendanceColumn(request):
 
 
 def getAttendanceColumns():
-    query = "SELECT * FROM attendanceColumns ORDER BY priority;"
+    query = "SELECT * FROM attendanceColumns ORDER BY ordering;"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
 
@@ -355,49 +384,6 @@ def selectActivity(request):
     return ""
 
 
-
-
-def forsight():
-    column = request.form.get("column")
-    column = column.lower()
-    date = request.form.get("date")
-    name = request.form.get("name")
-    nameList = name.split()
-
-    first = nameList[0]
-    last = nameList[1]
-    query1 = "SELECT "+ column + " FROM dailyAttendance WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
-    #currentStatus = executeSingleQuery(query1)
-    result1 = json.dumps(executeSingleQuery(query1,fetch = True), indent=4, sort_keys=True, default=str)
-    print(column)
-    print(date)
-    queryMaster = "SELECT "+ column + " FROM masterAttendance WHERE date = '" + date + "';"
-    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
-    newResult =json.loads(result)
-    print(result)
-    numAttend = newResult[0][0]
-    print(result)
-    print(numAttend)
-    if (result1 == None):
-        result1 = "false"
-    if (numAttend == None):
-        numAttend = 0
-
-    if "true" in result1:
-        if (numAttend == 0):
-            newNumAttend = 0
-        else:
-            newNumAttend = numAttend - 1
-
-        query = "UPDATE dailyAttendance SET " +  column + " = 'FALSE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
-    else:
-        newNumAttend = numAttend + 1
-        query = "UPDATE dailyAttendance SET " +  column + " = 'TRUE' WHERE date = '" + date + "' AND firstName = '" + first + "' AND lastName = '" + last + "';"
-    executeSingleQuery(query, [])
-
-    alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
-    executeSingleQuery(alterQuery, [])
-    return ""
 
 
 

@@ -167,7 +167,17 @@ def getStudentAttendance(student):
     return json.dumps(queryResult, indent=4, sort_keys=True, default=str)
 
 def getMasterAttendance():
-    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;",
+    
+    queryColumns = "SELECT name FROM attendanceColumns ORDER BY ordering;"
+    cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
+    colList = json.loads(cols) # this is strange... anyone have any idea why?
+    query = "SELECT date, numattend, " + colList[0][0];
+    for i in range(1, len(colList)):
+        query = query + ", " + colList[i][0]
+    query = query + " FROM masterAttendance ORDER BY date DESC;"
+    #"SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;"
+    
+    return json.dumps(executeSingleQuery(query,
         fetch = True)[:10], indent=4, sort_keys=True, default=str)
 
 

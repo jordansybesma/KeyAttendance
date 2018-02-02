@@ -451,7 +451,7 @@ def addAttendant(request):
     newResult =json.loads(result)
 
     if newResult == []:
-        newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1');"
+        newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1', '1');"
         executeSingleQuery(newQuery, [])
         return "false"
     else:
@@ -473,8 +473,8 @@ def addAttendant(request):
         numAttend = 0
     newNumAttend = numAttend + 1
         
-    alterQuery = "UPDATE masterAttendance SET Key = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
-    executeSingleQuery(alterQuery, [])
+    alterQuery2 = "UPDATE masterAttendance SET Key = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    executeSingleQuery(alterQuery2, [])
     
     return "true"
 

@@ -1,6 +1,5 @@
-var local, scott, urlBase;
+var local, base, urlBase;
 local = "http://127.0.0.1:5000";
-scott = "http://ec2-34-213-2-88.us-west-2.compute.amazonaws.com";
 base = "https://attendance.unionofyouth.org";
 urlBase = base;
 
@@ -954,9 +953,8 @@ function createNewAttendance() {
     document.getElementById("storeDate").innerHTML = date;
     var readable = makeDateReadable(date);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readable;
-    var table = document.getElementById("Attendance-Table");
     
-    makeTableHeader(table);
+    fillAttendanceTable();
     
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
@@ -964,17 +962,17 @@ function createNewAttendance() {
     list.style.display = "none";
 }
 
-function makeTableHeader(table) {
-    table.innerHTML = "";
-    console.log("got here");
-    getRequest("/getAttendanceColumns", "", makeTableHeaderHelper);
+function fillAttendanceTable() {
+    getRequest("/getAttendanceColumns", "", fillAttendanceTableHelper);
 }
 
-function makeTableHeaderHelper(_, data) {
+function fillAttendanceTableHelper(_, data) {
     console.log("got to helper");
-    //    console.log(data);
     document.getElementById("columns").innerHTML = data;
-    table = document.getElementById("Attendance-Table");
+    var table = document.getElementById("Attendance-Table");
+    
+    
+    table.innerHTML = "";
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
     var myData = JSON.parse(data);
@@ -983,8 +981,9 @@ function makeTableHeaderHelper(_, data) {
             var newHeader = makeHeaderReadable(myData[i][2]);
             row.insertCell(-1).innerHTML = newHeader;
         }
-
     }
+    
+    // Fill attendance table with recorded attendants
     var table_date = document.getElementById("storeDate").innerHTML;
     getRequest("/getAttendance/" + table_date, "", fillAttendance);
 }
@@ -996,10 +995,8 @@ function refreshAttendanceTable() {
 
 function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;
-    var table = document.getElementById("Attendance-Table");
-    console.log("about to create header");
     
-    makeTableHeader(table);
+    fillAttendanceTable();
     
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);
@@ -1008,7 +1005,7 @@ function displayAttendanceTable(table_date) {
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
-
+    
     return false;
 }
 

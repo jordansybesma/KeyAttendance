@@ -5,13 +5,13 @@ urlBase = base;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
-    var span = document.getElementById("close");
-    var popUp = document.getElementById('studentDiv');
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
+    var popUp = document.getElementById('studentDiv');
     popUp.style.display = "none";
 }
 
+// Adds a new attendee to current sheet
 // Called when a new name is added to the attendance sheet
 function addAttendant(first, last) {
     var dt = new Date();

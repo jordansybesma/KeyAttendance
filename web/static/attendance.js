@@ -2,7 +2,7 @@ var local, scott, urlBase;
 local = "http://127.0.0.1:5000";
 scott = "http://ec2-34-213-2-88.us-west-2.compute.amazonaws.com";
 base = "https://attendance.unionofyouth.org";
-urlBase = base;
+urlBase = local;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -1476,4 +1476,8 @@ function fillTextBox() {
 // callback for fillTextBox
 function textBoxCallback(_, js) {
     document.getElementById("codeTextBox").innerHTML = js;
+}
+
+function showReports() {
+    console.log('hello');
 }

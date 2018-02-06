@@ -687,9 +687,7 @@ function showStudentAttendance(_, data) {
     var parsedData = JSON.parse(data);
 
     console.log(parsedData);
-    //
-    // var x = [];
-
+    
     var dateCounts = [0, 0, 0, 0, 0, 0, 0];
 
     var dateTimes = [[], [], [], [], [], [], []];
@@ -712,10 +710,6 @@ function showStudentAttendance(_, data) {
         var hour = parseInt(timeList[0]);
         scatterx.push(convertDay(day));
         scattery.push(hour);
-        /*console.log(timeList);
-        var baseTenTime = parseInt(timeList[0]) + (parseInt(timeList[1]) / 60);
-        console.log(baseTenTime);
-        dateTimes[myDate.getDay()].push(baseTenTime);*/
     }
     console.log(dateTimes);
 
@@ -723,21 +717,7 @@ function showStudentAttendance(_, data) {
 
     graphStudentAttendance(dateCounts);
 
-    //scatterStudentAttendance(dateTimes);
     scatterStudentAttendance(scatterx, scattery);
-
-    // var trace1 = {
-    //   x: [1, 2, 3, 4, 5],
-    //   y: [1, 6, 3, 6, 1],
-    //   mode: 'markers',
-    //   type: 'scatter',
-    //   name: 'Team A',
-    //   text: ['A-1', 'A-2', 'A-3', 'A-4', 'A-5'],
-    //   marker: { size: 12 }
-    // };
-
-
-    //fillProfileTable(parsedData);
 
     getRequest("/frequentPeers/" + document.getElementById("studentName").innerHTML, "", showFrequentPeers);
 }
@@ -869,31 +849,6 @@ function graphStudentAttendance(yaxis) {
     };
 
     Plotly.newPlot('graphStudent', data, layout);
-}
-
-// FIX HARDCODED STUFF
-function fillProfileTable(attendance) {
-    
-//    var allCols = document.getElementById("columns").innerHTML;
-//    console.log("allcols: " + allCols);
-//    allCols = document.getElementById("saveColumnData").innerHTML;
-//    console.log("how'd u like me now? " + allCols);
-
-    var table = document.getElementById("profileAttendanceTable");
-    table.innerHTML = ""
-    var fields = ['ID', 'First', 'Last', 'Art', 'Made Food', 'Recieved Food', 'Leadership', 'Exersize', 'Mental Health', 'Volunteering', 'One On One', 'Comments', 'Date', 'Time'];
-    row = table.insertRow(-1);
-    for (header of fields) {
-        row.insertCell(-1).innerHTML = header;
-    }
-
-    for (i in attendance) {
-        currRow = table.insertRow(-1);
-        currLine = attendance[i];
-        for (i in currLine) {
-            currRow.insertCell(-1).innerHTML = currLine[i];
-        }
-    }
 }
 
 function selectActivity(name, column, date) {

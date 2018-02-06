@@ -66,6 +66,8 @@ function displayNewAttendant(first, last, time) {
     attendantData[0] = first;
     attendantData[1] = last;
     attendantData[2] = time;
+    
+    // atKey column defaulted to true
     attendantData[3] = true;
     var i;
     for (i = 4; i < arrayLength; i++) {
@@ -161,6 +163,7 @@ function sendSubmitForm() {
     var theirText = document.getElementById("someRandoText").value;
 
 }
+
 function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     var columnData = document.getElementById("columns").innerHTML;
@@ -472,17 +475,6 @@ function modifyAutofillList(_, studentNames) {
     list.innerHTML = inner;
 }
 
-// Obsolete?
-function showProfile(_, studentInfo) {
-
-    document.getElementById("studentProfileText").innerHTML += ("ID Number: ")
-
-    document.getElementById("studentProfileText").innerHTML += JSON.stringify(studentInfo)
-
-
-}
-
-
 function handleAddBox(e, curText) {
     if (e.keyCode === 13) {
         onAddRow();
@@ -503,11 +495,6 @@ function handleProfileBox(e, curText) {
 
 function showSuggestions(curText) {
     getRequest("/autofill/" + curText, "", modifyAutofillList);
-}
-
-// Obsolete?
-function checkBox(checkbox, keyword) {
-    var str = "got to checkBox " + checkbox.value + " " + keyword;
 }
 
 function openAddStudent() {
@@ -554,7 +541,7 @@ function showDemographics(_, data) {
 function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;
-    document.getElementById("saveColumnData").innerHTML = columns;
+    document.getElementById("saveStudentColumnData").innerHTML = columns;
     var studentInfo = JSON.parse(data);
     var columnInfo = JSON.parse(columns);
     var keywordElement = document.getElementById('keywordStudentSearch').value;
@@ -574,7 +561,7 @@ function openEditProfile() {
     console.log("gets to here");
     var name = document.getElementById('keywordStudentSearch').value;
     var studentInfo = document.getElementById("saveStudentData").innerHTML;
-    var columns = document.getElementById("saveColumnData").innerHTML;
+    var columns = document.getElementById("saveStudentColumnData").innerHTML;
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("editProfile");
     div.style.display = "block";

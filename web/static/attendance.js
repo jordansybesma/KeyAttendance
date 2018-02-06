@@ -199,22 +199,23 @@ function makeHeaderReadable(header) {
 
 // Inserts a row into the attendance table with name, timestamp, checkboxes, and delete button.
 // The name links to a student profile.
-function displayRow(columns, entry) {
+function displayRow(columns, attendeeEntry) {
     var table = document.getElementById("Attendance-Table");
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
-
-    console.log("entry: " + entry);
     
     var row = table.insertRow(1);
-    var fullName = entry[0] + " " + entry[1];
+    
+    var fullName = attendeeEntry[0] + " " + attendeeEntry[1];
     var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
-    var time = entry[2];
+    var time = attendeeEntry[2];
     row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
+    
     for (i in columns) {
         var colActive = columns[i][1];
         if (colActive == true) {
-            addCheckbox(i, entry, columns, date, row, fullName);
+            var checkbox = getCheckboxString(i, attendeeEntry, columns, date, fullName);
+            row.insertCell(-1).innerHTML = checkbox;
         }
     }
 
@@ -223,17 +224,20 @@ function displayRow(columns, entry) {
 }
 
 // Helper function for displayRow.
-// Adds a checkbox to the row with the correct status (checked or unchecked).
-function addCheckbox(i, entry, columns, date, row, fullName) {
+// Returns a checkbox to be added to the row with the correct status (checked or unchecked).
+function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
+    
+    // The offset of 3 is dependent on the first 3 elements of attendeeEntry being non-activities (firstName, lastName, time)
     var index = parseInt(i) + 3;
-    var hasDoneActivity = entry[index];
+    
+    var hasDoneActivity = attendeeEntry[index];
     var col = columns[i][2];
     
     var box = "<input type=\"checkbox\" " 
-        + (entry[index] ? "checked" : "") 
+        + (hasDoneActivity ? "checked" : "") 
         + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
     
-    row.insertCell(-1).innerHTML = box;
+    return box;
 }
 
 function showProfileManage() {
@@ -923,7 +927,6 @@ function onAddRow() {
             break;
         }
     }
-    //var date = getCurrentDate();
     if (optionFound) {
 
         document.getElementById("keyword").value = "";
@@ -936,8 +939,6 @@ function onAddRow() {
     } else {
         alert("Please enter an existing student");
     }
-    //var str = "How are you doing today?";
-
 }
 
 function showAttendeeProfile(fullName) {
@@ -951,8 +952,8 @@ function showAttendeeProfile(fullName) {
 function createNewAttendance() {
     var date = getCurrentDate();
     document.getElementById("storeDate").innerHTML = date;
-    var readable = makeDateReadable(date);
-    document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readable;
+    var readableTitle = makeDateReadable(date);
+    document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readableTitle;
     
     fillAttendanceTable();
     
@@ -962,6 +963,7 @@ function createNewAttendance() {
     list.style.display = "none";
 }
 
+// Uses flask to get 
 function fillAttendanceTable() {
     getRequest("/getAttendanceColumns", "", fillAttendanceTableHelper);
 }
@@ -993,6 +995,7 @@ function refreshAttendanceTable() {
     displayAttendanceTable(date);
 }
 
+// 
 function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;
     

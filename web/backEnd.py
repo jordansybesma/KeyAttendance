@@ -132,7 +132,7 @@ def sendFeedback(request):
 # strictly test for now
 # going to get today's data later
 def getAttendance(date):
-    queryColumns = "SELECT name FROM attendanceColumns ORDER BY priority;"
+    queryColumns = "SELECT name FROM attendanceColumns ORDER BY ordering;"
     cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
     colList = json.loads(cols) # this is strange... anyone have any idea why?
     query = "SELECT firstName, lastName, time, " + colList[0][0];
@@ -167,7 +167,17 @@ def getStudentAttendance(student):
     return json.dumps(queryResult, indent=4, sort_keys=True, default=str)
 
 def getMasterAttendance():
-    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;",
+    
+    queryColumns = "SELECT name FROM attendanceColumns ORDER BY ordering;"
+    cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
+    colList = json.loads(cols) # this is strange... anyone have any idea why?
+    query = "SELECT date, numattend, " + colList[0][0];
+    for i in range(1, len(colList)):
+        query = query + ", " + colList[i][0]
+    query = query + " FROM masterAttendance ORDER BY date DESC;"
+    #"SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;"
+    
+    return json.dumps(executeSingleQuery(query,
         fetch = True)[:10], indent=4, sort_keys=True, default=str)
 
 
@@ -226,6 +236,13 @@ def addAttendanceColumn(request):
     queryCounts = "UPDATE masterAttendance SET "+ name+ "='0';"
 
     executeSingleQuery(queryCounts, [])
+    
+    query2 = "SELECT priority FROM attendanceColumns WHERE name = \'" + name + "\'; "
+    result = json.dumps(executeSingleQuery(query2,fetch = True))
+    newResult =json.loads(result)
+    prio = newResult[0][0]
+    query3 = "UPDATE attendanceColumns SET ordering = " + str(prio) + " WHERE name = \'" + name + "\'; "
+    executeSingleQuery(query3, [])
 
 def deleteAttendanceColumn(request):
     name = request.form.get("name")
@@ -434,7 +451,7 @@ def addAttendant(request):
     newResult =json.loads(result)
 
     if newResult == []:
-        newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1');"
+        newQuery = "INSERT INTO masterAttendance VALUES('" + date + "', '1', '1');"
         executeSingleQuery(newQuery, [])
         return "false"
     else:
@@ -456,8 +473,8 @@ def addAttendant(request):
         numAttend = 0
     newNumAttend = numAttend + 1
         
-    alterQuery = "UPDATE masterAttendance SET Key = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
-    executeSingleQuery(alterQuery, [])
+    alterQuery2 = "UPDATE masterAttendance SET Key = '" + str(newNumAttend) + "' WHERE date = '" + date + "';"
+    executeSingleQuery(alterQuery2, [])
     
     return "true"
 

@@ -1,7 +1,7 @@
-var local, scott, urlBase;
+var local, base, urlBase;
 local = "http://127.0.0.1:5000";
-scott = "http://ec2-34-213-2-88.us-west-2.compute.amazonaws.com";
-urlBase = local;
+base = "https://attendance.unionofyouth.org";
+urlBase = base;
 
 // Called when a user exits the add new student pop up window
 function closeAddStudent() {
@@ -165,7 +165,9 @@ function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
+    console.log("MYDATA: " + myData);
     for (i in myData) {
+        console.log("i: " + i);
         displayRow(myColumns, myData[i]);
     }
 }
@@ -202,7 +204,9 @@ function displayRow(columns, entry) {
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
 
-    var row = table.insertRow(-1);
+    console.log("entry: " + entry);
+    
+    var row = table.insertRow(1);
     var fullName = entry[0] + " " + entry[1];
     var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     var time = entry[2];
@@ -226,7 +230,7 @@ function addCheckbox(i, entry, columns, date, row, fullName) {
     var col = columns[i][2];
     
     var box = "<input type=\"checkbox\" " 
-        + (hasDoneActivity ? "checked" : "") 
+        + (entry[index] ? "checked" : "") 
         + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
     
     row.insertCell(-1).innerHTML = box;
@@ -309,14 +313,14 @@ function showAttendanceManageHelper(_, data) {
             + " onclick=\"selectColumn('" + name + "')\">";
         var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
         var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
-        var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
+        //var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
         
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = name;
         row.insertCell(-1).innerHTML = checkBox;
         row.insertCell(-1).innerHTML = deleteButton;
         row.insertCell(-1).innerHTML = upButton;
-        row.insertCell(-1).innerHTML = downButton;
+        //row.insertCell(-1).innerHTML = downButton;
     }
 }
 
@@ -417,11 +421,9 @@ function stop(name) {
     if (name.indexOf("\\") != -1) {
         return false;
     }
+    
     return true;
-
 }
-
-
 
 function addColumn() {
     var name = document.getElementById("newColumn").value;
@@ -951,9 +953,8 @@ function createNewAttendance() {
     document.getElementById("storeDate").innerHTML = date;
     var readable = makeDateReadable(date);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readable;
-    var table = document.getElementById("Attendance-Table");
     
-    makeTableHeader(table);
+    fillAttendanceTable();
     
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
@@ -961,17 +962,17 @@ function createNewAttendance() {
     list.style.display = "none";
 }
 
-function makeTableHeader(table) {
-    table.innerHTML = "";
-    console.log("got here");
-    getRequest("/getAttendanceColumns", "", makeTableHeaderHelper);
+function fillAttendanceTable() {
+    getRequest("/getAttendanceColumns", "", fillAttendanceTableHelper);
 }
 
-function makeTableHeaderHelper(_, data) {
+function fillAttendanceTableHelper(_, data) {
     console.log("got to helper");
-    //    console.log(data);
     document.getElementById("columns").innerHTML = data;
-    table = document.getElementById("Attendance-Table");
+    var table = document.getElementById("Attendance-Table");
+    
+    
+    table.innerHTML = "";
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
     var myData = JSON.parse(data);
@@ -980,8 +981,9 @@ function makeTableHeaderHelper(_, data) {
             var newHeader = makeHeaderReadable(myData[i][2]);
             row.insertCell(-1).innerHTML = newHeader;
         }
-
     }
+    
+    // Fill attendance table with recorded attendants
     var table_date = document.getElementById("storeDate").innerHTML;
     getRequest("/getAttendance/" + table_date, "", fillAttendance);
 }
@@ -993,10 +995,8 @@ function refreshAttendanceTable() {
 
 function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;
-    var table = document.getElementById("Attendance-Table");
-    console.log("about to create header");
     
-    makeTableHeader(table);
+    fillAttendanceTable();
     
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);
@@ -1005,7 +1005,7 @@ function displayAttendanceTable(table_date) {
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
-
+    
     return false;
 }
 

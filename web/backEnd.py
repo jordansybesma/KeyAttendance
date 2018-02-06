@@ -30,14 +30,6 @@ def executeSingleQuery(query, params = [], fetch = False):
     return result
 
 
-"""
-{
-    firstName : "Jack",
-    lastName : "Wines"
-}
-"""
-
-
 def addNewStudent(request):
     firstName = request.form.get('firstName')
     lastName  = request.form.get('lastName')

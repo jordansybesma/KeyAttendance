@@ -25,6 +25,10 @@ def main():
 @app.route('/addText/', methods=['POST'])
 def foo():
     return backEnd.foo(request)
+    
+@app.route('/createAttendanceData/', methods = ["POST"])
+def createAttendanceData():
+    return backEnd.createAttendanceData(request)
 
 @app.route('/addNewStudent/', methods = ["POST"])
 def addNewStudent():

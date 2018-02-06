@@ -511,6 +511,12 @@ function checkBox(checkbox, keyword) {
 }
 
 function openAddStudent() {
+    /*var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", urlBase + "/createAttendanceData/");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("date=1");*/
+
+
     var popUp = document.getElementById('studentDiv');
     popUp.style.display = "block";
 }

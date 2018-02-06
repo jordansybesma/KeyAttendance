@@ -620,9 +620,7 @@ function openEditProfile() {
                 form.innerHTML = str;
                 div.appendChild(form);
             }
-
         }
-
     }
     var returnButton = document.createElement('button');
     returnButton.setAttribute('name', 'Return to Profile');
@@ -645,8 +643,6 @@ function updateProfile(name, col, colid, type) {
     } else {
         var value = document.getElementById(colid).value;
     }
-
-
 
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/updateStudentInfo/");
@@ -712,8 +708,6 @@ function showStudentAttendance(_, data) {
         scattery.push(hour);
     }
     console.log(dateTimes);
-
-
 
     graphStudentAttendance(dateCounts);
 

@@ -148,11 +148,6 @@ function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest.send(null);
 }
 
-function sendSubmitForm() {
-    var theirText = document.getElementById("someRandoText").value;
-
-}
-
 function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     var columnData = document.getElementById("columns").innerHTML;

@@ -3,7 +3,7 @@ local = "http://127.0.0.1:5000";
 base = "https://attendance.unionofyouth.org";
 urlBase = local;
 
-// Called when a user exits the add new student pop up window
+// Called when a user exits the add new student popup window
 function closeAddStudent() {
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
@@ -50,10 +50,10 @@ function addAttendant(first, last) {
 
 }
 
-// Adds a new attendant to the daily attendance table
+// Adds a new attendee to the daily attendance table
+// Function does not use database info (that's being stored right before displayNewAttendant() is called in addAttendant())
 function displayNewAttendant(first, last, time) {
     // Get data about columns
-    //refreshAttendanceTable()
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
 
@@ -78,44 +78,44 @@ function displayNewAttendant(first, last, time) {
 
 }
 
-// Called when a user clicks submit on the add new student dialogue. checks
-//that both values have been entered then adds them to the database
+// Called when a user clicks submit on the add new student dialogue.
+// Checks that both values have been entered then adds them to the database.
 function addNewStudent() {
 
-    //    onAddRow()(@(*#&*
+    var first = document.getElementById("newStudentFirst").value.trim();
+    var last = document.getElementById("newStudentLast").value.trim();
 
-    var first = document.getElementById("newStudentFirst").value;
-    var firstChar = first[0];
-    firstChar = firstChar.toUpperCase();
-    first = firstChar + first.slice(1);
-
-
-    var last = document.getElementById("newStudentLast").value;
-    var lastChar = last[0];
-    lastChar = lastChar.toUpperCase();
-    last = lastChar + last.slice(1);
-
-    if (first.trim() === "") {
+    // Check if input is valid
+    if (first === "") {
         alert("Please enter a first name");
         return;
     }
-    if (last.trim() == "") {
+    if (last == "") {
         alert("Please enter a last name");
         return;
     }
-
+        
+    first = capitalizeFirstLetter(first);
+    last = capitalizeFirstLetter(last);
+    
     // Adds student to student table
-    sendNewStudent(first.trim(), last.trim());
+    sendNewStudent(first, last);
 
     // Adds student to daily attendance table
-    addAttendant(first.trim(), last.trim());
+    addAttendant(first, last);
 
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
     closeAddStudent();
-    //var response = addAttendant(data);
 }
 
+// Capitalizes first letter of input
+function capitalizeFirstLetter(name){
+    var firstChar = name[0];
+    firstChar = firstChar.toUpperCase();
+    name = firstChar + name.slice(1);
+    return name;
+}
 
 function sendRequest(isPost, data, header, value, urlAddOn) {
     var xhr = new XMLHttpRequest();

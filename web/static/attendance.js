@@ -104,8 +104,7 @@ function addNewStudent() {
     // Adds student to daily attendance table
     addAttendant(first, last);
 
-    document.getElementById("newStudentFirst").value = "";
-    document.getElementById("newStudentLast").value = "";
+    // Closes popup
     closeAddStudent();
 }
 
@@ -115,15 +114,6 @@ function capitalizeFirstLetter(name){
     firstChar = firstChar.toUpperCase();
     name = firstChar + name.slice(1);
     return name;
-}
-
-function sendRequest(isPost, data, header, value, urlAddOn) {
-    var xhr = new XMLHttpRequest();
-    xhr.open(isPost ? "POST" : "GET", urlAddOn, true);
-    // xhr.setRequestHeader(header, value);
-    // var data = JSON.stringify({"text": theirText});
-    xhr.send(data);
-    return xhr.responseText;
 }
 
 function sendNewStudent(firstname, lastname) {

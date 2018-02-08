@@ -1,9 +1,8 @@
-var local, base, urlBase;
-local = "http://127.0.0.1:5000";
-base = "https://attendance.unionofyouth.org";
-urlBase = local;
+var urlBase = window.location.origin;
+// localSite = "http://127.0.0.1:5000";
+// scottSite = "https://attendance.unionofyouth.org";
 
-// Called when a user exits the add new student pop up window
+// Called when a user exits the add new student popup window
 function closeAddStudent() {
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
@@ -46,14 +45,12 @@ function addAttendant(first, last) {
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&date=" + date + "&time=" + time + "&id=");
 
     displayNewAttendant(first, last, time);
-
-
 }
 
-// Adds a new attendant to the daily attendance table
+// Adds a new attendee to the daily attendance table
+// Function does not use database info (that's being stored right before displayNewAttendant() is called in addAttendant())
 function displayNewAttendant(first, last, time) {
     // Get data about columns
-    //refreshAttendanceTable()
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
 
@@ -75,57 +72,47 @@ function displayNewAttendant(first, last, time) {
     }
 
     displayRow(myColumns, attendantData);
-
 }
 
-// Called when a user clicks submit on the add new student dialogue. checks
-//that both values have been entered then adds them to the database
+// Called when a user clicks submit on the add new student dialogue.
+// Checks that both values have been entered then adds them to the database.
 function addNewStudent() {
 
-    //    onAddRow()(@(*#&*
+    var first = document.getElementById("newStudentFirst").value.trim();
+    var last = document.getElementById("newStudentLast").value.trim();
 
-    var first = document.getElementById("newStudentFirst").value;
-    var firstChar = first[0];
-    firstChar = firstChar.toUpperCase();
-    first = firstChar + first.slice(1);
-
-
-    var last = document.getElementById("newStudentLast").value;
-    var lastChar = last[0];
-    lastChar = lastChar.toUpperCase();
-    last = lastChar + last.slice(1);
-
-    if (first.trim() === "") {
+    // Check if input is valid
+    if (first === "") {
         alert("Please enter a first name");
         return;
     }
-    if (last.trim() == "") {
+    if (last == "") {
         alert("Please enter a last name");
         return;
     }
-
+        
+    first = capitalizeFirstLetter(first);
+    last = capitalizeFirstLetter(last);
+    
     // Adds student to student table
-    sendNewStudent(first.trim(), last.trim());
+    sendNewStudent(first, last);
 
     // Adds student to daily attendance table
-    addAttendant(first.trim(), last.trim());
+    addAttendant(first, last);
 
-    document.getElementById("newStudentFirst").value = "";
-    document.getElementById("newStudentLast").value = "";
+    // Closes popup
     closeAddStudent();
-    //var response = addAttendant(data);
 }
 
-
-function sendRequest(isPost, data, header, value, urlAddOn) {
-    var xhr = new XMLHttpRequest();
-    xhr.open(isPost ? "POST" : "GET", urlAddOn, true);
-    // xhr.setRequestHeader(header, value);
-    // var data = JSON.stringify({"text": theirText});
-    xhr.send(data);
-    return xhr.responseText;
+// Capitalizes first letter of input
+function capitalizeFirstLetter(name){
+    var firstChar = name[0];
+    firstChar = firstChar.toUpperCase();
+    name = firstChar + name.slice(1);
+    return name;
 }
 
+// Adds a student to the table with all students
 function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addNewStudent/");
@@ -133,6 +120,7 @@ function sendNewStudent(firstname, lastname) {
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
 
+// Deletes all instances of attendant at specified date
 // use ID (hard to do for adding new student to table without an ID)
 function deleteAttendant(date, name) {
     var xmlhttp = new XMLHttpRequest();
@@ -142,9 +130,11 @@ function deleteAttendant(date, name) {
     displayAttendanceTable(date);
 }
 
+// Asynchronously calls the database and returns data to callback, which is a function.
+// That callback function's signature looks like "function [name of callback](_, [data]){...}
 function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest = new XMLHttpRequest();
-    var url = window.location.origin + urlAddon;
+    var url = urlBase + urlAddon;
     xmlHttpRequest.open('get', url);
 
     xmlHttpRequest.onreadystatechange = function () {
@@ -157,22 +147,6 @@ function getRequest(urlAddon, callbackState, callback) {
         }
     };
     xmlHttpRequest.send(null);
-}
-
-function sendSubmitForm() {
-    var theirText = document.getElementById("someRandoText").value;
-
-}
-
-function fillAttendance(_, attendance) {
-    var myData = JSON.parse(attendance);
-    var columnData = document.getElementById("columns").innerHTML;
-    var myColumns = JSON.parse(columnData);
-    console.log("MYDATA: " + myData);
-    for (i in myData) {
-        console.log("i: " + i);
-        displayRow(myColumns, myData[i]);
-    }
 }
 
 function makeHeaderReadable(header) {
@@ -198,49 +172,6 @@ function makeHeaderReadable(header) {
         newHeader = newHeader + newChar;
     }
     return newHeader;
-}
-
-// Inserts a row into the attendance table with name, timestamp, checkboxes, and delete button.
-// The name links to a student profile.
-function displayRow(columns, attendeeEntry) {
-    var table = document.getElementById("Attendance-Table");
-    var date = document.getElementById("storeDate").innerHTML;
-    document.getElementById("keyword").value = "";
-    
-    var row = table.insertRow(1);
-    
-    var fullName = attendeeEntry[0] + " " + attendeeEntry[1];
-    var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
-    var time = attendeeEntry[2];
-    row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
-    
-    for (i in columns) {
-        var colActive = columns[i][1];
-        if (colActive == true) {
-            var checkbox = getCheckboxString(i, attendeeEntry, columns, date, fullName);
-            row.insertCell(-1).innerHTML = checkbox;
-        }
-    }
-
-    var deleteButton = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
-    row.insertCell(-1).innerHTML = deleteButton;
-}
-
-// Helper function for displayRow.
-// Returns a checkbox to be added to the row with the correct status (checked or unchecked).
-function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
-    
-    // The offset of 3 is dependent on the first 3 elements of attendeeEntry being non-activities (firstName, lastName, time)
-    var index = parseInt(i) + 3;
-    
-    var hasDoneActivity = attendeeEntry[index];
-    var col = columns[i][2];
-    
-    var box = "<input type=\"checkbox\" " 
-        + (hasDoneActivity ? "checked" : "") 
-        + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
-    
-    return box;
 }
 
 function showProfileManage() {
@@ -802,32 +733,6 @@ function scatterStudentAttendance(xList, yList) {
     Plotly.newPlot('studentTimes', data, layout);
 }
 
-/*function scatterStudentAttendance(dateTimes){
-    var xList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    var yList = [[], [], [], [], [], [], []];
-    for (i = 0; i < dateTimes.length; i++) {
-      for (j = 0; j < dateTimes[i].length; i++) {
-        xList.push(xList[i]);
-        yList.push(dateTimes[i][j]);
-      }
-    }
-    console.log(xList);
-    console.log(yList);
-    var trace1 = {
-      x: xList,
-      y: yList,
-      type: 'scatter'
-    };
-    var data = [trace1];
-    var layout = {
-      autosize: false,
-      width: 500,
-      height: 500,
-      title: 'Attendance Times'
-    };
-    Plotly.newPlot('studentTimes', data, layout);
-}
-*/
 function graphStudentAttendance(yaxis) {
     var max = Math.max.apply(Math, yaxis);
     //var min = Math.min.apply(Math, yaxis);
@@ -905,11 +810,12 @@ function createNewAttendance() {
     list.style.display = "none";
 }
 
-// Uses flask to get 
+// Grabs the data for an attendance table and fills the table, using fillAttendanceTableHelper
 function fillAttendanceTable() {
     getRequest("/getAttendanceColumns", "", fillAttendanceTableHelper);
 }
 
+// Called through a getRequest from fillAttendanceTable.
 function fillAttendanceTableHelper(_, data) {
     console.log("got to helper");
     document.getElementById("columns").innerHTML = data;
@@ -930,6 +836,62 @@ function fillAttendanceTableHelper(_, data) {
     // Fill attendance table with recorded attendants
     var table_date = document.getElementById("storeDate").innerHTML;
     getRequest("/getAttendance/" + table_date, "", fillAttendance);
+}
+
+// Iterates through the attendants on a given day and populates the attendance table with them.
+// Called through a getRequest in fillAttendanceTableHelper.
+function fillAttendance(_, attendance) {
+    var myData = JSON.parse(attendance);
+    var columnData = document.getElementById("columns").innerHTML;
+    var myColumns = JSON.parse(columnData);
+    console.log("MYDATA: " + myData);
+    for (i in myData) {
+        console.log("i: " + i);
+        displayRow(myColumns, myData[i]);
+    }
+}
+
+// Inserts a row into the attendance table with name, timestamp, checkboxes, and delete button.
+// The name links to a student profile.
+function displayRow(columns, attendeeEntry) {
+    var table = document.getElementById("Attendance-Table");
+    var date = document.getElementById("storeDate").innerHTML;
+    document.getElementById("keyword").value = "";
+    
+    var row = table.insertRow(1);
+    
+    var fullName = attendeeEntry[0] + " " + attendeeEntry[1];
+    var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
+    var time = attendeeEntry[2];
+    row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
+    
+    for (i in columns) {
+        var colActive = columns[i][1];
+        if (colActive == true) {
+            var checkbox = getCheckboxString(i, attendeeEntry, columns, date, fullName);
+            row.insertCell(-1).innerHTML = checkbox;
+        }
+    }
+
+    var deleteButton = "<button type=\"button\" onclick=\"deleteAttendant('" + date + "', '" + fullName + "')\">Delete </button>";
+    row.insertCell(-1).innerHTML = deleteButton;
+}
+
+// Helper function for displayRow.
+// Returns a checkbox to be added to the row with the correct status (checked or unchecked).
+function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
+    
+    // The offset of 3 is dependent on the first 3 elements of attendeeEntry being non-activities (firstName, lastName, time)
+    var index = parseInt(i) + 3;
+    
+    var hasDoneActivity = attendeeEntry[index];
+    var col = columns[i][2];
+    
+    var box = "<input type=\"checkbox\" " 
+        + (hasDoneActivity ? "checked" : "") 
+        + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
+    
+    return box;
 }
 
 function refreshAttendanceTable() {

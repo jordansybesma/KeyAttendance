@@ -1,7 +1,6 @@
-var local, base, urlBase;
-local = "http://127.0.0.1:5000";
-base = "https://attendance.unionofyouth.org";
-urlBase = local;
+var urlBase = window.location.origin;
+// localSite = "http://127.0.0.1:5000";
+// scottSite = "https://attendance.unionofyouth.org";
 
 // Called when a user exits the add new student popup window
 function closeAddStudent() {
@@ -46,8 +45,6 @@ function addAttendant(first, last) {
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&date=" + date + "&time=" + time + "&id=");
 
     displayNewAttendant(first, last, time);
-
-
 }
 
 // Adds a new attendee to the daily attendance table
@@ -75,7 +72,6 @@ function displayNewAttendant(first, last, time) {
     }
 
     displayRow(myColumns, attendantData);
-
 }
 
 // Called when a user clicks submit on the add new student dialogue.
@@ -116,6 +112,7 @@ function capitalizeFirstLetter(name){
     return name;
 }
 
+// Adds a student to the table with all students
 function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addNewStudent/");
@@ -123,6 +120,7 @@ function sendNewStudent(firstname, lastname) {
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
 
+// Deletes all instances of attendant at specified date
 // use ID (hard to do for adding new student to table without an ID)
 function deleteAttendant(date, name) {
     var xmlhttp = new XMLHttpRequest();
@@ -131,6 +129,7 @@ function deleteAttendant(date, name) {
     xmlhttp.send("name=" + name + "&date=" + date);
     displayAttendanceTable(date);
 }
+
 
 function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest = new XMLHttpRequest();

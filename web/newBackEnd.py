@@ -238,9 +238,14 @@ def createStudentInfoTable(request):
 #totalQuery = "SELECT DISTINCT id INTO temp1 FROM students WHERE id = " + str(studID) + ";"
 #queryTemp = "SELECT DISTINCT id, " +  columnToSelect + " INTO " + rightTable + " FROM students WHERE activity_id = " + str(colID)
 #        queryTemp = queryTemp + " AND id = " + str(studID) +  ";"
-def getStudentInfo(studID):
+def getStudentInfo(name):
     totalQuery = "SELECT DISTINCT id INTO temp1 FROM students;"
     #executeSingleQuery(query1, [])
+    nameList = name.split()
+    first = nameList[0]
+    last = nameList[1]
+    queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
+    studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
     
     queryColumns = "SELECT info_id, name, type FROM studentcolumns WHERE is_showing = 'true' ORDER BY info_id;"
     columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
@@ -288,7 +293,7 @@ def getStudentInfo(studID):
     
     executeSingleQuery(totalQuery, [])
         
-    returnQuery = "SELECT * FROM " + newTable + " WHERE id = studID;"
+    returnQuery = "SELECT * FROM " + newTable + " WHERE id = " + str(studentID) + ";"
     
     result = json.dumps(executeSingleQuery(returnQuery, fetch = True), indent=4, sort_keys=True, default=str)
     print(result)

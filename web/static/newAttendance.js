@@ -70,7 +70,7 @@ function displayNewAttendant(first, last, time) {
     // atKey column defaulted to true
     attendantData[4] = true;
     var i;
-    for (i = 4; i < arrayLength; i++) {
+    for (i = 5; i < arrayLength; i++) {
         attendantData[i] = false;
     }
 

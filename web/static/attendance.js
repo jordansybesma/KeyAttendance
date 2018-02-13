@@ -104,15 +104,13 @@ function addNewStudent() {
     closeAddStudent();
 }
 
-// Capitalizes first letter of input
-function capitalizeFirstLetter(name){
-    var firstChar = name[0];
-    firstChar = firstChar.toUpperCase();
-    name = firstChar + name.slice(1);
-    return name;
+// Capitalizes first letter of string
+// Thanks to https://paulund.co.uk/capitalize-first-letter-string-javascript
+function capitalizeFirstLetter(string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Adds a student to the table with all students
+// Creates a new student and adds them to the table of all students
 function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addNewStudent/");
@@ -121,7 +119,7 @@ function sendNewStudent(firstname, lastname) {
 }
 
 // Deletes all instances of attendant at specified date
-// use ID (hard to do for adding new student to table without an ID)
+// (Ideally would use ID, but hard to do for adding new student to table without an ID)
 function deleteAttendant(date, name) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/deleteAttendant");
@@ -149,6 +147,7 @@ function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest.send(null);
 }
 
+// SQL can't handle strings with spaces. This method converts camel case strings into strings with spaces.
 function makeHeaderReadable(header) {
     var newHeader = "";
     var newChar = "";

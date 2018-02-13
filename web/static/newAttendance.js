@@ -62,9 +62,10 @@ function displayNewAttendant(first, last, time) {
     var attendantData = new Array(arrayLength);
 
     // Add data to array
-    attendantData[0] = first;
-    attendantData[1] = last;
-    attendantData[2] = time;
+    attendantData[0] = 1
+    attendantData[0] = time;
+    attendantData[1] = first;
+    attendantData[2] = last;
 
     // atKey column defaulted to true
     attendantData[3] = true;
@@ -881,7 +882,7 @@ function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
 
     var hasDoneActivity = attendeeEntry[index];
     var col = columns[i][2];
-
+   
     var box = "<input type=\"checkbox\" "
         + (hasDoneActivity ? "checked" : "")
         + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";

@@ -71,7 +71,7 @@ function displayNewAttendant(first, last, time) {
         attendantData[i] = false;
     }
 
-    displayRow(myColumns, attendantData);
+    fillRowAttendance(myColumns, attendantData);
 }
 
 // Called when a user clicks submit on the add new student dialogue.
@@ -104,15 +104,13 @@ function addNewStudent() {
     closeAddStudent();
 }
 
-// Capitalizes first letter of input
-function capitalizeFirstLetter(name){
-    var firstChar = name[0];
-    firstChar = firstChar.toUpperCase();
-    name = firstChar + name.slice(1);
-    return name;
+// Capitalizes first letter of string
+// Thanks to https://paulund.co.uk/capitalize-first-letter-string-javascript
+function capitalizeFirstLetter(string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Adds a student to the table with all students
+// Creates a new student and adds them to the table of all students
 function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addNewStudent/");
@@ -121,7 +119,7 @@ function sendNewStudent(firstname, lastname) {
 }
 
 // Deletes all instances of attendant at specified date
-// use ID (hard to do for adding new student to table without an ID)
+// (Ideally would use ID, but hard to do for adding new student to table without an ID)
 function deleteAttendant(date, name) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/deleteAttendant");
@@ -149,6 +147,9 @@ function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest.send(null);
 }
 
+// SQL can't handle strings with spaces. 
+// This method adds spaces in strings with camel case and replaces underscores with spaces.
+// Example: "HelloWorld" and "Hello_World" become "Hello World"
 function makeHeaderReadable(header) {
     var newHeader = "";
     var newChar = "";
@@ -174,26 +175,31 @@ function makeHeaderReadable(header) {
     return newHeader;
 }
 
-function showProfileManage() {
+// Displays Manage Profile tab, using showManageProfileHelper to retrieve column data from the database.
+function showManageProfile() {
     table = document.getElementById("studentColumnsTable");
     table.innerHTML = "";
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Column Name";
     row.insertCell(-1).innerHTML = "Show in Profile";
     row.insertCell(-1).innerHTML = "Show in Quick Add";
-    getRequest("/getStudentColumns", "", showStudentManageHelper);
+    getRequest("/getStudentColumns", "", showManageProfileHelper);
 }
 
-function showStudentManageHelper(_, data) {
+// For each element in data (an aspect of student profile such as gender), display as a row in the table.
+function showManageProfileHelper(_, data) {
     var myData = JSON.parse(data);
     var table = document.getElementById("studentColumnsTable");
     for (i in myData) {
         var row = table.insertRow(-1);
-        fillRow(row, myData[i]);
+        fillRowManageProfile(row, myData[i]);
     }
 }
 
-function fillRow(row, rowData) {
+// Displays aspect of student profile in a row.
+// isShowing indicates whether the demographic shows up in student profile.
+// isQuick indicates whether the demographic shows up in the add new student popup in the attendance sheet.
+function fillRowManageProfile(row, rowData) {
     var name = rowData[2];
     var isShowing = rowData[0];
     var isQuick = rowData[1];
@@ -226,7 +232,7 @@ function deleteStudentColumn(name) {
     xmlhttp.open("POST", urlBase + "/deleteStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
-    showProfileManage()
+    showManageProfile()
 }
 
 function showAttendanceManage() {
@@ -300,11 +306,12 @@ function selectColumn(name) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
 }
+
 function addStudentColumn() {
     var name = document.getElementById("studentColumnName").value;
     var type = document.getElementById("studentColumnType").value;
-    var badSubstring = " .,<>/?':;\|]}[{=+-_)(*&^%$#@!~`";
-    if (stop(name) === false) {
+
+    if (isValidColumnName(name) === false) {
         alert("Please enter a valid column name")
         document.getElementById("studentColumnName").value = "";
         return;
@@ -328,46 +335,25 @@ function addStudentColumn() {
     xmlhttp.open("POST", urlBase + "/addStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&type=" + type + "&definedOptions=");
-    showProfileManage()
+    showManageProfile()
 }
 
-function findOverlap(a, b) {
-    if (b.length === 0) {
-        return "";
-    }
-
-    if (a.endsWith(b)) {
-        return b;
-    }
-
-    if (a.indexOf(b) >= 0) {
-        return b;
-    }
-
-    return findOverlap(a, b.substring(0, b.length - 1));
-}
-
-function stop(name) {
-    //alert("got here");
+function isValidColumnName(name) {
     var badSubstring = " .,<>/?':;|]}[{=+-_)(*&^%$#@!~`";
     for (var i = 0; i < badSubstring.length; i++) {
         if (name.indexOf(badSubstring.charAt(i)) != -1) {
             return false;
         }
-
     }
     if (name.indexOf("\\") != -1) {
         return false;
     }
-    
     return true;
 }
 
 function addColumn() {
     var name = document.getElementById("newColumn").value;
-    var badSubstring = " .,<>/?':;\|]}[{=+-_)(*&^%$#@!~`";
-    //overlap = findOverlap(name, badSubstring);
-    if (stop(name) === false) {
+    if (isValidColumnName(name) === false) {
         alert("Please enter a valid column name")
         document.getElementById("newColumn").value = "";
         return;
@@ -846,14 +832,13 @@ function fillAttendance(_, attendance) {
     var myColumns = JSON.parse(columnData);
     console.log("MYDATA: " + myData);
     for (i in myData) {
-        console.log("i: " + i);
-        displayRow(myColumns, myData[i]);
+        fillRowAttendance(myColumns, myData[i]);
     }
 }
 
 // Inserts a row into the attendance table with name, timestamp, checkboxes, and delete button.
 // The name links to a student profile.
-function displayRow(columns, attendeeEntry) {
+function fillRowAttendance(columns, attendeeEntry) {
     var table = document.getElementById("Attendance-Table");
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
@@ -877,7 +862,7 @@ function displayRow(columns, attendeeEntry) {
     row.insertCell(-1).innerHTML = deleteButton;
 }
 
-// Helper function for displayRow.
+// Helper function for fillRowAttendance.
 // Returns a checkbox to be added to the row with the correct status (checked or unchecked).
 function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
     

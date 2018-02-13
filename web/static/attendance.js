@@ -71,7 +71,7 @@ function displayNewAttendant(first, last, time) {
         attendantData[i] = false;
     }
 
-    displayRow(myColumns, attendantData);
+    fillRowAttendance(myColumns, attendantData);
 }
 
 // Called when a user clicks submit on the add new student dialogue.
@@ -175,26 +175,27 @@ function makeHeaderReadable(header) {
     return newHeader;
 }
 
-function showProfileManage() {
+
+function showManageProfile() {
     table = document.getElementById("studentColumnsTable");
     table.innerHTML = "";
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Column Name";
     row.insertCell(-1).innerHTML = "Show in Profile";
     row.insertCell(-1).innerHTML = "Show in Quick Add";
-    getRequest("/getStudentColumns", "", showStudentManageHelper);
+    getRequest("/getStudentColumns", "", showManageProfileHelper);
 }
 
-function showStudentManageHelper(_, data) {
+function showManageProfileHelper(_, data) {
     var myData = JSON.parse(data);
     var table = document.getElementById("studentColumnsTable");
     for (i in myData) {
         var row = table.insertRow(-1);
-        fillRow(row, myData[i]);
+        fillRowManageProfile(row, myData[i]);
     }
 }
 
-function fillRow(row, rowData) {
+function fillRowManageProfile(row, rowData) {
     var name = rowData[2];
     var isShowing = rowData[0];
     var isQuick = rowData[1];
@@ -227,7 +228,7 @@ function deleteStudentColumn(name) {
     xmlhttp.open("POST", urlBase + "/deleteStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
-    showProfileManage()
+    showManageProfile()
 }
 
 function showAttendanceManage() {
@@ -301,6 +302,7 @@ function selectColumn(name) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
 }
+
 function addStudentColumn() {
     var name = document.getElementById("studentColumnName").value;
     var type = document.getElementById("studentColumnType").value;
@@ -329,7 +331,7 @@ function addStudentColumn() {
     xmlhttp.open("POST", urlBase + "/addStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&type=" + type + "&definedOptions=");
-    showProfileManage()
+    showManageProfile()
 }
 
 function isValidColumnName(name) {
@@ -338,12 +340,10 @@ function isValidColumnName(name) {
         if (name.indexOf(badSubstring.charAt(i)) != -1) {
             return false;
         }
-
     }
     if (name.indexOf("\\") != -1) {
         return false;
     }
-    
     return true;
 }
 
@@ -829,13 +829,13 @@ function fillAttendance(_, attendance) {
     console.log("MYDATA: " + myData);
     for (i in myData) {
         console.log("i: " + i);
-        displayRow(myColumns, myData[i]);
+        fillRowAttendance(myColumns, myData[i]);
     }
 }
 
 // Inserts a row into the attendance table with name, timestamp, checkboxes, and delete button.
 // The name links to a student profile.
-function displayRow(columns, attendeeEntry) {
+function fillRowAttendance(columns, attendeeEntry) {
     var table = document.getElementById("Attendance-Table");
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
@@ -859,7 +859,7 @@ function displayRow(columns, attendeeEntry) {
     row.insertCell(-1).innerHTML = deleteButton;
 }
 
-// Helper function for displayRow.
+// Helper function for fillRowAttendance.
 // Returns a checkbox to be added to the row with the correct status (checked or unchecked).
 function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
     

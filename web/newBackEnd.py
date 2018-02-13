@@ -27,11 +27,29 @@ def executeSingleQuery(query, params = [], fetch = False):
     return result
 
 
+# Gets student attendance data (date + time)
+def getStudentAttendance(student):
+    nameList = student.split()
+    first = nameList[0]
+    last = nameList[1]
+    queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
+    studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
+    queryAttendance = "SELECT DISTINCT date, time FROM dailyattendance WHERE student_id = " + str(studentID) + ";"
+    
+    return json.dumps(executeSingleQuery(queryAttendance, fetch = True), indent=4, sort_keys=True, default=str)
+
+    #return getStudentInfo(studentID)
+
+
+
 # Put the data in a format similar to how it is presented in javascript
 #Input: date
 #Output: all activity data for a specific date
 def getAttendance(date):
-    totalQuery = "SELECT DISTINCT student_id, time INTO temp1 FROM dailyattendance WHERE date = " + date + " AND activity_id = -1;"
+    totalQuery = "SELECT DISTINCT student_id, time INTO temp0 FROM dailyattendance WHERE date = " + date + " AND activity_id = -1;"
+    queryAddName= "SELECT temp0.student_id, temp0.time, students.first_name, students.last_name INTO temp1 "
+    queryAddName = queryAddName + "FROM temp0 LEFT JOIN students ON temp0.student_id = students.id;"
+    totalQuery = totalQuery + queryAddName
     #executeSingleQuery(query1, [])
     
     queryColumns = "SELECT activity_id, name FROM activities WHERE is_showing = 'true' ORDER BY ordering;"
@@ -76,7 +94,7 @@ def getAttendance(date):
 
     queryDrop = ""
     
-    for table in range(1, tempCount + 1):
+    for table in range(0, tempCount + 1):
         queryDrop = queryDrop + "DROP TABLE temp" + str(table) + "; "
     executeSingleQuery(queryDrop, [])
 
@@ -96,7 +114,7 @@ def addNewStudent(request):
 
 #Add info on a student
 #Input: name (first and last concatenated
-#column Id
+#column name
 #value - aka data to be entered for that column
 #Output: None
 def updateStudentInfo(request):
@@ -104,8 +122,11 @@ def updateStudentInfo(request):
     nameList = name.split()
     first = nameList[0]
     last = nameList[1]
-    colID = request.form.get('colId')
+    col = request.form.get('column')
     value = request.form.get('value')
+    queryColID = "SELECT info_id FROM activities WHERE name = \'" + col + "\';"
+
+    colID = json.loads(json.dumps(executeSingleQuery(queryColID, fetch=True)))[0][0]
     
      
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
@@ -304,33 +325,39 @@ def addStudentColumn(request):
 
 
 # INPUTS HAVE CHANGED
-#Input: column name
+#Input: name = column name, column =  isshowing/isquick
 #Output: nothing
 def alterStudentColumn(request):
     name = request.form.get("name")
-    #column = request.form.get("column")
-    queryStatus = "SELECT is_showing FROM studentColumns WHERE name = '" + name + "';"
+    column = request.form.get("column")
+    
+    queryStatus = "SELECT " + column + " FROM studentColumns WHERE name = '" + name + "';"
     result = json.dumps(executeSingleQuery(queryStatus,fetch = True))
     newResult =json.loads(result)
     isChecked = newResult[0][0]
 
     if (isChecked):
-        query = "UPDATE studentColumns SET is_showing = 'false' WHERE name = '" + name + "';"
+        query = "UPDATE studentColumns SET " + column + "  = 'false' WHERE name = '" + name + "';"
     else:
-        query = "UPDATE studentColumns SET is_showing = 'true' WHERE name = '" + name + "';"
+        query = "UPDATE studentColumns SET " + column + "  = 'true' WHERE name = '" + name + "';"
     executeSingleQuery(query, [])
     return "done"
 
 
-"""
-This method should not be neccessary anymore
+
+#This method might not be neccessary anymore
 def deleteStudentColumn(request):
-    name = request.form.get("name")
+    '''name = request.form.get("name")
     query = "DELETE FROM studentColumns WHERE name = '" + name + "';"
     query2 = "ALTER TABLE testStudents DROP COLUMN " + name + ";"
     executeSingleQuery(query, [])
+    executeSingleQuery(query2, [])'''
+    name = request.form.get("name")
+    query = "UPDATE studentColumns SET is_showing  = 'false' WHERE name = '" + name + "';"
+    query2 = "UPDATE studentColumns SET quick_add  = 'false' WHERE name = '" + name + "';"
+    executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
-"""
+    
 
 #Get student column info
 #Input: nothing
@@ -490,13 +517,13 @@ def moveAttendanceColumnUp(request):
     return "Done"
 
 #Add new item to track in attendance
-#INPUT HAS CHANGED
+#INPUT HAS CHANGED - doesn't use coltype however for now we'll send it anyway
 #Input: name
 #Output: none
 def addAttendanceColumn(request):
     #make sure column name not in use
     name = request.form.get("name")
-    #colType = request.form.get("type")
+    colType = request.form.get("type")
     isParent = "false"
     query = "INSERT INTO activities (is_showing, name, is_parent) VALUES ('true','" + name + "', '"+ isParent + "');"
     executeSingleQuery(query, [])
@@ -508,18 +535,22 @@ def addAttendanceColumn(request):
     executeSingleQuery(query3, [])
     return "done"
 
-"""
-Should no longer be neccessary
+
+#Should no longer be neccessary
 def deleteAttendanceColumn(request):
     name = request.form.get("name")
-    query = "DELETE FROM attendanceColumns WHERE name = '" + name + "';"
+    '''query = "DELETE FROM attendanceColumns WHERE name = '" + name + "';"
     queryAttendance = "ALTER TABLE dailyAttendance DROP COLUMN " + name + ";"
     queryMaster = "ALTER TABLE masterAttendance DROP COLUMN " + name + ";"
 
     executeSingleQuery(query, [])
     executeSingleQuery(queryAttendance, [])
-    executeSingleQuery(queryMaster, [])
-"""
+    executeSingleQuery(queryMaster, [])'''
+    query = "UPDATE activities SET is_showing  = 'false' WHERE name = '" + name + "';"
+    executeSingleQuery(query, [])
+    return "done"
+    
+
 
 #Not sure if this is currently being used...
 def updateAttendanceColumn(request):
@@ -689,17 +720,17 @@ def autofill(partialString):
     if (len(nameList) > 1):
         first = nameList[0].upper()
         last = nameList[1].upper()
-        query = "SELECT * FROM testStudents WHERE UPPER(firstName) LIKE '%" + first + "%' OR UPPER(lastName) LIKE '%" + last + "%';"
+        query = "SELECT * FROM students WHERE UPPER(firstName) LIKE '%" + first + "%' OR UPPER(lastName) LIKE '%" + last + "%';"
     else:
         q = partialString.upper()
-        query = "SELECT * FROM testStudents WHERE UPPER(firstName) LIKE '%" + q + "%' OR UPPER(lastName) LIKE '%" + q + "%';"
+        query = "SELECT * FROM students WHERE UPPER(firstName) LIKE '%" + q + "%' OR UPPER(lastName) LIKE '%" + q + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     suggestions = json.dumps(databaseResult[:10], indent=4, sort_keys=True, default=str)
     return suggestions
 
 def frequentPeers(name):
     studentID = getJustID(name)
-    query = "SELECT date, time FROM dailyAttendance WHERE id = '" + studentID + "';"
+    query = "SELECT date, time FROM dailyattendance WHERE id = '" + studentID + "';"
 
     result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
     result = result.replace("\n","").replace(" ","").replace("[", "").replace("]", "").replace("\"","")

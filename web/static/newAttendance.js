@@ -63,12 +63,12 @@ function displayNewAttendant(first, last, time) {
 
     // Add data to array
     attendantData[0] = 1
-    attendantData[0] = time;
-    attendantData[1] = first;
-    attendantData[2] = last;
+    attendantData[1] = time;
+    attendantData[2] = first;
+    attendantData[3] = last;
 
     // atKey column defaulted to true
-    attendantData[3] = true;
+    attendantData[4] = true;
     var i;
     for (i = 4; i < arrayLength; i++) {
         attendantData[i] = false;

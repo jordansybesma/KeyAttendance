@@ -741,10 +741,10 @@ def autofill(partialString):
     if (len(nameList) > 1):
         first = nameList[0].upper()
         last = nameList[1].upper()
-        query = "SELECT * FROM students WHERE UPPER(firstName) LIKE '%" + first + "%' OR UPPER(lastName) LIKE '%" + last + "%';"
+        query = "SELECT * FROM students WHERE UPPER(first_name) LIKE '%" + first + "%' OR UPPER(last_name) LIKE '%" + last + "%';"
     else:
         q = partialString.upper()
-        query = "SELECT * FROM students WHERE UPPER(firstName) LIKE '%" + q + "%' OR UPPER(lastName) LIKE '%" + q + "%';"
+        query = "SELECT * FROM students WHERE UPPER(first_name) LIKE '%" + q + "%' OR UPPER(last_name) LIKE '%" + q + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     suggestions = json.dumps(databaseResult[:10], indent=4, sort_keys=True, default=str)
     return suggestions

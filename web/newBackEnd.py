@@ -634,7 +634,7 @@ def deleteAttendant(request):
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
-    queryDelete = "DELETE FROM dailyattendance WHERE student_id = " + str(studentID) + " AND date = " + date + ";"
+    queryDelete = "DELETE FROM dailyattendance WHERE student_id = " + str(studentID) + " AND date = \'" + date + "\';"
     executeSingleQuery(queryDelete, [])
     return "done"
     

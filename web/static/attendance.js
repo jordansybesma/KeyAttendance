@@ -148,6 +148,7 @@ function getRequest(urlAddon, callbackState, callback) {
 }
 
 // SQL can't handle strings with spaces. This method converts camel case strings into strings with spaces.
+// DOCUMENT HERE!!!
 function makeHeaderReadable(header) {
     var newHeader = "";
     var newChar = "";

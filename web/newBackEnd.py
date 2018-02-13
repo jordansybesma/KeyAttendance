@@ -13,7 +13,7 @@ def executeSingleQuery(query, params = [], fetch = False):
     dbName = 'compsTestDB'
     user = 'ubuntu'
     password = 'keyComps'
-    hostName = 'ec2-34-213-2-88.us-west-2.compute.amazonaws.com'
+    hostName = 'ec2-35-160-216-144.us-west-2.compute.amazonaws.com'
     conn = psycopg2.connect(database=dbName, user=user, password=password, host=hostName)
     cur = conn.cursor()
     if len(params) == 0:
@@ -35,7 +35,7 @@ def getStudentAttendance(student):
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
     queryAttendance = "SELECT DISTINCT date, time FROM dailyattendance WHERE student_id = " + str(studentID) + ";"
-    
+
     return json.dumps(executeSingleQuery(queryAttendance, fetch = True), indent=4, sort_keys=True, default=str)
 
     #return getStudentInfo(studentID)
@@ -51,59 +51,65 @@ def getAttendance(date):
     queryAddName = queryAddName + "FROM temp0 LEFT JOIN students ON temp0.student_id = students.id;"
     totalQuery = totalQuery + queryAddName
     #executeSingleQuery(query1, [])
-    
+
     queryColumns = "SELECT activity_id, name FROM activities WHERE is_showing = 'true' ORDER BY ordering;"
     columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
     columns =json.loads(columnResults)
     newTable = "temp1"
     tempCount = 1
-    
+
     for i in range(len(columns)):
         name = columns[i][1]
         colID = columns[i][0]
         tempCount = tempCount + 1
         rightTable = "temp" + str(tempCount)
+<<<<<<< HEAD
         
         queryTemp = "SELECT DISTINCT student_id, activity_id INTO " + rightTable + " FROM dailyattendance WHERE date = \'" + date
         queryTemp = queryTemp + "\' AND activity_id = " + str(colID) + ";"
+=======
+
+        queryTemp = "SELECT DISTINCT student_id, activity_id INTO " + rightTable + " FROM dailyattendance WHERE date = " + date
+        queryTemp = queryTemp + " AND activity_id = " + str(colID) + ";"
+>>>>>>> 81550461e6c26ead763086af49361e0a5f6513b1
         #executeSingleQuery(queryTemp, [])
-        
+
         leftTable = newTable
         tempCount = tempCount + 1
         newTable = "temp" + str(tempCount)
         queryJoin = "SELECT " + leftTable + ".student_id, "+ leftTable + ".time, "
-        
-        
+
+
         if (i > 0):
             for act in range(1, i + 1):
                 queryJoin = queryJoin + leftTable + ".act" + str(act) + ", "
-            
-        
+
+
         queryJoin = queryJoin + rightTable + ".activity_id as act" + str(i + 1) + " INTO "
         queryJoin = queryJoin + newTable + " FROM " + leftTable + " LEFT JOIN "
         queryJoin = queryJoin + rightTable + " ON " + leftTable + ".student_id = " + rightTable + ".student_id;"
         totalQuery = totalQuery + " " + queryTemp + " " + queryJoin
-    
+
     executeSingleQuery(totalQuery, [])
-        
+
     returnQuery = "SELECT * FROM " + newTable + ";"
-    
+
     result = json.dumps(executeSingleQuery(returnQuery, fetch = True), indent=4, sort_keys=True, default=str)
     print(result)
     #return result
 
     queryDrop = ""
-    
+
     for table in range(0, tempCount + 1):
         queryDrop = queryDrop + "DROP TABLE temp" + str(table) + "; "
     executeSingleQuery(queryDrop, [])
 
-    return result    
-    
-    
+    return result
+
+
 #Add new student to system
 #Input: first name and last name
-#Output: none    
+#Output: none
 def addNewStudent(request):
     firstName = request.form.get('firstName')
     lastName  = request.form.get('lastName')
@@ -127,18 +133,18 @@ def updateStudentInfo(request):
     queryColID = "SELECT info_id FROM activities WHERE name = \'" + col + "\';"
 
     colID = json.loads(json.dumps(executeSingleQuery(queryColID, fetch=True)))[0][0]
-    
-     
+
+
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
     queryDelete = "DELETE FROM studentinfo WHERE studentid = " + str(studentID) + " AND info_id = " + str(colID) + ";"
-    
+
     queryColumnName = "SELECT name, type FROM studentcolumns WHERE info_id = + " + str(colID) + ";"
     nameResult = json.dumps(executeSingleQuery(queryColumnName, fetch=True))
     columnInfo =json.loads(nameResult)
     columnName = columnInfo[0][0]
     columnType = columnInfo[0][1]
-    
+
     colName = ""
     if (columnType == "varchar"):
         colName = "str_value"
@@ -153,30 +159,30 @@ def updateStudentInfo(request):
         colName = "time_value"
 
 
-    
-    queryUpdate = "INSERT INTO studentinfo (student_id, info_id, " + colName 
+
+    queryUpdate = "INSERT INTO studentinfo (student_id, info_id, " + colName
     queryUpdate = queryUpdate + ") VALUES (" + str(studentID) + ", " + str(colID) + ", " + value + ";"
-        
+
     queryTotal = queryDelete + " " + queryUpdate
     executeSingleQuery(queryTotal,[])
     return "done"
-    
+
 
 # create full table for student data
 ##NEEDS to be implemented in flaskEnd.py
 #Input: none
 #Output: all student data concatenated in one table
 def createStudentInfoTable(request):
-    
+
     totalQuery = "SELECT DISTINCT id INTO temp1 FROM students;"
     #executeSingleQuery(query1, [])
-    
+
     queryColumns = "SELECT info_id, name, type FROM studentcolumns WHERE is_showing = 'true' ORDER BY info_id;"
     columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
     columns =json.loads(columnResults)
     newTable = "temp1"
     tempCount = 1
-    
+
     for i in range(len(columns)):
         name = columns[i][1]
         colID = columns[i][0]
@@ -195,41 +201,41 @@ def createStudentInfoTable(request):
             colToSelect = "date_value"
         elif (colType == "boolean"):
             colToSelect = "time_value"
-        
+
         queryTemp = "SELECT DISTINCT student_id, " +  colToSelect + " INTO " + rightTable + " FROM studentinfo WHERE info_id = " + str(colID) + ";"
         #executeSingleQuery(queryTemp, [])
-        
+
         leftTable = newTable
         tempCount = tempCount + 1
         newTable = "temp" + str(tempCount)
         queryJoin = "SELECT " + leftTable + ".id, "
-        
-        
+
+
         if (i > 0):
             for act in range(1, i + 1):
                 queryJoin = queryJoin + leftTable + ".act" + str(act) + ", "
-            
-        
+
+
         queryJoin = queryJoin + rightTable + "." + colToSelect + " as act" + str(i + 1) + " INTO "
         queryJoin = queryJoin + newTable + " FROM " + leftTable + " LEFT JOIN "
         queryJoin = queryJoin + rightTable + " ON " + leftTable + ".id = " + rightTable + ".id;"
         totalQuery = totalQuery + " " + queryTemp + " " + queryJoin
-    
+
     executeSingleQuery(totalQuery, [])
-        
+
     returnQuery = "SELECT * FROM " + newTable + ";"
-    
+
     result = json.dumps(executeSingleQuery(returnQuery, fetch = True), indent=4, sort_keys=True, default=str)
     print(result)
     #return result
 
     queryDrop = ""
-    
+
     for table in range(1, tempCount + 1):
         queryDrop = queryDrop + "DROP TABLE temp" + str(table) + "; "
     executeSingleQuery(queryDrop, [])
 
-    return result    
+    return result
 
 
 # the same process as entire table, but for just one student
@@ -241,13 +247,13 @@ def createStudentInfoTable(request):
 def getStudentInfo(studID):
     totalQuery = "SELECT DISTINCT id INTO temp1 FROM students;"
     #executeSingleQuery(query1, [])
-    
+
     queryColumns = "SELECT info_id, name, type FROM studentcolumns WHERE is_showing = 'true' ORDER BY info_id;"
     columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
     columns =json.loads(columnResults)
     newTable = "temp1"
     tempCount = 1
-    
+
     for i in range(len(columns)):
         name = columns[i][1]
         colID = columns[i][0]
@@ -266,36 +272,36 @@ def getStudentInfo(studID):
             colToSelect = "date_value"
         elif (colType == "boolean"):
             colToSelect = "time_value"
-        
+
         queryTemp = "SELECT DISTINCT student_id, " +  colToSelect + " INTO " + rightTable + " FROM studentinfo WHERE info_id = " + str(colID) + ";"
         #executeSingleQuery(queryTemp, [])
-        
+
         leftTable = newTable
         tempCount = tempCount + 1
         newTable = "temp" + str(tempCount)
         queryJoin = "SELECT " + leftTable + ".id, "
-        
-        
+
+
         if (i > 0):
             for act in range(1, i + 1):
                 queryJoin = queryJoin + leftTable + ".act" + str(act) + ", "
-            
-        
+
+
         queryJoin = queryJoin + rightTable + "." + colToSelect + " as act" + str(i + 1) + " INTO "
         queryJoin = queryJoin + newTable + " FROM " + leftTable + " LEFT JOIN "
         queryJoin = queryJoin + rightTable + " ON " + leftTable + ".id = " + rightTable + ".id;"
         totalQuery = totalQuery + " " + queryTemp + " " + queryJoin
-    
+
     executeSingleQuery(totalQuery, [])
-        
+
     returnQuery = "SELECT * FROM " + newTable + " WHERE id = studID;"
-    
+
     result = json.dumps(executeSingleQuery(returnQuery, fetch = True), indent=4, sort_keys=True, default=str)
     print(result)
     #return result
 
     queryDrop = ""
-    
+
     for table in range(1, tempCount + 1):
         queryDrop = queryDrop + "DROP TABLE temp" + str(table) + "; "
     executeSingleQuery(queryDrop, [])
@@ -312,13 +318,13 @@ def addStudentColumn(request):
     colType = request.form.get("type")
     definedOptions = request.form.get("definedOptions")
 
-    
-    
+
+
     #query = "INSERT INTO studentColumns VALUES ('true','false', '" + name + "', '"+ colType + "', '" + definedOptions + "');"
     #queryAttendance = "ALTER TABLE testStudents ADD " + name + " " + colType + ";"
-    query = "INSERT INTO studentcolumns (is_showing, quick_add, name, type) VALUES (" 
+    query = "INSERT INTO studentcolumns (is_showing, quick_add, name, type) VALUES ("
     query = query + "'true', 'false', '" + name + "', '" + colType + "');"
-    
+
     executeSingleQuery(query, [])
     #executeSingleQuery(queryAttendance, [])
     return "done"
@@ -330,7 +336,7 @@ def addStudentColumn(request):
 def alterStudentColumn(request):
     name = request.form.get("name")
     column = request.form.get("column")
-    
+
     queryStatus = "SELECT " + column + " FROM studentColumns WHERE name = '" + name + "';"
     result = json.dumps(executeSingleQuery(queryStatus,fetch = True))
     newResult =json.loads(result)
@@ -357,7 +363,7 @@ def deleteStudentColumn(request):
     query2 = "UPDATE studentColumns SET quick_add  = 'false' WHERE name = '" + name + "';"
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
-    
+
 
 #Get student column info
 #Input: nothing
@@ -390,7 +396,7 @@ def getAttendance(date):
     queryResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(queryResult, indent=4, sort_keys=True, default=str)
     return result
-    
+
 """
 
 """
@@ -411,8 +417,8 @@ def getStudentAttendance(student):
     last = nameList[1]
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
-    
-    
+
+
     return getStudentInfo(studentID)
 
 
@@ -420,14 +426,20 @@ def getStudentAttendance(student):
 def getMasterAttendance():
     getDates = "SELECT DISTINCT date FROM dailyattendance ORDER BY date DESC;"
     #executeSingleQuery(query1, [])
+<<<<<<< HEAD
     dateResults = json.dumps(executeSingleQuery(getDates, fetch=True))
     dates =json.loads(dateResults)
     
     queryColumns = "SELECT id, name FROM activities WHERE inuse = 'true' ORDER BY ordering;"
+=======
+
+    queryColumns = "SELECT id, name FROM rachelAct WHERE inuse = 'true' ORDER BY ordering;"
+>>>>>>> 81550461e6c26ead763086af49361e0a5f6513b1
     columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
     columns =json.loads(columnResults)
     newTable = "temp1"
     tempCount = 1
+<<<<<<< HEAD
     queryCreateEmpty = "CREATE TABLE master (\"date\" date, attendees int "
     for i in range(len(columns)):
         name = columns[i][1]
@@ -448,49 +460,52 @@ def getMasterAttendance():
             #queryColumn = "SELECT DISTINCT
     
     
+=======
+
+>>>>>>> 81550461e6c26ead763086af49361e0a5f6513b1
     for i in range(len(columns)):
         name = columns[i][1]
         colID = columns[i][0]
         tempCount = tempCount + 1
         rightTable = "temp" + str(tempCount)
-        
+
         queryTemp = "SELECT DISTINCT id, activity_id INTO " + rightTable + " FROM rachelAtten WHERE dtime = " + date
         queryTemp = queryTemp + " AND activity_id = " + str(colID) + ";"
         #executeSingleQuery(queryTemp, [])
-        
+
         leftTable = newTable
         tempCount = tempCount + 1
         newTable = "temp" + str(tempCount)
         queryJoin = "SELECT " + leftTable + ".id, "
-        
-        
+
+
         if (i > 0):
             for act in range(1, i + 1):
                 queryJoin = queryJoin + leftTable + ".act" + str(act) + ", "
-            
-        
+
+
         queryJoin = queryJoin + rightTable + ".activity_id as act" + str(i + 1) + " INTO "
         queryJoin = queryJoin + newTable + " FROM " + leftTable + " LEFT JOIN "
         queryJoin = queryJoin + rightTable + " ON " + leftTable + ".id = " + rightTable + ".id;"
         totalQuery = totalQuery + " " + queryTemp + " " + queryJoin
-    
+
     executeSingleQuery(totalQuery, [])
-        
+
     returnQuery = "SELECT * FROM " + newTable + ";"
-    
+
     result = json.dumps(executeSingleQuery(returnQuery, fetch = True), indent=4, sort_keys=True, default=str)
     print(result)
     #return result
 
     queryDrop = ""
-    
+
     for table in range(1, tempCount + 1):
         queryDrop = queryDrop + "DROP TABLE temp" + str(table) + "; "
     executeSingleQuery(queryDrop, [])
 
-    return result    
-    
-    
+    return result
+
+
     """queryColumns = "SELECT name FROM attendanceColumns ORDER BY ordering;"
     cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
     colList = json.loads(cols) # this is strange... anyone have any idea why?
@@ -499,7 +514,7 @@ def getMasterAttendance():
         query = query + ", " + colList[i][0]
     query = query + " FROM masterAttendance ORDER BY date DESC;"
     #"SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;"
-    
+
     return json.dumps(executeSingleQuery(query,
         fetch = True)[:10], indent=4, sort_keys=True, default=str)"""
 
@@ -523,18 +538,18 @@ def moveAttendanceColumnUp(request):
         if (ids[i][0] == name):
             if (i < 2):
                 return ""
-            
+
             colID = ids[i][1]
             prevCol = ids[i-1][0]
             prevID = ids[i-1][1]
     if (colID == 0 or prevID == 0):
         print("did not find... oops!")
-        return 
+        return
     query1 = "UPDATE activities SET ordering = " + str(prevID) + " WHERE name = \'" + name + "\';"
     query2 = "UPDATE activities SET ordering = " + str(colID) + " WHERE name = \'" + prevCol + "\';"
     executeSingleQuery(query1, [])
     executeSingleQuery(query2, [])
-            
+
     return "Done"
 
 #Add new item to track in attendance
@@ -570,7 +585,7 @@ def deleteAttendanceColumn(request):
     query = "UPDATE activities SET is_showing  = 'false' WHERE name = '" + name + "';"
     executeSingleQuery(query, [])
     return "done"
-    
+
 
 
 #Not sure if this is currently being used...
@@ -632,12 +647,12 @@ def deleteAttendant(request):
     first = nameList[0]
     last = nameList[1]
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
-    
+
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
     queryDelete = "DELETE FROM dailyattendance WHERE student_id = " + str(studentID) + " AND date = " + date + ";"
     executeSingleQuery(queryDelete, [])
     return "done"
-    
+
 
 """
 I don't think this is used...
@@ -688,7 +703,7 @@ def selectActivity(request):
     queryColID = "SELECT info_id FROM activities WHERE name = \'" + column + "\';"
 
     colID = json.loads(json.dumps(executeSingleQuery(queryColID, fetch=True)))[0][0]
-    
+
 
     query = "SELECT * FROM dailyattendance WHERE student_id = " + str(studentID) + " AND date = '" + date + "' AND activity_id = " + str(colID) + ";"
     result = json.loads(json.dumps(executeSingleQuery(query, fetch=True)))
@@ -696,11 +711,11 @@ def selectActivity(request):
         queryUpdate = "INSERT INTO dailyattendance VALUES (" + str(studentID) + ", '" + date + "', null, " + str(colID) + ");"
     else:
         queryUpdate = "DELETE FROM dailyattendance WHERE student_id = " + str(studentID) + " AND date = '" + date + "' AND activity_id = " + str(colID) + ";"
-    executeSingleQuery(queryUpdate)    
-        
+    executeSingleQuery(queryUpdate)
+
     return "done"
 
-    
+
 
 
 
@@ -716,11 +731,11 @@ def addAttendant(request):
     time = request.form.get('time')
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
-    
+
     querykeyID = "SELECT info_id FROM activities WHERE name = 'key';"
 
     keyID = json.loads(json.dumps(executeSingleQuery(querykeyID, fetch=True)))[0][0]
-    
+
     queryAdd = "INSERT INTO dailyattendance VALUES (" + str(studentID) + ", '" + date + "', '" + time +  "', -1);"
     queryAddKey = "INSERT INTO dailyattendance VALUES (" + str(studentID) + ", '" + date + "', '" + time +  "', " + str(keyID) + ");"
     queryTotal = queryAdd + " " + queryAddKey
@@ -866,22 +881,3 @@ def getJustID(string):
     print(databaseResult[0][0])
     result = json.dumps(databaseResult[0][0])
     return result
-
-def getAlerts():
-    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.studentid FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id;"
-    databaseResult = executeSingleQuery(query, fetch = True)
-    return json.dumps(databaseResult)
-
-def addAlert(request):
-    id = request.form.get('id')
-    alert = request.form.get('alertText')
-    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [alert, 'f', id])
-
-def checkAlert(request):
-    id = request.form.get('id')
-    executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])   
-
-        
-        
-    
-    

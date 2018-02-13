@@ -107,15 +107,13 @@ function addNewStudent() {
     closeAddStudent();
 }
 
-// Capitalizes first letter of input
-function capitalizeFirstLetter(name) {
-    var firstChar = name[0];
-    firstChar = firstChar.toUpperCase();
-    name = firstChar + name.slice(1);
-    return name;
+// Capitalizes first letter of string
+// Thanks to https://paulund.co.uk/capitalize-first-letter-string-javascript
+function capitalizeFirstLetter(string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Adds a student to the table with all students
+// Creates a new student and adds them to the table of all students.
 //should be okay for update
 function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
@@ -124,9 +122,8 @@ function sendNewStudent(firstname, lastname) {
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
 
-// Deletes all instances of attendant at specified date
-// use ID (hard to do for adding new student to table without an ID)
-//Should be good
+// Deletes all instances of attendant at specified date.
+// (Ideally would use ID, but hard to do for adding new student to table without an ID).
 function deleteAttendant(date, name) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/deleteAttendant");
@@ -154,6 +151,9 @@ function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest.send(null);
 }
 
+// SQL can't handle strings with spaces. 
+// This method adds spaces in strings with camel case and replaces underscores with spaces.
+// Example: "HelloWorld" and "Hello_World" become "Hello World"
 function makeHeaderReadable(header) {
     var newHeader = "";
     var newChar = "";
@@ -314,8 +314,7 @@ function selectColumn(name) {
 function addStudentColumn() {
     var name = document.getElementById("studentColumnName").value;
     var type = document.getElementById("studentColumnType").value;
-    var badSubstring = " .,<>/?':;\|]}[{=+-_)(*&^%$#@!~`";
-    if (stop(name) === false) {
+    if (isValidColumnName(name) === false) {
         alert("Please enter a valid column name")
         document.getElementById("studentColumnName").value = "";
         return;
@@ -342,24 +341,7 @@ function addStudentColumn() {
     showProfileManage()
 }
 
-function findOverlap(a, b) {
-    if (b.length === 0) {
-        return "";
-    }
-
-    if (a.endsWith(b)) {
-        return b;
-    }
-
-    if (a.indexOf(b) >= 0) {
-        return b;
-    }
-
-    return findOverlap(a, b.substring(0, b.length - 1));
-}
-
-function stop(name) {
-    //alert("got here");
+function isValidColumnName(name) {
     var badSubstring = " .,<>/?':;|]}[{=+-_)(*&^%$#@!~`";
     for (var i = 0; i < badSubstring.length; i++) {
         if (name.indexOf(badSubstring.charAt(i)) != -1) {
@@ -377,9 +359,7 @@ function stop(name) {
 //should be updated
 function addColumn() {
     var name = document.getElementById("newColumn").value;
-    var badSubstring = " .,<>/?':;\|]}[{=+-_)(*&^%$#@!~`";
-    //overlap = findOverlap(name, badSubstring);
-    if (stop(name) === false) {
+    if (isValidColumnName(name) === false) {
         alert("Please enter a valid column name")
         document.getElementById("newColumn").value = "";
         return;

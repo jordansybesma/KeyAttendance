@@ -966,7 +966,7 @@ function displayMasterAttendance() {
     table.innerHTML = "";
     getRequest("/getAttendanceColumns", "", makeMasterTableHeader);
 }
-
+//should be fine/updated
 function makeMasterTableHeader(_, columns) {
     table = document.getElementById("masterAttendanceTable");
     var row = table.insertRow(-1);
@@ -983,9 +983,9 @@ function makeMasterTableHeader(_, columns) {
     getRequest("/getMasterAttendance", "", masterAttendanceHelper);
 }
 
-
-
+//The python has NOT been implemented
 function masterAttendanceHelper(_, masterData) {
+    return "woops";
     var myData = JSON.parse(masterData);
     console.log(masterData);
     columns = document.getElementById("columnData").innerHTML;
@@ -999,7 +999,7 @@ function masterAttendanceHelper(_, masterData) {
         for (j in columnData) {
 
             if (columnData[j][1] == true) {
-                var val = myData[i][parseInt(j) + 2];
+                var val = myData[i][parseInt(j) + 1];
                 if (val == null) {
                     val = 0;
                 }
@@ -1278,7 +1278,7 @@ function createFileHelper(_, attendance) {
     exportToCsv(filename, rows);
 
 }
-
+//EVERYTHING BELOW THIS NOT UPDATED YET BLEEEEHHHHH
 function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
     return false;

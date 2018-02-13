@@ -86,7 +86,7 @@ def getAttendance(date):
     
     executeSingleQuery(totalQuery, [])
         
-    returnQuery = "SELECT * FROM " + newTable + ";"
+    returnQuery = "SELECT * FROM " + newTable + " ORDER BY time;"
     
     result = json.dumps(executeSingleQuery(returnQuery, fetch = True), indent=4, sort_keys=True, default=str)
     print(result)

@@ -175,7 +175,7 @@ function makeHeaderReadable(header) {
     return newHeader;
 }
 
-
+// Displays Manage Profile tab, using showManageProfileHelper to retrieve column data from the database.
 function showManageProfile() {
     table = document.getElementById("studentColumnsTable");
     table.innerHTML = "";
@@ -186,6 +186,7 @@ function showManageProfile() {
     getRequest("/getStudentColumns", "", showManageProfileHelper);
 }
 
+// For each element in data (an aspect of student profile such as gender), display as a row in the table.
 function showManageProfileHelper(_, data) {
     var myData = JSON.parse(data);
     var table = document.getElementById("studentColumnsTable");
@@ -195,6 +196,9 @@ function showManageProfileHelper(_, data) {
     }
 }
 
+// Displays aspect of student profile in a row.
+// isShowing indicates whether the demographic shows up in student profile.
+// isQuick indicates whether the demographic shows up in the add new student popup in the attendance sheet.
 function fillRowManageProfile(row, rowData) {
     var name = rowData[2];
     var isShowing = rowData[0];
@@ -828,7 +832,6 @@ function fillAttendance(_, attendance) {
     var myColumns = JSON.parse(columnData);
     console.log("MYDATA: " + myData);
     for (i in myData) {
-        console.log("i: " + i);
         fillRowAttendance(myColumns, myData[i]);
     }
 }

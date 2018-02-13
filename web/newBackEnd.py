@@ -685,7 +685,7 @@ def selectActivity(request):
     last = nameList[1]
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
-    queryColID = "SELECT info_id FROM activities WHERE name = \'" + column + "\';"
+    queryColID = "SELECT activity_id FROM activities WHERE name = \'" + column + "\';"
 
     colID = json.loads(json.dumps(executeSingleQuery(queryColID, fetch=True)))[0][0]
     

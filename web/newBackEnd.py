@@ -71,7 +71,7 @@ def getAttendance(date):
         leftTable = newTable
         tempCount = tempCount + 1
         newTable = "temp" + str(tempCount)
-        queryJoin = "SELECT " + leftTable + ".student_id, "+ leftTable + ".time, "
+        queryJoin = "SELECT " + leftTable + ".student_id, "+ leftTable + ".time, " + leftTable + ".first_name, " + leftTable + ".last_name, "
         
         
         if (i > 0):

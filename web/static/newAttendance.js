@@ -877,7 +877,7 @@ function displayRow(columns, attendeeEntry) {
 function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
 
     // The offset of 3 is dependent on the first 3 elements of attendeeEntry being non-activities (firstName, lastName, time)
-    var index = parseInt(i) + 3;
+    var index = parseInt(i) + 4;
 
     var hasDoneActivity = attendeeEntry[index];
     var col = columns[i][2];

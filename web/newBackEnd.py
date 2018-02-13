@@ -691,7 +691,7 @@ def selectActivity(request):
     
 
     query = "SELECT * FROM dailyattendance WHERE student_id = " + str(studentID) + " AND date = '" + date + "' AND activity_id = " + str(colID) + ";"
-    result = json.loads(executeSingleQuery(query, fetch=True))
+    result = executeSingleQuery(query, fetch=True)
     if (len(result) < 1):
         queryUpdate = "INSERT INTO dailyattendance VALUES (" + str(studentID) + ", '" + date + "', null, " + str(colID) + ");"
     else:

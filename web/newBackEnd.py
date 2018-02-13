@@ -46,7 +46,7 @@ def getStudentAttendance(student):
 #Input: date
 #Output: all activity data for a specific date
 def getAttendance(date):
-    totalQuery = "SELECT DISTINCT student_id, time INTO temp0 FROM dailyattendance WHERE date = " + date + " AND activity_id = -1;"
+    totalQuery = "SELECT DISTINCT student_id, time INTO temp0 FROM dailyattendance WHERE date = \'" + date + "\' AND activity_id = -1;"
     queryAddName= "SELECT temp0.student_id, temp0.time, students.first_name, students.last_name INTO temp1 "
     queryAddName = queryAddName + "FROM temp0 LEFT JOIN students ON temp0.student_id = students.id;"
     totalQuery = totalQuery + queryAddName
@@ -64,8 +64,8 @@ def getAttendance(date):
         tempCount = tempCount + 1
         rightTable = "temp" + str(tempCount)
         
-        queryTemp = "SELECT DISTINCT student_id, activity_id INTO " + rightTable + " FROM dailyattendance WHERE date = " + date
-        queryTemp = queryTemp + " AND activity_id = " + str(colID) + ";"
+        queryTemp = "SELECT DISTINCT student_id, activity_id INTO " + rightTable + " FROM dailyattendance WHERE date = \'" + date
+        queryTemp = queryTemp + "\' AND activity_id = " + str(colID) + ";"
         #executeSingleQuery(queryTemp, [])
         
         leftTable = newTable
@@ -418,14 +418,35 @@ def getStudentAttendance(student):
 
 ##NOT EVEN CLOSE TO DONE NEEDS TO BE IMPLEMENTED
 def getMasterAttendance():
-    totalQuery = "SELECT DISTINCT date INTO temp1 FROM rachelAtten ORDER BY date DESC;"
+    getDates = "SELECT DISTINCT date FROM dailyattendance ORDER BY date DESC;"
     #executeSingleQuery(query1, [])
+    dateResults = json.dumps(executeSingleQuery(getDates, fetch=True))
+    dates =json.loads(dateResults)
     
-    queryColumns = "SELECT id, name FROM rachelAct WHERE inuse = 'true' ORDER BY ordering;"
+    queryColumns = "SELECT id, name FROM activities WHERE inuse = 'true' ORDER BY ordering;"
     columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
     columns =json.loads(columnResults)
     newTable = "temp1"
     tempCount = 1
+    queryCreateEmpty = "CREATE TABLE master (\"date\" date, attendees int "
+    for i in range(len(columns)):
+        name = columns[i][1]
+        queryCreateEmpty = queryCreateEmpty + ", " + name + "int "
+    queryCreateEmpty = queryCreateEmpty + ");"
+    
+    for i in range(len(dates)):
+        #queryAttendees = "SELECT DISTINCT student_id FROM dailyattendance WHERE date = " + dates[0][i] + ";"
+        #attenResults = json.dumps(executeSingleQuery(queryAttendees, fetch=True))
+        #attendees =json.loads(attenResults)
+        #numAtten = len(attendees)
+    
+        
+        queryInsertDate = "INSERT INTO master (date, attendees) VALUES (" + dates[0][i] + ", (SELECT COUNT(student_id) FROM dailyattendance WHERE date = " + dates[0][i] + " AND activity_id = -1;));"
+        for j in range(len(columns)):
+            name = columns[j][1]
+            colID = columns[j][0]
+            #queryColumn = "SELECT DISTINCT
+    
     
     for i in range(len(columns)):
         name = columns[i][1]

@@ -717,7 +717,7 @@ def addAttendant(request):
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
     
-    querykeyID = "SELECT info_id FROM activities WHERE name = 'key';"
+    querykeyID = "SELECT activity_id FROM activities WHERE name = 'key';"
 
     keyID = json.loads(json.dumps(executeSingleQuery(querykeyID, fetch=True)))[0][0]
     

@@ -147,8 +147,9 @@ function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest.send(null);
 }
 
-// SQL can't handle strings with spaces. This method converts camel case strings into strings with spaces.
-// DOCUMENT HERE!!!
+// SQL can't handle strings with spaces. 
+// This method adds spaces in strings with camel case and replaces underscores with spaces.
+// Example: "HelloWorld" and "Hello_World" become "Hello World"
 function makeHeaderReadable(header) {
     var newHeader = "";
     var newChar = "";
@@ -303,8 +304,8 @@ function selectColumn(name) {
 function addStudentColumn() {
     var name = document.getElementById("studentColumnName").value;
     var type = document.getElementById("studentColumnType").value;
-    var badSubstring = " .,<>/?':;\|]}[{=+-_)(*&^%$#@!~`";
-    if (stop(name) === false) {
+
+    if (isValidColumnName(name) === false) {
         alert("Please enter a valid column name")
         document.getElementById("studentColumnName").value = "";
         return;
@@ -331,24 +332,7 @@ function addStudentColumn() {
     showProfileManage()
 }
 
-function findOverlap(a, b) {
-    if (b.length === 0) {
-        return "";
-    }
-
-    if (a.endsWith(b)) {
-        return b;
-    }
-
-    if (a.indexOf(b) >= 0) {
-        return b;
-    }
-
-    return findOverlap(a, b.substring(0, b.length - 1));
-}
-
-function stop(name) {
-    //alert("got here");
+function isValidColumnName(name) {
     var badSubstring = " .,<>/?':;|]}[{=+-_)(*&^%$#@!~`";
     for (var i = 0; i < badSubstring.length; i++) {
         if (name.indexOf(badSubstring.charAt(i)) != -1) {
@@ -365,9 +349,7 @@ function stop(name) {
 
 function addColumn() {
     var name = document.getElementById("newColumn").value;
-    var badSubstring = " .,<>/?':;\|]}[{=+-_)(*&^%$#@!~`";
-    //overlap = findOverlap(name, badSubstring);
-    if (stop(name) === false) {
+    if (isValidColumnName(name) === false) {
         alert("Please enter a valid column name")
         document.getElementById("newColumn").value = "";
         return;

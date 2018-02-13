@@ -846,21 +846,3 @@ def getJustID(string):
     result = json.dumps(databaseResult[0][0])
     return result
 
-def getAlerts():
-    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.studentid FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id;"
-    databaseResult = executeSingleQuery(query, fetch = True)
-    return json.dumps(databaseResult)
-
-def addAlert(request):
-    id = request.form.get('id')
-    alert = request.form.get('alertText')
-    executeSingleQuery("INSERT INTO alerts VALUES (default, %s, %s, %s);", [alert, 'f', id])
-
-def checkAlert(request):
-    id = request.form.get('id')
-    executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])   
-
-        
-        
-    
-    

@@ -288,7 +288,7 @@ def getStudentInfo(name):
         
         queryJoin = queryJoin + rightTable + "." + colToSelect + " as act" + str(i + 1) + " INTO "
         queryJoin = queryJoin + newTable + " FROM " + leftTable + " LEFT JOIN "
-        queryJoin = queryJoin + rightTable + " ON " + leftTable + ".id = " + rightTable + ".id;"
+        queryJoin = queryJoin + rightTable + " ON " + leftTable + ".id = " + rightTable + ".student_id;"
         totalQuery = totalQuery + " " + queryTemp + " " + queryJoin
     
     executeSingleQuery(totalQuery, [])
@@ -592,6 +592,7 @@ def updateAttendanceColumn(request):
         query = "UPDATE activities SET is_showing = 'true' WHERE name = '" + name + "';"
 
     executeSingleQuery(query, [])
+    return "done"
 
 
 #get attendance columns

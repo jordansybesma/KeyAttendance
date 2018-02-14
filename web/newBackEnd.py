@@ -418,7 +418,7 @@ def getStudentAttendance(student):
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
     
     
-    return getStudentInfo(studentID)
+    return getStudentInfo(student)
 
 
 ##NOT EVEN CLOSE TO DONE NEEDS TO BE IMPLEMENTED

@@ -29,6 +29,7 @@ def executeSingleQuery(query, params = [], fetch = False):
 
 # Gets student attendance data (date + time)
 def getStudentAttendance(student):
+    print "got here"
     nameList = student.split()
     first = nameList[0]
     last = nameList[1]

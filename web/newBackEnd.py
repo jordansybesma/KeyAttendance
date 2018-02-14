@@ -432,82 +432,38 @@ def getMasterAttendance():
     queryColumns = "SELECT id, name FROM activities WHERE inuse = 'true' ORDER BY ordering;"
     columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
     columns =json.loads(columnResults)
-    newTable = "temp1"
-    tempCount = 1
+    
     queryCreateEmpty = "CREATE TABLE master (\"date\" date, attendees int "
     for i in range(len(columns)):
         name = columns[i][1]
         queryCreateEmpty = queryCreateEmpty + ", " + name + "int "
     queryCreateEmpty = queryCreateEmpty + ");"
-    
+    totalQuery = queryCreateEmpty
     for i in range(len(dates)):
-        #queryAttendees = "SELECT DISTINCT student_id FROM dailyattendance WHERE date = " + dates[0][i] + ";"
-        #attenResults = json.dumps(executeSingleQuery(queryAttendees, fetch=True))
-        #attendees =json.loads(attenResults)
-        #numAtten = len(attendees)
-    
         
-        queryInsertDate = "INSERT INTO master (date, attendees) VALUES (" + dates[0][i] + ", (SELECT COUNT(student_id) FROM dailyattendance WHERE date = " + dates[0][i] + " AND activity_id = -1;));"
+        queryInsertDate = "INSERT INTO master (date, attendees) VALUES (\'" + dates[0][i] + "\', (SELECT COUNT(DISTINCT student_id) FROM dailyattendance WHERE date = \'" + dates[0][i] + "\' AND activity_id = -1;));"
+        totalQuery = totalQuery + " " + queryInsertDate
         for j in range(len(columns)):
             name = columns[j][1]
             colID = columns[j][0]
-            #queryColumn = "SELECT DISTINCT
-    
-    
-    for i in range(len(columns)):
-        name = columns[i][1]
-        colID = columns[i][0]
-        tempCount = tempCount + 1
-        rightTable = "temp" + str(tempCount)
-        
-        queryTemp = "SELECT DISTINCT id, activity_id INTO " + rightTable + " FROM rachelAtten WHERE dtime = " + date
-        queryTemp = queryTemp + " AND activity_id = " + str(colID) + ";"
-        #executeSingleQuery(queryTemp, [])
-        
-        leftTable = newTable
-        tempCount = tempCount + 1
-        newTable = "temp" + str(tempCount)
-        queryJoin = "SELECT " + leftTable + ".id, "
-        
-        
-        if (i > 0):
-            for act in range(1, i + 1):
-                queryJoin = queryJoin + leftTable + ".act" + str(act) + ", "
-            
-        
-        queryJoin = queryJoin + rightTable + ".activity_id as act" + str(i + 1) + " INTO "
-        queryJoin = queryJoin + newTable + " FROM " + leftTable + " LEFT JOIN "
-        queryJoin = queryJoin + rightTable + " ON " + leftTable + ".id = " + rightTable + ".id;"
-        totalQuery = totalQuery + " " + queryTemp + " " + queryJoin
+            queryColumnCount = "UPDATE master set " + name + " = (SELECT COUNT(DISTINCT student_id) FROM dailyattendance WHERE date = \'" + dates[0][i] + "\' AND activity_id = " + str(colID) + ";) WHERE "
+            queryColumnCount = queryColumnCount + " date = \'" + dates[0][i] + "\';"
+            totalQuery = totalQuery + " " + queryColumnCount
     
     executeSingleQuery(totalQuery, [])
         
-    returnQuery = "SELECT * FROM " + newTable + ";"
+    returnQuery = "SELECT * FROM master;"
     
     result = json.dumps(executeSingleQuery(returnQuery, fetch = True), indent=4, sort_keys=True, default=str)
     print(result)
-    #return result
 
-    queryDrop = ""
-    
-    for table in range(1, tempCount + 1):
-        queryDrop = queryDrop + "DROP TABLE temp" + str(table) + "; "
+    queryDrop = "DROP TABLE master;"
     executeSingleQuery(queryDrop, [])
-
+    
     return result    
     
     
-    """queryColumns = "SELECT name FROM attendanceColumns ORDER BY ordering;"
-    cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
-    colList = json.loads(cols) # this is strange... anyone have any idea why?
-    query = "SELECT date, numattend, " + colList[0][0];
-    for i in range(1, len(colList)):
-        query = query + ", " + colList[i][0]
-    query = query + " FROM masterAttendance ORDER BY date DESC;"
-    #"SELECT DISTINCT * FROM masterAttendance ORDER BY date DESC;"
-    
-    return json.dumps(executeSingleQuery(query,
-        fetch = True)[:10], indent=4, sort_keys=True, default=str)"""
+   
 
 
 #Switch a column's placement with the column above it

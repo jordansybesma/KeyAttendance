@@ -587,7 +587,7 @@ function displayStudentInfo(catName, info, type) {
     console.log(type);
     if (info == null) {
         var text = document.createTextNode(displayName + ": ");
-    } else if (type == "varchar(500)") {
+    } else if (type == "varchar") {
         console.log("var");
         var text = document.createTextNode(displayName + ": " + info);
     } else if (type == "int") {

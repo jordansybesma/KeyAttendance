@@ -438,7 +438,7 @@ def getMasterAttendance():
     queryCreateEmpty = "CREATE TABLE master (\"date\" date, attendees int "
     for i in range(len(columns)):
         name = columns[i][1]
-        queryCreateEmpty = queryCreateEmpty + ", " + name + "int "
+        queryCreateEmpty = queryCreateEmpty + ", " + name + " int "
     queryCreateEmpty = queryCreateEmpty + ");"
     totalQuery = queryCreateEmpty
     for i in range(len(dates)):

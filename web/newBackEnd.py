@@ -426,7 +426,7 @@ def getLogin(login):
 def getMasterAttendance():
     getDates = "SELECT DISTINCT date FROM dailyattendance ORDER BY date DESC;"
     #executeSingleQuery(query1, [])
-    dateResults = json.dumps(executeSingleQuery(getDates, fetch=True))
+    dateResults = json.dumps(executeSingleQuery(getDates, fetch=True), indent=4, sort_keys=True, default=str)
     dates =json.loads(dateResults)
     
     queryColumns = "SELECT id, name FROM activities WHERE inuse = 'true' ORDER BY ordering;"

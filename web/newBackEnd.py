@@ -127,7 +127,9 @@ def updateStudentInfo(request):
     value = request.form.get('value')
     queryColID = "SELECT activity_id FROM activities WHERE name = \'" + col + "\';"
 
-    colID = json.loads(json.dumps(executeSingleQuery(queryColID, fetch=True)))[0][0]
+    colID = json.loads(json.dumps(executeSingleQuery(queryColID, fetch=True)))
+    print(colID)
+    colID = colID[0][0]
     
      
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"

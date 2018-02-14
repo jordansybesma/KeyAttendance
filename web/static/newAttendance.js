@@ -611,7 +611,7 @@ function displayStudentInfo(catName, info, type) {
 function showStudentAttendance(_, data) {
 
     var parsedData = JSON.parse(data);
-
+    console.log("got to showstudentattendance");
     console.log(parsedData);
 
     var dateCounts = [0, 0, 0, 0, 0, 0, 0];

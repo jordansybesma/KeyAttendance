@@ -125,16 +125,16 @@ def updateStudentInfo(request):
     last = nameList[1]
     col = request.form.get('column')
     value = request.form.get('value')
-    queryColID = "SELECT info_id FROM activities WHERE name = \'" + col + "\';"
+    queryColID = "SELECT activity_id FROM activities WHERE name = \'" + col + "\';"
 
     colID = json.loads(json.dumps(executeSingleQuery(queryColID, fetch=True)))[0][0]
     
      
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
-    queryDelete = "DELETE FROM studentinfo WHERE studentid = " + str(studentID) + " AND info_id = " + str(colID) + ";"
+    queryDelete = "DELETE FROM studentinfo WHERE student_id = " + str(studentID) + " AND activity_id = " + str(colID) + ";"
     
-    queryColumnName = "SELECT name, type FROM studentcolumns WHERE info_id = + " + str(colID) + ";"
+    queryColumnName = "SELECT name, type FROM studentcolumns WHERE activity_id = + " + str(colID) + ";"
     nameResult = json.dumps(executeSingleQuery(queryColumnName, fetch=True))
     columnInfo =json.loads(nameResult)
     columnName = columnInfo[0][0]
@@ -155,7 +155,7 @@ def updateStudentInfo(request):
 
 
     
-    queryUpdate = "INSERT INTO studentinfo (student_id, info_id, " + colName 
+    queryUpdate = "INSERT INTO studentinfo (student_id, activity_id, " + colName 
     queryUpdate = queryUpdate + ") VALUES (" + str(studentID) + ", " + str(colID) + ", " + value + ";"
         
     queryTotal = queryDelete + " " + queryUpdate

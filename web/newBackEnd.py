@@ -428,6 +428,8 @@ def getMasterAttendance():
     #executeSingleQuery(query1, [])
     dateResults = json.dumps(executeSingleQuery(getDates, fetch=True), indent=4, sort_keys=True, default=str)
     dates =json.loads(dateResults)
+    print(dates)
+    print(dates[0])
     
     queryColumns = "SELECT activity_id, name FROM activities WHERE is_showing = 'true' ORDER BY ordering;"
     columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))

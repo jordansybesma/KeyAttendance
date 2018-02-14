@@ -156,8 +156,12 @@ def updateStudentInfo(request):
         colName = "bool_value"
     elif (columnType == "date"):
         colName = "date_value"
+        if (value != "null"):
+            value = "\'" + value + "\'"
     elif (columnType == "boolean"):
         colName = "time_value"
+        if (value != "null"):
+            value = "\'" + value + "\'"
 
 
     

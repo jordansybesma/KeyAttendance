@@ -443,12 +443,12 @@ def getMasterAttendance():
     totalQuery = queryCreateEmpty
     for i in range(len(dates)):
         
-        queryInsertDate = "INSERT INTO master (date, attendees) VALUES (\'" + dates[i][0] + "\', (SELECT COUNT(DISTINCT student_id) FROM dailyattendance WHERE date = \'" + dates[i][0] + "\' AND activity_id = -1;));"
+        queryInsertDate = "INSERT INTO master (date, attendees) VALUES (\'" + dates[i][0] + "\', (SELECT COUNT(DISTINCT student_id) FROM dailyattendance WHERE date = \'" + dates[i][0] + "\' AND activity_id = -1));"
         totalQuery = totalQuery + " " + queryInsertDate
         for j in range(len(columns)):
             name = columns[j][1]
             colID = columns[j][0]
-            queryColumnCount = "UPDATE master set " + name + " = (SELECT COUNT(DISTINCT student_id) FROM dailyattendance WHERE date = \'" + dates[i][0] + "\' AND activity_id = " + str(colID) + ";) WHERE "
+            queryColumnCount = "UPDATE master set " + name + " = (SELECT COUNT(DISTINCT student_id) FROM dailyattendance WHERE date = \'" + dates[i][0] + "\' AND activity_id = " + str(colID) + ") WHERE "
             queryColumnCount = queryColumnCount + " date = \'" + dates[i][0] + "\';"
             totalQuery = totalQuery + " " + queryColumnCount
     

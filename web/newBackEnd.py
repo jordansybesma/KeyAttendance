@@ -582,14 +582,14 @@ def deleteAttendanceColumn(request):
 def updateAttendanceColumn(request):
     name = request.form.get("name")
 
-    queryMaster = "SELECT isShowing FROM attendanceColumns WHERE name = '" + name + "';"
+    queryMaster = "SELECT is_showing FROM activities WHERE name = '" + name + "';"
     result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
     newResult =json.loads(result)
     isShowing = newResult[0][0]
     if (isShowing):
-        query = "UPDATE attendanceColumns SET isShowing = 'false' WHERE name = '" + name + "';"
+        query = "UPDATE activities SET is_showing = 'false' WHERE name = '" + name + "';"
     else:
-        query = "UPDATE attendanceColumns SET isShowing = 'true' WHERE name = '" + name + "';"
+        query = "UPDATE activities SET is_showing = 'true' WHERE name = '" + name + "';"
 
     executeSingleQuery(query, [])
 

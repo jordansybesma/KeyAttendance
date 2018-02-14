@@ -411,7 +411,7 @@ def getLogin(login):
 """
 
 # NEEDS to either be taken out, or retrieve id and call other method
-def getStudentAttendance(student):
+'''def getStudentAttendance(student):
     nameList = student.split()
     first = nameList[0]
     last = nameList[1]
@@ -420,7 +420,7 @@ def getStudentAttendance(student):
     
     
     return getStudentInfo(student)
-
+'''
 
 ##NOT EVEN CLOSE TO DONE NEEDS TO BE IMPLEMENTED
 def getMasterAttendance():

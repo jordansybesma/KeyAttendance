@@ -970,7 +970,7 @@ function makeMasterTableHeader(_, columns) {
 
 //The python has NOT been implemented
 function masterAttendanceHelper(_, masterData) {
-    return "woops";
+   
     var myData = JSON.parse(masterData);
     console.log(masterData);
     columns = document.getElementById("columnData").innerHTML;
@@ -979,18 +979,10 @@ function masterAttendanceHelper(_, masterData) {
 
     for (i in myData) {
         var row = table.insertRow(-1);
-        row.insertCell(-1).innerHTML = myData[i][0];
-        row.insertCell(-1).innerHTML = myData[i][1];
-        for (j in columnData) {
-
-            if (columnData[j][1] == true) {
-                var val = myData[i][parseInt(j) + 1];
-                if (val == null) {
-                    val = 0;
-                }
-                row.insertCell(-1).innerHTML = val;
-            }
+        for (j in myData[i]) {
+            row.insertCell(-1).innerHTML = myData[i][j];
         }
+        
     }
 
     //masterDataPlot(xaxis, yaxis);

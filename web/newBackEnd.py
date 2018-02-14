@@ -454,7 +454,7 @@ def getMasterAttendance():
     
     executeSingleQuery(totalQuery, [])
         
-    returnQuery = "SELECT * FROM master;"
+    returnQuery = "SELECT * FROM master ORDER BY date DESC;"
     
     result = json.dumps(executeSingleQuery(returnQuery, fetch = True), indent=4, sort_keys=True, default=str)
     print(result)

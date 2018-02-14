@@ -180,7 +180,7 @@ function makeHeaderReadable(header) {
     return newHeader;
 }
 
-function showProfileManage() {
+function showManageProfile() {
     table = document.getElementById("studentColumnsTable");
     table.innerHTML = "";
     var row = table.insertRow(-1);

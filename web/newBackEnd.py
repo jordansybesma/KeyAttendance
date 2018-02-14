@@ -143,9 +143,13 @@ def updateStudentInfo(request):
     columnType = columnInfo[0][1]
     
     colName = ""
+    if (value == ""):
+        value = "null"
+        
     if (columnType == "varchar"):
         colName = "str_value"
-        value = "\'" + value + "\'"
+        if (value != "null"):
+            value = "\'" + value + "\'"
     elif (columnType == "int"):
         colName = "int_value"
     elif (columnType == "boolean"):
@@ -158,7 +162,7 @@ def updateStudentInfo(request):
 
     
     queryUpdate = "INSERT INTO studentinfo (student_id, info_id, " + colName 
-    queryUpdate = queryUpdate + ") VALUES (" + str(studentID) + ", " + str(colID) + ", " + value + ";"
+    queryUpdate = queryUpdate + ") VALUES (" + str(studentID) + ", " + str(colID) + ", " + value + ");"
         
     queryTotal = queryDelete + " " + queryUpdate
     executeSingleQuery(queryTotal,[])

@@ -622,20 +622,24 @@ function showStudentAttendance(_, data) {
     var scattery = [];
 
     for (i = 0; i < parsedData.length; i++) {
-        var dateString = parsedData[i][0];
-        console.log(dateString);
-        var dateList = dateString.split("-")
-        var myDate = new Date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
-        var day = myDate.getDay();
-        dateCounts[day] = dateCounts[day] + 1;
-        console.log(myDate.getDay());
+        if (parsedData[i][1] != null) {
 
-        var time = parsedData[i][1];
-        console.log(time);
-        var timeList = time.split(":");
-        var hour = parseInt(timeList[0]);
-        scatterx.push(convertDay(day));
-        scattery.push(hour);
+
+            var dateString = parsedData[i][0];
+            console.log(dateString);
+            var dateList = dateString.split("-")
+            var myDate = new Date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
+            var day = myDate.getDay();
+            dateCounts[day] = dateCounts[day] + 1;
+            console.log(myDate.getDay());
+
+            var time = parsedData[i][1];
+            console.log(time);
+            var timeList = time.split(":");
+            var hour = parseInt(timeList[0]);
+            scatterx.push(convertDay(day));
+            scattery.push(hour);
+        }
     }
     console.log(dateTimes);
 

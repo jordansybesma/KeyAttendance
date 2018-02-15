@@ -1247,19 +1247,33 @@ function createFileHelper(_, attendance) {
     columns = JSON.parse(document.getElementById("columns").innerHTML);
     console.log(columns);
     var nameRow = [];
+    nameRow.push("Time", "First", "Last")
     for (i in columns) {
         console.log(columns[i][1]);
         if (columns[i][1]) {
             console.log(columns[i][2]);
-            nameRow.push = columns[i][2];
+            nameRow.push(columns[i][2]);
         }
     }
     rows.push(nameRow);
     console.log(rows);
     var myData = JSON.parse(attendance);
     for (i in myData) {
-        
-        rows.push(myData[i]);
+        newRow = []
+        for (j in myData[i]) {
+            if (j > 0) {
+                if (myData[i][j] === parseInt(myData[i][j], 10)) {
+                    newRow.push("yes");
+                }
+                else if (myData[i][j] == null) {
+                    newRow.push("no");
+                }
+                else {
+                    newRow.push(myData[i][j]);
+                }
+            }
+        }
+        rows.push(newRow);
         
         
     }

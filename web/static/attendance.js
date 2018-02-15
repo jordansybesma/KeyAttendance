@@ -688,7 +688,7 @@ function showFrequentPeers(_, data) {
 function getStudentPicture(_, data) {
   console.log("arrived at get student picture")
   var photoSpace = document.getElementById("studentPhoto");
-  photoSpace.innerHTML += "src='static/resources/images/No-image-found.jpg'";
+  photoSpace.innerHTML += "src='/static/resources/images/No-image-found.jpg'";
 }
 
 

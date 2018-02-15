@@ -683,7 +683,7 @@ function showStudentAttendance(_, data) {
 function showFrequentPeers(_, data) {
     var peerSpace = document.getElementById("frequentPeers");
     peerSpace.innerHTML = (" ");
-    peerSpace.innerHTML += ("Frequently Attends With: \n \n");
+    peerSpace.innerHTML += ("Frequently Attends With:<br/><br/>");
 
     //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
 
@@ -700,14 +700,18 @@ function showFrequentPeers(_, data) {
     console.log("Goodbye")
 
     for (var i in nameList) {
-        var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span>';
-        friendsList.push(nameButton)
+        var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span><br/>';
+        peerSpace.innerHTML += nameButton;
     }
-
-    peerSpace.innerHTML += friendsList;
+    getRequest("/getJustID/" + document.getElementById("studentName").innerHTML, "", getStudentPicture);
 }
 
-
+//Take an id and pass on the path to the image
+function getStudentPicture(_, data) {
+  console.log("arrived at get student picture")
+  var photoSpace = document.getElementById("studentPhoto");
+  photoSpace.src = "/static/resources/images/No-image-found.jpg";
+}
 
 function convertDay(day) {
     if (day == 0) {

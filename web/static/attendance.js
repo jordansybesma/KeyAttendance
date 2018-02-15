@@ -659,7 +659,7 @@ function showStudentAttendance(_, data) {
 function showFrequentPeers(_, data) {
     var peerSpace = document.getElementById("frequentPeers");
     peerSpace.innerHTML = (" ");
-    peerSpace.innerHTML += ("Frequently Attends With: \n \n");
+    peerSpace.innerHTML += ("<strong>Frequently attends with:</strong><br/><br/>");
 
     //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
 
@@ -676,11 +676,13 @@ function showFrequentPeers(_, data) {
     console.log("Goodbye")
 
     for (var i in nameList) {
-        var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span>';
-        friendsList.push(nameButton)
+        var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span><br/>';
+        peerSpace.innerHTML += nameButton;
+//        friendsList.push(nameButton);
     }
 
-    peerSpace.innerHTML += friendsList;
+//    peerSpace.innerHTML += friendsList;
+    
     getRequest("/getJustID/" + document.getElementById("studentName").innerHTML, "", getStudentPicture);
 }
 

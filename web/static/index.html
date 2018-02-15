@@ -7,7 +7,7 @@
         <script src="jquery-3.2.1.min.js"></script>
         <script src="less.js" type="text/javascript"></script>
         <script src="tabs.js" type="text/javascript"></script>
-        <script src="newAttendance.js" type="text/javascript"></script>
+        <script src="attendance.js" type="text/javascript"></script>
         <script src="alerts.js" type="text/javascript"></script>
         <script src="plotly-latest.min.js"></script>
         <script>
@@ -69,7 +69,7 @@
                     <div id="rightStuff">
                         <button class="tabishButton" type="button" id="download" onclick="createFile()">Download</button>
                         <button id="refresh" class="tabishButton" type="button" onclick="refreshAttendanceTable()">Refresh</button>
-                        <button id="addStudent" class="tabishButton" type="button" onclick="openAddStudent()">Add New Student</button>
+                        <button id="addStudent" class="tabishButton" type="button" onclick="openAddNewStudent()">Add New Student</button>
                     </div>
                 </div>
                     <div id="studentDiv" class="addStudentContent">
@@ -85,7 +85,7 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <input type="button" onclick="closeAddStudent()" id="close" value="Cancel" />
+                            <input type="button" onclick="closeAddNewStudent()" id="close" value="Cancel" />
                             <input type="button" onclick="addNewStudent()" id="submitStudent" value="Submit" />
                         </div>
                     </div>

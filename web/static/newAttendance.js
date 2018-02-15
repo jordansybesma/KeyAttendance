@@ -73,8 +73,8 @@ function displayNewAttendant(first, last, time) {
     for (i = 5; i < arrayLength; i++) {
         attendantData[i] = false;
     }
-
-    displayRow(myColumns, attendantData);
+    var table = document.getElementById("Attendance-Table");
+    fillRowAttendance(table, myColumns, attendantData);
 }
 
 // Called when a user clicks submit on the add new student dialogue.
@@ -180,6 +180,7 @@ function makeHeaderReadable(header) {
     return newHeader;
 }
 
+// Displays Manage Profile tab, using showManageProfileHelper to retrieve column data from the database.
 function showManageProfile() {
     table = document.getElementById("studentColumnsTable");
     table.innerHTML = "";
@@ -187,20 +188,24 @@ function showManageProfile() {
     row.insertCell(-1).innerHTML = "Column Name";
     row.insertCell(-1).innerHTML = "Show in Profile";
     row.insertCell(-1).innerHTML = "Show in Quick Add";
-    getRequest("/getStudentColumns", "", showStudentManageHelper);
+    getRequest("/getStudentColumns", "", showManageProfileHelper);
 }
 
-function showStudentManageHelper(_, data) {
+// For each element in data (an aspect of student profile such as gender), display as a row in the table.
+function showManageProfileHelper(_, data) {
     var myData = JSON.parse(data);
     var table = document.getElementById("studentColumnsTable");
     for (i in myData) {
         var row = table.insertRow(-1);
-        fillRow(row, myData[i]);
+        fillRowManageProfile(row, myData[i]);
     }
 }
 
+// Displays aspect of student profile in a row.
+// isShowing indicates whether the demographic shows up in student profile.
+// isQuick indicates whether the demographic shows up in the add new student popup in attendance sheet.
 //indexes are updated
-function fillRow(row, rowData) {
+function fillRowManageProfile(row, rowData) {
     var name = rowData[3];
     var isShowing = rowData[1];
     var isQuick = rowData[2];
@@ -221,6 +226,7 @@ function fillRow(row, rowData) {
     row.insertCell(-1).innerHTML = deleteButton;
 }
 
+// Alters whether an aspect of student profile (like gender) is showing or is available in add new student popup in attendance sheet.
 //updated
 function selectStudentColumn(name, column) {
     var xmlhttp = new XMLHttpRequest();
@@ -229,6 +235,7 @@ function selectStudentColumn(name, column) {
     xmlhttp.send("name=" + name + "&column=" + column);
 }
 
+// Deletes aspect of student profile (like gender) from database.
 //updated
 function deleteStudentColumn(name) {
     var xmlhttp = new XMLHttpRequest();
@@ -237,20 +244,27 @@ function deleteStudentColumn(name) {
     xmlhttp.send("name=" + name);
     showProfileManage()
 }
+
+// Displays Attendance Columns tab by retrieving data on attendance columns and passing it to showAttendanceManageHelper.
 //should be fine
 function showAttendanceManage() {
-    table = document.getElementById("attendanceColumnsTable");
+    getRequest("/getAttendanceColumns", "", showAttendanceManageHelper);
+
+}
+
+// Displays the data of attendance columns in the Attendance Columns tab.
+//I think this is updated
+function showAttendanceManageHelper(_, data) {
+
+    // Clear table, display column names
+    var table = document.getElementById("attendanceColumnsTable");
     table.innerHTML = "";
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Column Name";
     row.insertCell(-1).innerHTML = "Currently in Use";
-    getRequest("/getAttendanceColumns", "", showAttendanceManageHelper);
-
-}
-//I think this is updated
-function showAttendanceManageHelper(_, data) {
+    
+    // Insert data into table
     var myData = JSON.parse(data);
-    var table = document.getElementById("attendanceColumnsTable");
     for (i in myData) {
         console.log(myData[i]);
 
@@ -270,23 +284,17 @@ function showAttendanceManageHelper(_, data) {
         //row.insertCell(-1).innerHTML = downButton;
     }
 }
+
+// Toggles whether the selected attendance column shows up in the attendance table.
 //should be updated
-function moveAttendanceColumnUp(name) {
-    console.log("move column up");
+function selectColumn(name) {
+    console.log("got here");
     var xmlhttp = new XMLHttpRequest();
-    console.log(urlBase);
-    xmlhttp.open("POST", urlBase + "/moveAttendanceColumnUp");
+    xmlhttp.open("POST", urlBase + "/updateAttendanceColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
-    showAttendanceManage();
-    //alert("you got it up");
-    return false;
 }
-//not implemented yet...
-function moveAttendanceColumnDown(name) {
-    alert("go down down down");
-    return false;
-}
+
 //should be updated
 function deleteColumn(name) {
     if (name == "Key" || name == "key") {
@@ -300,17 +308,30 @@ function deleteColumn(name) {
         xmlhttp.send("name=" + name);
         showAttendanceManage()
     }
-
 }
+
+// Changes order of appearance of attendance columns, displays inputted col one spot earlier.
 //should be updated
-function selectColumn(name) {
-    console.log("got here");
+function moveAttendanceColumnUp(name) {
+    console.log("move column up");
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", urlBase + "/updateAttendanceColumn");
+    console.log(urlBase);
+    xmlhttp.open("POST", urlBase + "/moveAttendanceColumnUp");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
+    showAttendanceManage();
+    //alert("you got it up");
+    return false;
 }
 
+// Changes order of appearance of attendance columns, displays inputted col one spot later.
+//not implemented yet...
+function moveAttendanceColumnDown(name) {
+    alert("go down down down");
+    return false;
+}
+
+// Adds new demographic element to student profiles.
 //Should be fine
 function addStudentColumn() {
     var name = document.getElementById("studentColumnName").value;
@@ -342,21 +363,8 @@ function addStudentColumn() {
     showProfileManage()
 }
 
-function isValidColumnName(name) {
-    var badSubstring = " .,<>/?':;|]}[{=+-_)(*&^%$#@!~`";
-    for (var i = 0; i < badSubstring.length; i++) {
-        if (name.indexOf(badSubstring.charAt(i)) != -1) {
-            return false;
-        }
 
-    }
-    if (name.indexOf("\\") != -1) {
-        return false;
-    }
-
-    return true;
-}
-
+// Adds new column to available columns of attendance tables.
 //should be updated
 function addColumn() {
     var name = document.getElementById("newColumn").value;
@@ -388,6 +396,22 @@ function addColumn() {
     row.insertCell(-1).innerHTML = checkBox;
     row.insertCell(-1).innerHTML = deleteButton;
 }
+
+// Checks if input name contains any of the characters in badSubstring. If yes, returns false, else returns true.
+function isValidColumnName(name) {
+    var badSubstring = " .,<>/?':;|]}[{=+-_)(*&^%$#@!~`";
+    for (var i = 0; i < badSubstring.length; i++) {
+        if (name.indexOf(badSubstring.charAt(i)) != -1) {
+            return false;
+        }
+    }
+    if (name.indexOf("\\") != -1) {
+        return false;
+    }
+
+    return true;
+}
+
 //indexes should be updated
 function modifyAutofillList(_, studentNames) {
     var list = document.getElementById("suggestedStudents");
@@ -843,18 +867,16 @@ function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
-    console.log("MYDATA: " + myData);
+    var table = document.getElementById("Attendance-Table");
     for (i in myData) {
-        console.log("i: " + i);
-        displayRow(myColumns, myData[i]);
+        fillRowAttendance(table, myColumns, myData[i]);
     }
 }
 
 // Inserts a row into the attendance table with name, timestamp, checkboxes, and delete button.
 // The name links to a student profile.
 //Should be updated
-function displayRow(columns, attendeeEntry) {
-    var table = document.getElementById("Attendance-Table");
+function fillRowAttendance(table, columns, attendeeEntry) {
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
 
@@ -877,7 +899,7 @@ function displayRow(columns, attendeeEntry) {
     row.insertCell(-1).innerHTML = deleteButton;
 }
 
-// Helper function for displayRow.
+// Helper function for fillRowAttendance.
 // Returns a checkbox to be added to the row with the correct status (checked or unchecked).
 function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
 
@@ -1247,24 +1269,37 @@ function createFileHelper(_, attendance) {
     columns = JSON.parse(document.getElementById("columns").innerHTML);
     console.log(columns);
     var nameRow = [];
+    nameRow.push("Time", "First", "Last")
     for (i in columns) {
         console.log(columns[i][1]);
         if (columns[i][1]) {
             console.log(columns[i][2]);
-            nameRow.push = columns[i][2];
+            nameRow.push(columns[i][2]);
         }
     }
     rows.push(nameRow);
     console.log(rows);
     var myData = JSON.parse(attendance);
     for (i in myData) {
-        
-        rows.push(myData[i]);
+        newRow = []
+        for (j in myData[i]) {
+            if (j > 0) {
+                if (myData[i][j] === parseInt(myData[i][j], 10)) {
+                    newRow.push("Y");
+                }
+                else if (myData[i][j] == null) {
+                    newRow.push("N");
+                }
+                else {
+                    newRow.push(myData[i][j]);
+                }
+            }
+        }
+        rows.push(newRow);
         
         
     }
     console.log(rows);
-    return "not yet";
     var date = document.getElementById("storeDate").innerHTML;
     var filename = "Attendance_" + date + ".csv";
 
@@ -1300,8 +1335,19 @@ function downloadMasterDates() {
 
 function downloadAllMasterHelper(_, data) {
     var rows = [];
-    rows.push(["Date", "Number Attended", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One"]);
-
+    columns = JSON.parse(document.getElementById("columns").innerHTML);
+    console.log(columns);
+    var nameRow = [];
+    nameRow.push("Date", "Number Attended")
+    for (i in columns) {
+        console.log(columns[i][1]);
+        if (columns[i][1]) {
+            console.log(columns[i][2]);
+            nameRow.push(columns[i][2]);
+        }
+    }
+    rows.push(nameRow);
+    console.log(rows);
     var myData = JSON.parse(data);
     for (i in myData) {
         rows.push(myData[i]);

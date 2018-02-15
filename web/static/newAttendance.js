@@ -1300,7 +1300,6 @@ function createFileHelper(_, attendance) {
         
     }
     console.log(rows);
-    return "not yet";
     var date = document.getElementById("storeDate").innerHTML;
     var filename = "Attendance_" + date + ".csv";
 

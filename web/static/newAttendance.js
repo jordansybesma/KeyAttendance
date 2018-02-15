@@ -1244,7 +1244,7 @@ function createFile() {
 function createFileHelper(_, attendance) {
     var rows = [];
     //rows.push(["ID", "First Name", "Last Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One", "Comments", "Date", "Time"]);
-    columns = document.getElementById("columns").innerHTML;
+    columns = JSON.parse(document.getElementById("columns").innerHTML);
     console.log(columns);
     var nameRow = [];
     for (i in columns) {

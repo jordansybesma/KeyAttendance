@@ -1245,17 +1245,21 @@ function createFileHelper(_, attendance) {
     var rows = [];
     //rows.push(["ID", "First Name", "Last Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One", "Comments", "Date", "Time"]);
     columns = document.getElementById("columns").innerHTML;
+    console.log(columns);
     var nameRow = [];
     for (i in columns) {
-        nameRow.push = columns[i][2];
+        if (myData[i][1] == true) {
+            console.log(columns[i][2]);
+            nameRow.push = columns[i][2];
+        }
     }
     rows.push(nameRow);
     console.log(rows);
     var myData = JSON.parse(attendance);
     for (i in myData) {
-        if (myData[i][1] == true) {
-            rows.push(myData[i]);
-        }
+        
+        rows.push(myData[i]);
+        
         
     }
     console.log(rows);

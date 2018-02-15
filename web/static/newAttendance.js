@@ -1248,7 +1248,7 @@ function createFileHelper(_, attendance) {
     console.log(columns);
     var nameRow = [];
     for (i in columns) {
-        if (columns[i][1] == true) {
+        if (columns[i][1]) {
             console.log(columns[i][2]);
             nameRow.push = columns[i][2];
         }

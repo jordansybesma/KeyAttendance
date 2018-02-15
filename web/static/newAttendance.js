@@ -12,6 +12,7 @@ function closeAddStudent() {
 
 // Adds a new attendee to current sheet
 // Called when a new name is added to the attendance sheet
+//Good for updated python
 function addAttendant(first, last) {
     var dt = new Date();
     // Display the month, day, and year. getMonth() returns a 0-based number.
@@ -49,6 +50,7 @@ function addAttendant(first, last) {
 
 // Adds a new attendee to the daily attendance table
 // Function does not use database info (that's being stored right before displayNewAttendant() is called in addAttendant())
+// I think this is good for update
 function displayNewAttendant(first, last, time) {
     // Get data about columns
     var columnData = document.getElementById("columns").innerHTML;
@@ -60,22 +62,24 @@ function displayNewAttendant(first, last, time) {
     var attendantData = new Array(arrayLength);
 
     // Add data to array
-    attendantData[0] = first;
-    attendantData[1] = last;
-    attendantData[2] = time;
-    
+    attendantData[0] = 1
+    attendantData[1] = time;
+    attendantData[2] = first;
+    attendantData[3] = last;
+
     // atKey column defaulted to true
-    attendantData[3] = true;
+    attendantData[4] = true;
     var i;
-    for (i = 4; i < arrayLength; i++) {
+    for (i = 5; i < arrayLength; i++) {
         attendantData[i] = false;
     }
-    var table = document.getElementById("Attendance-Table");
-    fillRowAttendance(table, myColumns, attendantData);
+
+    displayRow(myColumns, attendantData);
 }
 
 // Called when a user clicks submit on the add new student dialogue.
 // Checks that both values have been entered then adds them to the database.
+//I think this is okay - inner methods need to be checked
 function addNewStudent() {
 
     var first = document.getElementById("newStudentFirst").value.trim();
@@ -90,10 +94,10 @@ function addNewStudent() {
         alert("Please enter a last name");
         return;
     }
-        
+
     first = capitalizeFirstLetter(first);
     last = capitalizeFirstLetter(last);
-    
+
     // Adds student to student table
     sendNewStudent(first, last);
 
@@ -110,7 +114,8 @@ function capitalizeFirstLetter(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Creates a new student and adds them to the table of all students
+// Creates a new student and adds them to the table of all students.
+//should be okay for update
 function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addNewStudent/");
@@ -118,8 +123,8 @@ function sendNewStudent(firstname, lastname) {
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
 
-// Deletes all instances of attendant at specified date
-// (Ideally would use ID, but hard to do for adding new student to table without an ID)
+// Deletes all instances of attendant at specified date.
+// (Ideally would use ID, but hard to do for adding new student to table without an ID).
 function deleteAttendant(date, name) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/deleteAttendant");
@@ -175,7 +180,6 @@ function makeHeaderReadable(header) {
     return newHeader;
 }
 
-// Displays Manage Profile tab, using showManageProfileHelper to retrieve column data from the database.
 function showManageProfile() {
     table = document.getElementById("studentColumnsTable");
     table.innerHTML = "";
@@ -183,34 +187,31 @@ function showManageProfile() {
     row.insertCell(-1).innerHTML = "Column Name";
     row.insertCell(-1).innerHTML = "Show in Profile";
     row.insertCell(-1).innerHTML = "Show in Quick Add";
-    getRequest("/getStudentColumns", "", showManageProfileHelper);
+    getRequest("/getStudentColumns", "", showStudentManageHelper);
 }
 
-// For each element in data (an aspect of student profile such as gender), display as a row in the table.
-function showManageProfileHelper(_, data) {
+function showStudentManageHelper(_, data) {
     var myData = JSON.parse(data);
     var table = document.getElementById("studentColumnsTable");
     for (i in myData) {
         var row = table.insertRow(-1);
-        fillRowManageProfile(row, myData[i]);
+        fillRow(row, myData[i]);
     }
 }
 
-// Displays aspect of student profile in a row.
-// isShowing indicates whether the demographic shows up in student profile.
-// isQuick indicates whether the demographic shows up in the add new student popup in attendance sheet.
-function fillRowManageProfile(row, rowData) {
-    var name = rowData[2];
-    var isShowing = rowData[0];
-    var isQuick = rowData[1];
+//indexes are updated
+function fillRow(row, rowData) {
+    var name = rowData[3];
+    var isShowing = rowData[1];
+    var isQuick = rowData[2];
 
     var checkBoxIsShowing = "<input type=\"checkbox\" "
         + (isShowing ? "checked" : "")
-        + " onclick=\"selectStudentColumn('" + name + "', 'isShowing')\">";
+        + " onclick=\"selectStudentColumn('" + name + "', 'is_showing')\">";
 
     var checkBoxIsQuick = "<input type=\"checkbox\" "
         + (isQuick ? "checked" : "")
-        + " onclick=\"selectStudentColumn('" + name + "', 'isQuick')\">";
+        + " onclick=\"selectStudentColumn('" + name + "', 'quick_add')\">";
 
     var deleteButton = "<button type=\"button\" onclick=\"deleteStudentColumn('" + name + "')\">Delete </button>";
 
@@ -220,7 +221,7 @@ function fillRowManageProfile(row, rowData) {
     row.insertCell(-1).innerHTML = deleteButton;
 }
 
-// Alters whether an aspect of student profile (like gender) is showing or is available in add new student popup in attendance sheet.
+//updated
 function selectStudentColumn(name, column) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/alterStudentColumn");
@@ -228,37 +229,31 @@ function selectStudentColumn(name, column) {
     xmlhttp.send("name=" + name + "&column=" + column);
 }
 
-// Deletes aspect of student profile (like gender) from database.
+//updated
 function deleteStudentColumn(name) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/deleteStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
-    showManageProfile()
+    showProfileManage()
 }
-
-// Displays Attendance Columns tab by retrieving data on attendance columns and passing it to showAttendanceManageHelper.
+//should be fine
 function showAttendanceManage() {
-    getRequest("/getAttendanceColumns", "", showAttendanceManageHelper);
-
-}
-
-// Displays the data of attendance columns in the Attendance Columns tab.
-function showAttendanceManageHelper(_, data) {
-    
-    // Clear table, display column names
-    var table = document.getElementById("attendanceColumnsTable");
+    table = document.getElementById("attendanceColumnsTable");
     table.innerHTML = "";
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Column Name";
     row.insertCell(-1).innerHTML = "Currently in Use";
-    
-    
-    // Insert data into table
+    getRequest("/getAttendanceColumns", "", showAttendanceManageHelper);
+
+}
+//I think this is updated
+function showAttendanceManageHelper(_, data) {
     var myData = JSON.parse(data);
+    var table = document.getElementById("attendanceColumnsTable");
     for (i in myData) {
         console.log(myData[i]);
-        
+
         var name = myData[i][2];
         var checkBox = "<input type=\"checkbox\" "
             + (myData[i][1] ? "checked" : "")
@@ -266,7 +261,7 @@ function showAttendanceManageHelper(_, data) {
         var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
         var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
         //var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
-        
+
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = name;
         row.insertCell(-1).innerHTML = checkBox;
@@ -275,17 +270,24 @@ function showAttendanceManageHelper(_, data) {
         //row.insertCell(-1).innerHTML = downButton;
     }
 }
-
-// Toggles whether the selected attendance column shows up in the attendance table
-function selectColumn(name) {
-    console.log("got here");
+//should be updated
+function moveAttendanceColumnUp(name) {
+    console.log("move column up");
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", urlBase + "/updateAttendanceColumn");
+    console.log(urlBase);
+    xmlhttp.open("POST", urlBase + "/moveAttendanceColumnUp");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
+    showAttendanceManage();
+    //alert("you got it up");
+    return false;
 }
-
-// Deletes column (like "Played Basketball") from attendance table
+//not implemented yet...
+function moveAttendanceColumnDown(name) {
+    alert("go down down down");
+    return false;
+}
+//should be updated
 function deleteColumn(name) {
     if (name == "Key" || name == "key") {
         alert("You cannot delete the key column");
@@ -297,32 +299,22 @@ function deleteColumn(name) {
         xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
         xmlhttp.send("name=" + name);
         showAttendanceManage()
-    }   
-}
+    }
 
-// Changes order of appearance of attendance columns, displays inputted col one spot earlier
-function moveAttendanceColumnUp(name) {
-    console.log("move column up");
+}
+//should be updated
+function selectColumn(name) {
+    console.log("got here");
     var xmlhttp = new XMLHttpRequest();
-    console.log(urlBase);
-    xmlhttp.open("POST", urlBase + "/moveAttendanceColumnUp");
+    xmlhttp.open("POST", urlBase + "/updateAttendanceColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
-    showAttendanceManage();
-    return false;
 }
 
-// Changes order of appearance of attendance columns, displays inputted col one spot later.
-function moveAttendanceColumnDown(name) {
-    alert("go down down down");
-    return false;
-}
-
-// Adds new demographic element to student profiles.
+//Should be fine
 function addStudentColumn() {
     var name = document.getElementById("studentColumnName").value;
     var type = document.getElementById("studentColumnType").value;
-
     if (isValidColumnName(name) === false) {
         alert("Please enter a valid column name")
         document.getElementById("studentColumnName").value = "";
@@ -347,10 +339,25 @@ function addStudentColumn() {
     xmlhttp.open("POST", urlBase + "/addStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&type=" + type + "&definedOptions=");
-    showManageProfile()
+    showProfileManage()
 }
 
-// Adds new column to available columns of attendance tables.
+function isValidColumnName(name) {
+    var badSubstring = " .,<>/?':;|]}[{=+-_)(*&^%$#@!~`";
+    for (var i = 0; i < badSubstring.length; i++) {
+        if (name.indexOf(badSubstring.charAt(i)) != -1) {
+            return false;
+        }
+
+    }
+    if (name.indexOf("\\") != -1) {
+        return false;
+    }
+
+    return true;
+}
+
+//should be updated
 function addColumn() {
     var name = document.getElementById("newColumn").value;
     if (isValidColumnName(name) === false) {
@@ -381,24 +388,7 @@ function addColumn() {
     row.insertCell(-1).innerHTML = checkBox;
     row.insertCell(-1).innerHTML = deleteButton;
 }
-
-// Checks if input name contains any of the characters in badSubstring. If yes, returns false, else returns true.
-function isValidColumnName(name) {
-    var badSubstring = " .,<>/?':;|]}[{=+-_)(*&^%$#@!~`";
-    for (var i = 0; i < badSubstring.length; i++) {
-        if (name.indexOf(badSubstring.charAt(i)) != -1) {
-            return false;
-        }
-    }
-    if (name.indexOf("\\") != -1) {
-        return false;
-    }
-    return true;
-}
-
-// DOCUMENTATION STOPPING HERE, CHECKING newAttendance.js
-
-
+//indexes should be updated
 function modifyAutofillList(_, studentNames) {
     var list = document.getElementById("suggestedStudents");
     var myData = JSON.parse(studentNames);
@@ -441,7 +431,7 @@ function openAddStudent() {
     var popUp = document.getElementById('studentDiv');
     popUp.style.display = "block";
 }
-
+//should be updated
 function showStudentProfile() {
     console.log("got here");
 
@@ -468,7 +458,7 @@ function showStudentProfile() {
         getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
     }
 }
-
+//should be updated
 function showDemographics(_, data) {
     var parsedData = JSON.parse(data);
     console.log(parsedData);
@@ -477,7 +467,7 @@ function showDemographics(_, data) {
     getRequest("/getStudentColumns", "", demographicsHelper);
 
 }
-
+//should be updated
 function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;
@@ -489,14 +479,14 @@ function demographicsHelper(_, columns) {
     div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Edit Profile</button>";
 
     for (i in columnInfo) {
-        if (columnInfo[i][0]) {
-            displayStudentInfo(columnInfo[i][2], studentInfo[0][parseInt(i) + 3], columnInfo[i][3]);
+        if (columnInfo[i][1]) {
+            displayStudentInfo(columnInfo[i][3], studentInfo[0][parseInt(i) + 1], columnInfo[i][4]);
         }
     }
 
     getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 }
-
+//come back here
 function openEditProfile() {
     console.log("gets to here");
     var name = document.getElementById('keywordStudentSearch').value;
@@ -511,16 +501,16 @@ function openEditProfile() {
     var updateString = "";
     for (i in columnData) {
         console.log("outer loop");
-        
-        if (columnData[i][0]) {
+
+        if (columnData[i][1]) {
             console.log("next loop");
             var form = document.createElement("form");
-            var type = columnData[i][3];
+            var type = columnData[i][4];
             form.setAttribute('onSubmit', 'return false;');
-            if ((type == "varchar(500)") || (type == "int")) {
+            if ((type == "varchar") || (type == "int")) {
                 console.log("got to last loop");
-                var col = columnData[i][2];
-                var value = studData[parseInt(i) + 3];
+                var col = columnData[i][3];
+                var value = studData[parseInt(i) + 1];
                 if (value == null) {
                     value = "";
                 }
@@ -533,8 +523,8 @@ function openEditProfile() {
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "date") {
-                var col = columnData[i][2];
-                var value = studData[parseInt(i) + 3];
+                var col = columnData[i][3];
+                var value = studData[parseInt(i) + 1];
                 if (value == null) {
                     value = "";
                 }
@@ -546,9 +536,9 @@ function openEditProfile() {
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "boolean") {
-                var col = columnData[i][2];
+                var col = columnData[i][3];
                 var str = col + ": "
-                if (studData[parseInt(i) + 3]) {
+                if (studData[parseInt(i) + 1]) {
                     str = str + " <input type='checkbox' checked value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 } else {
                     str = str + " <input type='checkbox' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
@@ -576,7 +566,7 @@ function returnToProfile() {
     div.style.display = "none";
     showStudentProfile();
 }
-
+//should be updated
 function updateProfile(name, col, colid, type) {
     if (type == "boolean") {
         var value = "TRUE";
@@ -589,7 +579,7 @@ function updateProfile(name, col, colid, type) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&value=" + value + "&column=" + col);
 }
-
+//should be updated
 function displayStudentInfo(catName, info, type) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
@@ -597,7 +587,7 @@ function displayStudentInfo(catName, info, type) {
     console.log(type);
     if (info == null) {
         var text = document.createTextNode(displayName + ": ");
-    } else if (type == "varchar(500)") {
+    } else if (type == "varchar") {
         console.log("var");
         var text = document.createTextNode(displayName + ": " + info);
     } else if (type == "int") {
@@ -617,13 +607,13 @@ function displayStudentInfo(catName, info, type) {
     node.appendChild(text);
     parent.appendChild(node);
 }
-
+//Should  be updated
 function showStudentAttendance(_, data) {
 
     var parsedData = JSON.parse(data);
-
+    console.log("got to showstudentattendance");
     console.log(parsedData);
-    
+
     var dateCounts = [0, 0, 0, 0, 0, 0, 0];
 
     var dateTimes = [[], [], [], [], [], [], []];
@@ -632,20 +622,24 @@ function showStudentAttendance(_, data) {
     var scattery = [];
 
     for (i = 0; i < parsedData.length; i++) {
-        var dateString = parsedData[i][2];
-        console.log(dateString);
-        var dateList = dateString.split("-")
-        var myDate = new Date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
-        var day = myDate.getDay();
-        dateCounts[day] = dateCounts[day] + 1;
-        console.log(myDate.getDay());
-        
-        var time = parsedData[i][3];
-        console.log(time);
-        var timeList = time.split(":");
-        var hour = parseInt(timeList[0]);
-        scatterx.push(convertDay(day));
-        scattery.push(hour);
+        if (parsedData[i][1] != null) {
+
+
+            var dateString = parsedData[i][0];
+            console.log(dateString);
+            var dateList = dateString.split("-")
+            var myDate = new Date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
+            var day = myDate.getDay();
+            dateCounts[day] = dateCounts[day] + 1;
+            console.log(myDate.getDay());
+
+            var time = parsedData[i][1];
+            console.log(time);
+            var timeList = time.split(":");
+            var hour = parseInt(timeList[0]);
+            scatterx.push(convertDay(day));
+            scattery.push(hour);
+        }
     }
     console.log(dateTimes);
 
@@ -656,6 +650,7 @@ function showStudentAttendance(_, data) {
     getRequest("/frequentPeers/" + document.getElementById("studentName").innerHTML, "", showFrequentPeers);
 }
 
+//RUSS needs to update this + python
 function showFrequentPeers(_, data) {
     var peerSpace = document.getElementById("frequentPeers");
     peerSpace.innerHTML = (" ");
@@ -758,7 +753,7 @@ function graphStudentAttendance(yaxis) {
 
     Plotly.newPlot('graphStudent', data, layout);
 }
-
+//this should be fine/updated
 function selectActivity(name, column, date) {
     console.log("selecting activity");
     var xmlhttp = new XMLHttpRequest();
@@ -766,7 +761,7 @@ function selectActivity(name, column, date) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&column=" + column + "&date=" + date);
 }
-
+//should be updated
 function onAddRow() {
     var keywordElement = document.getElementById('keyword').value;
     var optionFound = false;
@@ -804,9 +799,9 @@ function createNewAttendance() {
     document.getElementById("storeDate").innerHTML = date;
     var readableTitle = makeDateReadable(date);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readableTitle;
-    
+
     fillAttendanceTable();
-    
+
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
@@ -819,12 +814,13 @@ function fillAttendanceTable() {
 }
 
 // Called through a getRequest from fillAttendanceTable.
+//should be okay/updated
 function fillAttendanceTableHelper(_, data) {
     console.log("got to helper");
     document.getElementById("columns").innerHTML = data;
     var table = document.getElementById("Attendance-Table");
-    
-    
+
+
     table.innerHTML = "";
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
@@ -835,7 +831,7 @@ function fillAttendanceTableHelper(_, data) {
             row.insertCell(-1).innerHTML = newHeader;
         }
     }
-    
+
     // Fill attendance table with recorded attendants
     var table_date = document.getElementById("storeDate").innerHTML;
     getRequest("/getAttendance/" + table_date, "", fillAttendance);
@@ -847,25 +843,28 @@ function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
-    var table = document.getElementById("Attendance-Table");
+    console.log("MYDATA: " + myData);
     for (i in myData) {
-        fillRowAttendance(table, myColumns, myData[i]);
+        console.log("i: " + i);
+        displayRow(myColumns, myData[i]);
     }
 }
 
 // Inserts a row into the attendance table with name, timestamp, checkboxes, and delete button.
 // The name links to a student profile.
-function fillRowAttendance(table, columns, attendeeEntry) {
+//Should be updated
+function displayRow(columns, attendeeEntry) {
+    var table = document.getElementById("Attendance-Table");
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
-    
+
     var row = table.insertRow(1);
-    
-    var fullName = attendeeEntry[0] + " " + attendeeEntry[1];
+
+    var fullName = attendeeEntry[2] + " " + attendeeEntry[3];
     var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
-    var time = attendeeEntry[2];
+    var time = attendeeEntry[1];
     row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
-    
+
     for (i in columns) {
         var colActive = columns[i][1];
         if (colActive == true) {
@@ -878,20 +877,20 @@ function fillRowAttendance(table, columns, attendeeEntry) {
     row.insertCell(-1).innerHTML = deleteButton;
 }
 
-// Helper function for fillRowAttendance.
+// Helper function for displayRow.
 // Returns a checkbox to be added to the row with the correct status (checked or unchecked).
 function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
-    
+
     // The offset of 3 is dependent on the first 3 elements of attendeeEntry being non-activities (firstName, lastName, time)
-    var index = parseInt(i) + 3;
-    
+    var index = parseInt(i) + 4;
+
     var hasDoneActivity = attendeeEntry[index];
     var col = columns[i][2];
-    
-    var box = "<input type=\"checkbox\" " 
-        + (hasDoneActivity ? "checked" : "") 
+   
+    var box = "<input type=\"checkbox\" "
+        + (hasDoneActivity ? "checked" : "")
         + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
-    
+
     return box;
 }
 
@@ -903,9 +902,9 @@ function refreshAttendanceTable() {
 // 
 function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;
-    
+
     fillAttendanceTable();
-    
+
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readable;
@@ -913,7 +912,7 @@ function displayAttendanceTable(table_date) {
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
-    
+
     return false;
 }
 
@@ -952,7 +951,7 @@ function displayMasterAttendance() {
     table.innerHTML = "";
     getRequest("/getAttendanceColumns", "", makeMasterTableHeader);
 }
-
+//should be fine/updated
 function makeMasterTableHeader(_, columns) {
     table = document.getElementById("masterAttendanceTable");
     var row = table.insertRow(-1);
@@ -969,9 +968,9 @@ function makeMasterTableHeader(_, columns) {
     getRequest("/getMasterAttendance", "", masterAttendanceHelper);
 }
 
-
-
+//The python has NOT been implemented
 function masterAttendanceHelper(_, masterData) {
+   
     var myData = JSON.parse(masterData);
     console.log(masterData);
     columns = document.getElementById("columnData").innerHTML;
@@ -980,18 +979,10 @@ function masterAttendanceHelper(_, masterData) {
 
     for (i in myData) {
         var row = table.insertRow(-1);
-        row.insertCell(-1).innerHTML = myData[i][0];
-        row.insertCell(-1).innerHTML = myData[i][1];
-        for (j in columnData) {
-
-            if (columnData[j][1] == true) {
-                var val = myData[i][parseInt(j) + 2];
-                if (val == null) {
-                    val = 0;
-                }
-                row.insertCell(-1).innerHTML = val;
-            }
+        for (j in myData[i]) {
+            row.insertCell(-1).innerHTML = myData[i][j];
         }
+        
     }
 
     //masterDataPlot(xaxis, yaxis);
@@ -1252,19 +1243,35 @@ function createFile() {
 
 function createFileHelper(_, attendance) {
     var rows = [];
-    rows.push(["ID", "First Name", "Last Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One", "Comments", "Date", "Time"]);
-
+    //rows.push(["ID", "First Name", "Last Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One", "Comments", "Date", "Time"]);
+    columns = JSON.parse(document.getElementById("columns").innerHTML);
+    console.log(columns);
+    var nameRow = [];
+    for (i in columns) {
+        console.log(columns[i][1]);
+        if (columns[i][1]) {
+            console.log(columns[i][2]);
+            nameRow.push = columns[i][2];
+        }
+    }
+    rows.push(nameRow);
+    console.log(rows);
     var myData = JSON.parse(attendance);
     for (i in myData) {
+        
         rows.push(myData[i]);
+        
+        
     }
-    var date = myData[0][12];
+    console.log(rows);
+    return "not yet";
+    var date = document.getElementById("storeDate").innerHTML;
     var filename = "Attendance_" + date + ".csv";
 
     exportToCsv(filename, rows);
 
 }
-
+//EVERYTHING BELOW THIS NOT UPDATED YET BLEEEEHHHHH
 function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
     return false;

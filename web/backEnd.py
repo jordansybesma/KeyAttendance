@@ -38,6 +38,65 @@ def executeSingleQuery(query, params = [], fetch = False):
 """
 
 
+
+def createAttendanceData(request):
+    date = request.form.get('date')
+    totalQuery = "SELECT DISTINCT id INTO temp1 FROM rachelAtten WHERE dtime = " + date + ";"
+    #executeSingleQuery(query1, [])
+    
+    queryColumns = "SELECT id, name FROM rachelAct WHERE inuse = 'true' ORDER BY ordering;"
+    columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
+    columns =json.loads(columnResults)
+    newTable = "temp1"
+    tempCount = 1
+    
+    for i in range(len(columns)):
+        name = columns[i][1]
+        colID = columns[i][0]
+        tempCount = tempCount + 1
+        rightTable = "temp" + str(tempCount)
+        
+        queryTemp = "SELECT DISTINCT id, activity_id INTO " + rightTable + " FROM rachelAtten WHERE dtime = " + date
+        queryTemp = queryTemp + " AND activity_id = " + str(colID) + ";"
+        #executeSingleQuery(queryTemp, [])
+        
+        leftTable = newTable
+        tempCount = tempCount + 1
+        newTable = "temp" + str(tempCount)
+        queryJoin = "SELECT " + leftTable + ".id, "
+        
+        
+        if (i > 0):
+            for act in range(1, i + 1):
+                queryJoin = queryJoin + leftTable + ".act" + str(act) + ", "
+            
+        
+        queryJoin = queryJoin + rightTable + ".activity_id as act" + str(i + 1) + " INTO "
+        queryJoin = queryJoin + newTable + " FROM " + leftTable + " LEFT JOIN "
+        queryJoin = queryJoin + rightTable + " ON " + leftTable + ".id = " + rightTable + ".id;"
+        totalQuery = totalQuery + " " + queryTemp + " " + queryJoin
+    
+    executeSingleQuery(totalQuery, [])
+        
+    returnQuery = "SELECT * FROM " + newTable + ";"
+    
+    result = json.dumps(executeSingleQuery(returnQuery, fetch = True), indent=4, sort_keys=True, default=str)
+    print(result)
+    #return result
+
+    queryDrop = ""
+    
+    for table in range(1, tempCount + 1):
+        queryDrop = queryDrop + "DROP TABLE temp" + str(table) + "; "
+    executeSingleQuery(queryDrop, [])
+
+    return result    
+        
+        
+    
+    
+
+
 def addNewStudent(request):
     firstName = request.form.get('firstName')
     lastName  = request.form.get('lastName')

@@ -1274,24 +1274,37 @@ function createFileHelper(_, attendance) {
     columns = JSON.parse(document.getElementById("columns").innerHTML);
     console.log(columns);
     var nameRow = [];
+    nameRow.push("Time", "First", "Last")
     for (i in columns) {
         console.log(columns[i][1]);
         if (columns[i][1]) {
             console.log(columns[i][2]);
-            nameRow.push = columns[i][2];
+            nameRow.push(columns[i][2]);
         }
     }
     rows.push(nameRow);
     console.log(rows);
     var myData = JSON.parse(attendance);
     for (i in myData) {
-        
-        rows.push(myData[i]);
+        newRow = []
+        for (j in myData[i]) {
+            if (j > 0) {
+                if (myData[i][j] === parseInt(myData[i][j], 10)) {
+                    newRow.push("Y");
+                }
+                else if (myData[i][j] == null) {
+                    newRow.push("N");
+                }
+                else {
+                    newRow.push(myData[i][j]);
+                }
+            }
+        }
+        rows.push(newRow);
         
         
     }
     console.log(rows);
-    return "not yet";
     var date = document.getElementById("storeDate").innerHTML;
     var filename = "Attendance_" + date + ".csv";
 
@@ -1327,8 +1340,19 @@ function downloadMasterDates() {
 
 function downloadAllMasterHelper(_, data) {
     var rows = [];
-    rows.push(["Date", "Number Attended", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One"]);
-
+    columns = JSON.parse(document.getElementById("columns").innerHTML);
+    console.log(columns);
+    var nameRow = [];
+    nameRow.push("Date", "Number Attended")
+    for (i in columns) {
+        console.log(columns[i][1]);
+        if (columns[i][1]) {
+            console.log(columns[i][2]);
+            nameRow.push(columns[i][2]);
+        }
+    }
+    rows.push(nameRow);
+    console.log(rows);
     var myData = JSON.parse(data);
     for (i in myData) {
         rows.push(myData[i]);

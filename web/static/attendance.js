@@ -63,7 +63,7 @@ function displayNewAttendant(first, last, time) {
     attendantData[0] = first;
     attendantData[1] = last;
     attendantData[2] = time;
-    
+
     // atKey column defaulted to true
     attendantData[3] = true;
     var i;
@@ -90,10 +90,10 @@ function addNewStudent() {
         alert("Please enter a last name");
         return;
     }
-        
+
     first = capitalizeFirstLetter(first);
     last = capitalizeFirstLetter(last);
-    
+
     // Adds student to student table
     sendNewStudent(first, last);
 
@@ -147,7 +147,7 @@ function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest.send(null);
 }
 
-// SQL can't handle strings with spaces. 
+// SQL can't handle strings with spaces.
 // This method adds spaces in strings with camel case and replaces underscores with spaces.
 // Example: "HelloWorld" and "Hello_World" become "Hello World"
 function makeHeaderReadable(header) {
@@ -245,20 +245,20 @@ function showAttendanceManage() {
 
 // Displays the data of attendance columns in the Attendance Columns tab.
 function showAttendanceManageHelper(_, data) {
-    
+
     // Clear table, display column names
     var table = document.getElementById("attendanceColumnsTable");
     table.innerHTML = "";
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Column Name";
     row.insertCell(-1).innerHTML = "Currently in Use";
-    
-    
+
+
     // Insert data into table
     var myData = JSON.parse(data);
     for (i in myData) {
         console.log(myData[i]);
-        
+
         var name = myData[i][2];
         var checkBox = "<input type=\"checkbox\" "
             + (myData[i][1] ? "checked" : "")
@@ -266,7 +266,7 @@ function showAttendanceManageHelper(_, data) {
         var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
         var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
         //var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
-        
+
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = name;
         row.insertCell(-1).innerHTML = checkBox;
@@ -297,7 +297,7 @@ function deleteColumn(name) {
         xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
         xmlhttp.send("name=" + name);
         showAttendanceManage()
-    }   
+    }
 }
 
 // Changes order of appearance of attendance columns, displays inputted col one spot earlier
@@ -511,7 +511,7 @@ function openEditProfile() {
     var updateString = "";
     for (i in columnData) {
         console.log("outer loop");
-        
+
         if (columnData[i][0]) {
             console.log("next loop");
             var form = document.createElement("form");
@@ -623,7 +623,7 @@ function showStudentAttendance(_, data) {
     var parsedData = JSON.parse(data);
 
     console.log(parsedData);
-    
+
     var dateCounts = [0, 0, 0, 0, 0, 0, 0];
 
     var dateTimes = [[], [], [], [], [], [], []];
@@ -639,7 +639,7 @@ function showStudentAttendance(_, data) {
         var day = myDate.getDay();
         dateCounts[day] = dateCounts[day] + 1;
         console.log(myDate.getDay());
-        
+
         var time = parsedData[i][3];
         console.log(time);
         var timeList = time.split(":");
@@ -681,6 +681,14 @@ function showFrequentPeers(_, data) {
     }
 
     peerSpace.innerHTML += friendsList;
+    getRequest("/getJustID/" + document.getElementById("studentName").innerHTML, "", getStudentPicture);
+}
+
+//Take an id and pass on the path to the image
+function getStudentPicture(_, data) {
+  console.log("arrived at get student picture")
+  var photoSpace = document.getElementById("studentPhoto");
+  photoSpace.src = "/static/resources/images/No-image-found.jpg";
 }
 
 
@@ -804,9 +812,9 @@ function createNewAttendance() {
     document.getElementById("storeDate").innerHTML = date;
     var readableTitle = makeDateReadable(date);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readableTitle;
-    
+
     fillAttendanceTable();
-    
+
     var popUp = document.getElementById('attendanceDiv');
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
@@ -823,8 +831,8 @@ function fillAttendanceTableHelper(_, data) {
     console.log("got to helper");
     document.getElementById("columns").innerHTML = data;
     var table = document.getElementById("Attendance-Table");
-    
-    
+
+
     table.innerHTML = "";
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Name";
@@ -835,7 +843,7 @@ function fillAttendanceTableHelper(_, data) {
             row.insertCell(-1).innerHTML = newHeader;
         }
     }
-    
+
     // Fill attendance table with recorded attendants
     var table_date = document.getElementById("storeDate").innerHTML;
     getRequest("/getAttendance/" + table_date, "", fillAttendance);
@@ -858,14 +866,14 @@ function fillAttendance(_, attendance) {
 function fillRowAttendance(table, columns, attendeeEntry) {
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
-    
+
     var row = table.insertRow(1);
-    
+
     var fullName = attendeeEntry[0] + " " + attendeeEntry[1];
     var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     var time = attendeeEntry[2];
     row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
-    
+
     for (i in columns) {
         var colActive = columns[i][1];
         if (colActive == true) {
@@ -881,17 +889,17 @@ function fillRowAttendance(table, columns, attendeeEntry) {
 // Helper function for fillRowAttendance.
 // Returns a checkbox to be added to the row with the correct status (checked or unchecked).
 function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
-    
+
     // The offset of 3 is dependent on the first 3 elements of attendeeEntry being non-activities (firstName, lastName, time)
     var index = parseInt(i) + 3;
-    
+
     var hasDoneActivity = attendeeEntry[index];
     var col = columns[i][2];
-    
-    var box = "<input type=\"checkbox\" " 
-        + (hasDoneActivity ? "checked" : "") 
+
+    var box = "<input type=\"checkbox\" "
+        + (hasDoneActivity ? "checked" : "")
         + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
-    
+
     return box;
 }
 
@@ -900,12 +908,12 @@ function refreshAttendanceTable() {
     displayAttendanceTable(date);
 }
 
-// 
+//
 function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;
-    
+
     fillAttendanceTable();
-    
+
     var readable = makeDateReadable(table_date);
     var sql = makeDateSQL(readable);
     document.getElementById("attendanceName").innerHTML = "Attendance Sheet: " + readable;
@@ -913,7 +921,7 @@ function displayAttendanceTable(table_date) {
     popUp.style.display = "block";
     var list = document.getElementById('attendanceListDiv');
     list.style.display = "none";
-    
+
     return false;
 }
 

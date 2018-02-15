@@ -78,7 +78,7 @@ html {
     //flex-direction: row;
     //align-items: stretch;
     display: flex;
-align-content: stretch;
+    align-content: stretch;
     //border: 1px solid #ccc;
     background-color: @base03;
     width: 100%;
@@ -121,14 +121,12 @@ align-content: stretch;
 
 
 th {
-    text-align: left;
     background-color: @base2;
 }
 
 th, td {
     border-bottom: 1px solid #ddd;
 }
-
 
 
 tr:nth-child(even) {background-color: @base2}
@@ -302,6 +300,12 @@ h4 {
         table-layout: fixed;
         //border: 2px solid @base2;
         border-collapse: collapse;
+
+        
+        td:first-child {
+            text-align: left;
+        }
+        
     }
 
     #masterAttendanceTable {

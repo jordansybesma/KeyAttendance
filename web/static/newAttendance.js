@@ -2,14 +2,6 @@ var urlBase = window.location.origin;
 // localSite = "http://127.0.0.1:5000";
 // scottSite = "https://attendance.unionofyouth.org";
 
-// Called when a user exits the add new student popup window
-function closeAddStudent() {
-    document.getElementById("newStudentFirst").value = "";
-    document.getElementById("newStudentLast").value = "";
-    var popUp = document.getElementById('studentDiv');
-    popUp.style.display = "none";
-}
-
 // Adds a new attendee to current sheet
 // Called when a new name is added to the attendance sheet
 //Good for updated python
@@ -105,13 +97,27 @@ function addNewStudent() {
     addAttendant(first, last);
 
     // Closes popup
-    closeAddStudent();
+    closeAddNewStudent();
 }
 
 // Capitalizes first letter of string
 // Thanks to https://paulund.co.uk/capitalize-first-letter-string-javascript
 function capitalizeFirstLetter(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Opens the add new student popup
+function openAddNewStudent() {
+    var popUp = document.getElementById('studentDiv');
+    popUp.style.display = "block";
+}
+
+// Called when a user exits the add new student popup window
+function closeAddNewStudent() {
+    document.getElementById("newStudentFirst").value = "";
+    document.getElementById("newStudentLast").value = "";
+    var popUp = document.getElementById('studentDiv');
+    popUp.style.display = "none";
 }
 
 // Creates a new student and adds them to the table of all students.
@@ -412,6 +418,36 @@ function isValidColumnName(name) {
     return true;
 }
 
+// If enter key is hit, tries to add student to attendance table
+// If any other key is hit, suggests students with names similar to input
+function handleAddBox(e, curText) {
+    var enterKey = 13;
+    if (e.keyCode === enterKey) {
+        onAddRow();
+    }
+    else {
+        showSuggestions(curText);
+    }
+}
+
+// If enter key is hit, tries to open student profile of input
+// If any other key is hit, suggests students with names similar to input
+function handleProfileBox(e, curText) {
+    var enterKey = 13;
+    if (e.keyCode === enterKey) {
+        showStudentProfile();
+    }
+    else {
+        showSuggestions(curText);
+    }
+}
+
+// Retrieves all students with names similar to curText, passes that data to modifyAutofillList()
+function showSuggestions(curText) {
+    getRequest("/autofill/" + curText, "", modifyAutofillList);
+}
+
+// Displays suggested students in a dropdown list from the textbox
 //indexes should be updated
 function modifyAutofillList(_, studentNames) {
     var list = document.getElementById("suggestedStudents");
@@ -423,65 +459,34 @@ function modifyAutofillList(_, studentNames) {
     list.innerHTML = inner;
 }
 
-function handleAddBox(e, curText) {
-    if (e.keyCode === 13) {
-        onAddRow();
-    }
-    else {
-        showSuggestions(curText);
-    }
-}
-
-function handleProfileBox(e, curText) {
-    if (e.keyCode === 13) {
-        showStudentProfile();
-    }
-    else {
-        showSuggestions(curText);
-    }
-}
-
-function showSuggestions(curText) {
-    getRequest("/autofill/" + curText, "", modifyAutofillList);
-}
-
-function openAddStudent() {
-    /*var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", urlBase + "/createAttendanceData/");
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("date=1");*/
-
-
-    var popUp = document.getElementById('studentDiv');
-    popUp.style.display = "block";
-}
+// Displays a student profile by using information stored in the HTML
 //should be updated
 function showStudentProfile() {
-    console.log("got here");
 
     var profileSpace = document.getElementById('studentProfileText');
     profileSpace.innerHTML = ("");
     var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
-    console.log("got here 2");
-    var keywordElement = document.getElementById('keywordStudentSearch').value;
+    var userInput = document.getElementById('keywordStudentSearch').value;
 
     var optionFound = false;
     datalist = document.getElementById("suggestedStudents");
     for (var j = 0; j < datalist.options.length; j++) {
-        if (keywordElement == datalist.options[j].value) {
+        if (userInput == datalist.options[j].value) {
             optionFound = true;
             break;
         }
     }
+    
+    // Open student profile
     if (optionFound) {
-        console.log("got here 3");
-        nameSpace.innerHTML += (keywordElement);
+        nameSpace.innerHTML += (userInput);
         profileSpace.innerHTML += ("\n");
-        console.log(keywordElement);
-        getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
+        getRequest("/getStudentInfo/" + userInput, "", showDemographics);
     }
 }
+
+
 //should be updated
 function showDemographics(_, data) {
     var parsedData = JSON.parse(data);

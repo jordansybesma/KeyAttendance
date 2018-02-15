@@ -1285,10 +1285,10 @@ function createFileHelper(_, attendance) {
         for (j in myData[i]) {
             if (j > 0) {
                 if (myData[i][j] === parseInt(myData[i][j], 10)) {
-                    newRow.push("yes");
+                    newRow.push("Y");
                 }
                 else if (myData[i][j] == null) {
-                    newRow.push("no");
+                    newRow.push("N");
                 }
                 else {
                     newRow.push(myData[i][j]);

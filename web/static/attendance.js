@@ -686,6 +686,7 @@ function showFrequentPeers(_, data) {
 
 //Take an id and pass on the path to the image
 function getStudentPicture(_, data) {
+  console.log("arrived at get student picture")
   var photoSpace = document.getElementById("studentPhoto");
   photoSpace.innerHTML += "src='static/resources/images/No-image-found.jpg'";
 }

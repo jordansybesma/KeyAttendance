@@ -1265,13 +1265,29 @@ function createFile() {
 
 function createFileHelper(_, attendance) {
     var rows = [];
-    rows.push(["ID", "First Name", "Last Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One", "Comments", "Date", "Time"]);
-
+    //rows.push(["ID", "First Name", "Last Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One", "Comments", "Date", "Time"]);
+    columns = JSON.parse(document.getElementById("columns").innerHTML);
+    console.log(columns);
+    var nameRow = [];
+    for (i in columns) {
+        console.log(columns[i][1]);
+        if (columns[i][1]) {
+            console.log(columns[i][2]);
+            nameRow.push = columns[i][2];
+        }
+    }
+    rows.push(nameRow);
+    console.log(rows);
     var myData = JSON.parse(attendance);
     for (i in myData) {
+        
         rows.push(myData[i]);
+        
+        
     }
-    var date = myData[0][12];
+    console.log(rows);
+    return "not yet";
+    var date = document.getElementById("storeDate").innerHTML;
     var filename = "Attendance_" + date + ".csv";
 
     exportToCsv(filename, rows);

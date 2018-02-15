@@ -1335,8 +1335,19 @@ function downloadMasterDates() {
 
 function downloadAllMasterHelper(_, data) {
     var rows = [];
-    rows.push(["Date", "Number Attended", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One"]);
-
+    columns = JSON.parse(document.getElementById("columns").innerHTML);
+    console.log(columns);
+    var nameRow = [];
+    nameRow.push("Date", "Number Attended")
+    for (i in columns) {
+        console.log(columns[i][1]);
+        if (columns[i][1]) {
+            console.log(columns[i][2]);
+            nameRow.push(columns[i][2]);
+        }
+    }
+    rows.push(nameRow);
+    console.log(rows);
     var myData = JSON.parse(data);
     for (i in myData) {
         rows.push(myData[i]);

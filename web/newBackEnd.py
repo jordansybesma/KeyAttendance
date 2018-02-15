@@ -475,7 +475,52 @@ def getMasterAttendance():
     return result    
     
     
-   
+#NOT EVEN CLOSE MUST BE REWRITTEN
+def getMasterAttendanceDate(dates):
+    dateList = dates.split()
+    start = dateList[0]
+    end = dateList[1]
+    
+    getDates = "SELECT DISTINCT date FROM dailyattendance ORDER BY date DESC;"
+    #executeSingleQuery(query1, [])
+    dateResults = json.dumps(executeSingleQuery(getDates, fetch=True), indent=4, sort_keys=True, default=str)
+    dates =json.loads(dateResults)
+    print(dates)
+    print(dates[0])
+    
+    queryColumns = "SELECT activity_id, name FROM activities WHERE is_showing = 'true' ORDER BY ordering;"
+    columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
+    columns =json.loads(columnResults)
+    
+    queryCreateEmpty = "CREATE TABLE master (\"date\" date, attendees int "
+    for i in range(len(columns)):
+        name = columns[i][1]
+        queryCreateEmpty = queryCreateEmpty + ", " + name + " int "
+    queryCreateEmpty = queryCreateEmpty + ");"
+    totalQuery = queryCreateEmpty
+    for i in range(len(dates)):
+        
+        queryInsertDate = "INSERT INTO master (date, attendees) VALUES (\'" + dates[i][0] + "\', (SELECT COUNT(DISTINCT student_id) FROM dailyattendance WHERE date = \'" + dates[i][0] + "\' AND activity_id = -1));"
+        totalQuery = totalQuery + " " + queryInsertDate
+        for j in range(len(columns)):
+            name = columns[j][1]
+            colID = columns[j][0]
+            queryColumnCount = "UPDATE master set " + name + " = (SELECT COUNT(DISTINCT student_id) FROM dailyattendance WHERE date = \'" + dates[i][0] + "\' AND activity_id = " + str(colID) + ") WHERE "
+            queryColumnCount = queryColumnCount + " date = \'" + dates[i][0] + "\';"
+            totalQuery = totalQuery + " " + queryColumnCount
+    
+    executeSingleQuery(totalQuery, [])
+        
+    returnQuery = "SELECT * FROM master WHERE date >= \'" + start + "\' AND date <= \'" + end + "\' ORDER BY date DESC;"
+    
+    result = json.dumps(executeSingleQuery(returnQuery, fetch = True), indent=4, sort_keys=True, default=str)
+    print(result)
+
+    queryDrop = "DROP TABLE master;"
+    executeSingleQuery(queryDrop, [])
+    
+    return result    
+       
 
 
 #Switch a column's placement with the column above it
@@ -572,13 +617,6 @@ def getAttendanceColumns():
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
 
-#NOT EVEN CLOSE MUST BE REWRITTEN
-def getMasterAttendanceDate(dates):
-    dateList = dates.split()
-    start = dateList[0]
-    end = dateList[1]
-    return json.dumps(executeSingleQuery("SELECT DISTINCT * FROM masterAttendance WHERE date >= '" + start + "' AND date <= '" + end + "' ORDER BY date ASC;",
-        fetch = True), indent=4, sort_keys=True, default=str)
 
 """
 Should no longer be neccessary

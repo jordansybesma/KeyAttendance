@@ -1338,7 +1338,7 @@ function downloadAllMasterHelper(_, data) {
     columns = JSON.parse(document.getElementById("columns").innerHTML);
     console.log(columns);
     var nameRow = [];
-    nameRow.push("Date", "Number Attended")
+    nameRow.push("Date", "#Attended")
     for (i in columns) {
         console.log(columns[i][1]);
         if (columns[i][1]) {

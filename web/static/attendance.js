@@ -3,7 +3,7 @@ var urlBase = window.location.origin;
 // scottSite = "https://attendance.unionofyouth.org";
 
 // Called when a user exits the add new student popup window
-function closeAddStudent() {
+function closeAddNewStudent() {
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
     var popUp = document.getElementById('studentDiv');
@@ -101,7 +101,7 @@ function addNewStudent() {
     addAttendant(first, last);
 
     // Closes popup
-    closeAddStudent();
+    closeAddNewStudent();
 }
 
 // Capitalizes first letter of string
@@ -431,7 +431,7 @@ function showSuggestions(curText) {
     getRequest("/autofill/" + curText, "", modifyAutofillList);
 }
 
-function openAddStudent() {
+function openAddNewStudent() {
     /*var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/createAttendanceData/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");

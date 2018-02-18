@@ -460,7 +460,7 @@ function modifyAutofillList(_, studentNames) {
 }
 
 // Displays a student profile by using information stored in the HTML
-//should be updated
+// should be updated
 function showStudentProfile() {
 
     var profileSpace = document.getElementById('studentProfileText');
@@ -470,7 +470,7 @@ function showStudentProfile() {
     var userInput = document.getElementById('keywordStudentSearch').value;
 
     var optionFound = false;
-    datalist = document.getElementById("suggestedStudents");
+    var datalist = document.getElementById("suggestedStudents");
     for (var j = 0; j < datalist.options.length; j++) {
         if (userInput == datalist.options[j].value) {
             optionFound = true;
@@ -486,8 +486,8 @@ function showStudentProfile() {
     }
 }
 
-
-//should be updated
+// Stores student's demographic information and retrieves/passes the active elements of demographics as specified in Manage Profile
+// should be updated
 function showDemographics(_, data) {
     var parsedData = JSON.parse(data);
     console.log(parsedData);
@@ -496,7 +496,10 @@ function showDemographics(_, data) {
     getRequest("/getStudentColumns", "", demographicsHelper);
 
 }
-//should be updated
+
+// Displays all active demographics for student.
+// columns[i] gives [isShowing, isQuick, name, type, definedOptions, priority] 
+// should be updated
 function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;
@@ -508,8 +511,15 @@ function demographicsHelper(_, columns) {
     div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Edit Profile</button>";
 
     for (i in columnInfo) {
-        if (columnInfo[i][1]) {
-            displayStudentInfo(columnInfo[i][3], studentInfo[0][parseInt(i) + 1], columnInfo[i][4]);
+        var isShowing = columnInfo[i][1];
+        if (isShowing) {
+            var colName = columnInfo[i][3];
+            var didActivity = studentInfo[0][parseInt(i) + 1];
+            var colDataType = columnInfo[i][4];
+
+            displayStudentInfo(colName, didActivity, colDataType);
+            
+//            displayStudentInfo(columnInfo[i][3], studentInfo[0][parseInt(i) + 1], columnInfo[i][4]);
         }
     }
 
@@ -609,25 +619,25 @@ function updateProfile(name, col, colid, type) {
     xmlhttp.send("name=" + name + "&value=" + value + "&column=" + col);
 }
 //should be updated
-function displayStudentInfo(catName, info, type) {
+function displayStudentInfo(colName, didActivity, colDataType) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
-    var displayName = makeHeaderReadable(catName);
-    console.log(type);
-    if (info == null) {
+    var displayName = makeHeaderReadable(colName);
+    console.log(colDataType);
+    if (didActivity == null) {
         var text = document.createTextNode(displayName + ": ");
-    } else if (type == "varchar") {
+    } else if (colDataType == "varchar") {
         console.log("var");
-        var text = document.createTextNode(displayName + ": " + info);
-    } else if (type == "int") {
+        var text = document.createTextNode(displayName + ": " + didActivity);
+    } else if (colDataType == "int") {
         console.log("int");
-        var text = document.createTextNode(displayName + ": " + info.toString());
-    } else if (type == "date") {
+        var text = document.createTextNode(displayName + ": " + didActivity.toString());
+    } else if (colDataType == "date") {
         console.log("date");
-        var text = document.createTextNode(displayName + ": " + makeDateReadable(info));
-    } else if (type == "boolean") {
+        var text = document.createTextNode(displayName + ": " + makeDateReadable(didActivity));
+    } else if (colDataType == "boolean") {
         console.log("bool");
-        if (info) {
+        if (didActivity) {
             var text = document.createTextNode(displayName + ": yes");
         } else {
             var text = document.createTextNode(displayName + ": no");
@@ -690,14 +700,7 @@ function showFrequentPeers(_, data) {
     // peerSpace.innerHTML += (data.join())
 
     var nameString = data.replace(/\[/g, "").replace(/\'/g, "").replace(/\]/g, "");
-
     var nameList = nameString.split(", ");
-
-    var friendsList = []
-
-    console.log("Hello")
-    console.log(nameList)
-    console.log("Goodbye")
 
     for (var i in nameList) {
         var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span><br/>';

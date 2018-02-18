@@ -453,7 +453,7 @@ function showStudentProfile() {
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
     var optionFound = false;
-    datalist = document.getElementById("suggestedStudents");
+    var datalist = document.getElementById("suggestedStudents");
     for (var j = 0; j < datalist.options.length; j++) {
         if (keywordElement == datalist.options[j].value) {
             optionFound = true;

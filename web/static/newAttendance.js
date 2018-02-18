@@ -692,7 +692,7 @@ function showStudentAttendance(_, data) {
 //RUSS needs to update this + python
 function showFrequentPeers(_, data) {
     var peerSpace = document.getElementById("frequentPeers");
-    peerSpace.innerHTML = (" ");
+    peerSpace.innerHTML = ("");
     peerSpace.innerHTML += ("Frequently Attends With:<br/><br/>");
 
     //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';

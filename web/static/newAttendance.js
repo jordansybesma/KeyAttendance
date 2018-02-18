@@ -2,14 +2,6 @@ var urlBase = window.location.origin;
 // localSite = "http://127.0.0.1:5000";
 // scottSite = "https://attendance.unionofyouth.org";
 
-// Called when a user exits the add new student popup window
-function closeAddStudent() {
-    document.getElementById("newStudentFirst").value = "";
-    document.getElementById("newStudentLast").value = "";
-    var popUp = document.getElementById('studentDiv');
-    popUp.style.display = "none";
-}
-
 // Adds a new attendee to current sheet
 // Called when a new name is added to the attendance sheet
 //Good for updated python
@@ -105,13 +97,27 @@ function addNewStudent() {
     addAttendant(first, last);
 
     // Closes popup
-    closeAddStudent();
+    closeAddNewStudent();
 }
 
 // Capitalizes first letter of string
 // Thanks to https://paulund.co.uk/capitalize-first-letter-string-javascript
 function capitalizeFirstLetter(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Opens the add new student popup
+function openAddNewStudent() {
+    var popUp = document.getElementById('studentDiv');
+    popUp.style.display = "block";
+}
+
+// Called when a user exits the add new student popup window
+function closeAddNewStudent() {
+    document.getElementById("newStudentFirst").value = "";
+    document.getElementById("newStudentLast").value = "";
+    var popUp = document.getElementById('studentDiv');
+    popUp.style.display = "none";
 }
 
 // Creates a new student and adds them to the table of all students.
@@ -412,6 +418,36 @@ function isValidColumnName(name) {
     return true;
 }
 
+// If enter key is hit, tries to add student to attendance table
+// If any other key is hit, suggests students with names similar to input
+function handleAddBox(e, curText) {
+    var enterKey = 13;
+    if (e.keyCode === enterKey) {
+        onAddRow();
+    }
+    else {
+        showSuggestions(curText);
+    }
+}
+
+// If enter key is hit, tries to open student profile of input
+// If any other key is hit, suggests students with names similar to input
+function handleProfileBox(e, curText) {
+    var enterKey = 13;
+    if (e.keyCode === enterKey) {
+        showStudentProfile();
+    }
+    else {
+        showSuggestions(curText);
+    }
+}
+
+// Retrieves all students with names similar to curText, passes that data to modifyAutofillList()
+function showSuggestions(curText) {
+    getRequest("/autofill/" + curText, "", modifyAutofillList);
+}
+
+// Displays suggested students in a dropdown list from the textbox
 //indexes should be updated
 function modifyAutofillList(_, studentNames) {
     var list = document.getElementById("suggestedStudents");
@@ -423,66 +459,35 @@ function modifyAutofillList(_, studentNames) {
     list.innerHTML = inner;
 }
 
-function handleAddBox(e, curText) {
-    if (e.keyCode === 13) {
-        onAddRow();
-    }
-    else {
-        showSuggestions(curText);
-    }
-}
-
-function handleProfileBox(e, curText) {
-    if (e.keyCode === 13) {
-        showStudentProfile();
-    }
-    else {
-        showSuggestions(curText);
-    }
-}
-
-function showSuggestions(curText) {
-    getRequest("/autofill/" + curText, "", modifyAutofillList);
-}
-
-function openAddStudent() {
-    /*var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", urlBase + "/createAttendanceData/");
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("date=1");*/
-
-
-    var popUp = document.getElementById('studentDiv');
-    popUp.style.display = "block";
-}
-//should be updated
+// Displays a student profile by using information stored in the HTML
+// should be updated
 function showStudentProfile() {
-    console.log("got here");
 
     var profileSpace = document.getElementById('studentProfileText');
     profileSpace.innerHTML = ("");
     var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
-    console.log("got here 2");
-    var keywordElement = document.getElementById('keywordStudentSearch').value;
+    var userInput = document.getElementById('keywordStudentSearch').value;
 
     var optionFound = false;
-    datalist = document.getElementById("suggestedStudents");
+    var datalist = document.getElementById("suggestedStudents");
     for (var j = 0; j < datalist.options.length; j++) {
-        if (keywordElement == datalist.options[j].value) {
+        if (userInput == datalist.options[j].value) {
             optionFound = true;
             break;
         }
     }
+    
+    // Open student profile
     if (optionFound) {
-        console.log("got here 3");
-        nameSpace.innerHTML += (keywordElement);
+        nameSpace.innerHTML += (userInput);
         profileSpace.innerHTML += ("\n");
-        console.log(keywordElement);
-        getRequest("/getStudentInfo/" + keywordElement, "", showDemographics);
+        getRequest("/getStudentInfo/" + userInput, "", showDemographics);
     }
 }
-//should be updated
+
+// Stores student's demographic information and retrieves/passes the active elements of demographics as specified in Manage Profile
+// should be updated
 function showDemographics(_, data) {
     var parsedData = JSON.parse(data);
     console.log(parsedData);
@@ -491,7 +496,10 @@ function showDemographics(_, data) {
     getRequest("/getStudentColumns", "", demographicsHelper);
 
 }
-//should be updated
+
+// Displays all active demographics for student.
+// columns[i] gives [isShowing, isQuick, name, type, definedOptions, priority] 
+// should be updated
 function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;
@@ -503,8 +511,15 @@ function demographicsHelper(_, columns) {
     div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Edit Profile</button>";
 
     for (i in columnInfo) {
-        if (columnInfo[i][1]) {
-            displayStudentInfo(columnInfo[i][3], studentInfo[0][parseInt(i) + 1], columnInfo[i][4]);
+        var isShowing = columnInfo[i][1];
+        if (isShowing) {
+            var colName = columnInfo[i][3];
+            var didActivity = studentInfo[0][parseInt(i) + 1];
+            var colDataType = columnInfo[i][4];
+
+            displayStudentInfo(colName, didActivity, colDataType);
+            
+//            displayStudentInfo(columnInfo[i][3], studentInfo[0][parseInt(i) + 1], columnInfo[i][4]);
         }
     }
 
@@ -604,25 +619,25 @@ function updateProfile(name, col, colid, type) {
     xmlhttp.send("name=" + name + "&value=" + value + "&column=" + col);
 }
 //should be updated
-function displayStudentInfo(catName, info, type) {
+function displayStudentInfo(colName, didActivity, colDataType) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
-    var displayName = makeHeaderReadable(catName);
-    console.log(type);
-    if (info == null) {
+    var displayName = makeHeaderReadable(colName);
+    console.log(colDataType);
+    if (didActivity == null) {
         var text = document.createTextNode(displayName + ": ");
-    } else if (type == "varchar") {
+    } else if (colDataType == "varchar") {
         console.log("var");
-        var text = document.createTextNode(displayName + ": " + info);
-    } else if (type == "int") {
+        var text = document.createTextNode(displayName + ": " + didActivity);
+    } else if (colDataType == "int") {
         console.log("int");
-        var text = document.createTextNode(displayName + ": " + info.toString());
-    } else if (type == "date") {
+        var text = document.createTextNode(displayName + ": " + didActivity.toString());
+    } else if (colDataType == "date") {
         console.log("date");
-        var text = document.createTextNode(displayName + ": " + makeDateReadable(info));
-    } else if (type == "boolean") {
+        var text = document.createTextNode(displayName + ": " + makeDateReadable(didActivity));
+    } else if (colDataType == "boolean") {
         console.log("bool");
-        if (info) {
+        if (didActivity) {
             var text = document.createTextNode(displayName + ": yes");
         } else {
             var text = document.createTextNode(displayName + ": no");
@@ -677,32 +692,29 @@ function showStudentAttendance(_, data) {
 //RUSS needs to update this + python
 function showFrequentPeers(_, data) {
     var peerSpace = document.getElementById("frequentPeers");
-    peerSpace.innerHTML = (" ");
-    peerSpace.innerHTML += ("Frequently Attends With: \n \n");
+    peerSpace.innerHTML = ("");
+    peerSpace.innerHTML += ("Frequently Attends With:<br/><br/>");
 
     //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
 
     // peerSpace.innerHTML += (data.join())
 
     var nameString = data.replace(/\[/g, "").replace(/\'/g, "").replace(/\]/g, "");
-
     var nameList = nameString.split(", ");
 
-    var friendsList = []
-
-    console.log("Hello")
-    console.log(nameList)
-    console.log("Goodbye")
-
     for (var i in nameList) {
-        var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span>';
-        friendsList.push(nameButton)
+        var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span><br/>';
+        peerSpace.innerHTML += nameButton;
     }
-
-    peerSpace.innerHTML += friendsList;
+    getRequest("/getJustID/" + document.getElementById("studentName").innerHTML, "", getStudentPicture);
 }
 
-
+//Take an id and pass on the path to the image
+function getStudentPicture(_, data) {
+  console.log("arrived at get student picture")
+  var photoSpace = document.getElementById("studentPhoto");
+  photoSpace.src = "/static/resources/images/No-image-found.jpg";
+}
 
 function convertDay(day) {
     if (day == 0) {

@@ -3,7 +3,7 @@ var urlBase = window.location.origin;
 // scottSite = "https://attendance.unionofyouth.org";
 
 // Called when a user exits the add new student popup window
-function closeAddStudent() {
+function closeAddNewStudent() {
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
     var popUp = document.getElementById('studentDiv');
@@ -101,7 +101,7 @@ function addNewStudent() {
     addAttendant(first, last);
 
     // Closes popup
-    closeAddStudent();
+    closeAddNewStudent();
 }
 
 // Capitalizes first letter of string
@@ -431,7 +431,7 @@ function showSuggestions(curText) {
     getRequest("/autofill/" + curText, "", modifyAutofillList);
 }
 
-function openAddStudent() {
+function openAddNewStudent() {
     /*var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/createAttendanceData/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
@@ -453,7 +453,7 @@ function showStudentProfile() {
     var keywordElement = document.getElementById('keywordStudentSearch').value;
 
     var optionFound = false;
-    datalist = document.getElementById("suggestedStudents");
+    var datalist = document.getElementById("suggestedStudents");
     for (var j = 0; j < datalist.options.length; j++) {
         if (keywordElement == datalist.options[j].value) {
             optionFound = true;
@@ -658,29 +658,24 @@ function showStudentAttendance(_, data) {
 
 function showFrequentPeers(_, data) {
     var peerSpace = document.getElementById("frequentPeers");
-    peerSpace.innerHTML = (" ");
-    peerSpace.innerHTML += ("Frequently Attends With: \n \n");
+    peerSpace.innerHTML = ("");
+    peerSpace.innerHTML += ("<strong>Frequently attends with:</strong><br/><br/>");
 
     //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
 
     // peerSpace.innerHTML += (data.join())
 
     var nameString = data.replace(/\[/g, "").replace(/\'/g, "").replace(/\]/g, "");
-
     var nameList = nameString.split(", ");
-
-    var friendsList = []
 
     console.log("Hello")
     console.log(nameList)
     console.log("Goodbye")
 
     for (var i in nameList) {
-        var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span>';
-        friendsList.push(nameButton)
-    }
-
-    peerSpace.innerHTML += friendsList;
+        var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span><br/>';
+        peerSpace.innerHTML += nameButton;
+    }    
     getRequest("/getJustID/" + document.getElementById("studentName").innerHTML, "", getStudentPicture);
 }
 
@@ -688,7 +683,7 @@ function showFrequentPeers(_, data) {
 function getStudentPicture(_, data) {
   console.log("arrived at get student picture")
   var photoSpace = document.getElementById("studentPhoto");
-  photoSpace.innerHTML += "src='static/resources/images/No-image-found.jpg'";
+  photoSpace.src = "/static/resources/images/No-image-found.jpg";
 }
 
 

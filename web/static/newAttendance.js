@@ -301,6 +301,7 @@ function selectColumn(name) {
     xmlhttp.send("name=" + name);
 }
 
+// Deletes an attendance column.
 //should be updated
 function deleteColumn(name) {
     if (name == "Key" || name == "key") {
@@ -384,6 +385,7 @@ function addColumn() {
         alert("Please enter a name")
         return;
     }
+    
     document.getElementById("newColumn").value = "";
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addAttendanceColumn");
@@ -498,7 +500,6 @@ function showDemographics(_, data) {
 }
 
 // Displays all active demographics for student.
-// columns[i] gives [isShowing, isQuick, name, type, definedOptions, priority] 
 // should be updated
 function demographicsHelper(_, columns) {
 
@@ -525,6 +526,8 @@ function demographicsHelper(_, columns) {
 
     getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 }
+
+// Displays the edit profile popup.
 //come back here
 function openEditProfile() {
     console.log("gets to here");
@@ -541,14 +544,15 @@ function openEditProfile() {
     for (i in columnData) {
         console.log("outer loop");
 
-        if (columnData[i][1]) {
+        var colIsShowing = columnData[i][1];
+        if (colIsShowing) {
             console.log("next loop");
+            var col = columnData[i][3];
             var form = document.createElement("form");
             var type = columnData[i][4];
             form.setAttribute('onSubmit', 'return false;');
             if ((type == "varchar") || (type == "int")) {
                 console.log("got to last loop");
-                var col = columnData[i][3];
                 var value = studData[parseInt(i) + 1];
                 if (value == null) {
                     value = "";
@@ -562,7 +566,6 @@ function openEditProfile() {
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "date") {
-                var col = columnData[i][3];
                 var value = studData[parseInt(i) + 1];
                 if (value == null) {
                     value = "";
@@ -575,7 +578,6 @@ function openEditProfile() {
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "boolean") {
-                var col = columnData[i][3];
                 var str = col + ": "
                 if (studData[parseInt(i) + 1]) {
                     str = str + " <input type='checkbox' checked value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;

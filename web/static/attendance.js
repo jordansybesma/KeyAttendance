@@ -511,7 +511,7 @@ function openEditProfile() {
     var updateString = "";
     for (i in columnData) {
         console.log("outer loop");
-
+        console.log("bool: "+columnData[i][0]);
         if (columnData[i][0]) {
             console.log("next loop");
             var form = document.createElement("form");

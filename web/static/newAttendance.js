@@ -291,7 +291,7 @@ function showAttendanceManageHelper(_, data) {
     }
 }
 
-// Toggles whether the selected attendance column shows up in the attendance table.
+// Toggles whether the selected attendance column shows up in the attendance table (when checkbox becomes checked/unchecked).
 //should be updated
 function selectColumn(name) {
     console.log("got here");
@@ -429,6 +429,32 @@ function handleAddBox(e, curText) {
     }
     else {
         showSuggestions(curText);
+    }
+}
+
+// Adds attendee to attendance table if input (from textbox) is a student.
+//should be updated
+function onAddRow() {
+    var input = document.getElementById('keyword').value;
+    var optionFound = false;
+    var datalist = document.getElementById("suggestedStudents");
+    for (var j = 0; j < datalist.options.length; j++) {
+        if (input == datalist.options[j].value) {
+            optionFound = true;
+            break;
+        }
+    }
+    if (optionFound) {
+
+        document.getElementById("keyword").value = "";
+
+        // eventually pass an id or get first and last name from input
+
+        var name = input.split(" ");
+        addAttendant(name[0], name[1]);
+
+    } else {
+        alert("Please enter an existing student");
     }
 }
 
@@ -601,12 +627,15 @@ function openEditProfile() {
     div.appendChild(returnButton);
 }
 
+// Closes edit profile popup.
 function returnToProfile() {
     var div = document.getElementById("editProfile");
     div.innerHTML = "";
     div.style.display = "none";
     showStudentProfile();
 }
+
+// Updates profile.
 //should be updated
 function updateProfile(name, col, colid, type) {
     if (type == "boolean") {
@@ -620,6 +649,8 @@ function updateProfile(name, col, colid, type) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&value=" + value + "&column=" + col);
 }
+
+// Displays student info such as age and gender.
 //should be updated
 function displayStudentInfo(colName, didActivity, colDataType) {
     var parent = document.getElementById("demographics");
@@ -648,6 +679,8 @@ function displayStudentInfo(colName, didActivity, colDataType) {
     node.appendChild(text);
     parent.appendChild(node);
 }
+
+// Shows "Recent Attendance" and "Attendance Times" plots on student profile.
 //Should  be updated
 function showStudentAttendance(_, data) {
 
@@ -691,6 +724,7 @@ function showStudentAttendance(_, data) {
     getRequest("/frequentPeers/" + document.getElementById("studentName").innerHTML, "", showFrequentPeers);
 }
 
+// On student's profile, shows other students who show up at similar times.
 //RUSS needs to update this + python
 function showFrequentPeers(_, data) {
     var peerSpace = document.getElementById("frequentPeers");
@@ -711,13 +745,14 @@ function showFrequentPeers(_, data) {
     getRequest("/getJustID/" + document.getElementById("studentName").innerHTML, "", getStudentPicture);
 }
 
-//Take an id and pass on the path to the image
+// Take an id and pass on the path to the image
 function getStudentPicture(_, data) {
   console.log("arrived at get student picture")
   var photoSpace = document.getElementById("studentPhoto");
   photoSpace.src = "/static/resources/images/No-image-found.jpg";
 }
 
+// Converts int to day of the week.
 function convertDay(day) {
     if (day == 0) {
         return "Sunday";
@@ -736,6 +771,7 @@ function convertDay(day) {
     }
 }
 
+// Shows "Attendance Times" plot on student profile.
 function scatterStudentAttendance(xList, yList) {
     var trace0 = {
         x: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
@@ -769,6 +805,7 @@ function scatterStudentAttendance(xList, yList) {
     Plotly.newPlot('studentTimes', data, layout);
 }
 
+// Shows "Recent Attendance" plot on student profile.
 function graphStudentAttendance(yaxis) {
     var max = Math.max.apply(Math, yaxis);
     //var min = Math.min.apply(Math, yaxis);
@@ -791,39 +828,8 @@ function graphStudentAttendance(yaxis) {
 
     Plotly.newPlot('graphStudent', data, layout);
 }
-//this should be fine/updated
-function selectActivity(name, column, date) {
-    console.log("selecting activity");
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", urlBase + "/selectActivity");
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("name=" + name + "&column=" + column + "&date=" + date);
-}
-//should be updated
-function onAddRow() {
-    var keywordElement = document.getElementById('keyword').value;
-    var optionFound = false;
-    var datalist = document.getElementById("suggestedStudents");
-    for (var j = 0; j < datalist.options.length; j++) {
-        if (keywordElement == datalist.options[j].value) {
-            optionFound = true;
-            break;
-        }
-    }
-    if (optionFound) {
 
-        document.getElementById("keyword").value = "";
-
-        // eventually pass an id or get first and last name from keywordElement
-
-        var name = keywordElement.split(" ");
-        addAttendant(name[0], name[1]);
-
-    } else {
-        alert("Please enter an existing student");
-    }
-}
-
+// Basically opens showStudentProfile, inputting the relevant information into the HTML document object.
 function showAttendeeProfile(fullName) {
     document.getElementById('keywordStudentSearch').value = fullName;
     document.getElementById("suggestedStudents").innerHTML = "<option>" + fullName + "</option>\n";
@@ -832,6 +838,7 @@ function showAttendeeProfile(fullName) {
     document.getElementById("studentProfileTab").click();
 }
 
+// Opens new attendance for current day.
 function createNewAttendance() {
     var date = getCurrentDate();
     document.getElementById("storeDate").innerHTML = date;
@@ -930,12 +937,23 @@ function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
     return box;
 }
 
+// Toggles whether a student has done the specified activity (when checkbox becomes checked/unchecked).
+//this should be fine/updated
+function selectActivity(name, column, date) {
+    console.log("selecting activity");
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", urlBase + "/selectActivity");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name + "&column=" + column + "&date=" + date);
+}
+
+// Refreshes current attendance table.
 function refreshAttendanceTable() {
     var date = document.getElementById("storeDate").innerHTML;
     displayAttendanceTable(date);
 }
 
-// 
+// Shows attendance table at specified date table_date.
 function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;
 

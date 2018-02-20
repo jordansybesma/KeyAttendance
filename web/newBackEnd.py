@@ -673,73 +673,6 @@ def getColsStr(cols):
     colsStr += cols[len(cols)-1]
     return colsStr
 
-def frequentPeers(name):
-    studentID = getJustID(name)
-    query = "SELECT date, time FROM dailyattendance WHERE student_id = '" + studentID + "' AND activity_id = -1;"
-
-    result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
-    result = result.replace("\n","").replace(" ","").replace("[", "").replace("]", "").replace("\"","")
-    result = result.split(",")
-
-
-    studentDict = {}
-    peersDict = {}
-
-    for i in range(0, len(result), 2):
-        if result[i] not in studentDict.keys():
-            studentDict[result[i]] = []
-        # studentDict[result[i]].append(result[i + 1])
-        timeList = result[i + 1].replace("\"", "").replace("\'","").split(":")
-        timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
-        studentDict[result[i]] = timeNum
-
-    for key in studentDict:
-        print(key)
-        if key not in peersDict.keys():
-            peersDict[key] = {}
-
-        query2 = "SELECT student_id, time FROM dailyAttendance WHERE date = '" + key + "';"
-        print(query2)
-        curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
-        curResult = curResult.replace("\n", "").replace("[q", "").replace(" ", "").replace("]","").replace("[","")
-
-        curResult = curResult.split(",")
-        print(curResult)
-
-        for i in range(0, len(curResult), 2):
-            if curResult[i] not in peersDict[key].keys():
-                peersDict[key][curResult[i]] = []
-            timeList = curResult[i + 1].replace("\"", "").replace("\'","").split(":")
-            timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
-            print(timeList)
-            # peersDict[key][curResult[i]].append(curResult[i + 1])
-            peersDict[key][curResult[i]] = timeNum
-
-    closeAppearancesDict = {}
-    testString = ""
-
-    for key in studentDict.keys():
-        if key != studentID:
-            curDate = key
-            curTime = studentDict[key]
-            for key2 in peersDict[curDate]:
-                peerDate = key2
-                peerTime = peersDict[curDate][key2]
-                if abs(curTime - peerTime) < 2:
-                    if key2 not in closeAppearancesDict:
-                        closeAppearancesDict[key2] = 1
-                    else:
-                        closeAppearancesDict[key2] += 1
-
-
-    closeAppearancesList = sorted(closeAppearancesDict.items(), key=lambda x: x[1])[::-1]
-    frequentPeersList = []
-
-    for i in range(5):
-        frequentPeer = getStudentByID(closeAppearancesList[i][0])
-        frequentPeersList.append(frequentPeer)
-
-    return str(frequentPeersList)
 """
 
 #Get attendance dates
@@ -830,73 +763,73 @@ def autofill(partialString):
     suggestions = json.dumps(databaseResult[:10], indent=4, sort_keys=True, default=str)
     return suggestions
 
-# def frequentPeers(name):
-#     studentID = getJustID(name)
-#     query = "SELECT date, time FROM dailyattendance WHERE id = '" + studentID + "';"
-#
-#     result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
-#     result = result.replace("\n","").replace(" ","").replace("[", "").replace("]", "").replace("\"","")
-#     result = result.split(",")
-#
-#
-#     studentDict = {}
-#     peersDict = {}
-#
-#     for i in range(0, len(result), 2):
-#         if result[i] not in studentDict.keys():
-#             studentDict[result[i]] = []
-#         # studentDict[result[i]].append(result[i + 1])
-#         timeList = result[i + 1].replace("\"", "").replace("\'","").split(":")
-#         timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
-#         studentDict[result[i]] = timeNum
-#
-#     for key in studentDict:
-#         print(key)
-#         if key not in peersDict.keys():
-#             peersDict[key] = {}
-#
-#         query2 = "SELECT id, time FROM dailyAttendance WHERE date = '" + key + "';"
-#         print(query2)
-#         curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
-#         curResult = curResult.replace("\n", "").replace("[q", "").replace(" ", "").replace("]","").replace("[","")
-#
-#         curResult = curResult.split(",")
-#         print(curResult)
-#
-#         for i in range(0, len(curResult), 2):
-#             if curResult[i] not in peersDict[key].keys():
-#                 peersDict[key][curResult[i]] = []
-#             timeList = curResult[i + 1].replace("\"", "").replace("\'","").split(":")
-#             timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
-#             print(timeList)
-#             # peersDict[key][curResult[i]].append(curResult[i + 1])
-#             peersDict[key][curResult[i]] = timeNum
-#
-#     closeAppearancesDict = {}
-#     testString = ""
-#
-#     for key in studentDict.keys():
-#         if key != studentID:
-#             curDate = key
-#             curTime = studentDict[key]
-#             for key2 in peersDict[curDate]:
-#                 peerDate = key2
-#                 peerTime = peersDict[curDate][key2]
-#                 if abs(curTime - peerTime) < 2:
-#                     if key2 not in closeAppearancesDict:
-#                         closeAppearancesDict[key2] = 1
-#                     else:
-#                         closeAppearancesDict[key2] += 1
-#
-#
-#     closeAppearancesList = sorted(closeAppearancesDict.items(), key=lambda x: x[1])[::-1]
-#     frequentPeersList = []
-#
-#     for i in range(5):
-#         frequentPeer = getStudentByID(closeAppearancesList[i][0])
-#         frequentPeersList.append(frequentPeer)
-#
-#     return str(frequentPeersList)
+def frequentPeers(name):
+    studentID = getJustID(name)
+    query = "SELECT date, time FROM dailyattendance WHERE student_id = '" + studentID + "' AND activity_id = -1;"
+
+    result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+    result = result.replace("\n","").replace(" ","").replace("[", "").replace("]", "").replace("\"","")
+    result = result.split(",")
+
+
+    studentDict = {}
+    peersDict = {}
+
+    for i in range(0, len(result), 2):
+        if result[i] not in studentDict.keys():
+            studentDict[result[i]] = []
+        # studentDict[result[i]].append(result[i + 1])
+        timeList = result[i + 1].replace("\"", "").replace("\'","").split(":")
+        timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
+        studentDict[result[i]] = timeNum
+
+    for key in studentDict:
+        print(key)
+        if key not in peersDict.keys():
+            peersDict[key] = {}
+
+        query2 = "SELECT student_id, time FROM dailyAttendance WHERE date = '" + key + "';"
+        print(query2)
+        curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
+        curResult = curResult.replace("\n", "").replace("[q", "").replace(" ", "").replace("]","").replace("[","")
+
+        curResult = curResult.split(",")
+        print(curResult)
+
+        for i in range(0, len(curResult), 2):
+            if curResult[i] not in peersDict[key].keys():
+                peersDict[key][curResult[i]] = []
+            timeList = curResult[i + 1].replace("\"", "").replace("\'","").split(":")
+            timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
+            print(timeList)
+            # peersDict[key][curResult[i]].append(curResult[i + 1])
+            peersDict[key][curResult[i]] = timeNum
+
+    closeAppearancesDict = {}
+    testString = ""
+
+    for key in studentDict.keys():
+        if key != studentID:
+            curDate = key
+            curTime = studentDict[key]
+            for key2 in peersDict[curDate]:
+                peerDate = key2
+                peerTime = peersDict[curDate][key2]
+                if abs(curTime - peerTime) < 2:
+                    if key2 not in closeAppearancesDict:
+                        closeAppearancesDict[key2] = 1
+                    else:
+                        closeAppearancesDict[key2] += 1
+
+
+    closeAppearancesList = sorted(closeAppearancesDict.items(), key=lambda x: x[1])[::-1]
+    frequentPeersList = []
+
+    for i in range(5):
+        frequentPeer = getStudentByID(closeAppearancesList[i][0])
+        frequentPeersList.append(frequentPeer)
+
+    return str(frequentPeersList)
 
 def studentProfile(string):
     nameList = string.split()

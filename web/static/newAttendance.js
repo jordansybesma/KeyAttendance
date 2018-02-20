@@ -1253,16 +1253,12 @@ function sendFeedback() {
     document.getElementById("feedback").value = "";
 }
 
-// fills the code text box under the table in an attendance sheet
+// Fills the code text box under the table in an attendance sheet.
 function fillTextBox() {
     getRequest("/static/cityspan.js", "", textBoxCallback)
 }
 
-// callback for fillTextBox
+// Callback for fillTextBox.
 function textBoxCallback(_, js) {
     document.getElementById("codeTextBox").innerHTML = js;
-}
-
-function showReports() {
-    console.log('hello');
 }

@@ -197,7 +197,7 @@ function getRequest(urlAddon, callbackState, callback) {
 }
 
 // MISC
-// SQL can't handle strings with spaces. 
+// SQL can't handle strings with spaces.
 // This method adds spaces in strings with camel case and replaces underscores with spaces.
 // Example: "HelloWorld" and "Hello_World" become "Hello World"
 function makeHeaderReadable(header) {
@@ -310,7 +310,7 @@ function showAttendanceManageHelper(_, data) {
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = "Column Name";
     row.insertCell(-1).innerHTML = "Currently in Use";
-    
+
     // Insert data into table
     var myData = JSON.parse(data);
     for (i in myData) {
@@ -427,7 +427,7 @@ function addColumn() {
         alert("Please enter a name")
         return;
     }
-    
+
     document.getElementById("newColumn").value = "";
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addAttendanceColumn");
@@ -551,7 +551,7 @@ function showStudentProfile() {
             break;
         }
     }
-    
+
     // Open student profile
     if (optionFound) {
         nameSpace.innerHTML += (userInput);
@@ -590,7 +590,7 @@ function demographicsHelper(_, columns) {
             var info = studentInfo[0][parseInt(i) + 1];
             var type = columnInfo[i][4];
 
-            displayStudentInfo(colName, info, type);            
+            displayStudentInfo(colName, info, type);
         }
     }
     getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
@@ -794,6 +794,7 @@ function showFrequentPeers(_, data) {
 // Take an id and pass on the path to the image.
 function getStudentPicture(_, data) {
   console.log("arrived at get student picture")
+  console.log(data);
   var photoSpace = document.getElementById("studentPhoto");
   photoSpace.src = "/static/resources/images/No-image-found.jpg";
 }
@@ -983,7 +984,7 @@ function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
 
     var hasDoneActivity = attendeeEntry[index];
     var col = columns[i][2];
-   
+
     var box = "<input type=\"checkbox\" "
         + (hasDoneActivity ? "checked" : "")
         + " onclick=\"selectActivity('" + fullName + "','" + col + "', '" + date + "')\">";
@@ -1088,7 +1089,7 @@ function makeMasterTableHeader(_, columns) {
 // AO
 // Populates master attendance table with data.
 function masterAttendanceHelper(_, masterData) {
-   
+
     var myData = JSON.parse(masterData);
     var columns = document.getElementById("columnData").innerHTML;
     columnData = JSON.parse(columns);
@@ -1097,7 +1098,7 @@ function masterAttendanceHelper(_, masterData) {
         var row = table.insertRow(-1);
         for (j in myData[i]) {
             row.insertCell(-1).innerHTML = myData[i][j];
-        }   
+        }
     }
 }
 
@@ -1176,7 +1177,7 @@ function createFileHelper(_, attendance) {
     console.log(columns);
     var nameRow = [];
     nameRow.push("Time", "First", "Last");
-    
+
     for (i in columns) {
         console.log(columns[i][1]);
         var colIsShowing = columns[i][1];

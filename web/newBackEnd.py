@@ -331,7 +331,7 @@ def addStudentColumn(request):
 
 
     #query = "INSERT INTO studentColumns VALUES ('true','false', '" + name + "', '"+ colType + "', '" + definedOptions + "');"
-    #queryAttendance = "ALTER TABLE testStudents ADD " + name + " " + colType + ";"
+    #queryAttendance = "ALTER TABLE students ADD " + name + " " + colType + ";"
     query = "INSERT INTO studentcolumns (is_showing, quick_add, name, type) VALUES ("
     query = query + "'true', 'false', '" + name + "', '" + colType + "');"
 
@@ -365,7 +365,7 @@ def alterStudentColumn(request):
 def deleteStudentColumn(request):
     name = request.form.get("name")
     query = "DELETE FROM studentColumns WHERE name = '" + name + "';"
-    query2 = "ALTER TABLE testStudents DROP COLUMN " + name + ";"
+    query2 = "ALTER TABLE students DROP COLUMN " + name + ";"
     executeSingleQuery(query, [])
     executeSingleQuery(query2, [])
     name = request.form.get("name")
@@ -800,10 +800,13 @@ def frequentPeers(name):
             if curResult[i] not in peersDict[key].keys():
                 peersDict[key][curResult[i]] = []
             timeList = curResult[i + 1].replace("\"", "").replace("\'","").split(":")
-            timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
-            print(timeList)
+            try:
+                timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
+                peersDict[key][curResult[i]] = timeNum
+                print(timeList)
+            except ValueError:
+                print("Some data wasn't there. Sad. Very sad.")
             # peersDict[key][curResult[i]].append(curResult[i + 1])
-            peersDict[key][curResult[i]] = timeNum
 
     closeAppearancesDict = {}
     testString = ""
@@ -836,7 +839,7 @@ def studentProfile(string):
     nameList = string.split()
     first = nameList[0]
     last = nameList[1]
-    query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + first + "%' OR lastName LIKE '%" + last + "%';"
+    query = "SELECT id FROM students WHERE first_name LIKE '%" + first + "%' OR last_name LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(databaseResult)
     return result
@@ -846,7 +849,7 @@ def studentProfile(string):
 #     nameList = string.split()
 #     first = nameList[0].upper()
 #     last = nameList[1].upper()
-#     query = "SELECT id FROM teststudents WHERE UPPER(firstname) LIKE '%" + first + "%' AND UPPER(lastname) LIKE '%" + last + "%';"
+#     query = "SELECT id FROM students WHERE UPPER(firstname) LIKE '%" + first + "%' AND UPPER(lastname) LIKE '%" + last + "%';"
 #     databaseResult = executeSingleQuery(query, fetch = True)
 #     return databaseResult;
 
@@ -858,11 +861,11 @@ def getStudentByID(string):
 
     print("CALLED")
 
-    query = "SELECT firstname FROM teststudents WHERE id = '" + string + "';"
+    query = "SELECT first_name FROM students WHERE id = '" + string + "';"
     databaseResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(databaseResult[0][0]).replace("\"","")
 
-    query2 = "SELECT lastname FROM teststudents WHERE id = '" + string + "';"
+    query2 = "SELECT last_name FROM students WHERE id = '" + string + "';"
     databaseResult2 = executeSingleQuery(query2, fetch = True)
     result2 = json.dumps(databaseResult2[0][0]).replace("\"","")
 
@@ -876,14 +879,14 @@ def getJustID(string):
     nameList = string.split()
     first = nameList[0].upper()
     last = nameList[1].upper()
-    query = "SELECT id FROM teststudents WHERE UPPER(firstname) LIKE '%" + first + "%' AND UPPER(lastname) LIKE '%" + last + "%';"
+    query = "SELECT id FROM students WHERE UPPER(first_name) LIKE '%" + first + "%' AND UPPER(last_name) LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     print(databaseResult[0][0])
     result = json.dumps(databaseResult[0][0])
     return result
 
 def getAlerts():
-    query = "SELECT testStudents.firstName, testStudents.lastName, alerts.alert, alerts.studentid FROM testStudents, alerts WHERE alerts.completed = FALSE AND alerts.studentid = testStudents.id;"
+    query = "SELECT students.firstName, students.lastName, alerts.alert, alerts.studentid FROM students, alerts WHERE alerts.completed = FALSE AND alerts.studentid = students.id;"
     databaseResult = executeSingleQuery(query, fetch = True)
     return json.dumps(databaseResult)
 

@@ -876,7 +876,7 @@ def addAttendant(request):
     time = request.form.get('time')
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
-    queryVisits = "SELECT number_visits FROM students WHERE id = " + studentID + ";"
+    queryVisits = "SELECT number_visits FROM students WHERE id = " + str(studentID) + ";"
     numVisits = json.loads(json.dumps(executeSingleQuery(queryVisits, fetch=True)))[0][0]
     newNum = numVisits + 1
 

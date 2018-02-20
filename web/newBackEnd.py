@@ -779,12 +779,12 @@ def deleteAttendant(request):
 
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
     
-    queryVisits = "SELECT number_visits FROM students WHERE id = " + studentID + ";"
+    queryVisits = "SELECT number_visits FROM students WHERE id = " + str(studentID) + ";"
     numVisits = json.loads(json.dumps(executeSingleQuery(queryVisits, fetch=True)))[0][0]
     newNum = numVisits - 1
 
     queryDelete = "DELETE FROM dailyattendance WHERE student_id = " + str(studentID) + " AND date = \'" + date + "\';"
-    queryUpdate = "UPDATE students SET number_visits = " + newNum + " WHERE id = " + str(studentID) + " ;"
+    queryUpdate = "UPDATE students SET number_visits = " + str(newNum) + " WHERE id = " + str(studentID) + " ;"
     queryDelete = queryDelete + " " + queryUpdate
     executeSingleQuery(queryDelete, [])
     return "done"

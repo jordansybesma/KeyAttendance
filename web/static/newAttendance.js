@@ -1039,7 +1039,7 @@ function masterAttendanceHelper(_, masterData) {
     }
 }
 
-// 
+// Formats date for humans.
 function makeDateReadable(date) {
     var monthStr = date.substr(5, 7).substr(0, 2);
     var monthInt = parseInt(monthStr);
@@ -1054,6 +1054,7 @@ function makeDateReadable(date) {
     return newDateDashes;
 }
 
+// Formats date for SQL.
 function makeDateSQL(date) {
     var month = date.substr(0, 2);
     var day = date.substr(3, 4);
@@ -1062,6 +1063,7 @@ function makeDateSQL(date) {
     return newDate;
 }
 
+// Retrieves current date using the Date object.
 function getCurrentDate() {
     var dt = new Date();
     // Display the month, day, and year. getMonth() returns a 0-based number.
@@ -1080,7 +1082,8 @@ function getCurrentDate() {
     return date;
 }
 
-//used with date picker in index.html
+
+// Displays the attendance table of the date from date picker (in index.html).
 function getDate() {
     var date = document.getElementById("datePicker").value;
     console.log(date);
@@ -1088,27 +1091,29 @@ function getDate() {
     return false;
 }
 
+// Using createFileHelper and exportToCSV, downloads a csv file of attendance table at specified date in storeDate.
 function createFile() {
-    //var date = getCurrentDate();
     var date = document.getElementById("storeDate").innerHTML;
     getRequest("/getAttendance/" + date, "", createFileHelper);
-    var rows = [];
-    rows.push(["things", "things2", "thing3"]);
-    rows.push(["things4", "things5", "thing6"]);
-    rows.push(["things7", "things8", "thing9"]);
-    //exportToCsv("testFile.csv", rows);
+//    var rows = [];
+//    rows.push(["things", "things2", "thing3"]);
+//    rows.push(["things4", "things5", "thing6"]);
+//    rows.push(["things7", "things8", "thing9"]);
+//    exportToCsv("testFile.csv", rows);
 }
 
+// Formats attendance table data into a file.
 function createFileHelper(_, attendance) {
     var rows = [];
-    //rows.push(["ID", "First Name", "Last Name", "Art", "Made Food", "Recieved Food", "Leadership", "Exersize", "Mental Health", "Volunteering", "One on One", "Comments", "Date", "Time"]);
-    columns = JSON.parse(document.getElementById("columns").innerHTML);
+    var columns = JSON.parse(document.getElementById("columns").innerHTML);
     console.log(columns);
     var nameRow = [];
-    nameRow.push("Time", "First", "Last")
+    nameRow.push("Time", "First", "Last");
+    
     for (i in columns) {
         console.log(columns[i][1]);
-        if (columns[i][1]) {
+        var colIsShowing = columns[i][1];
+        if (colIsShowing) {
             console.log(columns[i][2]);
             nameRow.push(columns[i][2]);
         }
@@ -1132,8 +1137,6 @@ function createFileHelper(_, attendance) {
             }
         }
         rows.push(newRow);
-        
-        
     }
     console.log(rows);
     var date = document.getElementById("storeDate").innerHTML;
@@ -1142,7 +1145,8 @@ function createFileHelper(_, attendance) {
     exportToCsv(filename, rows);
 
 }
-//EVERYTHING BELOW THIS NOT UPDATED YET BLEEEEHHHHH
+
+// EVERYTHING BELOW THIS NOT UPDATED YET BLEEEEHHHHH
 function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
     return false;
@@ -1194,7 +1198,8 @@ function downloadAllMasterHelper(_, data) {
     return false;
 }
 
-// source: https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
+// Converts rows into CSV file and downloads that file.
+// Source: https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
 function exportToCsv(filename, rows) {
     var processRow = function (row) {
         var finalVal = '';

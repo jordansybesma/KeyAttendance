@@ -836,7 +836,7 @@ def studentProfile(string):
     nameList = string.split()
     first = nameList[0]
     last = nameList[1]
-    query = "SELECT id FROM students WHERE firstName LIKE '%" + first + "%' OR lastName LIKE '%" + last + "%';"
+    query = "SELECT id FROM students WHERE first_name LIKE '%" + first + "%' OR last_name LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(databaseResult)
     return result
@@ -858,11 +858,11 @@ def getStudentByID(string):
 
     print("CALLED")
 
-    query = "SELECT firstname FROM students WHERE id = '" + string + "';"
+    query = "SELECT first_name FROM students WHERE id = '" + string + "';"
     databaseResult = executeSingleQuery(query, fetch = True)
     result = json.dumps(databaseResult[0][0]).replace("\"","")
 
-    query2 = "SELECT lastname FROM students WHERE id = '" + string + "';"
+    query2 = "SELECT last_name FROM students WHERE id = '" + string + "';"
     databaseResult2 = executeSingleQuery(query2, fetch = True)
     result2 = json.dumps(databaseResult2[0][0]).replace("\"","")
 
@@ -876,7 +876,7 @@ def getJustID(string):
     nameList = string.split()
     first = nameList[0].upper()
     last = nameList[1].upper()
-    query = "SELECT id FROM students WHERE UPPER(firstname) LIKE '%" + first + "%' AND UPPER(lastname) LIKE '%" + last + "%';"
+    query = "SELECT id FROM students WHERE UPPER(first_name) LIKE '%" + first + "%' AND UPPER(last_name) LIKE '%" + last + "%';"
     databaseResult = executeSingleQuery(query, fetch = True)
     print(databaseResult[0][0])
     result = json.dumps(databaseResult[0][0])

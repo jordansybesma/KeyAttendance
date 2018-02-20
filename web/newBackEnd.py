@@ -234,8 +234,12 @@ def getAttendance(date):
 def addNewStudent(request):
     firstName = request.form.get('firstName')
     lastName  = request.form.get('lastName')
-    executeSingleQuery("INSERT INTO students VALUES (%s, %s)", [firstName, lastName])
+    now = datetime.datetime.now()
+    today = transformDate(now)
 
+    executeSingleQuery("INSERT INTO students VALUES (%s, %s)", [firstName, lastName])
+    queryUpdate = "UPDATE students SET first_attendance = \'" + today + "\', number_visits = 0 WHERE first_name = \'" + firstName + "\' AND last_name = \'" + lastName + "\';" 
+    executeSingleQuery(queryUpdate, [])
     return "\nHello frontend:)\n"
 
 
@@ -766,6 +770,10 @@ def getAttendanceColumns():
 def deleteAttendant(request):
     name = request.form.get("name")
     date = request.form.get("date")
+    
+    queryVisits = "SELECT number_visits FROM students WHERE id = " + studentID + ";"
+    numVisits = json.loads(json.dumps(executeSingleQuery(queryVisits, fetch=True)))[0][0]
+    newNum = numVisits - 1
 
     nameList = name.split()
     first = nameList[0]
@@ -774,6 +782,8 @@ def deleteAttendant(request):
 
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
     queryDelete = "DELETE FROM dailyattendance WHERE student_id = " + str(studentID) + " AND date = \'" + date + "\';"
+    queryUpdate = "UPDATE students SET number_visits = " + newNum + " WHERE id = " + studentID + " ;"
+    queryDelete = queryDelete + " " + queryUpdate
     executeSingleQuery(queryDelete, [])
     return "done"
 
@@ -866,15 +876,22 @@ def addAttendant(request):
     time = request.form.get('time')
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
+    queryVisits = "SELECT number_visits FROM students WHERE id = " + studentID + ";"
+    numVisits = json.loads(json.dumps(executeSingleQuery(queryVisits, fetch=True)))[0][0]
+    newNum = numVisits + 1
 
     querykeyID = "SELECT activity_id FROM activities WHERE name = 'key';"
 
     keyID = json.loads(json.dumps(executeSingleQuery(querykeyID, fetch=True)))[0][0]
 
-    queryAdd = "INSERT INTO dailyattendance VALUES (" + str(studentID) + ", '" + date + "', '" + time +  "', -1);"
+    queryAdd = "INSERT INTO dailyattendance VALUES (" + str(studentID) + ", '" + date + "', '" + time +  "', -1, " + str(newNum) + ");"
     queryAddKey = "INSERT INTO dailyattendance VALUES (" + str(studentID) + ", '" + date + "', '" + time +  "', " + str(keyID) + ");"
-    queryTotal = queryAdd + " " + queryAddKey
+    queryUpdate = "UPDATE students SET number_visits = " + str(newNum) + " WHERE id = " + studentID + ";"
+    queryTotal = queryAdd + " " + queryAddKey + " " + queryUpdate
     executeSingleQuery(queryTotal, [])
+    
+    
+    
 
     return "done"
 

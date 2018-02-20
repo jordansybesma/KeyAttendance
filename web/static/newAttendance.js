@@ -2,9 +2,9 @@ var urlBase = window.location.origin;
 // localSite = "http://127.0.0.1:5000";
 // scottSite = "https://attendance.unionofyouth.org";
 
+// AS
 // Adds a new attendee to current sheet
 // Called when a new name is added to the attendance sheet
-//Good for updated python
 function addAttendant(first, last) {
     var dt = new Date();
     // Display the month, day, and year. getMonth() returns a 0-based number.
@@ -40,9 +40,9 @@ function addAttendant(first, last) {
     displayNewAttendant(first, last, time);
 }
 
+// AS
 // Adds a new attendee to the daily attendance table
 // Function does not use database info (that's being stored right before displayNewAttendant() is called in addAttendant())
-// I think this is good for update
 function displayNewAttendant(first, last, time) {
     // Get data about columns
     var columnData = document.getElementById("columns").innerHTML;
@@ -69,9 +69,9 @@ function displayNewAttendant(first, last, time) {
     fillRowAttendance(table, myColumns, attendantData);
 }
 
+// AS
 // Called when a user clicks submit on the add new student dialogue.
 // Checks that both values have been entered then adds them to the database.
-//I think this is okay - inner methods need to be checked
 function addNewStudent() {
 
     var first = document.getElementById("newStudentFirst").value.trim();
@@ -100,18 +100,21 @@ function addNewStudent() {
     closeAddNewStudent();
 }
 
+// AS
 // Capitalizes first letter of string
 // Thanks to https://paulund.co.uk/capitalize-first-letter-string-javascript
 function capitalizeFirstLetter(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+// AS
 // Opens the add new student popup
 function openAddNewStudent() {
     var popUp = document.getElementById('studentDiv');
     popUp.style.display = "block";
 }
 
+// AS
 // Called when a user exits the add new student popup window
 function closeAddNewStudent() {
     document.getElementById("newStudentFirst").value = "";
@@ -120,8 +123,8 @@ function closeAddNewStudent() {
     popUp.style.display = "none";
 }
 
+// AS
 // Creates a new student and adds them to the table of all students.
-//should be okay for update
 function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addNewStudent/");
@@ -129,6 +132,7 @@ function sendNewStudent(firstname, lastname) {
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
 
+// AS
 // Deletes all instances of attendant at specified date.
 // (Ideally would use ID, but hard to do for adding new student to table without an ID).
 function deleteAttendant(date, name) {
@@ -139,6 +143,7 @@ function deleteAttendant(date, name) {
     displayAttendanceTable(date);
 }
 
+// MISC
 // Asynchronously calls the database and returns data to callback, which is a function.
 // That callback function's signature looks like "function [name of callback](_, [data]){...}
 function getRequest(urlAddon, callbackState, callback) {
@@ -158,6 +163,7 @@ function getRequest(urlAddon, callbackState, callback) {
     xmlHttpRequest.send(null);
 }
 
+// MISC
 // SQL can't handle strings with spaces. 
 // This method adds spaces in strings with camel case and replaces underscores with spaces.
 // Example: "HelloWorld" and "Hello_World" become "Hello World"
@@ -186,6 +192,7 @@ function makeHeaderReadable(header) {
     return newHeader;
 }
 
+// MP
 // Displays Manage Profile tab, using showManageProfileHelper to retrieve column data from the database.
 function showManageProfile() {
     table = document.getElementById("studentColumnsTable");
@@ -197,6 +204,7 @@ function showManageProfile() {
     getRequest("/getStudentColumns", "", showManageProfileHelper);
 }
 
+// MP
 // For each element in data (an aspect of student profile such as gender), display as a row in the table.
 function showManageProfileHelper(_, data) {
     var myData = JSON.parse(data);
@@ -207,10 +215,10 @@ function showManageProfileHelper(_, data) {
     }
 }
 
+// MP
 // Displays aspect of student profile in a row.
 // isShowing indicates whether the demographic shows up in student profile.
 // isQuick indicates whether the demographic shows up in the add new student popup in attendance sheet.
-//indexes are updated
 function fillRowManageProfile(row, rowData) {
     var name = rowData[3];
     var isShowing = rowData[1];
@@ -232,8 +240,8 @@ function fillRowManageProfile(row, rowData) {
     row.insertCell(-1).innerHTML = deleteButton;
 }
 
+// MP
 // Alters whether an aspect of student profile (like gender) is showing or is available in add new student popup in attendance sheet.
-//updated
 function selectStudentColumn(name, column) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/alterStudentColumn");
@@ -241,8 +249,8 @@ function selectStudentColumn(name, column) {
     xmlhttp.send("name=" + name + "&column=" + column);
 }
 
+// MP
 // Deletes aspect of student profile (like gender) from database.
-//updated
 function deleteStudentColumn(name) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/deleteStudentColumn");
@@ -251,6 +259,7 @@ function deleteStudentColumn(name) {
     showProfileManage()
 }
 
+// AC
 // Displays Attendance Columns tab by retrieving data on attendance columns and passing it to showAttendanceManageHelper.
 //should be fine
 function showAttendanceManage() {
@@ -258,8 +267,8 @@ function showAttendanceManage() {
 
 }
 
+// AC
 // Displays the data of attendance columns in the Attendance Columns tab.
-//I think this is updated
 function showAttendanceManageHelper(_, data) {
 
     // Clear table, display column names
@@ -291,8 +300,8 @@ function showAttendanceManageHelper(_, data) {
     }
 }
 
+// Ac
 // Toggles whether the selected attendance column shows up in the attendance table (when checkbox becomes checked/unchecked).
-//should be updated
 function selectColumn(name) {
     console.log("got here");
     var xmlhttp = new XMLHttpRequest();
@@ -301,8 +310,8 @@ function selectColumn(name) {
     xmlhttp.send("name=" + name);
 }
 
+// AC
 // Deletes an attendance column.
-//should be updated
 function deleteColumn(name) {
     if (name == "Key" || name == "key") {
         alert("You cannot delete the key column");
@@ -317,8 +326,8 @@ function deleteColumn(name) {
     }
 }
 
+// AC
 // Changes order of appearance of attendance columns, displays inputted col one spot earlier.
-//should be updated
 function moveAttendanceColumnUp(name) {
     console.log("move column up");
     var xmlhttp = new XMLHttpRequest();
@@ -331,6 +340,7 @@ function moveAttendanceColumnUp(name) {
     return false;
 }
 
+// AC
 // Changes order of appearance of attendance columns, displays inputted col one spot later.
 //not implemented yet...
 function moveAttendanceColumnDown(name) {
@@ -338,8 +348,8 @@ function moveAttendanceColumnDown(name) {
     return false;
 }
 
+// MP
 // Adds new demographic element to student profiles.
-//Should be fine
 function addStudentColumn() {
     var name = document.getElementById("studentColumnName").value;
     var type = document.getElementById("studentColumnType").value;
@@ -370,9 +380,8 @@ function addStudentColumn() {
     showProfileManage()
 }
 
-
+// AC
 // Adds new column to available columns of attendance tables.
-//should be updated
 function addColumn() {
     var name = document.getElementById("newColumn").value;
     if (isValidColumnName(name) === false) {
@@ -405,6 +414,7 @@ function addColumn() {
     row.insertCell(-1).innerHTML = deleteButton;
 }
 
+// MISC
 // Checks if input name contains any of the characters in badSubstring. If yes, returns false, else returns true.
 function isValidColumnName(name) {
     var badSubstring = " .,<>/?':;|]}[{=+-_)(*&^%$#@!~`";
@@ -420,6 +430,7 @@ function isValidColumnName(name) {
     return true;
 }
 
+// AS
 // If enter key is hit, tries to add student to attendance table
 // If any other key is hit, suggests students with names similar to input
 function handleAddBox(e, curText) {
@@ -432,8 +443,8 @@ function handleAddBox(e, curText) {
     }
 }
 
+// AS
 // Adds attendee to attendance table if input (from textbox) is a student.
-//should be updated
 function onAddRow() {
     var input = document.getElementById('keyword').value;
     var optionFound = false;
@@ -458,6 +469,7 @@ function onAddRow() {
     }
 }
 
+// SP
 // If enter key is hit, tries to open student profile of input
 // If any other key is hit, suggests students with names similar to input
 function handleProfileBox(e, curText) {
@@ -470,13 +482,14 @@ function handleProfileBox(e, curText) {
     }
 }
 
+// MISC
 // Retrieves all students with names similar to curText, passes that data to modifyAutofillList()
 function showSuggestions(curText) {
     getRequest("/autofill/" + curText, "", modifyAutofillList);
 }
 
+// MISC
 // Displays suggested students in a dropdown list from the textbox
-//indexes should be updated
 function modifyAutofillList(_, studentNames) {
     var list = document.getElementById("suggestedStudents");
     var myData = JSON.parse(studentNames);
@@ -487,8 +500,8 @@ function modifyAutofillList(_, studentNames) {
     list.innerHTML = inner;
 }
 
+// SP
 // Displays a student profile by using information stored in the HTML
-// should be updated
 function showStudentProfile() {
 
     var profileSpace = document.getElementById('studentProfileText');
@@ -514,8 +527,8 @@ function showStudentProfile() {
     }
 }
 
+// SP
 // Stores student's demographic information and retrieves/passes the active elements of demographics as specified in Manage Profile
-// should be updated
 function showDemographics(_, data) {
     var parsedData = JSON.parse(data);
     console.log(parsedData);
@@ -525,8 +538,8 @@ function showDemographics(_, data) {
 
 }
 
+// SP
 // Displays all active demographics for student.
-// should be updated
 function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;
@@ -550,8 +563,8 @@ function demographicsHelper(_, columns) {
     getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 }
 
+// SP
 // Displays the edit profile popup.
-//come back here
 function openEditProfile() {
     console.log("gets to here");
     var name = document.getElementById('keywordStudentSearch').value;
@@ -624,6 +637,7 @@ function openEditProfile() {
     div.appendChild(returnButton);
 }
 
+// SP
 // Closes edit profile popup.
 function returnToProfile() {
     var div = document.getElementById("editProfile");
@@ -632,8 +646,8 @@ function returnToProfile() {
     showStudentProfile();
 }
 
+// SP
 // Updates profile.
-//should be updated
 function updateProfile(name, col, colid, type) {
     if (type == "boolean") {
         var value = "TRUE";
@@ -647,8 +661,8 @@ function updateProfile(name, col, colid, type) {
     xmlhttp.send("name=" + name + "&value=" + value + "&column=" + col);
 }
 
+// SP
 // Displays student info such as age and gender.
-//should be updated
 function displayStudentInfo(colName, info, type) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
@@ -677,8 +691,8 @@ function displayStudentInfo(colName, info, type) {
     parent.appendChild(node);
 }
 
+// SP
 // Shows "Recent Attendance" and "Attendance Times" plots on student profile.
-//Should  be updated
 function showStudentAttendance(_, data) {
 
     var parsedData = JSON.parse(data);
@@ -721,6 +735,7 @@ function showStudentAttendance(_, data) {
     getRequest("/frequentPeers/" + document.getElementById("studentName").innerHTML, "", showFrequentPeers);
 }
 
+// SP
 // On student's profile, shows other students who show up at similar times.
 //RUSS needs to update this + python
 function showFrequentPeers(_, data) {
@@ -742,13 +757,15 @@ function showFrequentPeers(_, data) {
     getRequest("/getJustID/" + document.getElementById("studentName").innerHTML, "", getStudentPicture);
 }
 
-// Take an id and pass on the path to the image
+// SP
+// Take an id and pass on the path to the image.
 function getStudentPicture(_, data) {
   console.log("arrived at get student picture")
   var photoSpace = document.getElementById("studentPhoto");
   photoSpace.src = "/static/resources/images/No-image-found.jpg";
 }
 
+// SP
 // Converts int to day of the week.
 function convertDay(day) {
     if (day == 0) {
@@ -768,6 +785,7 @@ function convertDay(day) {
     }
 }
 
+// SP
 // Shows "Attendance Times" plot on student profile.
 function scatterStudentAttendance(xList, yList) {
     var trace0 = {
@@ -802,6 +820,7 @@ function scatterStudentAttendance(xList, yList) {
     Plotly.newPlot('studentTimes', data, layout);
 }
 
+// SP
 // Shows "Recent Attendance" plot on student profile.
 function graphStudentAttendance(yaxis) {
     var max = Math.max.apply(Math, yaxis);
@@ -826,6 +845,7 @@ function graphStudentAttendance(yaxis) {
     Plotly.newPlot('graphStudent', data, layout);
 }
 
+// ASP
 // Basically opens showStudentProfile, inputting the relevant information into the HTML document object.
 function showAttendeeProfile(fullName) {
     document.getElementById('keywordStudentSearch').value = fullName;
@@ -835,6 +855,7 @@ function showAttendeeProfile(fullName) {
     document.getElementById("studentProfileTab").click();
 }
 
+// AS
 // Opens new attendance for current day.
 function createNewAttendance() {
     var date = getCurrentDate();
@@ -850,13 +871,14 @@ function createNewAttendance() {
     list.style.display = "none";
 }
 
+// AS
 // Grabs the data for an attendance table and fills the table, using fillAttendanceTableHelper
 function fillAttendanceTable() {
     getRequest("/getAttendanceColumns", "", fillAttendanceTableHelper);
 }
 
+// AS
 // Called through a getRequest from fillAttendanceTable.
-//should be okay/updated
 function fillAttendanceTableHelper(_, data) {
     console.log("got to helper");
     document.getElementById("columns").innerHTML = data;
@@ -879,6 +901,7 @@ function fillAttendanceTableHelper(_, data) {
     getRequest("/getAttendance/" + table_date, "", fillAttendance);
 }
 
+// AS
 // Iterates through the attendants on a given day and populates the attendance table with them.
 // Called through a getRequest in fillAttendanceTableHelper.
 function fillAttendance(_, attendance) {
@@ -891,9 +914,9 @@ function fillAttendance(_, attendance) {
     }
 }
 
+// AS
 // Inserts a row into the attendance table with name, timestamp, checkboxes, and delete button.
 // The name links to a student profile.
-//Should be updated
 function fillRowAttendance(table, columns, attendeeEntry) {
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
@@ -917,6 +940,7 @@ function fillRowAttendance(table, columns, attendeeEntry) {
     row.insertCell(-1).innerHTML = deleteButton;
 }
 
+// AS
 // Helper function for fillRowAttendance.
 // Returns a checkbox to be added to the row with the correct status (checked or unchecked).
 function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
@@ -934,8 +958,8 @@ function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
     return box;
 }
 
+// AS
 // Toggles whether a student has done the specified activity (when checkbox becomes checked/unchecked).
-//this should be fine/updated
 function selectActivity(name, column, date) {
     console.log("selecting activity");
     var xmlhttp = new XMLHttpRequest();
@@ -944,12 +968,14 @@ function selectActivity(name, column, date) {
     xmlhttp.send("name=" + name + "&column=" + column + "&date=" + date);
 }
 
+// AS
 // Refreshes current attendance table.
 function refreshAttendanceTable() {
     var date = document.getElementById("storeDate").innerHTML;
     displayAttendanceTable(date);
 }
 
+// AS
 // Shows attendance table at specified date table_date.
 function displayAttendanceTable(table_date) {
     document.getElementById("storeDate").innerHTML = table_date;
@@ -967,6 +993,7 @@ function displayAttendanceTable(table_date) {
     return false;
 }
 
+// AS
 // Retrieves data on attendance tables to display using createListofAttendanceDates.
 function returnAttendance() {
     var popUp = document.getElementById('attendanceDiv');
@@ -978,6 +1005,7 @@ function returnAttendance() {
     getRequest("/getDates", "", createListOfAttendanceDates);
 }
 
+// AS
 // Displays the dates of the ten latest attendance tables as links to those tables.
 function createListOfAttendanceDates(_, dates) {
     var myData = JSON.parse(dates);
@@ -994,6 +1022,7 @@ function createListOfAttendanceDates(_, dates) {
     }
 }
 
+// AO
 // Ultimately displays master table with aggregate data.
 // Retrieves data on attendance columns to display header for master table.
 // Passes data to makeMasterTableHeader, which in turn calls masterAttendanceHelper to populate table.
@@ -1003,8 +1032,8 @@ function displayMasterAttendance() {
     getRequest("/getAttendanceColumns", "", makeMasterTableHeader);
 }
 
+// AO
 // Displays header for master table, retrieves and passes data on masterAttendance to masterAttendanceHelper.
-//should be fine/updated
 function makeMasterTableHeader(_, columns) {
     table = document.getElementById("masterAttendanceTable");
     var row = table.insertRow(-1);
@@ -1023,8 +1052,8 @@ function makeMasterTableHeader(_, columns) {
     getRequest("/getMasterAttendance", "", masterAttendanceHelper);
 }
 
+// AO
 // Populates master attendance table with data.
-// The python has NOT been implemented
 function masterAttendanceHelper(_, masterData) {
    
     var myData = JSON.parse(masterData);
@@ -1039,6 +1068,7 @@ function masterAttendanceHelper(_, masterData) {
     }
 }
 
+// MISC
 // Formats date for humans.
 function makeDateReadable(date) {
     var monthStr = date.substr(5, 7).substr(0, 2);
@@ -1054,6 +1084,7 @@ function makeDateReadable(date) {
     return newDateDashes;
 }
 
+// AS/MISC?
 // Formats date for SQL.
 function makeDateSQL(date) {
     var month = date.substr(0, 2);
@@ -1063,6 +1094,7 @@ function makeDateSQL(date) {
     return newDate;
 }
 
+// MISC
 // Retrieves current date using the Date object.
 function getCurrentDate() {
     var dt = new Date();
@@ -1082,7 +1114,7 @@ function getCurrentDate() {
     return date;
 }
 
-
+// AS
 // Displays the attendance table of the date from date picker (in index.html).
 function getDate() {
     var date = document.getElementById("datePicker").value;
@@ -1091,6 +1123,7 @@ function getDate() {
     return false;
 }
 
+// AS
 // Using createFileHelper and exportToCSV, downloads a csv file of attendance table at specified date in storeDate.
 function createFile() {
     var date = document.getElementById("storeDate").innerHTML;
@@ -1102,6 +1135,7 @@ function createFile() {
 //    exportToCsv("testFile.csv", rows);
 }
 
+// AS
 // Formats attendance table data into a file.
 function createFileHelper(_, attendance) {
     var rows = [];
@@ -1146,12 +1180,14 @@ function createFileHelper(_, attendance) {
 
 }
 
+// AO
 // Downloads all attendance tables by passing master attendance data to downloadAllMasterHelper.
 function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
     return false;
 }
 
+// AO
 // Downloads all attendance tables between 2 specified dates by passing attendance data to downloadAllMasterHelper.
 function downloadMasterDates() {
     var start = document.getElementById("startDate").value;
@@ -1173,6 +1209,7 @@ function downloadMasterDates() {
     return false;
 }
 
+// AO
 // Processes data into a coherent set of rows to be exported into a CSV file.
 function downloadAllMasterHelper(_, data) {
     var rows = [];
@@ -1199,6 +1236,7 @@ function downloadAllMasterHelper(_, data) {
     return false;
 }
 
+// MISC
 // Converts rows into CSV file and downloads that file.
 // Source: https://stackoverflow.com/questions/14964035/how-to-export-javascript-array-info-to-csv-on-client-side
 function exportToCsv(filename, rows) {
@@ -1242,6 +1280,7 @@ function exportToCsv(filename, rows) {
     }
 }
 
+// FF
 // Sends input in feedback textbox to database.
 function sendFeedback() {
     var feedback = document.getElementById("feedback").value;
@@ -1253,11 +1292,13 @@ function sendFeedback() {
     document.getElementById("feedback").value = "";
 }
 
+// AS
 // Fills the code text box under the table in an attendance sheet.
 function fillTextBox() {
     getRequest("/static/cityspan.js", "", textBoxCallback)
 }
 
+// AS
 // Callback for fillTextBox.
 function textBoxCallback(_, js) {
     document.getElementById("codeTextBox").innerHTML = js;

@@ -124,7 +124,7 @@ def addAttendant():
     return newBackEnd.addAttendant(request)
 
 @app.route('/getNumberAttended/<string>')
-def autofill(string):
+def getNumberAttended(string):
     return newBackEnd.getNumberAttended(string)
 
 

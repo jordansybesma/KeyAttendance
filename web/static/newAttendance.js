@@ -970,9 +970,20 @@ function displayAttendanceTable(table_date) {
     return false;
 }
 
+// Retrieves data on attendance tables to display using createListofAttendanceDates.
+function returnAttendance() {
+    var popUp = document.getElementById('attendanceDiv');
+    popUp.style.display = "none";
+    var list = document.getElementById('attendanceListDiv');
+    list.style.display = "block";
+    var list = document.getElementById("attendanceList");
+    list.innerHTML = '';
+    getRequest("/getDates", "", createListOfAttendanceDates);
+}
+
+// Displays the dates of the ten latest attendance tables as links to those tables.
 function createListOfAttendanceDates(_, dates) {
     var myData = JSON.parse(dates);
-    console.log(myData);
     var list = document.getElementById("attendanceList");
     list.innerHTML = "";
     for (i in myData) {
@@ -984,20 +995,6 @@ function createListOfAttendanceDates(_, dates) {
             list.appendChild(entry);
         }
     }
-}
-
-function displayAttendanceList() {
-    getRequest("/getDates", "", createListOfAttendanceDates);
-}
-
-function returnAttendance() {
-    var popUp = document.getElementById('attendanceDiv');
-    popUp.style.display = "none";
-    var list = document.getElementById('attendanceListDiv');
-    list.style.display = "block";
-    var list = document.getElementById("attendanceList");
-    list.innerHTML = '';
-    getRequest("/getDates", "", createListOfAttendanceDates);
 }
 
 function displayMasterAttendance() {

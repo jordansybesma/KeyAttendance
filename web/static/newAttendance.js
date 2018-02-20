@@ -997,11 +997,16 @@ function createListOfAttendanceDates(_, dates) {
     }
 }
 
+// Ultimately displays master table with aggregate data.
+// Retrieves data on attendance columns to display header for master table.
+// Passes data to makeMasterTableHeader, which in turn calls masterAttendanceHelper to populate table.
 function displayMasterAttendance() {
     var table = document.getElementById("masterAttendanceTable");
     table.innerHTML = "";
     getRequest("/getAttendanceColumns", "", makeMasterTableHeader);
 }
+
+// Displays header for master table, retrieves and passes data on masterAttendance to masterAttendanceHelper.
 //should be fine/updated
 function makeMasterTableHeader(_, columns) {
     table = document.getElementById("masterAttendanceTable");
@@ -1011,155 +1016,33 @@ function makeMasterTableHeader(_, columns) {
     row.insertCell(-1).innerHTML = "Attendees";
     var myData = JSON.parse(columns);
     for (i in myData) {
-        if (myData[i][1] == true) {
-            var newHeader = makeHeaderReadable(myData[i][2]);
+        var colIsShowing = myData[i][1];
+        var colName = myData[i][2];
+        if (colIsShowing) {
+            var newHeader = makeHeaderReadable(colName);
             row.insertCell(-1).innerHTML = newHeader;
         }
     }
     getRequest("/getMasterAttendance", "", masterAttendanceHelper);
 }
 
-//The python has NOT been implemented
+// Populates master attendance table with data.
+// The python has NOT been implemented
 function masterAttendanceHelper(_, masterData) {
    
     var myData = JSON.parse(masterData);
-    console.log(masterData);
-    columns = document.getElementById("columnData").innerHTML;
+    var columns = document.getElementById("columnData").innerHTML;
     columnData = JSON.parse(columns);
-    console.log(columnData);
 
     for (i in myData) {
         var row = table.insertRow(-1);
         for (j in myData[i]) {
             row.insertCell(-1).innerHTML = myData[i][j];
-        }
-        
+        }   
     }
-
-    //masterDataPlot(xaxis, yaxis);
-    //activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxisLeadership, yaxisExersize, yaxisMentalHealth, yaxisVolunteering, yaxisOneOnOne);
-
-
 }
 
-function activitiesPlot(xaxis, yaxisArt, yaxisMadeFood, yaxisRecievedFood, yaxisLeadership, yaxisExersize, yaxisMentalHealth, yaxisVolunteering, yaxisOneOnOne) {
-    var maxList = [];
-    maxList.push(Math.max.apply(Math, yaxisArt));
-    maxList.push(Math.max.apply(Math, yaxisMadeFood));
-    maxList.push(Math.max.apply(Math, yaxisRecievedFood));
-    maxList.push(Math.max.apply(Math, yaxisLeadership));
-    maxList.push(Math.max.apply(Math, yaxisExersize));
-    maxList.push(Math.max.apply(Math, yaxisMentalHealth));
-    maxList.push(Math.max.apply(Math, yaxisVolunteering));
-    maxList.push(Math.max.apply(Math, yaxisOneOnOne));
-    var max = Math.max.apply(Math, maxList);
-    //var min = Math.min.apply(Math, yaxis);
-    //var change = Math.ceil((max - min) / xaxis.lenth);
-    var change = 10;
 
-    var trace1 = {
-        x: xaxis,
-        y: yaxisArt,
-        mode: 'lines',
-        name: "Art",
-        line: {
-            width: 3
-        }
-    };
-    var trace2 = {
-        x: xaxis,
-        y: yaxisMadeFood,
-        mode: 'lines',
-        name: "Made Food",
-        line: {
-            width: 3
-        }
-    };
-    var trace3 = {
-        x: xaxis,
-        y: yaxisRecievedFood,
-        mode: 'lines',
-        name: "Received Food",
-        line: {
-            width: 3
-        }
-    };
-    var trace4 = {
-        x: xaxis,
-        y: yaxisLeadership,
-        mode: 'lines',
-        name: "Leadership",
-        line: {
-            width: 3
-        }
-    };
-    var trace5 = {
-        x: xaxis,
-        y: yaxisExersize,
-        mode: 'lines',
-        name: "Exersize",
-        line: {
-            width: 3
-        }
-    };
-    var trace6 = {
-        x: xaxis,
-        y: yaxisMentalHealth,
-        mode: 'lines',
-        name: "Mental Health",
-        line: {
-            width: 3
-        }
-    };
-    var trace7 = {
-        x: xaxis,
-        y: yaxisVolunteering,
-        mode: 'lines',
-        name: "Volunteering",
-        line: {
-            width: 3
-        }
-    };
-    var trace8 = {
-        x: xaxis,
-        y: yaxisOneOnOne,
-        mode: 'lines',
-        name: "OneOnOne",
-        line: {
-            width: 3
-        }
-    };
-    var data = [trace1, trace2, trace3, trace4, trace5, trace6, trace7, trace8];
-
-    var layout = {
-        autosize: false,
-        width: 500,
-        height: 500,
-        yaxis: {
-            autotick: false,
-            ticks: 'outside',
-            tick0: 0,
-            dtick: change,
-            ticklen: 1,
-            tickwidth: 1,
-            tickcolor: '#000',
-            autorange: false,
-            range: [0, max]
-        },
-        margin: {
-            l: 50,
-            r: 50,
-            b: 100,
-            t: 100,
-            pad: 4
-        },
-        title: 'Activity Participation',
-        layout_autorange_after: false
-
-    };
-
-    Plotly.newPlot('activityGraph', data, layout);
-}
 
 function masterDataPlot(xaxis, yaxis) {
     var max = Math.max.apply(Math, yaxis);

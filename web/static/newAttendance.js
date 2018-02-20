@@ -7,7 +7,9 @@ function getTimesAttended() {
     endDate = document.getElementById("endDateReport").innerHTML;
     num = document.getElementById("numTimesAttended").innerHTML;
     addOn = startDate + "" + endDate + "" + num
-    getRequest("/getNumberAttended/" + addOn, "", getTimesAttendedHelper)
+    console.log("got to times attended");
+    console.log(addOn);
+    getRequest("/getNumberAttended/" + addOn, "", getTimesAttendedHelper);
 
 }
 
@@ -30,7 +32,7 @@ function giveReport() {
 
 }
 function reportHelper(_, columns) {
-    var studColumns = JSON.parse(data);
+    var studColumns = JSON.parse(columns);
     var columnData = document.getElementById("columns").innerHTML;
     var activities = JSON.parse(columnData);
 }

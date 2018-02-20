@@ -829,6 +829,7 @@ def frequentPeers(name):
         frequentPeer = getStudentByID(closeAppearancesList[i][0])
         frequentPeersList.append(frequentPeer)
 
+    print("Hello, RUSS!")
     return str(frequentPeersList)
 
 def studentProfile(string):

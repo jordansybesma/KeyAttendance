@@ -771,16 +771,18 @@ def deleteAttendant(request):
     name = request.form.get("name")
     date = request.form.get("date")
     
-    queryVisits = "SELECT number_visits FROM students WHERE id = " + studentID + ";"
-    numVisits = json.loads(json.dumps(executeSingleQuery(queryVisits, fetch=True)))[0][0]
-    newNum = numVisits - 1
-
+    
     nameList = name.split()
     first = nameList[0]
     last = nameList[1]
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
 
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
+    
+    queryVisits = "SELECT number_visits FROM students WHERE id = " + studentID + ";"
+    numVisits = json.loads(json.dumps(executeSingleQuery(queryVisits, fetch=True)))[0][0]
+    newNum = numVisits - 1
+
     queryDelete = "DELETE FROM dailyattendance WHERE student_id = " + str(studentID) + " AND date = \'" + date + "\';"
     queryUpdate = "UPDATE students SET number_visits = " + newNum + " WHERE id = " + str(studentID) + " ;"
     queryDelete = queryDelete + " " + queryUpdate

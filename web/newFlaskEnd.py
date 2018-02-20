@@ -165,7 +165,7 @@ def checkAlert():
     return newBackEnd.checkAlert(request)
 
 @app.route('/getPhoto/<string>')
-def getPhoto():
+def getPhoto(string):
     return newBackEnd.getPhoto(string)
 
 

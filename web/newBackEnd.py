@@ -48,7 +48,7 @@ def getNumberAttended(string):
     prev = transformDate(before)'''
     
     #Here we could grab actual student names - maybe thats what we want to do...
-    querySelect = "SELECT DISTINCT(student_id) FROM dailyAttendance WHERE date <= \'" + endDate + "\' AND date > \'" + startDate + "\' AND number_attendance = " + str(numAtten) + ";"
+    querySelect = "SELECT DISTINCT(student_id) FROM dailyAttendance WHERE date <= \'" + endDate + "\' AND date >= \'" + startDate + "\' AND visit_number = " + str(numAtten) + ";"
     
     return json.dumps(executeSingleQuery(querySelect, fetch = True), indent=4, sort_keys=True, default=str)
     

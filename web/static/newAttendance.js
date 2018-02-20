@@ -2,6 +2,14 @@ var urlBase = window.location.origin;
 // localSite = "http://127.0.0.1:5000";
 // scottSite = "https://attendance.unionofyouth.org";
 
+
+
+function giveReport() {
+
+
+}
+
+
 // Adds a new attendee to current sheet
 // Called when a new name is added to the attendance sheet
 //Good for updated python

@@ -26,6 +26,11 @@ def main():
 def foo():
     return newBackEnd.foo(request)
     
+    
+@app.route('/getReports')
+def getReports():
+    return newBackEnd.getReports()
+        
 @app.route('/createAttendanceData/', methods = ["POST"])
 def createAttendanceData():
     return newBackEnd.createAttendanceData(request)

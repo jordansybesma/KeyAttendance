@@ -25,12 +25,12 @@ def main():
 @app.route('/addText/', methods=['POST'])
 def foo():
     return newBackEnd.foo(request)
-    
-    
+
+
 @app.route('/getReports')
 def getReports():
     return newBackEnd.getReports()
-        
+
 @app.route('/createAttendanceData/', methods = ["POST"])
 def createAttendanceData():
     return newBackEnd.createAttendanceData(request)
@@ -98,7 +98,7 @@ def updateAttendanceColumn():
 @app.route('/getAttendanceColumns')
 def getAttendanceColumns():
     return newBackEnd.getAttendanceColumns()
-    
+
 @app.route('/moveAttendanceColumnUp', methods = ["POST"])
 def moveAttendanceColumnUp():
     return newBackEnd.moveAttendanceColumnUp(request)
@@ -158,6 +158,11 @@ def addAlert():
 @app.route('/checkAlert/', methods = ["POST"])
 def checkAlert():
     return newBackEnd.checkAlert(request)
+
+@app.route('/getPhoto/<string>')
+def getPhoto():
+    return newBackEnd.getPhoto(string)
+
 
 if __name__ == "__main__":
    # print("Site booting up...")

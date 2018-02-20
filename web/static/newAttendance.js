@@ -541,15 +541,12 @@ function demographicsHelper(_, columns) {
         var isShowing = columnInfo[i][1];
         if (isShowing) {
             var colName = columnInfo[i][3];
-            var didActivity = studentInfo[0][parseInt(i) + 1];
-            var colDataType = columnInfo[i][4];
+            var info = studentInfo[0][parseInt(i) + 1];
+            var type = columnInfo[i][4];
 
-            displayStudentInfo(colName, didActivity, colDataType);
-            
-//            displayStudentInfo(columnInfo[i][3], studentInfo[0][parseInt(i) + 1], columnInfo[i][4]);
+            displayStudentInfo(colName, info, type);            
         }
     }
-
     getRequest("/getStudentAttendance/" + keywordElement + "/", "", showStudentAttendance);
 }
 
@@ -652,25 +649,25 @@ function updateProfile(name, col, colid, type) {
 
 // Displays student info such as age and gender.
 //should be updated
-function displayStudentInfo(colName, didActivity, colDataType) {
+function displayStudentInfo(colName, info, type) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
     var displayName = makeHeaderReadable(colName);
-    console.log(colDataType);
-    if (didActivity == null) {
+    console.log(type);
+    if (info == null) {
         var text = document.createTextNode(displayName + ": ");
-    } else if (colDataType == "varchar") {
+    } else if (type == "varchar") {
         console.log("var");
-        var text = document.createTextNode(displayName + ": " + didActivity);
-    } else if (colDataType == "int") {
+        var text = document.createTextNode(displayName + ": " + info);
+    } else if (type == "int") {
         console.log("int");
-        var text = document.createTextNode(displayName + ": " + didActivity.toString());
-    } else if (colDataType == "date") {
+        var text = document.createTextNode(displayName + ": " + info.toString());
+    } else if (type == "date") {
         console.log("date");
-        var text = document.createTextNode(displayName + ": " + makeDateReadable(didActivity));
-    } else if (colDataType == "boolean") {
+        var text = document.createTextNode(displayName + ": " + makeDateReadable(info));
+    } else if (type == "boolean") {
         console.log("bool");
-        if (didActivity) {
+        if (info) {
             var text = document.createTextNode(displayName + ": yes");
         } else {
             var text = document.createTextNode(displayName + ": no");
@@ -1042,6 +1039,7 @@ function masterAttendanceHelper(_, masterData) {
     }
 }
 
+// 
 function makeDateReadable(date) {
     var monthStr = date.substr(5, 7).substr(0, 2);
     var monthInt = parseInt(monthStr);

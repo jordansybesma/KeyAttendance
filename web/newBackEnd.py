@@ -800,10 +800,13 @@ def frequentPeers(name):
             if curResult[i] not in peersDict[key].keys():
                 peersDict[key][curResult[i]] = []
             timeList = curResult[i + 1].replace("\"", "").replace("\'","").split(":")
-            timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
-            print(timeList)
+            try:
+                timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
+                peersDict[key][curResult[i]] = timeNum
+                print(timeList)
+            except ValueError:
+                print("Some data wasn't there. Sad. Very sad.")
             # peersDict[key][curResult[i]].append(curResult[i + 1])
-            peersDict[key][curResult[i]] = timeNum
 
     closeAppearancesDict = {}
     testString = ""

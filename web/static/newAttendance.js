@@ -1042,32 +1042,6 @@ function masterAttendanceHelper(_, masterData) {
     }
 }
 
-
-function checkLogin() {
-    var user = document.getElementById("username").value;
-    var pass = document.getElementById("password").value;
-    getRequest("/getLogin/" + user + " " + pass, "", checkLoginHelper);
-
-}
-
-function checkLoginHelper(_, loginData) {
-    var myData = JSON.parse(loginData);
-    if (myData.length > 0) {
-        var hide = document.getElementById('login');
-        hide.style.display = "none";
-        var show = document.getElementById('dontShow');
-        show.style.display = "block";
-    } else {
-        alert("Incorrect Login");
-    }
-}
-function showLogin() {
-    var hide = document.getElementById('login');
-    hide.style.display = "block";
-    var show = document.getElementById('dontShow');
-    show.style.display = "none";
-}
-
 function makeDateReadable(date) {
     var monthStr = date.substr(5, 7).substr(0, 2);
     var monthInt = parseInt(monthStr);

@@ -123,6 +123,11 @@ def selectActivity():
 def addAttendant():
     return newBackEnd.addAttendant(request)
 
+@app.route('/getNumberAttended/<string>')
+def autofill(string):
+    return newBackEnd.getNumberAttended(string)
+
+
 @app.route('/autofill/<partialString>')
 def autofill(partialString):
     return newBackEnd.autofill(partialString)

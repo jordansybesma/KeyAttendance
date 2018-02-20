@@ -177,6 +177,23 @@
         <div id="Reports" class="tabcontent">
             <h2>Reports</h2>
 
+            <div id="downloadStudentReport">
+                <h3>Select a start date, end date, and number of times to attend</h3>
+                <h5>For instance if you select Jan 1, Jan 5, and 10</h5>
+                <h5>You will get back the names of students who attended for the 10th time between Jan 1 and Jan 5</h5>
+
+                
+                <form onsubmit="return false;">
+                    Start Date <br>
+                    <input type="date" id="startDateReport" /><br>
+                    End Date <br>
+                    <input type="date" id="endDateReport" /><br>
+                    Number of Times Attended <br>
+                    <input type="number" id="numTimesAttended" /><br>
+                    <input type="submit" onclick="getTimesAttended()" />
+                </form>
+            </div>
+
         </div>
 
     </body>

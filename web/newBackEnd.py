@@ -36,7 +36,11 @@ def getReports():
 
 #assuming dailyAttendance will have new column number_attendances
 # return the ids of students who attended the numAttenth time in the last numDays
-def getNumberAttended(numAtten, startDay, endDate):
+def getNumberAttended(string):
+    valueList = string.split()
+    startDate = valueList[0]
+    endDate = valueList[1]
+    numAtten = valueList[2]
 
     '''now = datetime.datetime.now()
     today = transformDate(now)
@@ -44,7 +48,7 @@ def getNumberAttended(numAtten, startDay, endDate):
     prev = transformDate(before)'''
 
     #Here we could grab actual student names - maybe thats what we want to do...
-    querySelect = "SELECT DISTINCT(student_id) FROM dailyAttendance WHERE date <= \'" + endDate + "\' AND date > \'" + startDay + "\' AND number_attendance = " + str(numAtten) + ";"
+    querySelect = "SELECT DISTINCT(student_id) FROM dailyAttendance WHERE date <= \'" + endDate + "\' AND date > \'" + startDate + "\' AND number_attendance = " + str(numAtten) + ";"
 
     return json.dumps(executeSingleQuery(querySelect, fetch = True), indent=4, sort_keys=True, default=str)
 

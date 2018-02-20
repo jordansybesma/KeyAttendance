@@ -2,13 +2,43 @@ var urlBase = window.location.origin;
 // localSite = "http://127.0.0.1:5000";
 // scottSite = "https://attendance.unionofyouth.org";
 
-
-
-function giveReport() {
-
+function getTimesAttended() {
+    startDate = document.getElementById("startDateReport").value;
+    endDate = document.getElementById("endDateReport").value;
+    num = document.getElementById("numTimesAttended").value;
+    console.log(startDate);
+    console.log(endDate);
+    console.log(num);
+    addOn = startDate + " " + endDate + " " + num
+    console.log("got to times attended");
+    console.log(addOn);
+    getRequest("/getNumberAttended/" + addOn, "", getTimesAttendedHelper);
 
 }
 
+function getTimesAttendedHelper(_, students) {
+    var students = JSON.parse(students);
+    rows = [];
+    for (i in students) {
+        rows.push(students[i]);
+    }
+    filename = "whateverForNow";
+
+
+    exportToCsv(filename, rows);
+}
+
+function giveReport() {
+    
+
+    getRequest("/getStudentColumns", "", reportHelper);
+
+}
+function reportHelper(_, columns) {
+    var studColumns = JSON.parse(columns);
+    var columnData = document.getElementById("columns").innerHTML;
+    var activities = JSON.parse(columnData);
+}
 
 // AS
 // Adds a new attendee to current sheet

@@ -3,9 +3,12 @@ var urlBase = window.location.origin;
 // scottSite = "https://attendance.unionofyouth.org";
 
 function getTimesAttended() {
-    startDate = document.getElementById("startDateReport").innerHTML;
-    endDate = document.getElementById("endDateReport").innerHTML;
-    num = document.getElementById("numTimesAttended").innerHTML;
+    startDate = document.getElementById("startDateReport").valueOf;
+    endDate = document.getElementById("endDateReport").valueOf;
+    num = document.getElementById("numTimesAttended").valueOf.toString;
+    console.log(startDate);
+    console.log(endDate);
+    console.log(num);
     addOn = startDate + "" + endDate + "" + num
     console.log("got to times attended");
     console.log(addOn);

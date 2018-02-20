@@ -29,11 +29,11 @@ def executeSingleQuery(query, params = [], fetch = False):
 
 def getReports():
     return uniqueAttendance()
-    
-    
-    
-    
-    
+
+
+
+
+
 #assuming dailyAttendance will have new column number_attendances
 # return the ids of students who attended the numAttenth time in the last numDays
 def getNumberAttended(string):
@@ -46,12 +46,14 @@ def getNumberAttended(string):
     today = transformDate(now)
     before = datetime.datetime.now() - datetime.timedelta(days=numDays)
     prev = transformDate(before)'''
-    
+
     #Here we could grab actual student names - maybe thats what we want to do...
+
     querySelect = "SELECT DISTINCT(student_id) FROM dailyAttendance WHERE date <= \'" + endDate + "\' AND date >= \'" + startDate + "\' AND visit_number = " + str(numAtten) + ";"
     
+
     return json.dumps(executeSingleQuery(querySelect, fetch = True), indent=4, sort_keys=True, default=str)
-    
+
 
 #Could be combined with unique table probably...
 def getFirstAttendance():
@@ -64,34 +66,34 @@ def getFirstAttendance():
     month = transformDate(lastMonth)
     lastYear = datetime.datetime.now() - datetime.timedelta(days=366)
     year = transformDate(lastYear)
-    
-    
-    
+
+
+
     dates = [week, month, year]
-    
+
     queryWeek = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE first_attendance <= \'" + today + "\' AND first_attendance > \'" + week + "\'"
     queryMonth = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE first_attendance <= \'" + today + "\' AND first_attendance > \'" + month + "\'"
     queryYear = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE first_attendance <= \'" + today + "\' AND first_attendance > \'" + year + "\'"
-    
+
 
     tableCreate = "CREATE TABLE firstAtten (name varchar(100), week int, month int, year int);"
     addAttendees = "INSERT INTO unique VALUES (\'attendees\', (" + queryWeek + "), (" + queryMonth + "), (" + queryYear + "));"
     queryTotal = tableCreate + " " + addAttendees + " "
-    
-    
+
+
     executeSingleQuery(queryTotal, [])
-        
+
     querySelect = "SELECT * FROM firstAtten;"
-    
+
     returnVal = json.dumps(executeSingleQuery(querySelect, fetch = True), indent=4, sort_keys=True, default=str)
-    
+
     queryDrop = "DROP TABLE firstAtten;"
     executeSingleQuery(queryDrop, [])
-    
+
     return returnVal
-        
+
 def uniqueAttendance():
-    
+
     #first - lets get unique students for the last week, month, 6 months, year
     now = datetime.datetime.now() - datetime.timedelta(days=1)
     today = transformDate(now)
@@ -101,22 +103,22 @@ def uniqueAttendance():
     month = transformDate(lastMonth)
     lastYear = datetime.datetime.now() - datetime.timedelta(days=366)
     year = transformDate(lastYear)
-    
+
     queryColumns = "SELECT activity_id, name FROM activities WHERE is_showing = 'true' ORDER BY ordering;"
     columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
     columns =json.loads(columnResults)
-    
+
     dates = [week, month, year]
-    
+
     queryWeek = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE date <= \'" + today + "\' AND date > \'" + week + "\'"
     queryMonth = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE date <= \'" + today + "\' AND date > \'" + month + "\'"
     queryYear = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE date <= \'" + today + "\' AND date > \'" + year + "\'"
-    
+
 
     tableCreate = "CREATE TABLE unique (name varchar(100), week int, month int, year int);"
     addAttendees = "INSERT INTO unique VALUES (\'attendees\', (" + queryWeek + "), (" + queryMonth + "), (" + queryYear + "));"
     queryTotal = tableCreate + " " + addAttendees + " "
-    
+
     for i in range(len(columns)):
         colName = columns[i][1]
         colID = columns[i][0]
@@ -127,29 +129,29 @@ def uniqueAttendance():
             queryCount = queryCount + " AND activity_id = " + str(colID) + ""
             queryInsert = queryInsert + ", (" + queryCount + ")"
         queryInsert = queryInsert + ");"
-        queryTotal = queryTotal + " " + queryInsert + " " 
-    
+        queryTotal = queryTotal + " " + queryInsert + " "
+
     executeSingleQuery(queryTotal, [])
-        
+
     querySelect = "SELECT * FROM unique;"
-    
+
     returnVal = json.dumps(executeSingleQuery(querySelect, fetch = True), indent=4, sort_keys=True, default=str)
-    
+
     queryDrop = "DROP TABLE unique;"
     executeSingleQuery(queryDrop, [])
     return returnVal
-            
-    
-    
-    
-    
+
+
+
+
+
 def transformDate(date):
     newDate = ""
     newDate = newDate + str(date.year)
     newDate = newDate + "-" + str(date.month)
     newDate = newDate + "-" + str(date.day)
     return newDate
-    
+
 
 # Gets student attendance data (date + time)
 def getStudentAttendance(student):
@@ -837,6 +839,16 @@ def selectActivity(request):
     executeSingleQuery(queryUpdate)
 
     return "done"
+
+##Gets the path to a student's photo if one exists. Otherwise, gets the path to a default 'not found' image
+def getPhoto(id):
+    query = "SELECT * FROM studentinfo WHERE student_id = " + str(id) +  " AND info_id = 5;"
+    result = executeSingleQuery(query, fetch=True)
+    if (len(result) < 1):
+        return "/static/resources/images/No-image-found.jpg"
+    else:
+        return result[0][3]
+
 
 
 

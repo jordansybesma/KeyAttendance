@@ -29,7 +29,7 @@ function getTimesAttendedHelper(_, students) {
 }
 
 function giveReport() {
-    
+
 
     getRequest("/getStudentColumns", "", reportHelper);
 
@@ -800,8 +800,15 @@ function showFrequentPeers(_, data) {
 function getStudentPicture(_, data) {
   console.log("arrived at get student picture")
   console.log(data);
+  // var photoSpace = document.getElementById("studentPhoto");
+  // photoSpace.src = "/static/resources/images/No-image-found.jpg";
+  getRequest("/getPhoto/" + data, "", placeStudentPicture);
+}
+
+function placeStudentPicture(_, data) {
+  console.log("arrived at placeStudentPicture")
   var photoSpace = document.getElementById("studentPhoto");
-  photoSpace.src = "/static/resources/images/No-image-found.jpg";
+  photoSpace.src = data;
 }
 
 // SP

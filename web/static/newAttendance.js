@@ -1146,11 +1146,13 @@ function createFileHelper(_, attendance) {
 
 }
 
-// EVERYTHING BELOW THIS NOT UPDATED YET BLEEEEHHHHH
+// Downloads all attendance tables by passing master attendance data to downloadAllMasterHelper.
 function downloadAllMaster() {
     getRequest("/getMasterAttendance", "", downloadAllMasterHelper);
     return false;
 }
+
+// Downloads all attendance tables between 2 specified dates by passing attendance data to downloadAllMasterHelper.
 function downloadMasterDates() {
     var start = document.getElementById("startDate").value;
     var end = document.getElementById("endDate").value;
@@ -1171,8 +1173,7 @@ function downloadMasterDates() {
     return false;
 }
 
-
-
+// Processes data into a coherent set of rows to be exported into a CSV file.
 function downloadAllMasterHelper(_, data) {
     var rows = [];
     columns = JSON.parse(document.getElementById("columns").innerHTML);
@@ -1241,6 +1242,7 @@ function exportToCsv(filename, rows) {
     }
 }
 
+// Sends input in feedback textbox to database.
 function sendFeedback() {
     var feedback = document.getElementById("feedback").value;
     var date = getCurrentDate();
@@ -1249,22 +1251,6 @@ function sendFeedback() {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("date=" + date + "&feedback=" + feedback);
     document.getElementById("feedback").value = "";
-}
-
-function login() {
-    var user = document.getElementById("username").value;
-    var pass = document.getElementById("password").value;
-    getRequest("/getLogin/" + user + " " + pass, "", loginHelper);
-}
-
-function loginHelper(_, loginData) {
-    var myData = JSON.parse(loginData);
-    if (myData.length > 0) {
-        var url = '/main/';
-        window.location = url;
-    } else {
-        alert("Incorrect Login");
-    }
 }
 
 // fills the code text box under the table in an attendance sheet

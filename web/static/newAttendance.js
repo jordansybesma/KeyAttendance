@@ -29,7 +29,7 @@ function getTimesAttendedHelper(_, students) {
 }
 
 function giveReport() {
-    
+
 
     getRequest("/getStudentColumns", "", reportHelper);
 
@@ -802,7 +802,7 @@ function getStudentPicture(_, data) {
   console.log(data);
   // var photoSpace = document.getElementById("studentPhoto");
   // photoSpace.src = "/static/resources/images/No-image-found.jpg";
-  getRequest("/getPhot/" + data, "", placeStudentPicture);
+  getRequest("/getPhoto/" + data, "", placeStudentPicture);
 }
 
 function placeStudentPicture(_, data) {

@@ -363,11 +363,11 @@ def alterStudentColumn(request):
 
 #This method might not be neccessary anymore
 def deleteStudentColumn(request):
-    '''name = request.form.get("name")
+    name = request.form.get("name")
     query = "DELETE FROM studentColumns WHERE name = '" + name + "';"
     query2 = "ALTER TABLE testStudents DROP COLUMN " + name + ";"
     executeSingleQuery(query, [])
-    executeSingleQuery(query2, [])'''
+    executeSingleQuery(query2, [])
     name = request.form.get("name")
     query = "UPDATE studentColumns SET is_showing  = 'false' WHERE name = '" + name + "';"
     query2 = "UPDATE studentColumns SET quick_add  = 'false' WHERE name = '" + name + "';"
@@ -392,45 +392,45 @@ def sendFeedback(request):
 
 
 
-"""
+
 Theoretically not necessary anymore
-def getAttendance(date):
-    queryColumns = "SELECT name FROM attendanceColumns ORDER BY ordering;"
-    cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
-    colList = json.loads(cols) # this is strange... anyone have any idea why?
-    query = "SELECT firstName, lastName, time, " + colList[0][0];
-    for i in range(1, len(colList)):
-        query = query + ", " + colList[i][0]
-    query = query + " FROM dailyAttendance WHERE date= '" + date + "' ORDER BY time ASC;"
+# def getAttendance(date):
+#     queryColumns = "SELECT name FROM attendanceColumns ORDER BY ordering;"
+#     cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)
+#     colList = json.loads(cols) # this is strange... anyone have any idea why?
+#     query = "SELECT firstName, lastName, time, " + colList[0][0];
+#     for i in range(1, len(colList)):
+#         query = query + ", " + colList[i][0]
+#     query = query + " FROM dailyAttendance WHERE date= '" + date + "' ORDER BY time ASC;"
+#
+#     queryResult = executeSingleQuery(query, fetch = True)
+#     result = json.dumps(queryResult, indent=4, sort_keys=True, default=str)
+#     return result
 
-    queryResult = executeSingleQuery(query, fetch = True)
-    result = json.dumps(queryResult, indent=4, sort_keys=True, default=str)
-    return result
 
-"""
 
-"""
-Not currently in use I think
-def getLogin(login):
-    nameList = login.split()
-    user = nameList[0]
-    password = nameList[1]
-    query = "SELECT * FROM login WHERE username = '" + user + "' AND password = '" + password + "';"
-    return json.dumps(executeSingleQuery(query,
-        fetch = True), indent=4, sort_keys=True, default=str)
-"""
+
+# Not currently in use I think
+# def getLogin(login):
+#     nameList = login.split()
+#     user = nameList[0]
+#     password = nameList[1]
+#     query = "SELECT * FROM login WHERE username = '" + user + "' AND password = '" + password + "';"
+#     return json.dumps(executeSingleQuery(query,
+#         fetch = True), indent=4, sort_keys=True, default=str)
+
 
 # NEEDS to either be taken out, or retrieve id and call other method
-'''def getStudentAttendance(student):
-    nameList = student.split()
-    first = nameList[0]
-    last = nameList[1]
-    queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
-    studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
+# def getStudentAttendance(student):
+#     nameList = student.split()
+#     first = nameList[0]
+#     last = nameList[1]
+#     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
+#     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
+#
+#
+#     return getStudentInfo(student)
 
-
-    return getStudentInfo(student)
-'''
 
 ##NOT EVEN CLOSE TO DONE NEEDS TO BE IMPLEMENTED
 def getMasterAttendance():
@@ -579,13 +579,13 @@ def addAttendanceColumn(request):
 #Should no longer be neccessary
 def deleteAttendanceColumn(request):
     name = request.form.get("name")
-    '''query = "DELETE FROM attendanceColumns WHERE name = '" + name + "';"
+    query = "DELETE FROM attendanceColumns WHERE name = '" + name + "';"
     queryAttendance = "ALTER TABLE dailyAttendance DROP COLUMN " + name + ";"
     queryMaster = "ALTER TABLE masterAttendance DROP COLUMN " + name + ";"
 
     executeSingleQuery(query, [])
     executeSingleQuery(queryAttendance, [])
-    executeSingleQuery(queryMaster, [])'''
+    executeSingleQuery(queryMaster, [])
     query = "UPDATE activities SET is_showing  = 'false' WHERE name = '" + name + "';"
     executeSingleQuery(query, [])
     return "done"
@@ -618,21 +618,21 @@ def getAttendanceColumns():
 
 
 
-"""
-Should no longer be neccessary
-def decreaseActivityCount(column, date, increase):
-    queryMaster = "SELECT "+ column + " FROM masterAttendance WHERE date = '" + date + "';"
-    result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
-    newResult =json.loads(result)
-    numAttend = newResult[0][0]
-    if increase:
-        numAttend += 1
-    else:
-        numAttend -= 1
 
-    alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(numAttend) + "' WHERE date = '" + date + "';"
-    executeSingleQuery(alterQuery, [])
-"""
+# Should no longer be neccessary
+# def decreaseActivityCount(column, date, increase):
+#     queryMaster = "SELECT "+ column + " FROM masterAttendance WHERE date = '" + date + "';"
+#     result = json.dumps(executeSingleQuery(queryMaster,fetch = True))
+#     newResult =json.loads(result)
+#     numAttend = newResult[0][0]
+#     if increase:
+#         numAttend += 1
+#     else:
+#         numAttend -= 1
+#
+#     alterQuery = "UPDATE masterAttendance SET " + column + " = '" + str(numAttend) + "' WHERE date = '" + date + "';"
+#     executeSingleQuery(alterQuery, [])
+
 
 #Delete someone from attendance sheet
 #Input: name + date
@@ -652,28 +652,28 @@ def deleteAttendant(request):
     return "done"
 
 
-"""
-I don't think this is used...
-def getActiveCols():
-    query = "SELECT name FROM attendanceColumns ORDER BY isshowing DESC;"
-    colsRaw = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
-    cols = json.loads(colsRaw)
-    activeCols = []
-    for i in range(len(cols)):
-        if cols[i][0]:
-            activeCols.append(cols[i][0])
-    return activeCols
-"""
-"""
-Don't think this is used either...
-def getColsStr(cols):
-    colsStr = ""
-    for i in range(len(cols)-1):
-        colsStr += cols[i] + ", "
-    colsStr += cols[len(cols)-1]
-    return colsStr
 
-"""
+# I don't think this is used...
+# def getActiveCols():
+#     query = "SELECT name FROM attendanceColumns ORDER BY isshowing DESC;"
+#     colsRaw = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+#     cols = json.loads(colsRaw)
+#     activeCols = []
+#     for i in range(len(cols)):
+#         if cols[i][0]:
+#             activeCols.append(cols[i][0])
+#     return activeCols
+
+
+# Don't think this is used either...
+# def getColsStr(cols):
+#     colsStr = ""
+#     for i in range(len(cols)-1):
+#         colsStr += cols[i] + ", "
+#     colsStr += cols[len(cols)-1]
+#     return colsStr
+
+
 
 #Get attendance dates
 #Input: none
@@ -745,9 +745,9 @@ def addAttendant(request):
 
 ######################This is where I stopped editing ################
 
-"""
-    Literally just takes a string. Compares both first and last name.
-"""
+
+    # Literally just takes a string. Compares both first and last name.
+
 def autofill(partialString):
     if(partialString == ""):
         return json.dumps([])

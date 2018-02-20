@@ -9,7 +9,7 @@ function getTimesAttended() {
     console.log(startDate);
     console.log(endDate);
     console.log(num);
-    addOn = startDate + "" + endDate + "" + num
+    addOn = startDate + " " + endDate + " " + num
     console.log("got to times attended");
     console.log(addOn);
     getRequest("/getNumberAttended/" + addOn, "", getTimesAttendedHelper);

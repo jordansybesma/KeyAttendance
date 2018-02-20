@@ -1043,54 +1043,6 @@ function masterAttendanceHelper(_, masterData) {
 }
 
 
-
-function masterDataPlot(xaxis, yaxis) {
-    var max = Math.max.apply(Math, yaxis);
-    var min = Math.min.apply(Math, yaxis);
-    var change = Math.ceil((max - min) / xaxis.lenth);
-    change = 10;
-
-    var trace1 = {
-        x: xaxis,
-        y: yaxis,
-        mode: 'lines',
-        line: {
-            color: 'rgb(55, 128, 191)',
-            width: 3
-        }
-    };
-    var data = [trace1];
-
-    var layout = {
-        autosize: false,
-        width: 500,
-        height: 500,
-        yaxis: {
-            autotick: false,
-            ticks: 'outside',
-            tick0: 0,
-            dtick: change,
-            ticklen: 1,
-            tickwidth: 1,
-            tickcolor: '#000',
-            autorange: false,
-            range: [0, max]
-        },
-        margin: {
-            l: 50,
-            r: 50,
-            b: 100,
-            t: 100,
-            pad: 4
-        },
-        title: 'Recent Attendance',
-        layout_autorange_after: false
-
-    };
-
-    Plotly.newPlot('masterGraph', data, layout);
-}
-
 function checkLogin() {
     var user = document.getElementById("username").value;
     var pass = document.getElementById("password").value;

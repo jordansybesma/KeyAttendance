@@ -18,11 +18,12 @@ function getTimesAttended() {
 
 function getTimesAttendedHelper(_, students) {
     var students = JSON.parse(students);
+    console.log(students);
     rows = [];
     for (i in students) {
         rows.push(students[i]);
     }
-    filename = "whateverForNow";
+    filename = "whateverForNow.csv";
 
 
     exportToCsv(filename, rows);

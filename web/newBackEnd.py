@@ -393,7 +393,7 @@ def sendFeedback(request):
 
 
 
-Theoretically not necessary anymore
+# Theoretically not necessary anymore
 # def getAttendance(date):
 #     queryColumns = "SELECT name FROM attendanceColumns ORDER BY ordering;"
 #     cols = json.dumps(executeSingleQuery(queryColumns, fetch = True), indent=4, sort_keys=True, default=str)

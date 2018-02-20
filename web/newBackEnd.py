@@ -840,7 +840,7 @@ def selectActivity(request):
 
 ##Gets the path to a student's photo if one exists. Otherwise, gets the path to a default 'not found' image
 def getPhoto(id):
-    query = "SELECT * FROM studentinfo WHERE student_id = " + str(studentID) " AND info_id = 5;"
+    query = "SELECT * FROM studentinfo WHERE student_id = " + str(studentID) +  " AND info_id = 5;"
     result = executeSingleQuery(query, fetch=True)
     if (len(result) < 1):
         return "/static/resources/images/No-image-found.jpg"

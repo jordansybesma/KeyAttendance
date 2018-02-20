@@ -845,7 +845,7 @@ def getPhoto(id):
     if (len(result) < 1):
         return "/static/resources/images/No-image-found.jpg"
     else:
-        print(result[0])
+        print(result[0][3])
         return "/static/resources/images/No-image-found.jpg"
 
 

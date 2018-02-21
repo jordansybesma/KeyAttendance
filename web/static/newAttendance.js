@@ -2,6 +2,8 @@ var urlBase = window.location.origin;
 // localSite = "http://127.0.0.1:5000";
 // scottSite = "https://attendance.unionofyouth.org";
 
+// R
+// Returns students who attended for the num-th time between a start and end date using getTimesAttendedHelper.
 function getTimesAttended() {
     startDate = document.getElementById("startDateReport").value;
     endDate = document.getElementById("endDateReport").value;
@@ -16,6 +18,8 @@ function getTimesAttended() {
 
 }
 
+// R
+// Downloads a CSV file of students who attended for num-th time using exportToCSV.
 function getTimesAttendedHelper(_, students) {
     var students = JSON.parse(students);
     console.log(students);
@@ -29,12 +33,13 @@ function getTimesAttendedHelper(_, students) {
     exportToCsv(filename, rows);
 }
 
+
+// R
 function giveReport() {
-
-
     getRequest("/getStudentColumns", "", reportHelper);
-
 }
+
+// R
 function reportHelper(_, columns) {
     var studColumns = JSON.parse(columns);
     var columnData = document.getElementById("columns").innerHTML;

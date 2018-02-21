@@ -1,4 +1,4 @@
-var urlBase = window.location.origin;
+//var urlBase = window.location.origin;
 // localSite = "http://127.0.0.1:5000";
 // scottSite = "https://attendance.unionofyouth.org";
 

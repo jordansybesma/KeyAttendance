@@ -815,6 +815,7 @@ function placeStudentPicture(_, data) {
   console.log("arrived at placeStudentPicture")
   var photoSpace = document.getElementById("studentPhoto");
   photoSpace.src = data;
+  photoSpace.hidden = false;
   var div = document.getElementById("uploadPicture")
   div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Upload a Picture</button>";
 }

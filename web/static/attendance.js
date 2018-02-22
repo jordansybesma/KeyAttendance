@@ -1,4 +1,4 @@
-//var urlBase = window.location.origin;
+var urlBase = window.location.origin;
 // localSite = "http://127.0.0.1:5000";
 // scottSite = "https://attendance.unionofyouth.org";
 
@@ -7,7 +7,7 @@ function closeAddNewStudent() {
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
     var popUp = document.getElementById('studentDiv');
-    popUp.style.display = "none";
+    popUp.style.display = "none";    
 }
 
 // Adds a new attendee to current sheet
@@ -154,22 +154,35 @@ function makeHeaderReadable(header) {
     var newHeader = "";
     var newChar = "";
     for (i in header) {
-        if (i == 0) {
+        
+        var firstChar = i==0;
+        var capitalChar = header[i] == header[i].toUpperCase();
+        var underscoreChar = header[i] == "_";
+        var prevCharIsUnderscore = header[i - 1] == "_";
+        
+        if (firstChar) {
             newChar = header[i].toUpperCase();
-        } else if (header[i] == header[i].toUpperCase()) {
-            if (header[i - 1] != "_") {
+        
+        } else if (underscoreChar) {
+            // Replace underscore with space.
+            newChar = " ";
+            
+        } else if (capitalChar) {
+            if (!prevCharIsUnderscore) {
                 newHeader = newHeader + " ";
                 newChar = header[i];
+            } else {
+                // Do nothing; space has already been added.
             }
-        } else if (header[i] == "_") {
-            newHeader = newHeader + " ";
-            newChar = "";
-        } else {
-            if (header[i - 1] == "_") {
+            
+        } else if (prevCharIsUnderscore) {
                 newChar = header[i].toUpperCase();
-            }
+            
+        } else {
+            // Keep the char the same.
             newChar = header[i];
         }
+    
         newHeader = newHeader + newChar;
     }
     return newHeader;

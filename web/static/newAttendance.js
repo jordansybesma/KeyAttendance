@@ -817,7 +817,21 @@ function placeStudentPicture(_, data) {
   photoSpace.src = data;
   photoSpace.hidden = false;
   var div = document.getElementById("uploadPicture")
-  div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Upload a Picture</button>";
+  div.innerHTML = "<button type=\"button\" onclick=\"uploadPicture()\">Upload a Picture</button>";
+}
+
+function uploadPicture() {
+  var http = require('http');
+  var formidable = require('formidable');
+
+  http.createServer(function (req, res) {
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write('<form action="fileupload" method="post" enctype="multipart/form-data">');
+    res.write('<input type="file" name="filetoupload"><br>');
+    res.write('<input type="submit">');
+    res.write('</form>');
+    return res.end();
+}).listen(8080);
 }
 
 // SP

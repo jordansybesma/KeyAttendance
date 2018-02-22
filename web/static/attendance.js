@@ -81,27 +81,33 @@ function addNewStudent() {
     var first = document.getElementById("newStudentFirst").value.trim();
     var last = document.getElementById("newStudentLast").value.trim();
 
-    // Check if input is valid
+    if (inputOkay(first, last)){
+        
+        first = capitalizeFirstLetter(first);
+        last = capitalizeFirstLetter(last);
+
+        // Adds student to student table
+        sendNewStudent(first, last);
+
+        // Adds student to daily attendance table
+        addAttendant(first, last);
+
+        // Closes popup
+        closeAddNewStudent();
+    }
+}
+
+// Check if input is valid.
+function inputOkay(first, last) {
     if (first === "") {
         alert("Please enter a first name");
-        return;
-    }
+        return false;
+    } 
     if (last == "") {
         alert("Please enter a last name");
-        return;
-    }
-
-    first = capitalizeFirstLetter(first);
-    last = capitalizeFirstLetter(last);
-
-    // Adds student to student table
-    sendNewStudent(first, last);
-
-    // Adds student to daily attendance table
-    addAttendant(first, last);
-
-    // Closes popup
-    closeAddNewStudent();
+        return false;
+    }       
+    return true;
 }
 
 // Capitalizes first letter of string

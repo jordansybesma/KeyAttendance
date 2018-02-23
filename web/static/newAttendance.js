@@ -27,7 +27,7 @@ function getTimesAttendedHelper(_, students) {
     for (i in students) {
         rows.push(students[i]);
     }
-    filename = "whateverForNow.csv";
+    filename = "attendance_report.csv";
 
 
     exportToCsv(filename, rows);
@@ -734,7 +734,7 @@ function displayStudentInfo(colName, info, type) {
     console.log(type);
     if (info == null) {
         var text = document.createTextNode(displayName + ": ");
-    } else if (type == "varchar") {
+    } else if ((type == "varchar") || (type == "varchar(500)")) {
         console.log("var");
         var text = document.createTextNode(displayName + ": " + info);
     } else if (type == "int") {
@@ -986,6 +986,7 @@ function fillAttendanceTableHelper(_, data) {
 function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     var columnData = document.getElementById("columns").innerHTML;
+    console.log(columnData);
     var myColumns = JSON.parse(columnData);
     var table = document.getElementById("Attendance-Table");
     for (i in myData) {
@@ -1029,6 +1030,7 @@ function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
 
     var hasDoneActivity = attendeeEntry[index];
     var col = columns[i][2];
+    console.log(col);
 
     var box = "<input type=\"checkbox\" "
         + (hasDoneActivity ? "checked" : "")

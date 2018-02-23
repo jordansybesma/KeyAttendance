@@ -15,7 +15,7 @@ def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
     dbName = 'compsTestDB'
     user = 'ubuntu'
-    password = 'keyComps'
+    password = 'keyCRES'
     hostName = 'ec2-34-213-2-88.us-west-2.compute.amazonaws.com'
     conn = psycopg2.connect(database=dbName, user=user, password=password, host=hostName)
     cur = conn.cursor()
@@ -479,7 +479,7 @@ def addAttendant(request):
         print("already added")
         return "false"
 
-    query = "SELECT id FROM testStudents WHERE firstName LIKE '%" + firstName + "%' OR lastName LIKE '%" + lastName + "%';"
+    query = "SELECT id FROM testStudents WHERE firstName = \'" + firstName + "\' AND lastName = \'" + lastName + "\';"
     databaseResult = executeSingleQuery(query, fetch = True)
 
     queryRows = "SELECT name from attendanceColumns"

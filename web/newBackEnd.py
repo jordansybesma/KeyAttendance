@@ -10,10 +10,10 @@ import flaskEnd
 
 def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
-    dbName = 'compsTestDB'
+    dbName = 'keyDB'
     user = 'ubuntu'
     password = 'keyComps'
-    hostName = 'ec2-35-160-216-144.us-west-2.compute.amazonaws.com'
+    hostName = 'ec2-34-213-2-88.us-west-2.compute.amazonaws.com'
     conn = psycopg2.connect(database=dbName, user=user, password=password, host=hostName)
     cur = conn.cursor()
     if len(params) == 0:
@@ -403,6 +403,8 @@ def getStudentInfo(name):
         # key difference - select from differnt column based on type
         colToSelect = ""
         if (colType == "varchar"):
+            colToSelect = "str_value"
+        elif(colType == "varchar(500)"):
             colToSelect = "str_value"
         elif (colType == "int"):
             colToSelect = "int_value"

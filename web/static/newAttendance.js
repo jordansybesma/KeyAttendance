@@ -2,6 +2,8 @@ var urlBase = window.location.origin;
 // localSite = "http://127.0.0.1:5000";
 // scottSite = "https://attendance.unionofyouth.org";
 
+// R
+// Returns students who attended for the num-th time between a start and end date using getTimesAttendedHelper.
 function getTimesAttended() {
     startDate = document.getElementById("startDateReport").value;
     endDate = document.getElementById("endDateReport").value;
@@ -16,6 +18,8 @@ function getTimesAttended() {
 
 }
 
+// R
+// Downloads a CSV file of students who attended for num-th time using exportToCSV.
 function getTimesAttendedHelper(_, students) {
     var students = JSON.parse(students);
     console.log(students);
@@ -29,12 +33,13 @@ function getTimesAttendedHelper(_, students) {
     exportToCsv(filename, rows);
 }
 
+
+// R
 function giveReport() {
-
-
     getRequest("/getStudentColumns", "", reportHelper);
-
 }
+
+// R
 function reportHelper(_, columns) {
     var studColumns = JSON.parse(columns);
     var columnData = document.getElementById("columns").innerHTML;
@@ -116,27 +121,34 @@ function addNewStudent() {
     var first = document.getElementById("newStudentFirst").value.trim();
     var last = document.getElementById("newStudentLast").value.trim();
 
-    // Check if input is valid
+    if (inputOkay(first, last)){
+        
+        first = capitalizeFirstLetter(first);
+        last = capitalizeFirstLetter(last);
+
+        // Adds student to student table
+        sendNewStudent(first, last);
+
+        // Adds student to daily attendance table
+        addAttendant(first, last);
+
+        // Closes popup
+        closeAddNewStudent();
+    }
+}
+
+// AS
+// Check if input is valid.
+function inputOkay(first, last) {
     if (first === "") {
         alert("Please enter a first name");
-        return;
-    }
+        return false;
+    } 
     if (last == "") {
         alert("Please enter a last name");
-        return;
-    }
-
-    first = capitalizeFirstLetter(first);
-    last = capitalizeFirstLetter(last);
-
-    // Adds student to student table
-    sendNewStudent(first, last);
-
-    // Adds student to daily attendance table
-    addAttendant(first, last);
-
-    // Closes popup
-    closeAddNewStudent();
+        return false;
+    }       
+    return true;
 }
 
 // AS
@@ -210,22 +222,35 @@ function makeHeaderReadable(header) {
     var newHeader = "";
     var newChar = "";
     for (i in header) {
-        if (i == 0) {
+        
+        var firstChar = i==0;
+        var capitalChar = header[i] == header[i].toUpperCase();
+        var underscoreChar = header[i] == "_";
+        var prevCharIsUnderscore = header[i - 1] == "_";
+        
+        if (firstChar) {
             newChar = header[i].toUpperCase();
-        } else if (header[i] == header[i].toUpperCase()) {
-            if (header[i - 1] != "_") {
+        
+        } else if (underscoreChar) {
+            // Replace underscore with space.
+            newChar = " ";
+            
+        } else if (capitalChar) {
+            if (!prevCharIsUnderscore) {
                 newHeader = newHeader + " ";
                 newChar = header[i];
+            } else {
+                // Do nothing; space has already been added.
             }
-        } else if (header[i] == "_") {
-            newHeader = newHeader + " ";
-            newChar = "";
-        } else {
-            if (header[i - 1] == "_") {
+            
+        } else if (prevCharIsUnderscore) {
                 newChar = header[i].toUpperCase();
-            }
+            
+        } else {
+            // Keep the char the same.
             newChar = header[i];
         }
+    
         newHeader = newHeader + newChar;
     }
     return newHeader;
@@ -810,6 +835,13 @@ function placeStudentPicture(_, data) {
   console.log("arrived at placeStudentPicture")
   var photoSpace = document.getElementById("studentPhoto");
   photoSpace.src = data;
+  photoSpace.hidden = false;
+  var div = document.getElementById("uploadPicture")
+  div.innerHTML = "<button type=\"button\" onclick=\"uploadPicture()\">Upload a Picture</button>";
+}
+
+function uploadPicture() {
+  console.log("Clicked uploadPicture!")
 }
 
 // SP

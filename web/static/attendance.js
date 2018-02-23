@@ -7,7 +7,7 @@ function closeAddNewStudent() {
     document.getElementById("newStudentFirst").value = "";
     document.getElementById("newStudentLast").value = "";
     var popUp = document.getElementById('studentDiv');
-    popUp.style.display = "none";
+    popUp.style.display = "none";    
 }
 
 // Adds a new attendee to current sheet
@@ -81,27 +81,33 @@ function addNewStudent() {
     var first = document.getElementById("newStudentFirst").value.trim();
     var last = document.getElementById("newStudentLast").value.trim();
 
-    // Check if input is valid
+    if (inputOkay(first, last)){
+        
+        first = capitalizeFirstLetter(first);
+        last = capitalizeFirstLetter(last);
+
+        // Adds student to student table
+        sendNewStudent(first, last);
+
+        // Adds student to daily attendance table
+        addAttendant(first, last);
+
+        // Closes popup
+        closeAddNewStudent();
+    }
+}
+
+// Check if input is valid.
+function inputOkay(first, last) {
     if (first === "") {
         alert("Please enter a first name");
-        return;
-    }
+        return false;
+    } 
     if (last == "") {
         alert("Please enter a last name");
-        return;
-    }
-
-    first = capitalizeFirstLetter(first);
-    last = capitalizeFirstLetter(last);
-
-    // Adds student to student table
-    sendNewStudent(first, last);
-
-    // Adds student to daily attendance table
-    addAttendant(first, last);
-
-    // Closes popup
-    closeAddNewStudent();
+        return false;
+    }       
+    return true;
 }
 
 // Capitalizes first letter of string
@@ -154,22 +160,35 @@ function makeHeaderReadable(header) {
     var newHeader = "";
     var newChar = "";
     for (i in header) {
-        if (i == 0) {
+        
+        var firstChar = i==0;
+        var capitalChar = header[i] == header[i].toUpperCase();
+        var underscoreChar = header[i] == "_";
+        var prevCharIsUnderscore = header[i - 1] == "_";
+        
+        if (firstChar) {
             newChar = header[i].toUpperCase();
-        } else if (header[i] == header[i].toUpperCase()) {
-            if (header[i - 1] != "_") {
+        
+        } else if (underscoreChar) {
+            // Replace underscore with space.
+            newChar = " ";
+            
+        } else if (capitalChar) {
+            if (!prevCharIsUnderscore) {
                 newHeader = newHeader + " ";
                 newChar = header[i];
+            } else {
+                // Do nothing; space has already been added.
             }
-        } else if (header[i] == "_") {
-            newHeader = newHeader + " ";
-            newChar = "";
-        } else {
-            if (header[i - 1] == "_") {
+            
+        } else if (prevCharIsUnderscore) {
                 newChar = header[i].toUpperCase();
-            }
+            
+        } else {
+            // Keep the char the same.
             newChar = header[i];
         }
+    
         newHeader = newHeader + newChar;
     }
     return newHeader;

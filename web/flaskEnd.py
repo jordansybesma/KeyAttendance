@@ -43,6 +43,11 @@ def addNewStudent():
 def updateStudentInfo():
     return backEnd.updateStudentInfo(request)
 
+
+@app.route('/uniqueAttendance/')
+def uniqueAttendance():
+    return backEnd.uniqueAttendance()
+
 @app.route('/getStudentInfo/<name>')
 def getStudentInfo(name):
     return backEnd.getStudentInfo(name)
@@ -167,6 +172,10 @@ def checkAlert():
 @app.route('/getPhoto/<string>')
 def getPhoto(string):
     return backEnd.getPhoto(string)
+
+@app.route('/uploadPicture')
+def uploadPicture(id):
+    return backEnd.getPhoto(id)
 
 
 if __name__ == "__main__":

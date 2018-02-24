@@ -46,6 +46,7 @@ function reportHelper(_, columns) {
     console.log(columns);
     uniqueAttenData = JSON.parse(columns);
     table = document.getElementById("UniqueAttendanceTable");
+    table.innerHTML = "";
     var headers = table.insertRow(0);
     headers.insertCell(-1).innerHTML = 'Category';
     headers.insertCell(-1).innerHTML = '7 Days';
@@ -62,6 +63,65 @@ function reportHelper(_, columns) {
     }
     //var row = table.insertRow(1);
     //row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
+
+    getRequest("/getFirstAttendance/", "", reportHelper2);
+
+}
+
+function reportHelper2(_, columns) {
+    console.log(columns);
+    uniqueAttenData = JSON.parse(columns);
+    table = document.getElementById("NewAttendanceTable");
+    table.innerHTML = "";
+    var headers = table.insertRow(0);
+    
+    headers.insertCell(-1).innerHTML = '7 Days';
+    headers.insertCell(-1).innerHTML = '30 Days';
+    headers.insertCell(-1).innerHTML = 'Year';
+
+
+
+    for (i in uniqueAttenData) {
+        var row = table.insertRow(-1);
+        for (j in uniqueAttenData[i]) {
+            row.insertCell(-1).innerHTML = uniqueAttenData[i][j];
+        }
+    }
+
+}
+
+
+function getNewStudentsAttended(){
+    var start = document.getElementById("startDateNewStudent").value;
+    var end = document.getElementById("endDateNewStudent").value;
+    console.log(start);
+    console.log(end);
+    console.log(typeof start);
+    if (start == "") {
+        alert("Please enter a start date");
+        return false;
+    }
+    if (end == "") {
+        alert("Please enter an end date");
+        return false;
+    }
+    console.log(start + " " + end);
+    console.log("/getFirstAttendanceDates/" + start + " " + end);
+    getRequest("/getFirstAttendanceDates/" + start + " " + end, "", reportHelper3);
+    return false;
+}
+function reportHelper3(_, students) {
+    data = JSON.parse(students);
+
+    console.log(data);
+    rows = [];
+    for (i in data) {
+        rows.push(data[i]);
+    }
+    filename = "new_student_report.csv";
+
+
+    exportToCsv(filename, rows);
 
 }
 

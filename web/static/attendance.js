@@ -36,14 +36,33 @@ function getTimesAttendedHelper(_, students) {
 
 // R
 function giveReport() {
-    getRequest("/getStudentColumns", "", reportHelper);
+    //getRequest("/getStudentColumns", "", reportHelper);
+    console.log("got to report");
+    getRequest("/uniqueAttendance/", "", reportHelper);
 }
 
 // R
 function reportHelper(_, columns) {
-    var studColumns = JSON.parse(columns);
-    var columnData = document.getElementById("columns").innerHTML;
-    var activities = JSON.parse(columnData);
+    console.log(columns);
+    uniqueAttenData = JSON.parse(columns);
+    table = document.getElementById("UniqueAttendanceTable");
+    var headers = table.insertRow(0);
+    headers.insertCell(-1).innerHTML = 'Category';
+    headers.insertCell(-1).innerHTML = '7 Days';
+    headers.insertCell(-1).innerHTML = '30 Days';
+    headers.insertCell(-1).innerHTML = 'Year';
+
+
+
+    for (i in uniqueAttenData) {
+        var row = table.insertRow(-1);
+        for (j in uniqueAttenData[i]) {
+            row.insertCell(-1).innerHTML = uniqueAttenData[i][j];
+        }
+    }
+    //var row = table.insertRow(1);
+    //row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
+
 }
 
 // AS
@@ -1006,6 +1025,7 @@ function fillRowAttendance(table, columns, attendeeEntry) {
     var fullName = attendeeEntry[2] + " " + attendeeEntry[3];
     var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     var time = attendeeEntry[1];
+    
     row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
 
     for (i in columns) {

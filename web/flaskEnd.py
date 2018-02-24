@@ -43,6 +43,11 @@ def addNewStudent():
 def updateStudentInfo():
     return backEnd.updateStudentInfo(request)
 
+
+@app.route('/uniqueAttendance/')
+def uniqueAttendance():
+    return backEnd.uniqueAttendance()
+
 @app.route('/getStudentInfo/<name>')
 def getStudentInfo(name):
     return backEnd.getStudentInfo(name)

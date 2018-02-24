@@ -3,6 +3,7 @@ import psycopg2
 import sys
 import datetime
 import flaskEnd
+from os import path
 
 from flask import Flask, request, redirect, url_for
 from werkzeug.utils import secure_filename
@@ -1117,7 +1118,7 @@ def checkAlert(request):
 
 def uploadPicture(studentid, name, imageObj):
     nameExt = name.rsplit('.')[-1].lower()
-    pathString = "/static/resources/images/" + studentid + nameExt
+    pathString = "static/resources/images/" + studentid + nameExt
     imageObj.save(pathString)
     executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);" [studentid, pathString])
     return 1

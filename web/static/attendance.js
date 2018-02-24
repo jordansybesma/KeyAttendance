@@ -36,14 +36,33 @@ function getTimesAttendedHelper(_, students) {
 
 // R
 function giveReport() {
-    getRequest("/getStudentColumns", "", reportHelper);
+    //getRequest("/getStudentColumns", "", reportHelper);
+    console.log("got to report");
+    getRequest("/uniqueAttendance/", "", reportHelper);
 }
 
 // R
 function reportHelper(_, columns) {
-    var studColumns = JSON.parse(columns);
-    var columnData = document.getElementById("columns").innerHTML;
-    var activities = JSON.parse(columnData);
+    console.log(columns);
+    uniqueAttenData = JSON.parse(columns);
+    table = document.getElementById("UniqueAttendanceTable");
+    var headers = table.insertRow(0);
+    headers.insertCell(-1).innerHTML = 'Category';
+    headers.insertCell(-1).innerHTML = '7 Days';
+    headers.insertCell(-1).innerHTML = '30 Days';
+    headers.insertCell(-1).innerHTML = 'Year';
+
+
+
+    for (i in uniqueAttenData) {
+        var row = table.insertRow(-1);
+        for (j in uniqueAttenData[i]) {
+            row.insertCell(-1).innerHTML = uniqueAttenData[i][j];
+        }
+    }
+    //var row = table.insertRow(1);
+    //row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
+
 }
 
 // AS
@@ -611,6 +630,11 @@ function demographicsHelper(_, columns) {
     var data = document.getElementById("saveStudentData").innerHTML;
     document.getElementById("saveStudentColumnData").innerHTML = columns;
     var studentInfo = JSON.parse(data);
+    console.log("studentInfo:");
+    console.log(studentInfo);
+    // set the hidden form input for picture upload to be the ID
+    // this lets the backend know the student ID of the assosiated picture
+    document.getElementById("pictureUploadHiddenId").value = studentInfo[0][0];
     var columnInfo = JSON.parse(columns);
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("demographics");
@@ -804,19 +828,19 @@ function showStudentAttendance(_, data) {
 // SP
 // On student's profile, shows other students who show up at similar times.
 function showFrequentPeers(_, data) {
-    var peerSpace = document.getElementById("frequentPeers").innerHTML;
-    peerSpace = ("Frequently Attends With:<br/><br/>");
+    var peerSpace = document.getElementById("frequentPeers");
+    peerSpace.innerHTML = "Frequently Attends With:<br/><br/>";
 
     //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
 
-    // peerSpace += (data.join())
+    // peerSpace.innerHTML += (data.join())
 
     var nameString = data.replace(/\[/g, "").replace(/\'/g, "").replace(/\]/g, "");
     var nameList = nameString.split(", ");
 
     for (var i in nameList) {
         var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span><br/>';
-        peerSpace += nameButton;
+        peerSpace.innerHTML += nameButton;
     }
     getRequest("/getJustID/" + document.getElementById("studentName").innerHTML, "", getStudentPicture);
 }
@@ -824,9 +848,25 @@ function showFrequentPeers(_, data) {
 // AS
 // On attendance sheet, shows peers with whom the added attendee frequently attends.
 function showFrequentPeersAttendance(_, data) {
-    var peerSpace = document.getElementById("frequentlyAttendsWith").innerHTML;
-    peerSpace = "";
-    
+    var peerSpace = document.getElementById("frequentlyAttendsWith");
+    peerSpace.innerHTML = "Suggested Students: ";
+        
+    var nameString = data.replace(/\[/g, "").replace(/\'/g, "").replace(/\]/g, "");
+
+    var nameList = nameString.split(", ");
+
+    var friendsList = []
+
+    for (var i in nameList) {
+        var name = nameList[i].split(" ");
+        var first = name[0];
+        var second = name[1];
+        console.log("huh: " + nameList[i]);
+        
+        var nameButton = '<span style="cursor:pointer" onclick=\"addAttendant(\'' + first + "," + last + '\')\">' + nameList[i] + '</span>';
+        friendsList.push(nameButton);
+    }
+    peerSpace.innerHTML += friendsList;
 }
 
 // SP
@@ -1014,6 +1054,7 @@ function fillRowAttendance(table, columns, attendeeEntry) {
     var fullName = attendeeEntry[2] + " " + attendeeEntry[3];
     var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     var time = attendeeEntry[1];
+    
     row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
 
     for (i in columns) {

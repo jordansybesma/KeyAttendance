@@ -133,6 +133,7 @@
                         <p>Upload a New Picture:</p>
                         <p><input id="upload_button" type="file" class="btn btn-default btn-xs" name="file"></p>
                         <p><input id="submit_button" type="submit" class="btn btn-success" value="Upload">
+                        <input type="hidden" id="pictureUploadHiddenId" name="id"/>
                       </div>
                     </form>
                     <p id="saveStudentData"></p>
@@ -185,10 +186,14 @@
         <div id="Reports" class="tabcontent">
             <h2>Reports</h2>
 
+            <h3>Unique Attendees Report</h3>
+            <h4>This table shows the number of unique students who participated in each activity over several time spans. Does not include data for the current date (most recent data is from yesterday)</h4>
+
+            <table id="UniqueAttendanceTable" style="width:50%"></table>
+
             <div id="downloadStudentReport">
-                <h3>Select a start date, end date, and number of times to attend</h3>
-                <h5>For instance if you select Jan 1, Jan 5, and 10</h5>
-                <h5>You will get back the names of students who attended for the 10th time between Jan 1 and Jan 5</h5>
+                <h3>Attendance Milestone Report</h3>
+                <h4>Selelct a start date, end date and number of times attended. For instance if you select Jan 1, Jan 5, and 10 you will get back the names of students who attended for the 10th time between Jan 1 and Jan 5</h4>
 
 
                 <form onsubmit="return false;">

@@ -201,7 +201,8 @@ function addNewStudent() {
 
     var first = document.getElementById("newStudentFirst").value.trim();
     var last = document.getElementById("newStudentLast").value.trim();
-
+    document.getElementById("newStudentFirstSave").value = first;
+    document.getElementById("newStudentLastSave").value = last;
     if (inputOkay(first, last)){
 
         first = capitalizeFirstLetter(first);
@@ -244,6 +245,93 @@ function capitalizeFirstLetter(string){
 function openAddNewStudent() {
     var popUp = document.getElementById('studentDiv');
     popUp.style.display = "block";
+    document.getElementById("newStudentFirstSave").value = "";
+    document.getElementById("newStudentLastSave").value = "";
+    getRequest("/getStudentColumns", "", newStudentHelper);
+
+
+}
+function newStudentHelper(_, columns) {
+    columnData = JSON.parse(columns);
+    var div = document.getElementById("addNewStudentQuick");
+    div.innerHTML = "";
+    var updateString = "addNewStudent();";
+
+    var form = document.createElement("form");
+    form.setAttribute('onSubmit', 'return false;');
+   
+    var str = "First Name :<br> <input id='newStudentFirst' type='text' value=''/> <br>";
+    console.log(str);
+    form.innerHTML = str;
+    div.appendChild(form);
+
+    var form2 = document.createElement("form");
+    form2.setAttribute('onSubmit', 'return false;');
+
+    var str = "Last Name :<br> <input id='newStudentLast' type='text' value=''/> <br>";
+    console.log(str);
+    form2.innerHTML = str;
+    div.appendChild(form2);
+    
+    for (i in columnData) {
+        console.log("outer loop");
+        var colIsShowing = columnData[i][2];
+        if (colIsShowing) {
+            console.log("next loop");
+            var col = columnData[i][3];
+            var form = document.createElement("form");
+            var type = columnData[i][4];
+            form.setAttribute('onSubmit', 'return false;');
+            if ((type == "varchar(500)") || (type == "int")) {
+                console.log("got to last loop");
+                
+                var str = col + ":<br> <input id='" + col + "colid' type='text' value=''/> <br>";
+                //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
+                //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
+                console.log(str);
+                updateString = updateString + "updateProfile('','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
+                console.log(updateString);
+                form.innerHTML = str;
+                div.appendChild(form);
+            } else if (type == "date") {
+                
+                var str = col + ":<br> <input id='" + col + "colid' type='date' value=''/> <br>";
+                //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
+                //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
+                console.log(str);
+                updateString = updateString + "updateProfile('','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
+                form.innerHTML = str;
+                div.appendChild(form);
+            } else if (type == "boolean") {
+                var str = col + ": "
+                
+                  
+                str = str + " <input type='checkbox')\"/><br><br>"
+                updateString = updateString + "updateProfile('','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
+                console.log(str);
+                form.innerHTML = str;
+                div.appendChild(form);
+            }
+        }
+    }
+
+
+    footer = document.getElementById("newStudentFooter");
+    var closeButton = document.createElement('button');
+    closeButton.setAttribute('name', 'Return to Profile');
+    //console.log(updateString);
+    closeButton.setAttribute('onclick', "closeAddNewStudent()");
+    closeButton.innerHTML = "Close";
+    footer.appendChild(closeButton);
+
+    var returnButton = document.createElement('button');
+    returnButton.setAttribute('name', 'Return to Profile');
+    console.log(updateString);
+    returnButton.setAttribute('onclick', updateString);
+    returnButton.innerHTML = "Submit";
+    footer.appendChild(returnButton);
+
+    
 }
 
 // AS
@@ -382,7 +470,7 @@ function fillRowManageProfile(row, rowData) {
     row.insertCell(-1).innerHTML = name;
     row.insertCell(-1).innerHTML = checkBoxIsShowing;
     row.insertCell(-1).innerHTML = checkBoxIsQuick;
-    row.insertCell(-1).innerHTML = deleteButton;
+    //row.insertCell(-1).innerHTML = deleteButton;
 }
 
 // MP
@@ -401,7 +489,7 @@ function deleteStudentColumn(name) {
     xmlhttp.open("POST", urlBase + "/deleteStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
-    showProfileManage()
+    showManageProfile()
 }
 
 // AC
@@ -439,7 +527,7 @@ function showAttendanceManageHelper(_, data) {
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = name;
         row.insertCell(-1).innerHTML = checkBox;
-        row.insertCell(-1).innerHTML = deleteButton;
+        //row.insertCell(-1).innerHTML = deleteButton;
         row.insertCell(-1).innerHTML = upButton;
         //row.insertCell(-1).innerHTML = downButton;
     }
@@ -522,7 +610,7 @@ function addStudentColumn() {
     xmlhttp.open("POST", urlBase + "/addStudentColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name + "&type=" + type + "&definedOptions=");
-    showProfileManage()
+    showManageProfile()
 }
 
 // AC
@@ -551,12 +639,13 @@ function addColumn() {
             + "checked"
             + " onclick=\"selectColumn('" + name + "')\">";
     var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
+    var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
 
     var table = document.getElementById("attendanceColumnsTable");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = name;
     row.insertCell(-1).innerHTML = checkBox;
-    row.insertCell(-1).innerHTML = deleteButton;
+    row.insertCell(-1).innerHTML = upButton;
 }
 
 // MISC
@@ -805,6 +894,17 @@ function updateProfile(name, col, colid, type) {
         var value = "TRUE";
     } else {
         var value = document.getElementById(colid).value;
+    }
+    if (name == "") {
+        first = document.getElementById("newStudentFirstSave").value;
+        last = document.getElementById("newStudentLastSave").value;
+        if (first == "") {
+            return;
+        }
+        if (last == "") {
+            return;
+        }
+        name = first + " " + last;
     }
 
     var xmlhttp = new XMLHttpRequest();

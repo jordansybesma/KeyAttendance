@@ -78,19 +78,14 @@
                         <div class="addStudentHeader">
                             <h2 id="popUpHeader">Add Student</h2>
                        </div>
-                        <div class="modal-body">
-                            <form>
-                                First name:<br>
-                                <input type="text" name="firstname" id="newStudentFirst"><br>
-                                Last name:<br>
-                                <input type="text" name="lastname" id="newStudentLast">
-                            </form>
+                        
+                        <div class="modal-body" id="addNewStudentQuick"></div>
+                        <p id="newStudentFirstSave"></p>
+                        <p id="newStudentLastSave"></p>
+
+                        <div class="modal-footer" id="newStudentFooter"></div>
+
                         </div>
-                        <div class="modal-footer">
-                            <input type="button" onclick="closeAddNewStudent()" id="close" value="Cancel" />
-                            <input type="button" onclick="addNewStudent()" id="submitStudent" value="Submit" />
-                        </div>
-                    </div>
                 <p id="columns"></p>
                 <table id="Attendance-Table" style="width:100%"></table>
             </div>

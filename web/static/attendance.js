@@ -1367,7 +1367,11 @@ function masterAttendanceHelper(_, masterData) {
     for (i in myData) {
         var row = table.insertRow(-1);
         for (j in myData[i]) {
-            row.insertCell(-1).innerHTML = myData[i][j];
+            if (j==0) {
+                row.insertCell(-1).innerHTML = makeDateReadable(myData[i][j]);
+            } else {
+                row.insertCell(-1).innerHTML = myData[i][j];   
+            }
         }
     }
 }
@@ -1376,15 +1380,15 @@ function masterAttendanceHelper(_, masterData) {
 // Formats date for humans.
 function makeDateReadable(date) {
     var monthStr = date.substr(5, 7).substr(0, 2);
+    var day = date.substr(8, 10);
+    var year = date.substr(0, 4);
+    var newDateDashes = monthStr + "/" + day + "/" + year;
+    
     var monthInt = parseInt(monthStr);
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var month = months[monthInt - 1];
-
-    var day = date.substr(8, 10);
-    var year = date.substr(0, 4);
-
     var newDate = month + " " + day + ", " + year;
-    var newDateDashes = monthStr + "/" + day + "/" + year;
+
     return newDateDashes;
 }
 

@@ -1100,11 +1100,9 @@ def checkAlert(request):
     id = request.form.get('id')
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])
 
-def uploadPicture(studentid):
-    print("uploadPicture called!")
-    name, imageObj = list(request.files.items())[0]
+def uploadPicture(studentid, name, imageObj):
     nameExt = name.rsplit('.')[-1].lower()
-    pathString = "/static/resources/images" + studentid + nameExt
+    pathString = "/static/resources/images/" + studentid + nameExt
     imageObj.save(pathString)
     executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);" [studentid, pathString])
     return 1

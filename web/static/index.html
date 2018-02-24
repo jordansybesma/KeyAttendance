@@ -123,11 +123,11 @@
                 <div id="studentInfo">
                     <h3 id = "studentName"></h3>
                     <img id="studentPhoto" hidden>
-                    <form id="package_form" action="/uploadPicture" method="post">
+                    <form id="package_form" action="/uploadPicture" method="post" enctype="multipart/form-data">
                       <div>
                         <p>Upload a New Picture:</p>
-                        <p><input id="upload_button" type="file" class="btn btn-default btn-xs" name="file"></p>
-                        <p><input id="submit_button" type="submit" class="btn btn-success" value="Upload">
+                        <p><input id="upload_button" type="file" name="file"></p>
+                        <p><input id="submit_button" type="submit" value="Upload">
                         <input type="hidden" id="pictureUploadHiddenId" name="id"/>
                       </div>
                     </form>
@@ -170,7 +170,6 @@
                 <input type="text" id="studentColumnName" />
                 <select id="studentColumnType">
                     <option value="varchar">Word</option>
-                    <option value="boolean">True/False</option>
                     <option value="int">Number</option>
                     <option value="date">Date</option>
                 </select>

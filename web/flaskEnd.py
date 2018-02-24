@@ -30,6 +30,11 @@ def foo():
 @app.route('/getReports')
 def getReports():
     return backEnd.getReports()
+    
+    
+@app.route('/fixShit')
+def fixShit():
+    return backEnd.fixShit()
 
 @app.route('/createAttendanceData/', methods = ["POST"])
 def createAttendanceData():
@@ -182,10 +187,13 @@ def checkAlert():
 def getPhoto(string):
     return backEnd.getPhoto(string)
 
-@app.route('/uploadPicture')
+@app.route('/uploadPicture', methods = ["POST"])
 def uploadPicture():
+    print(request.files)
+    name, imageObj = list(request.files.items())[0]
     studentid = request.form["id"]
-    return backEnd.uploadPicture(studentid)
+    print(studentid)
+    return backEnd.uploadPicture(studentid, name, imageObj)
 
 
 if __name__ == "__main__":

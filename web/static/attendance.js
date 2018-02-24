@@ -29,12 +29,14 @@ function getTimesAttendedHelper(_, students) {
     }
     filename = "attendance_report.csv";
 
-
     exportToCsv(filename, rows);
 }
 
 
 // R
+// Retrieves data on num of unique attendees that did x activity for all x $\in$ activeColumns.
+// It does this for time periods of the past day, past week, past month, and past year.
+// This data is passed to reportHelper!
 function giveReport() {
     //getRequest("/getStudentColumns", "", reportHelper);
     console.log("got to report");
@@ -42,6 +44,8 @@ function giveReport() {
 }
 
 // R
+// Displays data on the different time intervals, day/week/month/year.
+// Retrieves data on num students who attended the Key for the first time in past week/month/year, passes it to reportHelper2.
 function reportHelper(_, columns) {
     console.log(columns);
     uniqueAttenData = JSON.parse(columns);
@@ -52,8 +56,6 @@ function reportHelper(_, columns) {
     headers.insertCell(-1).innerHTML = '7 Days';
     headers.insertCell(-1).innerHTML = '30 Days';
     headers.insertCell(-1).innerHTML = 'Year';
-
-
 
     for (i in uniqueAttenData) {
         var row = table.insertRow(-1);
@@ -68,6 +70,8 @@ function reportHelper(_, columns) {
 
 }
 
+// R
+// Displays data on first attendances for week/month/year.
 function reportHelper2(_, columns) {
     console.log(columns);
     uniqueAttenData = JSON.parse(columns);
@@ -79,18 +83,16 @@ function reportHelper2(_, columns) {
     headers.insertCell(-1).innerHTML = '30 Days';
     headers.insertCell(-1).innerHTML = 'Year';
 
-
-
     for (i in uniqueAttenData) {
         var row = table.insertRow(-1);
         for (j in uniqueAttenData[i]) {
             row.insertCell(-1).innerHTML = uniqueAttenData[i][j];
         }
     }
-
 }
 
-
+// R
+// Retrieves data on num students who attended the Key for the first time between 2 specified dates, passes it to reportHelper3.
 function getNewStudentsAttended(){
     var start = document.getElementById("startDateNewStudent").value;
     var end = document.getElementById("endDateNewStudent").value;
@@ -110,6 +112,9 @@ function getNewStudentsAttended(){
     getRequest("/getFirstAttendanceDates/" + start + " " + end, "", reportHelper3);
     return false;
 }
+
+// R
+// Exports data on first attendances between specified dates to a CSV file!
 function reportHelper3(_, students) {
     data = JSON.parse(students);
 
@@ -247,7 +252,8 @@ function openAddNewStudent() {
     popUp.style.display = "block";
     document.getElementById("newStudentFirstSave").value = "";
     document.getElementById("newStudentLastSave").value = "";
-    getRequest("/getStudentColumns", "", newStudentHelper);
+    
+    //getRequest("/getStudentColumns", "", newStudentHelper);
 
 
 }
@@ -321,11 +327,13 @@ function newStudentHelper(_, columns) {
     closeButton.setAttribute('name', 'Return to Profile');
     //console.log(updateString);
     closeButton.setAttribute('onclick', "closeAddNewStudent()");
-    closeButton.innerHTML = "Close";
+    closeButton.setAttribute('id', "close");
+    closeButton.innerHTML = "Cancel";
     footer.appendChild(closeButton);
 
     var returnButton = document.createElement('button');
     returnButton.setAttribute('name', 'Return to Profile');
+    returnButton.setAttribute('id',"submitStudent");
     console.log(updateString);
     returnButton.setAttribute('onclick', updateString);
     returnButton.innerHTML = "Submit";
@@ -838,7 +846,7 @@ function openEditProfile() {
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 console.log(str);
-                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
+                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
                 console.log(updateString);
                 form.innerHTML = str;
                 div.appendChild(form);
@@ -851,7 +859,7 @@ function openEditProfile() {
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 console.log(str);
-                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
+                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "boolean") {
@@ -863,7 +871,7 @@ function openEditProfile() {
 
                 }
                 str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
-                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
+                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
                 console.log(str);
                 form.innerHTML = str;
                 div.appendChild(form);
@@ -890,8 +898,9 @@ function returnToProfile() {
 // SP
 // Updates profile.
 function updateProfile(name, col, colid, type) {
-    if (type == "boolean") {
-        var value = "TRUE";
+    console.log(type);
+    if ((type == "boolean")||(type == "checkbox")) {
+        var value = "";
     } else {
         var value = document.getElementById(colid).value;
     }
@@ -1358,7 +1367,11 @@ function masterAttendanceHelper(_, masterData) {
     for (i in myData) {
         var row = table.insertRow(-1);
         for (j in myData[i]) {
-            row.insertCell(-1).innerHTML = myData[i][j];
+            if (j==0) {
+                row.insertCell(-1).innerHTML = makeDateReadable(myData[i][j]);
+            } else {
+                row.insertCell(-1).innerHTML = myData[i][j];   
+            }
         }
     }
 }
@@ -1367,15 +1380,15 @@ function masterAttendanceHelper(_, masterData) {
 // Formats date for humans.
 function makeDateReadable(date) {
     var monthStr = date.substr(5, 7).substr(0, 2);
+    var day = date.substr(8, 10);
+    var year = date.substr(0, 4);
+    var newDateDashes = monthStr + "/" + day + "/" + year;
+    
     var monthInt = parseInt(monthStr);
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var month = months[monthInt - 1];
-
-    var day = date.substr(8, 10);
-    var year = date.substr(0, 4);
-
     var newDate = month + " " + day + ", " + year;
-    var newDateDashes = monthStr + "/" + day + "/" + year;
+
     return newDateDashes;
 }
 

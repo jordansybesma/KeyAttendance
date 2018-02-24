@@ -1157,7 +1157,6 @@ def checkAlert(request):
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])
 
 def uploadPicture(studentid, name, imageObj):
-    raise ValueError(getpass.getuser())
     nameExt = name.rsplit('.')[-1].lower()
     pathString = "/home/ubuntu/404-repo-name-DNE/web/static/resources/images/" + studentid + "image"
     imageObj.save(pathString)

@@ -173,7 +173,7 @@ def checkAlert():
 def getPhoto(string):
     return backEnd.getPhoto(string)
 
-@app.route('/uploadPicture')
+@app.route('/uploadPicture', methods = ["POST"])
 def uploadPicture():
     studentid = request.form["id"]
     return backEnd.getPhoto(studentid)

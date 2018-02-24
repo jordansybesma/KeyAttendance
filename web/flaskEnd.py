@@ -25,7 +25,12 @@ def main():
 @app.route('/addText/', methods=['POST'])
 def foo():
     return backEnd.foo(request)
-    
+
+
+@app.route('/getReports')
+def getReports():
+    return backEnd.getReports()
+
 @app.route('/createAttendanceData/', methods = ["POST"])
 def createAttendanceData():
     return backEnd.createAttendanceData(request)
@@ -93,7 +98,7 @@ def updateAttendanceColumn():
 @app.route('/getAttendanceColumns')
 def getAttendanceColumns():
     return backEnd.getAttendanceColumns()
-    
+
 @app.route('/moveAttendanceColumnUp', methods = ["POST"])
 def moveAttendanceColumnUp():
     return backEnd.moveAttendanceColumnUp(request)
@@ -117,6 +122,11 @@ def selectActivity():
 @app.route('/addAttendant/', methods = ["POST"])
 def addAttendant():
     return backEnd.addAttendant(request)
+
+@app.route('/getNumberAttended/<string>')
+def getNumberAttended(string):
+    return backEnd.getNumberAttended(string)
+
 
 @app.route('/autofill/<partialString>')
 def autofill(partialString):
@@ -153,6 +163,11 @@ def addAlert():
 @app.route('/checkAlert/', methods = ["POST"])
 def checkAlert():
     return backEnd.checkAlert(request)
+
+@app.route('/getPhoto/<string>')
+def getPhoto(string):
+    return backEnd.getPhoto(string)
+
 
 if __name__ == "__main__":
    # print("Site booting up...")

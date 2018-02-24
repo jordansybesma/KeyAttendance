@@ -168,6 +168,10 @@ def checkAlert():
 def getPhoto(string):
     return backEnd.getPhoto(string)
 
+@app.route('/uploadPicture')
+def uploadPicture(id):
+    return backEnd.getPhoto(id)
+
 
 if __name__ == "__main__":
    # print("Site booting up...")

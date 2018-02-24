@@ -4,6 +4,10 @@ import sys
 import datetime
 import flaskEnd
 
+from flask import Flask, request, redirect, url_for
+from werkzeug.utils import secure_filename
+
+
 
 
 
@@ -50,12 +54,12 @@ def getNumberAttended(string):
     #Here we could grab actual student names - maybe thats what we want to do...
 
     queryCreate = "SELECT DISTINCT(student_id) INTO temp1 FROM dailyAttendance WHERE date <= \'" + endDate + "\' AND date >= \'" + startDate + "\' AND visit_number = " + str(numAtten) + ";"
-    
+
     queryCreate = queryCreate + " SELECT temp1.student_id, students.first_name, students.last_name INTO temp2 FROM temp1 LEFT JOIN students ON temp1.student_id = students.id;"
-    
+
     executeSingleQuery(queryCreate, [])
     querySelect = "SELECT * FROM temp2;"
-    
+
     results = json.dumps(executeSingleQuery(querySelect, fetch = True), indent=4, sort_keys=True, default=str)
     queryDrop = "DROP TABLE temp1; DROP TABLE temp2;"
     executeSingleQuery(queryDrop, [])
@@ -245,7 +249,7 @@ def addNewStudent(request):
     today = transformDate(now)
 
     executeSingleQuery("INSERT INTO students VALUES (%s, %s)", [firstName, lastName])
-    queryUpdate = "UPDATE students SET first_attendance = \'" + today + "\', number_visits = 0 WHERE first_name = \'" + firstName + "\' AND last_name = \'" + lastName + "\';" 
+    queryUpdate = "UPDATE students SET first_attendance = \'" + today + "\', number_visits = 0 WHERE first_name = \'" + firstName + "\' AND last_name = \'" + lastName + "\';"
     executeSingleQuery(queryUpdate, [])
     return "\nHello frontend:)\n"
 
@@ -779,15 +783,15 @@ def getAttendanceColumns():
 def deleteAttendant(request):
     name = request.form.get("name")
     date = request.form.get("date")
-    
-    
+
+
     nameList = name.split()
     first = nameList[0]
     last = nameList[1]
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
 
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
-    
+
     queryVisits = "SELECT number_visits FROM students WHERE id = " + str(studentID) + ";"
     numVisits = json.loads(json.dumps(executeSingleQuery(queryVisits, fetch=True)))[0][0]
     newNum = numVisits - 1
@@ -900,9 +904,9 @@ def addAttendant(request):
     queryUpdate = "UPDATE students SET number_visits = " + str(newNum) + " WHERE id = " + str(studentID) + ";"
     queryTotal = queryAdd + " " + queryAddKey + " " + queryUpdate
     executeSingleQuery(queryTotal, [])
-    
-    
-    
+
+
+
 
     return "done"
 
@@ -1062,3 +1066,11 @@ def addAlert(request):
 def checkAlert(request):
     id = request.form.get('id')
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])
+
+def uploadPicture(id):
+    print("uploadPicture called!")
+    name, imageObj = request.files.popitem()
+    nameExt = name.rsplit('.')[-1].lower()
+    pathString = "/static/resources/images" + id + nameExt
+    imageObj.save(pathString)
+    

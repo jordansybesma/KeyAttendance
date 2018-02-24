@@ -611,6 +611,11 @@ function demographicsHelper(_, columns) {
     var data = document.getElementById("saveStudentData").innerHTML;
     document.getElementById("saveStudentColumnData").innerHTML = columns;
     var studentInfo = JSON.parse(data);
+    console.log("studentInfo:");
+    console.log(studentInfo);
+    // set the hidden form input for picture upload to be the ID
+    // this lets the backend know the student ID of the assosiated picture
+    document.getElementById("pictureUploadHiddenId").value = studentInfo[0][0];
     var columnInfo = JSON.parse(columns);
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("demographics");

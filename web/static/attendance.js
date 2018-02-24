@@ -247,7 +247,8 @@ function openAddNewStudent() {
     popUp.style.display = "block";
     document.getElementById("newStudentFirstSave").value = "";
     document.getElementById("newStudentLastSave").value = "";
-    getRequest("/getStudentColumns", "", newStudentHelper);
+    
+    //getRequest("/getStudentColumns", "", newStudentHelper);
 
 
 }
@@ -321,11 +322,13 @@ function newStudentHelper(_, columns) {
     closeButton.setAttribute('name', 'Return to Profile');
     //console.log(updateString);
     closeButton.setAttribute('onclick', "closeAddNewStudent()");
-    closeButton.innerHTML = "Close";
+    closeButton.setAttribute('id', "close");
+    closeButton.innerHTML = "Cancel";
     footer.appendChild(closeButton);
 
     var returnButton = document.createElement('button');
     returnButton.setAttribute('name', 'Return to Profile');
+    returnButton.setAttribute('id',"submitStudent");
     console.log(updateString);
     returnButton.setAttribute('onclick', updateString);
     returnButton.innerHTML = "Submit";
@@ -838,7 +841,7 @@ function openEditProfile() {
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 console.log(str);
-                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
+                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
                 console.log(updateString);
                 form.innerHTML = str;
                 div.appendChild(form);
@@ -851,7 +854,7 @@ function openEditProfile() {
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 console.log(str);
-                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
+                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "boolean") {
@@ -863,7 +866,7 @@ function openEditProfile() {
 
                 }
                 str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
-                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
+                updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
                 console.log(str);
                 form.innerHTML = str;
                 div.appendChild(form);
@@ -890,8 +893,9 @@ function returnToProfile() {
 // SP
 // Updates profile.
 function updateProfile(name, col, colid, type) {
-    if (type == "boolean") {
-        var value = "TRUE";
+    console.log(type);
+    if ((type == "boolean")||(type == "checkbox")) {
+        var value = "";
     } else {
         var value = document.getElementById(colid).value;
     }

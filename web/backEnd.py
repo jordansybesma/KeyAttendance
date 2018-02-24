@@ -193,6 +193,20 @@ def getStudentAttendance(student):
 
     #return getStudentInfo(studentID)
 
+def fixShit():
+    queryStudData = "SELECT * FROM tempStudents;"
+    students = json.loads(json.dumps(executeSingleQuery(queryStudData, fetch = True), indent=4, sort_keys=True, default=str))
+    queryCreate = "CREATE TABLE students (first_name text NOT NULL, last_name text NOT NULL, id integer NOT NULL, first_attendance date, number_visits int);"
+    executeSingleQuery(queryCreate, [])
+    queryTotal = ""
+    for i in range(len(students)):
+        queryInsert = "INSERT INTO students VALUES (\'" + students[i][0]
+        queryInsert = queryInsert + "\', \'" + students[i][1] + "\', " + students[i][2] + ", " + students[i][3] + ", " + students[i][4] + ");"
+        queryTotal = queryTotal + " " + queryInsert
+    executeSingleQuery(queryTotal, [])
+    return "done"
+            
+
 
 
 # Put the data in a format similar to how it is presented in javascript
@@ -263,7 +277,21 @@ def addNewStudent(request):
     now = datetime.datetime.now()
     today = transformDate(now)
 
-    executeSingleQuery("INSERT INTO students VALUES (%s, %s)", [firstName, lastName])
+    
+    
+    queryIDs = "SELECT id FROM students ORDER BY id DESC"
+    ids = json.loads(json.dumps(executeSingleQuery(queryIDs, fetch = True), indent=4, sort_keys=True, default=str))
+    largeID = ids[0][0]
+    newID = largeID + 1
+    
+    
+    #executeSingleQuery("INSERT INTO students VALUES (\'" + firstName + "\', \'" + lastName + "\', " + str(newID) + ");", [])
+    executeSingleQuery("INSERT INTO students VALUES (\'" + firstName + "\', \'" + lastName + "\');", [])
+    
+    
+    #queryUpdateID = "UPDATE students SET id = " + newID + "WHERE first_name = \'" + firstName + "\', AND last_name = \'" + lastName + "\';"
+    #executeSingleQuery(queryUpdateID, [])
+    
     queryUpdate = "UPDATE students SET first_attendance = \'" + today + "\', number_visits = 0 WHERE first_name = \'" + firstName + "\' AND last_name = \'" + lastName + "\';"
     executeSingleQuery(queryUpdate, [])
     return "\nHello frontend:)\n"
@@ -310,6 +338,17 @@ def updateStudentInfo(request):
         colName = "int_value"
     elif (columnType == "boolean"):
         colName = "bool_value"
+        
+        curVal = json.loads(json.dumps(executeSingleQuery("SELECT bool_value FROM studentInfo WHERE student_id = " + str(studentID) + " AND activity_id = " + str(colID) + ";", [])))
+        if (len(curVal) == 0):
+            value = 'true'
+        else:
+            if (curVal[0][0] == False):
+                value = 'true'
+            else:
+                value = 'false'
+                
+        
     elif (columnType == "date"):
         colName = "date_value"
         if (value != "null"):

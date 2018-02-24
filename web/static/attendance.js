@@ -689,7 +689,14 @@ function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;
     document.getElementById("saveStudentColumnData").innerHTML = columns;
+    console.log(columns);
+
     var studentInfo = JSON.parse(data);
+    console.log("studentInfo:");
+    console.log(studentInfo);
+    // set the hidden form input for picture upload to be the ID
+    // this lets the backend know the student ID of the assosiated picture
+    document.getElementById("pictureUploadHiddenId").value = studentInfo[0][0];
     var columnInfo = JSON.parse(columns);
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("demographics");
@@ -715,6 +722,7 @@ function openEditProfile() {
     var name = document.getElementById('keywordStudentSearch').value;
     var studentInfo = document.getElementById("saveStudentData").innerHTML;
     var columns = document.getElementById("saveStudentColumnData").innerHTML;
+    console.log("in openEditProfile");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("editProfile");
     div.style.display = "block";
@@ -724,7 +732,6 @@ function openEditProfile() {
     var updateString = "";
     for (i in columnData) {
         console.log("outer loop");
-
         var colIsShowing = columnData[i][1];
         if (colIsShowing) {
             console.log("next loop");
@@ -732,7 +739,7 @@ function openEditProfile() {
             var form = document.createElement("form");
             var type = columnData[i][4];
             form.setAttribute('onSubmit', 'return false;');
-            if ((type == "varchar") || (type == "int")) {
+            if ((type == "varchar(500)") || (type == "int")) {
                 console.log("got to last loop");
                 var value = studData[parseInt(i) + 1];
                 if (value == null) {
@@ -778,7 +785,7 @@ function openEditProfile() {
     returnButton.setAttribute('name', 'Return to Profile');
     console.log(updateString);
     returnButton.setAttribute('onclick', updateString + 'returnToProfile();');
-    returnButton.innerHTML = "Return to Profile";
+    returnButton.innerHTML = "Submit";
     div.appendChild(returnButton);
 }
 
@@ -883,19 +890,19 @@ function showStudentAttendance(_, data) {
 // SP
 // On student's profile, shows other students who show up at similar times.
 function showFrequentPeers(_, data) {
-    var peerSpace = document.getElementById("frequentPeers").innerHTML;
-    peerSpace = ("Frequently Attends With:<br/><br/>");
+    var peerSpace = document.getElementById("frequentPeers");
+    peerSpace.innerHTML = "Frequently Attends With:<br/><br/>";
 
     //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
 
-    // peerSpace += (data.join())
+    // peerSpace.innerHTML += (data.join())
 
     var nameString = data.replace(/\[/g, "").replace(/\'/g, "").replace(/\]/g, "");
     var nameList = nameString.split(", ");
 
     for (var i in nameList) {
         var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span><br/>';
-        peerSpace += nameButton;
+        peerSpace.innerHTML += nameButton;
     }
     getRequest("/getJustID/" + document.getElementById("studentName").innerHTML, "", getStudentPicture);
 }
@@ -903,9 +910,25 @@ function showFrequentPeers(_, data) {
 // AS
 // On attendance sheet, shows peers with whom the added attendee frequently attends.
 function showFrequentPeersAttendance(_, data) {
-    var peerSpace = document.getElementById("frequentlyAttendsWith").innerHTML;
-    peerSpace = "";
-    
+    var peerSpace = document.getElementById("frequentlyAttendsWith");
+    peerSpace.innerHTML = "Suggested Students: ";
+        
+    var nameString = data.replace(/\[/g, "").replace(/\'/g, "").replace(/\]/g, "");
+
+    var nameList = nameString.split(", ");
+
+    var friendsList = []
+
+    for (var i in nameList) {
+        var name = nameList[i].split(" ");
+        var first = name[0];
+        var second = name[1];
+        console.log("huh: " + nameList[i]);
+        
+        var nameButton = '<span style="cursor:pointer" onclick=\"addAttendant(\'' + first + "," + last + '\')\">' + nameList[i] + '</span>';
+        friendsList.push(nameButton);
+    }
+    peerSpace.innerHTML += friendsList;
 }
 
 // SP

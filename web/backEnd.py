@@ -913,7 +913,7 @@ def addAttendant(request):
     querykeyID = "SELECT activity_id FROM activities WHERE name = 'Key';"
 
     keyID = json.loads(json.dumps(executeSingleQuery(querykeyID, fetch=True)))[0][0]
-    now = datetime.datetime.now() 
+    now = datetime.datetime.now()
     today = transformDate(now)
     if (len(date) == 9):
         date = date[0:5] + "0" + date[5:]
@@ -940,7 +940,7 @@ def addAttendant(request):
                 newMinute = str(int(lastTime[3:5]) + 5)
                 newSecond= "00"
             time = newHour + ":" + newMinute + ":" + newSecond
-        
+
     queryAdd = "INSERT INTO dailyattendance VALUES (" + str(studentID) + ", '" + date + "', '" + time +  "', -1, " + str(newNum) + ");"
     queryAddKey = "INSERT INTO dailyattendance VALUES (" + str(studentID) + ", '" + date + "', '" + time +  "', " + str(keyID) + ");"
     queryUpdate = "UPDATE students SET number_visits = " + str(newNum) + " WHERE id = " + str(studentID) + ";"
@@ -1115,10 +1115,11 @@ def checkAlert(request):
     id = request.form.get('id')
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])
 
-def uploadPicture(id):
+def uploadPicture(studentid):
     print("uploadPicture called!")
-    name, imageObj = request.files.popitem()
+    name, imageObj = list(request.files.items())[0]
     nameExt = name.rsplit('.')[-1].lower()
-    pathString = "/static/resources/images" + id + nameExt
+    pathString = "/static/resources/images" + studentid + nameExt
     imageObj.save(pathString)
-    
+    executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);" [studentid, pathString])
+    return 1

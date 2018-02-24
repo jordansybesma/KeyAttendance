@@ -126,14 +126,14 @@ def uniqueAttendance():
     queryYear = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE date <= \'" + today + "\' AND date > \'" + year + "\'"
 
 
-    tableCreate = "CREATE TABLE unique (name varchar(100), week int, month int, year int);"
-    addAttendees = "INSERT INTO unique VALUES (\'attendees\', (" + queryWeek + "), (" + queryMonth + "), (" + queryYear + "));"
+    tableCreate = "CREATE TABLE uniqueAtten (name varchar(100), week int, month int, year int);"
+    addAttendees = "INSERT INTO uniqueAtten VALUES (\'Number Who Attended\', (" + queryWeek + "), (" + queryMonth + "), (" + queryYear + "));"
     queryTotal = tableCreate + " " + addAttendees + " "
 
     for i in range(len(columns)):
         colName = columns[i][1]
         colID = columns[i][0]
-        queryInsert = "INSERT INTO unique VALUES (\'" + colName + "\'"
+        queryInsert = "INSERT INTO uniqueAtten VALUES (\'" + colName + "\'"
         for j in range(3):
             date = dates[j]
             queryCount = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE date <= \'" + today + "\' AND date > \'" + date + "\'"
@@ -144,11 +144,11 @@ def uniqueAttendance():
 
     executeSingleQuery(queryTotal, [])
 
-    querySelect = "SELECT * FROM unique;"
+    querySelect = "SELECT * FROM uniqueAtten;"
 
     returnVal = json.dumps(executeSingleQuery(querySelect, fetch = True), indent=4, sort_keys=True, default=str)
 
-    queryDrop = "DROP TABLE unique;"
+    queryDrop = "DROP TABLE uniqueAtten;"
     executeSingleQuery(queryDrop, [])
     return returnVal
 

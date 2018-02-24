@@ -101,6 +101,8 @@ function addAttendant(first, last) {
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&date=" + date + "&time=" + time + "&id=");
 
     displayNewAttendant(first, last, time);
+    
+    getRequest("/frequentPeers/" + first + " " + last, "", showFrequentPeersAttendance);
 }
 
 // AS
@@ -141,7 +143,7 @@ function addNewStudent() {
     var last = document.getElementById("newStudentLast").value.trim();
 
     if (inputOkay(first, last)){
-        
+
         first = capitalizeFirstLetter(first);
         last = capitalizeFirstLetter(last);
 
@@ -162,11 +164,11 @@ function inputOkay(first, last) {
     if (first === "") {
         alert("Please enter a first name");
         return false;
-    } 
+    }
     if (last == "") {
         alert("Please enter a last name");
         return false;
-    }       
+    }
     return true;
 }
 
@@ -241,19 +243,19 @@ function makeHeaderReadable(header) {
     var newHeader = "";
     var newChar = "";
     for (i in header) {
-        
+
         var firstChar = i==0;
         var capitalChar = header[i] == header[i].toUpperCase();
         var underscoreChar = header[i] == "_";
         var prevCharIsUnderscore = header[i - 1] == "_";
-        
+
         if (firstChar) {
             newChar = header[i].toUpperCase();
-        
+
         } else if (underscoreChar) {
             // Replace underscore with space.
             newChar = " ";
-            
+
         } else if (capitalChar) {
             if (!prevCharIsUnderscore) {
                 newHeader = newHeader + " ";
@@ -261,15 +263,15 @@ function makeHeaderReadable(header) {
             } else {
                 // Do nothing; space has already been added.
             }
-            
+
         } else if (prevCharIsUnderscore) {
                 newChar = header[i].toUpperCase();
-            
+
         } else {
             // Keep the char the same.
             newChar = header[i];
         }
-    
+
         newHeader = newHeader + newChar;
     }
     return newHeader;
@@ -820,24 +822,30 @@ function showStudentAttendance(_, data) {
 
 // SP
 // On student's profile, shows other students who show up at similar times.
-//RUSS needs to update this + python
 function showFrequentPeers(_, data) {
-    var peerSpace = document.getElementById("frequentPeers");
-    peerSpace.innerHTML = ("");
-    peerSpace.innerHTML += ("Frequently Attends With:<br/><br/>");
+    var peerSpace = document.getElementById("frequentPeers").innerHTML;
+    peerSpace = ("Frequently Attends With:<br/><br/>");
 
     //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
 
-    // peerSpace.innerHTML += (data.join())
+    // peerSpace += (data.join())
 
     var nameString = data.replace(/\[/g, "").replace(/\'/g, "").replace(/\]/g, "");
     var nameList = nameString.split(", ");
 
     for (var i in nameList) {
         var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span><br/>';
-        peerSpace.innerHTML += nameButton;
+        peerSpace += nameButton;
     }
     getRequest("/getJustID/" + document.getElementById("studentName").innerHTML, "", getStudentPicture);
+}
+
+// AS
+// On attendance sheet, shows peers with whom the added attendee frequently attends.
+function showFrequentPeersAttendance(_, data) {
+    var peerSpace = document.getElementById("frequentlyAttendsWith").innerHTML;
+    peerSpace = "";
+    
 }
 
 // SP

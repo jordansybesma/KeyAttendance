@@ -45,7 +45,7 @@ function giveReport() {
 
 // R
 // Displays data on the different time intervals, day/week/month/year.
-// 
+// Retrieves data on num students who attended the Key for the first time in past week/month/year, passes it to reportHelper2.
 function reportHelper(_, columns) {
     console.log(columns);
     uniqueAttenData = JSON.parse(columns);
@@ -56,8 +56,6 @@ function reportHelper(_, columns) {
     headers.insertCell(-1).innerHTML = '7 Days';
     headers.insertCell(-1).innerHTML = '30 Days';
     headers.insertCell(-1).innerHTML = 'Year';
-
-
 
     for (i in uniqueAttenData) {
         var row = table.insertRow(-1);
@@ -73,7 +71,7 @@ function reportHelper(_, columns) {
 }
 
 // R
-// 
+// Displays data on first attendances for week/month/year.
 function reportHelper2(_, columns) {
     console.log(columns);
     uniqueAttenData = JSON.parse(columns);
@@ -85,18 +83,16 @@ function reportHelper2(_, columns) {
     headers.insertCell(-1).innerHTML = '30 Days';
     headers.insertCell(-1).innerHTML = 'Year';
 
-
-
     for (i in uniqueAttenData) {
         var row = table.insertRow(-1);
         for (j in uniqueAttenData[i]) {
             row.insertCell(-1).innerHTML = uniqueAttenData[i][j];
         }
     }
-
 }
 
-
+// R
+// Retrieves data on num students who attended the Key for the first time between 2 specified dates, passes it to reportHelper3.
 function getNewStudentsAttended(){
     var start = document.getElementById("startDateNewStudent").value;
     var end = document.getElementById("endDateNewStudent").value;
@@ -116,6 +112,9 @@ function getNewStudentsAttended(){
     getRequest("/getFirstAttendanceDates/" + start + " " + end, "", reportHelper3);
     return false;
 }
+
+// R
+// Exports data on first attendances between specified dates to a CSV file!
 function reportHelper3(_, students) {
     data = JSON.parse(students);
 

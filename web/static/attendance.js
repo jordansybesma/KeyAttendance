@@ -850,18 +850,22 @@ function showFrequentPeersAttendance(_, data) {
 
     var nameList = nameString.split(", ");
 
-    var friendsList = []
-
-    for (var i in nameList) {
+    nameListLength = nameList.length;
+    console.log("nameListLength: "+nameListLength);
+    for (var i=0; i < nameListLength-1; i++) {
         var name = nameList[i].split(" ");
         var first = name[0];
-        var second = name[1];
-        console.log("huh: " + nameList[i]);
+        var last = name[1];
         
-        var nameButton = '<span style="cursor:pointer" onclick=\"addAttendant(\'' + first + "," + last + '\')\">' + nameList[i] + '</span>';
-        friendsList.push(nameButton);
+        var nameButton = '<span style="cursor:pointer" onclick=\"addAttendant(\'' + first + "', '" + last + '\')\">' + nameList[i] + ", " + '</span>';
+        peerSpace.innerHTML += nameButton;
     }
-    peerSpace.innerHTML += friendsList;
+    var finalName = nameList[nameListLength-1].split(" ");
+    var finalFirst = finalName[0];
+    var finalLast = finalName[1];
+    var params = finalFirst + "', '" + finalLast;
+    var finalNameButton = '<span style="cursor:pointer" onclick=\"addAttendant(\'' + params + '\')\">' + nameList[nameListLength-1] + '</span>';
+    peerSpace.innerHTML += finalNameButton;
 }
 
 // SP
@@ -1029,7 +1033,6 @@ function fillAttendanceTableHelper(_, data) {
 function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     var columnData = document.getElementById("columns").innerHTML;
-    console.log(columnData);
     var myColumns = JSON.parse(columnData);
     var table = document.getElementById("Attendance-Table");
     for (i in myData) {

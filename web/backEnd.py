@@ -66,6 +66,21 @@ def getNumberAttended(string):
     return results
 
 
+
+
+
+
+
+def getFirstAttendanceDates(dates):
+    
+    dateList = dates.split()
+    start = dateList[0]
+    end = dateList[1]
+    
+    query = "SELECT first_name, last_name FROM students WHERE first_attendance <= \'" + end + "\' AND first_attendance >= \'" + start + "\';"
+    
+    return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+
 #Could be combined with unique table probably...
 def getFirstAttendance():
     #first - lets get unique students for the last week, month, 6 months, year
@@ -82,13 +97,13 @@ def getFirstAttendance():
 
     dates = [week, month, year]
 
-    queryWeek = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE first_attendance <= \'" + today + "\' AND first_attendance > \'" + week + "\'"
-    queryMonth = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE first_attendance <= \'" + today + "\' AND first_attendance > \'" + month + "\'"
-    queryYear = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE first_attendance <= \'" + today + "\' AND first_attendance > \'" + year + "\'"
+    queryWeek = "SELECT COUNT(DISTINCT id) FROM students WHERE first_attendance <= \'" + today + "\' AND first_attendance > \'" + week + "\'"
+    queryMonth = "SELECT COUNT(DISTINCT id) FROM students WHERE first_attendance <= \'" + today + "\' AND first_attendance > \'" + month + "\'"
+    queryYear = "SELECT COUNT(DISTINCT id) FROM students WHERE first_attendance <= \'" + today + "\' AND first_attendance > \'" + year + "\'"
 
 
-    tableCreate = "CREATE TABLE firstAtten (name varchar(100), week int, month int, year int);"
-    addAttendees = "INSERT INTO unique VALUES (\'attendees\', (" + queryWeek + "), (" + queryMonth + "), (" + queryYear + "));"
+    tableCreate = "CREATE TABLE firstAtten (week int, month int, year int);"
+    addAttendees = "INSERT INTO firstAtten VALUES ((" + queryWeek + "), (" + queryMonth + "), (" + queryYear + "));"
     queryTotal = tableCreate + " " + addAttendees + " "
 
 

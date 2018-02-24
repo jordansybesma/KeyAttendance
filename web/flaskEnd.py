@@ -43,6 +43,15 @@ def addNewStudent():
 def updateStudentInfo():
     return backEnd.updateStudentInfo(request)
 
+@app.route('/getFirstAttendanceDates/<dates>')
+def getFirstAttendanceDates(dates):
+    return backEnd.getFirstAttendanceDates(dates)
+
+
+
+@app.route('/getFirstAttendance/')
+def getFirstAttendance():
+    return backEnd.getFirstAttendance()
 
 @app.route('/uniqueAttendance/')
 def uniqueAttendance():

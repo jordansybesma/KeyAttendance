@@ -58,14 +58,14 @@
                         <h2 id="attendanceName">Attendance Sheet placeholder</h2>
                         <p id="storeDate"></p>
 
-                        <form autocomplete="off" onsubmit="return false;" id="suggestForm">
-                            <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required>
-                            <input onclick="onAddRow()" id="searchbutton" type="button" value="Add" class=tabishButton>
-                            <datalist id="suggestedStudents"></datalist>
-                        </form>
-                        
-                        <div id="frequentlyAttendsWith"></div>
-                        
+                        <div id="addingAndSuggested">
+                            <form autocomplete="off" onsubmit="return false;" id="suggestForm">
+                                <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required>
+                                <input onclick="onAddRow()" id="searchbutton" type="button" value="Add" class=tabishButton>
+                                <datalist id="suggestedStudents"></datalist>
+                            </form>
+                            <h5 id="frequentlyAttendsWith">Suggested Students: </h5>
+                        </div>
                     </div>
 
                     <div id="rightStuff">
@@ -78,19 +78,14 @@
                         <div class="addStudentHeader">
                             <h2 id="popUpHeader">Add Student</h2>
                        </div>
-                        <div class="modal-body">
-                            <form>
-                                First name:<br>
-                                <input type="text" name="firstname" id="newStudentFirst"><br>
-                                Last name:<br>
-                                <input type="text" name="lastname" id="newStudentLast">
-                            </form>
+                        
+                        <div class="modal-body" id="addNewStudentQuick"></div>
+                        <p id="newStudentFirstSave"></p>
+                        <p id="newStudentLastSave"></p>
+
+                        <div class="modal-footer" id="newStudentFooter"></div>
+
                         </div>
-                        <div class="modal-footer">
-                            <input type="button" onclick="closeAddNewStudent()" id="close" value="Cancel" />
-                            <input type="button" onclick="addNewStudent()" id="submitStudent" value="Submit" />
-                        </div>
-                    </div>
                 <p id="columns"></p>
                 <table id="Attendance-Table" style="width:100%"></table>
             </div>
@@ -190,6 +185,22 @@
             <h4>This table shows the number of unique students who participated in each activity over several time spans. Does not include data for the current date (most recent data is from yesterday)</h4>
 
             <table id="UniqueAttendanceTable" style="width:50%"></table>
+
+
+
+            <h3>New Student Report</h3>
+            <h4>This table shows the number of students who attended the key for the first time over several time spans. </h4>
+
+            <table id="NewAttendanceTable" style="width:50%"></table>
+
+            <h4>Select a start date and an end date to get an excel file that list the students who attended for the first time between those two dates. </h4>
+            <form onsubmit="return false;">
+                Start Date <br>
+                <input type="date" id="startDateNewStudent" /><br>
+                End Date <br>
+                <input type="date" id="endDateNewStudent" /><br>
+                <input type="submit" onclick="getNewStudentsAttended()" />
+            </form>
 
             <div id="downloadStudentReport">
                 <h3>Attendance Milestone Report</h3>

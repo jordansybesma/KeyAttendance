@@ -1121,4 +1121,4 @@ def uploadPicture(studentid, name, imageObj):
     pathString = "static/resources/images/" + studentid + nameExt
     imageObj.save(pathString)
     executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);" [studentid, pathString])
-    return 1
+    return "Done!"

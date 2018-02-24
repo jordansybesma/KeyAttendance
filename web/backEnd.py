@@ -1156,7 +1156,7 @@ def checkAlert(request):
 
 def uploadPicture(studentid, name, imageObj):
     nameExt = name.rsplit('.')[-1].lower()
-    pathString = "/home/ubuntu/404-repo-name-DNE/web/static/resources/images/"
+    pathString = "/home/ubuntu/404-repo-name-DNE/web/static/resources/images/" + studentid + "image"
     imageObj.save(pathString)
     executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);" [studentid, pathString])
     return 1

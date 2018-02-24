@@ -1102,7 +1102,7 @@ def checkAlert(request):
 
 def uploadPicture(studentid):
     print("uploadPicture called!")
-    name, imageObj = request.files.popitem()
+    name, imageObj = request.files.items()[0]
     nameExt = name.rsplit('.')[-1].lower()
     pathString = "/static/resources/images" + studentid + nameExt
     imageObj.save(pathString)

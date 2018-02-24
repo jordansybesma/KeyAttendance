@@ -82,6 +82,8 @@ function addAttendant(first, last) {
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&date=" + date + "&time=" + time + "&id=");
 
     displayNewAttendant(first, last, time);
+    
+    getRequest("/frequentPeers/" + first + " " + last, "", showFrequentPeersAttendance);
 }
 
 // AS
@@ -801,24 +803,30 @@ function showStudentAttendance(_, data) {
 
 // SP
 // On student's profile, shows other students who show up at similar times.
-//RUSS needs to update this + python
 function showFrequentPeers(_, data) {
-    var peerSpace = document.getElementById("frequentPeers");
-    peerSpace.innerHTML = ("");
-    peerSpace.innerHTML += ("Frequently Attends With:<br/><br/>");
+    var peerSpace = document.getElementById("frequentPeers").innerHTML;
+    peerSpace = ("Frequently Attends With:<br/><br/>");
 
     //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
 
-    // peerSpace.innerHTML += (data.join())
+    // peerSpace += (data.join())
 
     var nameString = data.replace(/\[/g, "").replace(/\'/g, "").replace(/\]/g, "");
     var nameList = nameString.split(", ");
 
     for (var i in nameList) {
         var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span><br/>';
-        peerSpace.innerHTML += nameButton;
+        peerSpace += nameButton;
     }
     getRequest("/getJustID/" + document.getElementById("studentName").innerHTML, "", getStudentPicture);
+}
+
+// AS
+// On attendance sheet, shows peers with whom the added attendee frequently attends.
+function showFrequentPeersAttendance(_, data) {
+    var peerSpace = document.getElementById("frequentlyAttendsWith").innerHTML;
+    peerSpace = "";
+    
 }
 
 // SP

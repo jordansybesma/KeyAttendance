@@ -992,9 +992,15 @@ def frequentPeers(name):
     closeAppearancesList = sorted(closeAppearancesDict.items(), key=lambda x: x[1])[::-1]
     frequentPeersList = []
 
-    for i in range(5):
-        frequentPeer = getStudentByID(closeAppearancesList[i][0])
-        frequentPeersList.append(frequentPeer)
+    peerListLength = len(closeAppearancesList)
+    if (peerListLength > 5):
+        for i in range(5):
+            frequentPeer = getStudentByID(closeAppearancesList[i][0])
+            frequentPeersList.append(frequentPeer)
+    else:
+        for i in range(peerListLength):
+            frequentPeer = getStudentByID(closeAppearancesList[i][0])
+            frequentPeersList.append(frequentPeer)
 
     print("Hello, RUSS!")
     return str(frequentPeersList)

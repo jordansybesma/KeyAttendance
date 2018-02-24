@@ -30,6 +30,11 @@ def foo():
 @app.route('/getReports')
 def getReports():
     return backEnd.getReports()
+    
+    
+@app.route('/fixShit')
+def fixShit():
+    return backEnd.fixShit()
 
 @app.route('/createAttendanceData/', methods = ["POST"])
 def createAttendanceData():

@@ -898,7 +898,34 @@ def addAttendant(request):
     querykeyID = "SELECT activity_id FROM activities WHERE name = 'Key';"
 
     keyID = json.loads(json.dumps(executeSingleQuery(querykeyID, fetch=True)))[0][0]
-
+    now = datetime.datetime.now() 
+    today = transformDate(now)
+    if (len(date) == 9):
+        date = date[0:5] + "0" + date[5:]
+    if (len(today) == 9):
+        today = today[0:5] + "0" + today[5:]
+    print(date)
+    print(today)
+    if (today != date):
+        queryTime = "SELECT time FROM dailyAttendance WHERE date = \'" + date + "\' ORDER BY time DESC;"
+        lastTimes = json.loads(json.dumps(executeSingleQuery(queryTime,fetch = True)[:10], indent=4, sort_keys=True, default=str))
+        print(lastTimes)
+        if (len(lastTimes) == 0):
+            time = "15:00:00"
+        else:
+            lastTime = lastTimes[0][0]
+            print(lastTime)
+            minutes = lastTime[3:5]
+            if (int(minutes) > 50):
+                newHour = str(int(lastTime[0:2]) + 1)
+                newMinute = "00"
+                newSecond = "00"
+            else:
+                newHour = lastTime[0:2]
+                newMinute = str(int(lastTime[3:5]) + 5)
+                newSecond= "00"
+            time = newHour + ":" + newMinute + ":" + newSecond
+        
     queryAdd = "INSERT INTO dailyattendance VALUES (" + str(studentID) + ", '" + date + "', '" + time +  "', -1, " + str(newNum) + ");"
     queryAddKey = "INSERT INTO dailyattendance VALUES (" + str(studentID) + ", '" + date + "', '" + time +  "', " + str(keyID) + ");"
     queryUpdate = "UPDATE students SET number_visits = " + str(newNum) + " WHERE id = " + str(studentID) + ";"
@@ -996,9 +1023,15 @@ def frequentPeers(name):
     closeAppearancesList = sorted(closeAppearancesDict.items(), key=lambda x: x[1])[::-1]
     frequentPeersList = []
 
-    for i in range(5):
-        frequentPeer = getStudentByID(closeAppearancesList[i][0])
-        frequentPeersList.append(frequentPeer)
+    peerListLength = len(closeAppearancesList)
+    if (peerListLength > 5):
+        for i in range(5):
+            frequentPeer = getStudentByID(closeAppearancesList[i][0])
+            frequentPeersList.append(frequentPeer)
+    else:
+        for i in range(peerListLength):
+            frequentPeer = getStudentByID(closeAppearancesList[i][0])
+            frequentPeersList.append(frequentPeer)
 
     print("Hello, RUSS!")
     return str(frequentPeersList)

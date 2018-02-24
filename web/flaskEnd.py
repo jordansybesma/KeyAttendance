@@ -169,8 +169,9 @@ def getPhoto(string):
     return backEnd.getPhoto(string)
 
 @app.route('/uploadPicture')
-def uploadPicture(id):
-    return backEnd.getPhoto(id)
+def uploadPicture():
+    studentid = request.form["id"]
+    return backEnd.getPhoto(studentid)
 
 
 if __name__ == "__main__":

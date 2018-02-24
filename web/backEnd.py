@@ -72,13 +72,13 @@ def getNumberAttended(string):
 
 
 def getFirstAttendanceDates(dates):
-    
+
     dateList = dates.split()
     start = dateList[0]
     end = dateList[1]
-    
+
     query = "SELECT first_name, last_name FROM students WHERE first_attendance <= \'" + end + "\' AND first_attendance >= \'" + start + "\';"
-    
+
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
 #Could be combined with unique table probably...
@@ -1117,7 +1117,7 @@ def checkAlert(request):
 
 def uploadPicture(studentid, name, imageObj):
     nameExt = name.rsplit('.')[-1].lower()
-    pathString = "/static/resources/images/" + studentid + nameExt
+    pathString = "~/404-repo-name-DNE/web/static/resources/images/" + studentid + nameExt
     imageObj.save(pathString)
     executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);" [studentid, pathString])
     return 1

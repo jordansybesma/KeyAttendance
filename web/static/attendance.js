@@ -46,6 +46,7 @@ function reportHelper(_, columns) {
     console.log(columns);
     uniqueAttenData = JSON.parse(columns);
     table = document.getElementById("UniqueAttendanceTable");
+    table.innerHTML = "";
     var headers = table.insertRow(0);
     headers.insertCell(-1).innerHTML = 'Category';
     headers.insertCell(-1).innerHTML = '7 Days';
@@ -62,6 +63,65 @@ function reportHelper(_, columns) {
     }
     //var row = table.insertRow(1);
     //row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
+
+    getRequest("/getFirstAttendance/", "", reportHelper2);
+
+}
+
+function reportHelper2(_, columns) {
+    console.log(columns);
+    uniqueAttenData = JSON.parse(columns);
+    table = document.getElementById("NewAttendanceTable");
+    table.innerHTML = "";
+    var headers = table.insertRow(0);
+    
+    headers.insertCell(-1).innerHTML = '7 Days';
+    headers.insertCell(-1).innerHTML = '30 Days';
+    headers.insertCell(-1).innerHTML = 'Year';
+
+
+
+    for (i in uniqueAttenData) {
+        var row = table.insertRow(-1);
+        for (j in uniqueAttenData[i]) {
+            row.insertCell(-1).innerHTML = uniqueAttenData[i][j];
+        }
+    }
+
+}
+
+
+function getNewStudentsAttended(){
+    var start = document.getElementById("startDateNewStudent").value;
+    var end = document.getElementById("endDateNewStudent").value;
+    console.log(start);
+    console.log(end);
+    console.log(typeof start);
+    if (start == "") {
+        alert("Please enter a start date");
+        return false;
+    }
+    if (end == "") {
+        alert("Please enter an end date");
+        return false;
+    }
+    console.log(start + " " + end);
+    console.log("/getFirstAttendanceDates/" + start + " " + end);
+    getRequest("/getFirstAttendanceDates/" + start + " " + end, "", reportHelper3);
+    return false;
+}
+function reportHelper3(_, students) {
+    data = JSON.parse(students);
+
+    console.log(data);
+    rows = [];
+    for (i in data) {
+        rows.push(data[i]);
+    }
+    filename = "new_student_report.csv";
+
+
+    exportToCsv(filename, rows);
 
 }
 
@@ -629,7 +689,14 @@ function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;
     document.getElementById("saveStudentColumnData").innerHTML = columns;
+    console.log(columns);
+
     var studentInfo = JSON.parse(data);
+    console.log("studentInfo:");
+    console.log(studentInfo);
+    // set the hidden form input for picture upload to be the ID
+    // this lets the backend know the student ID of the assosiated picture
+    document.getElementById("pictureUploadHiddenId").value = studentInfo[0][0];
     var columnInfo = JSON.parse(columns);
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("demographics");
@@ -655,6 +722,7 @@ function openEditProfile() {
     var name = document.getElementById('keywordStudentSearch').value;
     var studentInfo = document.getElementById("saveStudentData").innerHTML;
     var columns = document.getElementById("saveStudentColumnData").innerHTML;
+    console.log("in openEditProfile");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("editProfile");
     div.style.display = "block";
@@ -664,7 +732,6 @@ function openEditProfile() {
     var updateString = "";
     for (i in columnData) {
         console.log("outer loop");
-
         var colIsShowing = columnData[i][1];
         if (colIsShowing) {
             console.log("next loop");
@@ -672,7 +739,7 @@ function openEditProfile() {
             var form = document.createElement("form");
             var type = columnData[i][4];
             form.setAttribute('onSubmit', 'return false;');
-            if ((type == "varchar") || (type == "int")) {
+            if ((type == "varchar(500)") || (type == "int")) {
                 console.log("got to last loop");
                 var value = studData[parseInt(i) + 1];
                 if (value == null) {
@@ -718,7 +785,7 @@ function openEditProfile() {
     returnButton.setAttribute('name', 'Return to Profile');
     console.log(updateString);
     returnButton.setAttribute('onclick', updateString + 'returnToProfile();');
-    returnButton.innerHTML = "Return to Profile";
+    returnButton.innerHTML = "Submit";
     div.appendChild(returnButton);
 }
 

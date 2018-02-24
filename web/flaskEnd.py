@@ -43,6 +43,15 @@ def addNewStudent():
 def updateStudentInfo():
     return backEnd.updateStudentInfo(request)
 
+@app.route('/getFirstAttendanceDates/<dates>')
+def getFirstAttendanceDates(dates):
+    return backEnd.getFirstAttendanceDates(dates)
+
+
+
+@app.route('/getFirstAttendance/')
+def getFirstAttendance():
+    return backEnd.getFirstAttendance()
 
 @app.route('/uniqueAttendance/')
 def uniqueAttendance():
@@ -174,8 +183,9 @@ def getPhoto(string):
     return backEnd.getPhoto(string)
 
 @app.route('/uploadPicture')
-def uploadPicture(id):
-    return backEnd.getPhoto(id)
+def uploadPicture():
+    studentid = request.form["id"]
+    return backEnd.uploadPicture(studentid)
 
 
 if __name__ == "__main__":

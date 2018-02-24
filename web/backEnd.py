@@ -72,13 +72,13 @@ def getNumberAttended(string):
 
 
 def getFirstAttendanceDates(dates):
-    
+
     dateList = dates.split()
     start = dateList[0]
     end = dateList[1]
-    
+
     query = "SELECT first_name, last_name FROM students WHERE first_attendance <= \'" + end + "\' AND first_attendance >= \'" + start + "\';"
-    
+
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
 #Could be combined with unique table probably...
@@ -205,7 +205,7 @@ def fixShit():
         queryTotal = queryTotal + " " + queryInsert
     executeSingleQuery(queryTotal, [])
     return "done"
-            
+
 
 
 
@@ -277,21 +277,21 @@ def addNewStudent(request):
     now = datetime.datetime.now()
     today = transformDate(now)
 
-    
-    
+
+
     queryIDs = "SELECT id FROM students ORDER BY id DESC"
     ids = json.loads(json.dumps(executeSingleQuery(queryIDs, fetch = True), indent=4, sort_keys=True, default=str))
     largeID = ids[0][0]
     newID = largeID + 1
-    
-    
+
+
     #executeSingleQuery("INSERT INTO students VALUES (\'" + firstName + "\', \'" + lastName + "\', " + str(newID) + ");", [])
     executeSingleQuery("INSERT INTO students VALUES (\'" + firstName + "\', \'" + lastName + "\');", [])
-    
-    
+
+
     #queryUpdateID = "UPDATE students SET id = " + newID + "WHERE first_name = \'" + firstName + "\', AND last_name = \'" + lastName + "\';"
     #executeSingleQuery(queryUpdateID, [])
-    
+
     queryUpdate = "UPDATE students SET first_attendance = \'" + today + "\', number_visits = 0 WHERE first_name = \'" + firstName + "\' AND last_name = \'" + lastName + "\';"
     executeSingleQuery(queryUpdate, [])
     return "\nHello frontend:)\n"
@@ -338,7 +338,7 @@ def updateStudentInfo(request):
         colName = "int_value"
     elif (columnType == "boolean"):
         colName = "bool_value"
-        
+
         curVal = json.loads(json.dumps(executeSingleQuery("SELECT bool_value FROM studentInfo WHERE student_id = " + str(studentID) + " AND activity_id = " + str(colID) + ";", [])))
         if (len(curVal) == 0):
             value = 'true'
@@ -347,8 +347,8 @@ def updateStudentInfo(request):
                 value = 'true'
             else:
                 value = 'false'
-                
-        
+
+
     elif (columnType == "date"):
         colName = "date_value"
         if (value != "null"):
@@ -1156,7 +1156,7 @@ def checkAlert(request):
 
 def uploadPicture(studentid, name, imageObj):
     nameExt = name.rsplit('.')[-1].lower()
-    pathString = "/static/resources/images/" + studentid + nameExt
+    pathString = "/home/ubuntu/404-repo-name-DNE/web/static/resources/images/" + studentid + "image"
     imageObj.save(pathString)
     executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);" [studentid, pathString])
     return 1

@@ -629,6 +629,8 @@ function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;
     document.getElementById("saveStudentColumnData").innerHTML = columns;
+    console.log(columns);
+
     var studentInfo = JSON.parse(data);
     console.log("studentInfo:");
     console.log(studentInfo);
@@ -660,6 +662,7 @@ function openEditProfile() {
     var name = document.getElementById('keywordStudentSearch').value;
     var studentInfo = document.getElementById("saveStudentData").innerHTML;
     var columns = document.getElementById("saveStudentColumnData").innerHTML;
+    console.log("in openEditProfile");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("editProfile");
     div.style.display = "block";
@@ -669,7 +672,6 @@ function openEditProfile() {
     var updateString = "";
     for (i in columnData) {
         console.log("outer loop");
-
         var colIsShowing = columnData[i][1];
         if (colIsShowing) {
             console.log("next loop");
@@ -677,7 +679,7 @@ function openEditProfile() {
             var form = document.createElement("form");
             var type = columnData[i][4];
             form.setAttribute('onSubmit', 'return false;');
-            if ((type == "varchar") || (type == "int")) {
+            if ((type == "varchar(500)") || (type == "int")) {
                 console.log("got to last loop");
                 var value = studData[parseInt(i) + 1];
                 if (value == null) {
@@ -723,7 +725,7 @@ function openEditProfile() {
     returnButton.setAttribute('name', 'Return to Profile');
     console.log(updateString);
     returnButton.setAttribute('onclick', updateString + 'returnToProfile();');
-    returnButton.innerHTML = "Return to Profile";
+    returnButton.innerHTML = "Submit";
     div.appendChild(returnButton);
 }
 

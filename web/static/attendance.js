@@ -29,12 +29,14 @@ function getTimesAttendedHelper(_, students) {
     }
     filename = "attendance_report.csv";
 
-
     exportToCsv(filename, rows);
 }
 
 
 // R
+// Retrieves data on num of unique attendees that did x activity for all x $\in$ activeColumns.
+// It does this for time periods of the past day, past week, past month, and past year.
+// This data is passed to reportHelper!
 function giveReport() {
     //getRequest("/getStudentColumns", "", reportHelper);
     console.log("got to report");
@@ -42,6 +44,8 @@ function giveReport() {
 }
 
 // R
+// Displays data on the different time intervals, day/week/month/year.
+// 
 function reportHelper(_, columns) {
     console.log(columns);
     uniqueAttenData = JSON.parse(columns);
@@ -68,6 +72,8 @@ function reportHelper(_, columns) {
 
 }
 
+// R
+// 
 function reportHelper2(_, columns) {
     console.log(columns);
     uniqueAttenData = JSON.parse(columns);

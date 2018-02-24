@@ -58,12 +58,14 @@
                         <h2 id="attendanceName">Attendance Sheet placeholder</h2>
                         <p id="storeDate"></p>
 
-                        <form autocomplete="off" onsubmit="return false;" id="suggestForm">
-                            <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required>
-                            <input onclick="onAddRow()" id="searchbutton" type="button" value="Add" class=tabishButton>
-                            <datalist id="suggestedStudents"></datalist>
-                        </form>
-                        <h5 id="frequentlyAttendsWith">Suggested Students: </h5>
+                        <div id="addingAndSuggested">
+                            <form autocomplete="off" onsubmit="return false;" id="suggestForm">
+                                <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required>
+                                <input onclick="onAddRow()" id="searchbutton" type="button" value="Add" class=tabishButton>
+                                <datalist id="suggestedStudents"></datalist>
+                            </form>
+                            <h5 id="frequentlyAttendsWith">Suggested Students: </h5>
+                        </div>
                     </div>
 
                     <div id="rightStuff">
@@ -121,11 +123,11 @@
                 <div id="studentInfo">
                     <h3 id = "studentName"></h3>
                     <img id="studentPhoto" hidden>
-                    <form id="package_form" action="/uploadPicture" method="post">
+                    <form id="package_form" action="/uploadPicture" method="post" enctype="multipart/form-data">
                       <div>
                         <p>Upload a New Picture:</p>
-                        <p><input id="upload_button" type="file" class="btn btn-default btn-xs" name="file"></p>
-                        <p><input id="submit_button" type="submit" class="btn btn-success" value="Upload">
+                        <p><input id="upload_button" type="file" name="file"></p>
+                        <p><input id="submit_button" type="submit" value="Upload">
                         <input type="hidden" id="pictureUploadHiddenId" name="id"/>
                       </div>
                     </form>

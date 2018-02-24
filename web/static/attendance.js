@@ -804,19 +804,19 @@ function showStudentAttendance(_, data) {
 // SP
 // On student's profile, shows other students who show up at similar times.
 function showFrequentPeers(_, data) {
-    var peerSpace = document.getElementById("frequentPeers").innerHTML;
-    peerSpace = ("Frequently Attends With:<br/><br/>");
+    var peerSpace = document.getElementById("frequentPeers");
+    peerSpace.innerHTML = "Frequently Attends With:<br/><br/>";
 
     //var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\''+ fullName +'\')\">'+ fullName +'</span>';
 
-    // peerSpace += (data.join())
+    // peerSpace.innerHTML += (data.join())
 
     var nameString = data.replace(/\[/g, "").replace(/\'/g, "").replace(/\]/g, "");
     var nameList = nameString.split(", ");
 
     for (var i in nameList) {
         var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + nameList[i] + '\')\">' + nameList[i] + '</span><br/>';
-        peerSpace += nameButton;
+        peerSpace.innerHTML += nameButton;
     }
     getRequest("/getJustID/" + document.getElementById("studentName").innerHTML, "", getStudentPicture);
 }
@@ -824,9 +824,25 @@ function showFrequentPeers(_, data) {
 // AS
 // On attendance sheet, shows peers with whom the added attendee frequently attends.
 function showFrequentPeersAttendance(_, data) {
-    var peerSpace = document.getElementById("frequentlyAttendsWith").innerHTML;
-    peerSpace = "";
-    
+    var peerSpace = document.getElementById("frequentlyAttendsWith");
+    peerSpace.innerHTML = "Suggested Students: ";
+        
+    var nameString = data.replace(/\[/g, "").replace(/\'/g, "").replace(/\]/g, "");
+
+    var nameList = nameString.split(", ");
+
+    var friendsList = []
+
+    for (var i in nameList) {
+        var name = nameList[i].split(" ");
+        var first = name[0];
+        var second = name[1];
+        console.log("huh: " + nameList[i]);
+        
+        var nameButton = '<span style="cursor:pointer" onclick=\"addAttendant(\'' + first + "," + last + '\')\">' + nameList[i] + '</span>';
+        friendsList.push(nameButton);
+    }
+    peerSpace.innerHTML += friendsList;
 }
 
 // SP

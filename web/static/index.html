@@ -123,7 +123,7 @@
                 <div id="studentInfo">
                     <h3 id = "studentName"></h3>
                     <img id="studentPhoto" hidden>
-                    <form id="package_form" action="/uploadPicture" method="post" enctype="multipart/form-data" target="doneMessage">
+                    <form id="package_form" action="/uploadPicture" method="post" enctype="multipart/form-data" target="hiddenFrame">
                       <div>
                         <p>Upload a New Picture:</p>
                         <p><input id="upload_button" type="file" accept="image/*" name="file"></p>
@@ -220,7 +220,7 @@
         </div>
 
     </body>
-
+<iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
 </html>
 
 <script>

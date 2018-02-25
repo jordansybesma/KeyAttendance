@@ -745,9 +745,7 @@ function modifyAutofillList(_, studentNames) {
 // SP
 // Displays a student profile by using information stored in the HTML
 function showStudentProfile() {
-
-    var profileSpace = document.getElementById('studentProfileText');
-    profileSpace.innerHTML = ("");
+    document.getElementById('changePhoto').style.display = 'contents';
     var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
     var userInput = document.getElementById('keywordStudentSearch').value;
@@ -764,7 +762,6 @@ function showStudentProfile() {
     // Open student profile
     if (optionFound) {
         nameSpace.innerHTML += (userInput);
-        profileSpace.innerHTML += ("\n");
         getRequest("/getStudentInfo/" + userInput, "", showDemographics);
     }
 }

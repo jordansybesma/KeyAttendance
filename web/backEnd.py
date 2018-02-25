@@ -68,7 +68,98 @@ def getNumberAttended(string):
     return results
 
 
+def getStudentsByActivity(dates):
+    dateList = dates.split()
+    start = dateList[0]
+    end = dateList[1]
+    column = dateList[2]
+    activityID = json.loads(json.dumps(executeSingleQuery("SELECT activity_id FROM activities WHERE name = \'" + column + "\';", fetch = True), indent=4, sort_keys=True, default=str))[0][0]
+    
+    queryStudents = "SELECT DISTINCT(student_id) INTO tempIDs FROM dailyAttendance WHERE date <= \'" + end + "\' AND date >= \'" + start + "\' AND activity_id = " + str(activityID) + ";"
+    query2 = "SELECT tempIDs.student_ID, students.first_name, students.last_name INTO tempNames FROM tempIDs LEFT JOIN students ON tempIDs.student_id = students.id;"
+    queryStudents = queryStudents + " " + query2
+    executeSingleQuery(queryStudents, [])
+     
+    totalQuery = "SELECT DISTINCT id as student_id INTO temp1 FROM students;"
+    #executeSingleQuery(query1, [])
 
+    queryColumns = "SELECT info_id, name, type FROM studentcolumns WHERE is_showing = 'true' ORDER BY info_id;"
+    columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
+    columns =json.loads(columnResults)
+    newTable = "temp1"
+    tempCount = 1
+
+    for i in range(len(columns)):
+        name = columns[i][1]
+        colID = columns[i][0]
+        colType = columns[i][2]
+        tempCount = tempCount + 1
+        rightTable = "temp" + str(tempCount)
+        # key difference - select from differnt column based on type
+        colToSelect = ""
+        if (colType == "varchar"):
+            colToSelect = "str_value"
+        elif (colType == "varchar(500)"):
+            colToSelect = "str_value"
+        elif (colType == "int"):
+            colToSelect = "int_value"
+        elif (colType == "boolean"):
+            colToSelect = "bool_value"
+        elif (colType == "date"):
+            colToSelect = "date_value"
+        elif (colType == "boolean"):
+            colToSelect = "time_value"
+
+        queryTemp = "SELECT DISTINCT student_id, " +  colToSelect + " INTO " + rightTable + " FROM studentinfo WHERE info_id = " + str(colID) + ";"
+        #executeSingleQuery(queryTemp, [])
+
+        leftTable = newTable
+        tempCount = tempCount + 1
+        newTable = "temp" + str(tempCount)
+        queryJoin = "SELECT " + leftTable + ".student_id, "
+
+
+        if (i > 0):
+            for act in range(1, i + 1):
+                queryJoin = queryJoin + leftTable + ".act" + str(act) + ", "
+
+
+        queryJoin = queryJoin + rightTable + "." + colToSelect + " as act" + str(i + 1) + " INTO "
+        queryJoin = queryJoin + newTable + " FROM " + leftTable + " LEFT JOIN "
+        queryJoin = queryJoin + rightTable + " ON " + leftTable + ".student_id = " + rightTable + ".student_id;"
+        totalQuery = totalQuery + " " + queryTemp + " " + queryJoin
+
+    executeSingleQuery(totalQuery, [])
+
+    returnQuery = "SELECT tempNames.first_name, tempNames.last_name, " + newTable + ".* FROM " + newTable + " RIGHT JOIN tempNames ON tempNames.student_id = " + newTable + ".student_id;"
+
+    result = json.dumps(executeSingleQuery(returnQuery, fetch = True), indent=4, sort_keys=True, default=str)
+    print(result)
+    #return result
+
+    queryDrop = "DROP TABLE tempNames; DROP TABLE tempIDs;"
+
+    for table in range(1, tempCount + 1):
+        queryDrop = queryDrop + "DROP TABLE temp" + str(table) + "; "
+    executeSingleQuery(queryDrop, [])
+    
+    return result
+ 
+
+def getUniqueStudentsDates(dates):
+    dateList = dates.split()
+    start = dateList[0]
+    end = dateList[1]
+    
+    query = "SELECT DISTINCT(student_id) INTO temp1 FROM dailyAttendance WHERE date <= \'" + end + "\' AND date >= \'" + start + "\';"
+    query2 = "SELECT temp1.student_id, students.first_name, students.last_name INTO temp2 FROM temp1 LEFT JOIN students ON temp1.student_id = students.id;"
+    queryTotal = query + " " + query2
+    executeSingleQuery(queryTotal, [])
+    querySelect = "SELECT * FROM temp2 ORDER BY first_name, last_name;"
+    results =  json.dumps(executeSingleQuery(querySelect, fetch = True), indent=4, sort_keys=True, default=str)
+    queryDrop = "DROP TABLE temp1; DROP TABLE temp2;"
+    executeSingleQuery(queryDrop, [])
+    return results
 
 
 
@@ -119,6 +210,55 @@ def getFirstAttendance():
     executeSingleQuery(queryDrop, [])
 
     return returnVal
+    
+    
+    
+def getUniqueAttendanceDates(dates):
+    
+    dateList = dates.split()
+    start = dateList[0]
+    end = dateList[1]
+    
+    queryColumns = "SELECT activity_id, name FROM activities WHERE is_showing = 'true' ORDER BY ordering;"
+    columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
+    columns =json.loads(columnResults)
+
+    
+
+    queryWeek = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE date <= \'" + end + "\' AND date > \'" + start + "\'"
+    
+
+
+    tableCreate = "CREATE TABLE uniqueAtten (name varchar(100), week int);"
+    addAttendees = "INSERT INTO uniqueAtten VALUES (\'Number Who Attended\', (" + queryWeek + "));"
+    queryTotal = tableCreate + " " + addAttendees + " "
+
+    for i in range(len(columns)):
+        colName = columns[i][1]
+        colID = columns[i][0]
+        queryInsert = "INSERT INTO uniqueAtten VALUES (\'" + colName + "\'"
+        
+        queryCount = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE date <= \'" + end + "\' AND date > \'" + start + "\'"
+        queryCount = queryCount + " AND activity_id = " + str(colID) + ""
+        queryInsert = queryInsert + ", (" + queryCount + ")"
+        queryInsert = queryInsert + ");"
+        queryTotal = queryTotal + " " + queryInsert + " "
+
+    executeSingleQuery(queryTotal, [])
+
+    querySelect = "SELECT * FROM uniqueAtten;"
+
+    returnVal = json.dumps(executeSingleQuery(querySelect, fetch = True), indent=4, sort_keys=True, default=str)
+
+    queryDrop = "DROP TABLE uniqueAtten;"
+    executeSingleQuery(queryDrop, [])
+    return returnVal
+
+
+
+
+
+    
 
 def uniqueAttendance():
 
@@ -394,6 +534,8 @@ def createStudentInfoTable(request):
         # key difference - select from differnt column based on type
         colToSelect = ""
         if (colType == "varchar"):
+            colToSelect = "str_value"
+        elif (colType == "varchar(500)"):
             colToSelect = "str_value"
         elif (colType == "int"):
             colToSelect = "int_value"

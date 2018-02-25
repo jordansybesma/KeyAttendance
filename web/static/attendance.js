@@ -43,12 +43,154 @@ function giveReport() {
     getRequest("/uniqueAttendance/", "", reportHelper);
 }
 
+function getUniqueStudentsDate() {
+    start = document.getElementById("startDateUnique").value;
+    end = document.getElementById("endDateUnique").value;
+    console.log(start);
+    console.log(end);
+    console.log(typeof start);
+    if (start == "") {
+        alert("Please enter a start date");
+        return false;
+    }
+    if (end == "") {
+        alert("Please enter an end date");
+        return false;
+    }
+    console.log(start + " " + end);
+    console.log("/getUniqueAttendanceDates/" + start + " " + end);
+    getRequest("/getUniqueAttendanceDates/" + start + " " + end, "", reportHelper4);
+    return false;
+
+}
+
+function reportHelper4(_, students) {
+    data = JSON.parse(students);
+
+    console.log(data);
+    rows = [];
+    for (i in data) {
+        rows.push(data[i]);
+    }
+    filename = "unique_attendees_report.csv";
+
+
+    exportToCsv(filename, rows);
+
+}
+
+function reportHelper5(_, students) {
+    data = JSON.parse(students);
+
+    console.log(data);
+    rows = [];
+    for (i in data) {
+        rows.push(data[i]);
+    }
+    filename = "student_attendance_report.csv";
+
+
+    exportToCsv(filename, rows);
+
+}
+
+function reportHelper6(_, students) {
+    data = JSON.parse(students);
+    headers = document.getElementById("savedHeadersActivities").value;
+
+    console.log(data);
+    rows = [];
+    row = [];
+    row.push("First");
+    row.push("Last");
+    row.push("ID")
+    for (i in headers) {
+        if (headers[i][1]==true) {
+            row.push(headers[i][3]);
+        }
+    }
+    rows.push(row);
+    for (i in data) {
+        rows.push(data[i]);
+    }
+    filename = "student_activity_report.csv";
+
+
+    exportToCsv(filename, rows);
+
+}
+
+function getStudentsActivity() {
+
+    getRequest("/getStudentColumns", "", getStudentActivityHelper);
+    
+    
+}
+function getStudentActivityHelper(_, headers) {
+    console.log(headers);
+    document.getElementById("savedHeadersActivities").value = JSON.parse(headers);
+
+    start = document.getElementById("startDateActivity").value;
+    end = document.getElementById("endDateActivity").value;
+    column = document.getElementById("activitySelection").value;
+    console.log(start);
+    console.log(end);
+    console.log(typeof start);
+    if (start == "") {
+        alert("Please enter a start date");
+        return false;
+    }
+    if (end == "") {
+        alert("Please enter an end date");
+        return false;
+    }
+    console.log(start + " " + end);
+    //console.log("/getStudentsByActivity/" + start + " " + end);
+    getRequest("/getStudentsByActivity/" + start + " " + end + " " + column, "", reportHelper6);
+}
+function getStudentsDate() {
+    start = document.getElementById("startDateStudents").value;
+    end = document.getElementById("endDateStudents").value;
+    console.log(start);
+    console.log(end);
+    console.log(typeof start);
+    if (start == "") {
+        alert("Please enter a start date");
+        return false;
+    }
+    if (end == "") {
+        alert("Please enter an end date");
+        return false;
+    }
+    console.log(start + " " + end);
+    console.log("/getUniqueStudentsDates/" + start + " " + end);
+    getRequest("/getUniqueStudentsDates/" + start + " " + end, "", reportHelper5);
+    return false;
+
+}
+
+function addOptions(data) {
+    //document.getElementById("savedHeadersActivities").value = data;
+    var select = document.getElementById("activitySelection");
+    for (i in data) {
+        if (i != 0) {
+            var option = document.createElement('option');
+            option.text = data[i][0];
+            select.add(option, 0);
+        }
+
+    }
+}
+
+
 // R
 // Displays data on the different time intervals, day/week/month/year.
 // Retrieves data on num students who attended the Key for the first time in past week/month/year, passes it to reportHelper2.
 function reportHelper(_, columns) {
     console.log(columns);
     uniqueAttenData = JSON.parse(columns);
+
+    addOptions(uniqueAttenData);
     table = document.getElementById("UniqueAttendanceTable");
     table.innerHTML = "";
     var headers = table.insertRow(0);
@@ -264,7 +406,9 @@ function openAddNewStudent() {
     document.getElementById("newStudentFirstSave").value = "";
     document.getElementById("newStudentLastSave").value = "";
 
-    //getRequest("/getStudentColumns", "", newStudentHelper);
+    
+    getRequest("/getStudentColumns", "", newStudentHelper);
+
 
 
 }

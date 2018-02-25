@@ -314,9 +314,16 @@ function addAttendant(first, last) {
 }
 
 function studentConfirmationHelper(_, row) {
+    if (row == "") {
+        alert("Student already added");
+        //getRequest("/frequentPeers/" + first + " " + last, "", showFrequentPeersAttendance);
+        return;
+    }
     data = JSON.parse(row);
     if (data.length < 1) {
         alert("WARNING: STUDENT WAS NOT ADDED TO ATTENDANCE");
+        //getRequest("/frequentPeers/" + first + " " + last, "", showFrequentPeersAttendance);
+        return;
     }
     console.log(data);
     
@@ -356,7 +363,16 @@ function displayNewAttendant(first, last, time) {
     for (i = 5; i < arrayLength; i++) {
         attendantData[i] = false;
     }
+    var stringToBeAdded = time + "  -  " + first + " " + last
+    //console.log(stringToBeAdded);
     var table = document.getElementById("Attendance-Table");
+    var row = table.rows[1].cells;
+    //console.log(row[0].innerHTML)
+    var full = row[0].innerHTML;
+    if ((full.includes(first)) && (full.includes(last))) {
+        alert("Student already added");
+        return;
+    }
     fillRowAttendance(table, myColumns, attendantData);
 }
 
@@ -498,6 +514,7 @@ function newStudentHelper(_, columns) {
 
 
     footer = document.getElementById("newStudentFooter");
+    footer.innerHTML = "";
     var closeButton = document.createElement('button');
     closeButton.setAttribute('name', 'Return to Profile');
     //console.log(updateString);

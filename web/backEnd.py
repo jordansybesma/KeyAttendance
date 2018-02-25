@@ -16,7 +16,8 @@ import getpass
 
 def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
-    loginFile = open("~/404-repo-name-DNE/web/static/resources/login.txt", "r")
+    #loginFile = open("~/404-repo-name-DNE/web/static/resources/login.txt", "r")
+    loginFile = open("/static/resources/login.txt", "r")
 
     dbName = 'keyDB'
     user = 'ubuntu'

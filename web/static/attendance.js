@@ -683,14 +683,14 @@ function showAttendanceManageHelper(_, data) {
             + " onclick=\"selectColumn('" + name + "')\">";
         var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
         var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
-        //var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
+        var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
 
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = name;
         row.insertCell(-1).innerHTML = checkBox;
         //row.insertCell(-1).innerHTML = deleteButton;
         row.insertCell(-1).innerHTML = upButton;
-        //row.insertCell(-1).innerHTML = downButton;
+        row.insertCell(-1).innerHTML = downButton;
     }
 }
 
@@ -738,7 +738,14 @@ function moveAttendanceColumnUp(name) {
 // Changes order of appearance of attendance columns, displays inputted col one spot later.
 //not implemented yet...
 function moveAttendanceColumnDown(name) {
-    alert("go down down down");
+    console.log("move column down");
+    var xmlhttp = new XMLHttpRequest();
+    console.log(urlBase);
+    xmlhttp.open("POST", urlBase + "/moveAttendanceColumnDown");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name);
+    showAttendanceManage();
+    //alert("you got it up");
     return false;
 }
 
@@ -801,12 +808,16 @@ function addColumn() {
             + " onclick=\"selectColumn('" + name + "')\">";
     var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
     var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
+    var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Up</button>";
 
     var table = document.getElementById("attendanceColumnsTable");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = name;
     row.insertCell(-1).innerHTML = checkBox;
     row.insertCell(-1).innerHTML = upButton;
+    row.insertCell(-1).innerHTML = downButton;
+
+
 }
 
 // MISC

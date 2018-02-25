@@ -896,6 +896,42 @@ def moveAttendanceColumnUp(request):
     executeSingleQuery(query2, [])
 
     return "Done"
+    
+    
+    
+    
+#Switch a column's placement with the column above it
+#Input: column name
+#Output: none
+def moveAttendanceColumnDown(request):
+    print("got to column up")
+    name = request.form.get("name")
+    query = "SELECT name, ordering FROM activities ORDER BY ordering;"
+    result = json.dumps(executeSingleQuery(query,fetch = True))
+    print(result)
+    ids =json.loads(result)
+    colID = 0
+    nextCol = ""
+    nextID = 0
+    print(name)
+    for i in range(1, len(ids)):
+        print(ids[i][0])
+        if (ids[i][0] == name):
+            if (i == (len(ids)-1)):
+                return ""
+
+            colID = ids[i][1]
+            nextCol = ids[i+1][0]
+            nextID = ids[i+1][1]
+    if (colID == 0 or nextID == 0):
+        print("did not find... oops!")
+        return
+    query1 = "UPDATE activities SET ordering = " + str(nextID) + " WHERE name = \'" + name + "\';"
+    query2 = "UPDATE activities SET ordering = " + str(colID) + " WHERE name = \'" + nextCol + "\';"
+    executeSingleQuery(query1, [])
+    executeSingleQuery(query2, [])
+
+    return "Done"
 
 #Add new item to track in attendance
 #INPUT HAS CHANGED - doesn't use coltype however for now we'll send it anyway

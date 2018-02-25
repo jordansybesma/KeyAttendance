@@ -1738,6 +1738,7 @@ function exportToCsv(filename, rows) {
 
 // FF
 // Sends input in feedback textbox to database.
+/* 
 function sendFeedback() {
     var feedback = document.getElementById("feedback").value;
     var date = getCurrentDate();
@@ -1747,6 +1748,7 @@ function sendFeedback() {
     xmlhttp.send("date=" + date + "&feedback=" + feedback);
     document.getElementById("feedback").value = "";
 }
+ */
 
 // AS
 // Fills the code text box under the table in an attendance sheet.

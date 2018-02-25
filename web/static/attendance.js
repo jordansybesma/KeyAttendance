@@ -317,6 +317,9 @@ function addAttendant(first, last) {
 // Function does not use database info (that's being stored right before displayNewAttendant() is called in addAttendant())
 function displayNewAttendant(first, last, time) {
     // Get data about columns
+    refreshAttendanceTable();
+    return true;
+
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
 

@@ -419,7 +419,10 @@ def addNewStudent(request):
     now = datetime.datetime.now()
     today = transformDate(now)
 
-
+    otherStudents = json.loads(json.dumps(executeSingleQuery("SELECT id FROM students WHERE first_name = \'" + firstName + "\' AND last_name = \'" + lastName + "\';", fetch = True), indent=4, sort_keys=True, default=str))
+    if (len(otherStudents) > 0):
+        return "nope"
+    
 
     # queryIDs = "SELECT id FROM students ORDER BY id DESC"
     # ids = json.loads(json.dumps(executeSingleQuery(queryIDs, fetch = True), indent=4, sort_keys=True, default=str))

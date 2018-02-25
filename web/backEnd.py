@@ -1161,4 +1161,4 @@ def uploadPicture(studentid, name, imageObj):
     pathString = "/home/ubuntu/404-repo-name-DNE/web/static/resources/images/" + studentid + "image"
     imageObj.save(pathString)
     executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);", [studentid, pathString])
-    return 1
+    return "Done!"

@@ -374,6 +374,9 @@ function addNewStudent() {
         first = replaceSpacesWithUnderscores(first);
         last = replaceSpacesWithUnderscores(last);
         
+        first = capitalizeFirstLetter(first);
+        last = capitalizeFirstLetter(last);
+        
         // Adds student to student table
         sendNewStudent(first, last);
 
@@ -385,7 +388,7 @@ function addNewStudent() {
     }
 }
 
-// AS
+// MISC
 // Check if input is valid.
 function inputOkay(first, last) {
     if (first === "") {
@@ -1007,8 +1010,7 @@ function openEditProfile() {
     var columnData = JSON.parse(columns);
     var updateString = "";
     
-    var id = studData[0];
-    var editNameHTML = getEditNameHTML(id, name);
+    var editNameHTML = getEditNameHTML(name);
     var form = document.createElement("form");
     updateString = updateString + editNameHTML[1];
     form.innerHTML = editNameHTML[0];
@@ -1089,34 +1091,37 @@ function returnToProfile(fullName) {
 
 // SP
 // Returns HTML for editing student name in popup.
-function getEditNameHTML(id, name) {
+function getEditNameHTML(oldName) {
     var nameArray = name.split(" ");
     var first = nameArray[0];
     var last = nameArray[1];
     var firstStr = "First name:<br><input type='text' value='" + first + "' name='firstname' id='editFirst'><br>";
     var lastStr = "Last name:<br><input type='text' value='" + last + "' name='lastname' id='editLast'>";
     var fullStr = firstStr + lastStr;
-    var functionToCall = "editName('" + id + "');"
+    var functionToCall = "editName('" + oldName + "');"
     return [fullStr, functionToCall];
 }
 
 // SP
 // Changes the name of a student.
-function editName(id) {
+function editName(oldName) {
 
-    var first = document.getElementById("newStudentFirst").value.trim();
-    var last = document.getElementById("newStudentLast").value.trim();
+    var first = document.getElementById("editFirst").value.trim();
+    var last = document.getElementById("editLast").value.trim();
 
     if (inputOkay(first, last)){
 
         first = replaceSpacesWithUnderscores(first);
         last = replaceSpacesWithUnderscores(last);
+        
+        first = capitalizeFirstLetter(first);
+        last = capitalizeFirstLetter(last);
 
         // Adds student to student table
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("POST", urlBase + "/editStudentName/");
         xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-        xmlhttp.send("id=" + id + "&firstName=" + first + "&lastName=" + last);
+        xmlhttp.send("oldName=" + oldName + "&newFirst=" + first + "&newLast=" + last);
 
         // Closes popup
         var fullName = first + " " + last;
@@ -1828,4 +1833,12 @@ function textBoxCallback(_, js) {
 function submitStudentPictureChange() {
     document.getElementById().submit();
     showStudentProfile();
+}
+
+
+// AS
+// Capitalizes first letter of string
+// Thanks to https://paulund.co.uk/capitalize-first-letter-string-javascript
+function capitalizeFirstLetter(string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }

@@ -58,14 +58,12 @@
                         <h2 id="attendanceName">Attendance Sheet placeholder</h2>
                         <p id="storeDate"></p>
 
-                        <div id="addingAndSuggested">
-                            <form autocomplete="off" onsubmit="return false;" id="suggestForm">
-                                <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required>
-                                <input onclick="onAddRow()" id="searchbutton" type="button" value="Add" class=tabishButton>
-                                <datalist id="suggestedStudents"></datalist>
-                            </form>
-                            <h5 id="frequentlyAttendsWith">Suggested Students: </h5>
-                        </div>
+                        <form autocomplete="off" onsubmit="return false;" id="suggestForm">
+                            <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required>
+                            <input onclick="onAddRow()" id="searchbutton" type="button" value="Add" class=tabishButton>
+                            <datalist id="suggestedStudents"></datalist>
+                        </form>
+                        <h5 id="frequentlyAttendsWith">Suggested Students: </h5>
                     </div>
 
                     <div id="rightStuff">
@@ -77,8 +75,7 @@
                     <div id="studentDiv" class="addStudentContent">
                         <div class="addStudentHeader">
                             <h2 id="popUpHeader">Add Student</h2>
-                       </div>
-                        
+                        </div>
                         <div class="modal-body" id="addNewStudentQuick"></div>
                         <p id="newStudentFirstSave"></p>
                         <p id="newStudentLastSave"></p>

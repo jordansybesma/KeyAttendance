@@ -210,9 +210,11 @@ function addNewStudent() {
     document.getElementById("newStudentLastSave").value = last;
     if (inputOkay(first, last)){
 
-        first = capitalizeFirstLetter(first);
-        last = capitalizeFirstLetter(last);
-
+        console.log("first1: " + first);
+        first = replaceSpacesWithUnderscores(first);
+        console.log("first2: " + first);
+        last = replaceSpacesWithUnderscores(last);
+        
         // Adds student to student table
         sendNewStudent(first, last);
 
@@ -238,12 +240,21 @@ function inputOkay(first, last) {
     return true;
 }
 
+
 // AS
-// Capitalizes first letter of string
-// Thanks to https://paulund.co.uk/capitalize-first-letter-string-javascript
-function capitalizeFirstLetter(string){
-    return string.charAt(0).toUpperCase() + string.slice(1);
+// Replaces any spaces with underscores.
+function replaceSpacesWithUnderscores(string) {
+    strArray = string.split(" ");
+    length = strArray.length;
+    newString = "";
+    for (var i = 0; i<(length-1); i++) {
+        newString += strArray[i] + "_";
+    }
+    newString += strArray[length-1];
+    
+    return newString;
 }
+
 
 // AS
 // Opens the add new student popup

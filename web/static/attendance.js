@@ -990,9 +990,10 @@ function openEditProfile() {
     var columnData = JSON.parse(columns);
     var updateString = "";
     
-    var editNameHTML = getEditNameHTML();
+    var id = studData[0];
+    var editNameHTML = getEditNameHTML(id, name);
     var form = document.createElement("form");
-    updateString += editNameHTML[1];
+    updateString = updateString + editNameHTML[1];
     form.innerHTML = editNameHTML[0];
     div.appendChild(form);
     
@@ -1045,7 +1046,7 @@ function openEditProfile() {
     }
     var returnButton = document.createElement('button');
     returnButton.setAttribute('name', 'Return to Profile');
-    returnButton.setAttribute('onclick', updateString + 'returnToProfile();');
+    returnButton.setAttribute('onclick', updateString);
     returnButton.innerHTML = "Submit";
     div.appendChild(returnButton);
     
@@ -1067,17 +1068,38 @@ function returnToProfile() {
 
 // SP
 // Returns HTML for editing student name in popup.
-function getEditNameHTML(id, first, last) {
-    var str = "First name:<br><input type='text' name='firstname' id='editFirst'><br>Last name:<br><input type='text' name='lastname' id='editLast'>";
-    var functionToCall = "editName();"
-    return [str, functionToCall];
+function getEditNameHTML(id, name) {
+    var nameArray = name.split(" ");
+    var first = nameArray[0];
+    var last = nameArray[1];
+    var firstStr = "First name:<br><input type='text' value='" + first + "' name='firstname' id='editFirst'><br>";
+    var lastStr = "Last name:<br><input type='text' value='" + last + "' name='lastname' id='editLast'>";
+    var fullStr = firstStr + lastStr;
+    var functionToCall = "editName('" + id + "');"
+    return [fullStr, functionToCall];
 }
 
 // SP
 // Changes the name of a student.
-function editName() {
-    
-    
+function editName(id) {
+
+    var first = document.getElementById("newStudentFirst").value.trim();
+    var last = document.getElementById("newStudentLast").value.trim();
+
+    if (inputOkay(first, last)){
+
+        first = replaceSpacesWithUnderscores(first);
+        last = replaceSpacesWithUnderscores(last);
+
+        // Adds student to student table
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", urlBase + "/editStudentName/");
+        xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        xmlhttp.send("id=" + id + "&firstName=" + first + "&lastName=" + last);
+
+        // Closes popup
+        returnToProfile();
+    }
 }
 
 // SP

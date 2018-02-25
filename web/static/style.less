@@ -195,11 +195,12 @@ h4 {
     }
 
     #changePhoto {
-        //display: none;
+        visibility: hidden;
     }
 }
 
 
+// .tabishButton, input[type="submit"], button  {
 .tabishButton, input[type="submit"], button  {
     //max-height: 50px;
     //width: 16.6666%;
@@ -269,6 +270,10 @@ h4 {
     #newStudentFirst{
         left: -10px;
     }
+    
+    .modebar{
+      display: none !important;
+}
 
     #newStudentLast{
         left: -10px;
@@ -412,9 +417,9 @@ span:hover {
 #editProfile {
     position: absolute;
     width: 400px;
-    height: 250px;
+    height: 300px;
     z-index: 15;
-    top: 50%;
+    top: 30%;
     left: 50%;
     margin: -100px 0 0 -150px;
     padding-top: 10px;

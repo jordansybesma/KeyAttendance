@@ -109,16 +109,22 @@
         </div>
 
         <div id="StudentProfiles" class="tabcontent">
-
-            <div id="profileSearch">
+            <div id="ProfileSearch">
                 <h3>Student Profiles</h3>
                 <form autocomplete="off" onsubmit="return false;">
                     <input list="suggestedStudents" name="nameEnter" onkeypress="handleProfileBox(event, this.value)" id="keywordStudentSearch" type="text" placeholder="Name" required />
                     <input onclick="showStudentProfile()" id="searchbutton" type="button" value="Submit">
                 </form>
-                <div id="studentInfo">
-                    <h3 id = "studentName"></h3>
+                <h3 id = "studentName"></h3>
+                <div id="StudentInfo">
+                    </form>
+                    <p id="saveStudentData"></p>
+                    <p id="saveStudentColumnData"></p>
+                    <div id="frequentPeers" ></div>
+                    <div id="demographics" ></div>
                     <img id="studentPhoto" hidden>
+                    <div id="graphStudent"></div>
+                    <div id="studentTimes"></div>
                     <form id="changePhoto" action="/uploadPicture" method="post" enctype="multipart/form-data" target="hiddenFrame">
                       <div>
                         <p>Upload a New Picture:</p>
@@ -126,17 +132,6 @@
                         <p><input id="submit_button" type="submit" value="Upload" onclick="showStudentProfile()">
                         <input type="hidden" id="pictureUploadHiddenId" name="id"/>
                       </div>
-                    </form>
-                    <p id="saveStudentData"></p>
-                    <p id="saveStudentColumnData"></p>
-                    <div id="demographics" ></div>
-                    <p id="studentProfileText"></p>
-
-                    <div style="width: 100%; overflow: hidden;">
-                        <div id="graphStudent" style="width: 500px; float: left;"></div>
-                        <div id="studentTimes" style="width: 500px; float: left;"></div>
-                        <div id="frequentPeers" style="width: 200px; float: left;"></div>
-                    </div>
                     <table id="profileAttendanceTable"></table>
                 </div>
             </div>

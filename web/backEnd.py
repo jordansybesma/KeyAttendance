@@ -74,12 +74,12 @@ def getStudentsByActivity(dates):
     end = dateList[1]
     column = dateList[2]
     activityID = json.loads(json.dumps(executeSingleQuery("SELECT activity_id FROM activities WHERE name = \'" + column + "\';", fetch = True), indent=4, sort_keys=True, default=str))[0][0]
-    
+
     queryStudents = "SELECT DISTINCT(student_id) INTO tempIDs FROM dailyAttendance WHERE date <= \'" + end + "\' AND date >= \'" + start + "\' AND activity_id = " + str(activityID) + ";"
     query2 = "SELECT tempIDs.student_ID, students.first_name, students.last_name INTO tempNames FROM tempIDs LEFT JOIN students ON tempIDs.student_id = students.id;"
     queryStudents = queryStudents + " " + query2
     executeSingleQuery(queryStudents, [])
-     
+
     totalQuery = "SELECT DISTINCT id as student_id INTO temp1 FROM students;"
     #executeSingleQuery(query1, [])
 
@@ -142,15 +142,15 @@ def getStudentsByActivity(dates):
     for table in range(1, tempCount + 1):
         queryDrop = queryDrop + "DROP TABLE temp" + str(table) + "; "
     executeSingleQuery(queryDrop, [])
-    
+
     return result
- 
+
 
 def getUniqueStudentsDates(dates):
     dateList = dates.split()
     start = dateList[0]
     end = dateList[1]
-    
+
     query = "SELECT DISTINCT(student_id) INTO temp1 FROM dailyAttendance WHERE date <= \'" + end + "\' AND date >= \'" + start + "\';"
     query2 = "SELECT temp1.student_id, students.first_name, students.last_name INTO temp2 FROM temp1 LEFT JOIN students ON temp1.student_id = students.id;"
     queryTotal = query + " " + query2
@@ -210,23 +210,23 @@ def getFirstAttendance():
     executeSingleQuery(queryDrop, [])
 
     return returnVal
-    
-    
-    
+
+
+
 def getUniqueAttendanceDates(dates):
-    
+
     dateList = dates.split()
     start = dateList[0]
     end = dateList[1]
-    
+
     queryColumns = "SELECT activity_id, name FROM activities WHERE is_showing = 'true' ORDER BY ordering;"
     columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
     columns =json.loads(columnResults)
 
-    
+
 
     queryWeek = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE date <= \'" + end + "\' AND date > \'" + start + "\'"
-    
+
 
 
     tableCreate = "CREATE TABLE uniqueAtten (name varchar(100), week int);"
@@ -237,7 +237,7 @@ def getUniqueAttendanceDates(dates):
         colName = columns[i][1]
         colID = columns[i][0]
         queryInsert = "INSERT INTO uniqueAtten VALUES (\'" + colName + "\'"
-        
+
         queryCount = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE date <= \'" + end + "\' AND date > \'" + start + "\'"
         queryCount = queryCount + " AND activity_id = " + str(colID) + ""
         queryInsert = queryInsert + ", (" + queryCount + ")"
@@ -258,7 +258,7 @@ def getUniqueAttendanceDates(dates):
 
 
 
-    
+
 
 def uniqueAttendance():
 
@@ -421,10 +421,10 @@ def addNewStudent(request):
 
 
 
-    queryIDs = "SELECT id FROM students ORDER BY id DESC"
-    ids = json.loads(json.dumps(executeSingleQuery(queryIDs, fetch = True), indent=4, sort_keys=True, default=str))
-    largeID = ids[0][0]
-    newID = largeID + 1
+    # queryIDs = "SELECT id FROM students ORDER BY id DESC"
+    # ids = json.loads(json.dumps(executeSingleQuery(queryIDs, fetch = True), indent=4, sort_keys=True, default=str))
+    # largeID = ids[0][0]
+    # newID = largeID + 1
 
 
     #executeSingleQuery("INSERT INTO students VALUES (\'" + firstName + "\', \'" + lastName + "\', " + str(newID) + ");", [])
@@ -723,14 +723,14 @@ def getStudentColumns():
     query = "SELECT * FROM studentcolumns ORDER BY info_id"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
-# 
+#
 # #Not sure if this will end up being in use
 # def sendFeedback(request):
 #     feedback = request.form.get('feedback')
 #     date = request.form.get('date')
 #     query = "INSERT INTO feedback VALUES ('" + date +"', '" + feedback + "');"
 #     executeSingleQuery(query,[])
-# 
+#
 
 
 
@@ -1275,14 +1275,18 @@ def getStudentByID(string):
 # WE SHOULD do a query that sees if fullName can be found from firstName+lastName in DB
 # This would account for problems with multiple spaces in students' names.
 def getJustID(string):
-    nameList = string.split()
-    first = nameList[0].upper()
-    last = nameList[1].upper()
-    query = "SELECT id FROM students WHERE UPPER(first_name) LIKE '%" + first + "%' AND UPPER(last_name) LIKE '%" + last + "%';"
-    databaseResult = executeSingleQuery(query, fetch = True)
-    print(databaseResult[0][0])
-    result = json.dumps(databaseResult[0][0])
-    return result
+    try:
+        nameList = string.split()
+        first = nameList[0].upper()
+        last = nameList[1].upper()
+        query = "SELECT id FROM students WHERE UPPER(first_name) LIKE '%" + first + "%' AND UPPER(last_name) LIKE '%" + last + "%';"
+        databaseResult = executeSingleQuery(query, fetch = True)
+        print(databaseResult[0][0])
+        result = json.dumps(databaseResult[0][0])
+        return result
+    except IndexError:
+        print("IndexError!")
+        return 0
 
 def getAlerts():
     query = "SELECT students.firstName, students.lastName, alerts.alert, alerts.studentid FROM students, alerts WHERE alerts.completed = FALSE AND alerts.studentid = students.id;"

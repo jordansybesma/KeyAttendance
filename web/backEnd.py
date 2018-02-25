@@ -723,14 +723,14 @@ def getStudentColumns():
     query = "SELECT * FROM studentcolumns ORDER BY info_id"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
-
-#Not sure if this will end up being in use
-def sendFeedback(request):
-    feedback = request.form.get('feedback')
-    date = request.form.get('date')
-    query = "INSERT INTO feedback VALUES ('" + date +"', '" + feedback + "');"
-    executeSingleQuery(query,[])
-
+# 
+# #Not sure if this will end up being in use
+# def sendFeedback(request):
+#     feedback = request.form.get('feedback')
+#     date = request.form.get('date')
+#     query = "INSERT INTO feedback VALUES ('" + date +"', '" + feedback + "');"
+#     executeSingleQuery(query,[])
+# 
 
 
 

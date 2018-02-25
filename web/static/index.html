@@ -116,15 +116,12 @@
                     <input onclick="showStudentProfile()" id="searchbutton" type="button" value="Submit">
                 </form>
                 <h3 id = "studentName"></h3>
+                <p id="saveStudentData"></p>
+                <p id="saveStudentColumnData"></p>
                 <div id="StudentInfo">
-                    </form>
-                    <p id="saveStudentData"></p>
-                    <p id="saveStudentColumnData"></p>
+                    <img id="studentPhoto" hidden>
                     <div id="frequentPeers" ></div>
                     <div id="demographics" ></div>
-                    <img id="studentPhoto" hidden>
-                    <div id="graphStudent"></div>
-                    <div id="studentTimes"></div>
                     <form id="changePhoto" action="/uploadPicture" method="post" enctype="multipart/form-data" target="hiddenFrame">
                       <div>
                         <p>Upload a New Picture:</p>
@@ -132,6 +129,9 @@
                         <p><input id="submit_button" type="submit" value="Upload" onclick="showStudentProfile()">
                         <input type="hidden" id="pictureUploadHiddenId" name="id"/>
                       </div>
+                    </form>
+                    <div id="graphStudent"></div>
+                    <div id="studentTimes"></div>
                     <table id="profileAttendanceTable"></table>
                 </div>
             </div>
@@ -144,7 +144,7 @@
             <h2>Current Attendance Columns</h2>
             <form onsubmit="return false;">
                 <input type="text" id="newColumn" />
-                <input type="submit" onclick="addColumn();" />
+                <input type="submit" onclick="addColumn();" class="tabishButton"/>
             </form>
             <table id="attendanceColumnsTable"></table>
         </div>

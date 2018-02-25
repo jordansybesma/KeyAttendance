@@ -43,12 +43,154 @@ function giveReport() {
     getRequest("/uniqueAttendance/", "", reportHelper);
 }
 
+function getUniqueStudentsDate() {
+    start = document.getElementById("startDateUnique").value;
+    end = document.getElementById("endDateUnique").value;
+    console.log(start);
+    console.log(end);
+    console.log(typeof start);
+    if (start == "") {
+        alert("Please enter a start date");
+        return false;
+    }
+    if (end == "") {
+        alert("Please enter an end date");
+        return false;
+    }
+    console.log(start + " " + end);
+    console.log("/getUniqueAttendanceDates/" + start + " " + end);
+    getRequest("/getUniqueAttendanceDates/" + start + " " + end, "", reportHelper4);
+    return false;
+
+}
+
+function reportHelper4(_, students) {
+    data = JSON.parse(students);
+
+    console.log(data);
+    rows = [];
+    for (i in data) {
+        rows.push(data[i]);
+    }
+    filename = "unique_attendees_report.csv";
+
+
+    exportToCsv(filename, rows);
+
+}
+
+function reportHelper5(_, students) {
+    data = JSON.parse(students);
+
+    console.log(data);
+    rows = [];
+    for (i in data) {
+        rows.push(data[i]);
+    }
+    filename = "student_attendance_report.csv";
+
+
+    exportToCsv(filename, rows);
+
+}
+
+function reportHelper6(_, students) {
+    data = JSON.parse(students);
+    headers = document.getElementById("savedHeadersActivities").value;
+
+    console.log(data);
+    rows = [];
+    row = [];
+    row.push("First");
+    row.push("Last");
+    row.push("ID")
+    for (i in headers) {
+        if (headers[i][1]==true) {
+            row.push(headers[i][3]);
+        }
+    }
+    rows.push(row);
+    for (i in data) {
+        rows.push(data[i]);
+    }
+    filename = "student_activity_report.csv";
+
+
+    exportToCsv(filename, rows);
+
+}
+
+function getStudentsActivity() {
+
+    getRequest("/getStudentColumns", "", getStudentActivityHelper);
+    
+    
+}
+function getStudentActivityHelper(_, headers) {
+    console.log(headers);
+    document.getElementById("savedHeadersActivities").value = JSON.parse(headers);
+
+    start = document.getElementById("startDateActivity").value;
+    end = document.getElementById("endDateActivity").value;
+    column = document.getElementById("activitySelection").value;
+    console.log(start);
+    console.log(end);
+    console.log(typeof start);
+    if (start == "") {
+        alert("Please enter a start date");
+        return false;
+    }
+    if (end == "") {
+        alert("Please enter an end date");
+        return false;
+    }
+    console.log(start + " " + end);
+    //console.log("/getStudentsByActivity/" + start + " " + end);
+    getRequest("/getStudentsByActivity/" + start + " " + end + " " + column, "", reportHelper6);
+}
+function getStudentsDate() {
+    start = document.getElementById("startDateStudents").value;
+    end = document.getElementById("endDateStudents").value;
+    console.log(start);
+    console.log(end);
+    console.log(typeof start);
+    if (start == "") {
+        alert("Please enter a start date");
+        return false;
+    }
+    if (end == "") {
+        alert("Please enter an end date");
+        return false;
+    }
+    console.log(start + " " + end);
+    console.log("/getUniqueStudentsDates/" + start + " " + end);
+    getRequest("/getUniqueStudentsDates/" + start + " " + end, "", reportHelper5);
+    return false;
+
+}
+
+function addOptions(data) {
+    //document.getElementById("savedHeadersActivities").value = data;
+    var select = document.getElementById("activitySelection");
+    for (i in data) {
+        if (i != 0) {
+            var option = document.createElement('option');
+            option.text = data[i][0];
+            select.add(option, 0);
+        }
+
+    }
+}
+
+
 // R
 // Displays data on the different time intervals, day/week/month/year.
 // Retrieves data on num students who attended the Key for the first time in past week/month/year, passes it to reportHelper2.
 function reportHelper(_, columns) {
     console.log(columns);
     uniqueAttenData = JSON.parse(columns);
+
+    addOptions(uniqueAttenData);
     table = document.getElementById("UniqueAttendanceTable");
     table.innerHTML = "";
     var headers = table.insertRow(0);
@@ -78,7 +220,7 @@ function reportHelper2(_, columns) {
     table = document.getElementById("NewAttendanceTable");
     table.innerHTML = "";
     var headers = table.insertRow(0);
-    
+
     headers.insertCell(-1).innerHTML = '7 Days';
     headers.insertCell(-1).innerHTML = '30 Days';
     headers.insertCell(-1).innerHTML = 'Year';
@@ -166,7 +308,7 @@ function addAttendant(first, last) {
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&date=" + date + "&time=" + time + "&id=");
 
     displayNewAttendant(first, last, time);
-    
+
     getRequest("/frequentPeers/" + first + " " + last, "", showFrequentPeersAttendance);
 }
 
@@ -175,6 +317,8 @@ function addAttendant(first, last) {
 // Function does not use database info (that's being stored right before displayNewAttendant() is called in addAttendant())
 function displayNewAttendant(first, last, time) {
     // Get data about columns
+   
+
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
 
@@ -210,9 +354,9 @@ function addNewStudent() {
     document.getElementById("newStudentLastSave").value = last;
     if (inputOkay(first, last)){
 
-        first = capitalizeFirstLetter(first);
-        last = capitalizeFirstLetter(last);
-
+        first = replaceSpacesWithUnderscores(first);
+        last = replaceSpacesWithUnderscores(last);
+        
         // Adds student to student table
         sendNewStudent(first, last);
 
@@ -238,12 +382,21 @@ function inputOkay(first, last) {
     return true;
 }
 
+
 // AS
-// Capitalizes first letter of string
-// Thanks to https://paulund.co.uk/capitalize-first-letter-string-javascript
-function capitalizeFirstLetter(string){
-    return string.charAt(0).toUpperCase() + string.slice(1);
+// Replaces any spaces with underscores.
+function replaceSpacesWithUnderscores(string) {
+    strArray = string.split(" ");
+    length = strArray.length;
+    newString = "";
+    for (var i = 0; i<(length-1); i++) {
+        newString += strArray[i] + "_";
+    }
+    newString += strArray[length-1];
+    
+    return newString;
 }
+
 
 // AS
 // Opens the add new student popup
@@ -252,8 +405,10 @@ function openAddNewStudent() {
     popUp.style.display = "block";
     document.getElementById("newStudentFirstSave").value = "";
     document.getElementById("newStudentLastSave").value = "";
+
     
-    //getRequest("/getStudentColumns", "", newStudentHelper);
+    getRequest("/getStudentColumns", "", newStudentHelper);
+
 
 
 }
@@ -265,8 +420,8 @@ function newStudentHelper(_, columns) {
 
     var form = document.createElement("form");
     form.setAttribute('onSubmit', 'return false;');
-   
-    var str = "First Name :<br> <input id='newStudentFirst' type='text' value=''/> <br>";
+
+    var str = "First Name:<br> <input id='newStudentFirst' type='text' value=''/> <br>";
     console.log(str);
     form.innerHTML = str;
     div.appendChild(form);
@@ -274,11 +429,11 @@ function newStudentHelper(_, columns) {
     var form2 = document.createElement("form");
     form2.setAttribute('onSubmit', 'return false;');
 
-    var str = "Last Name :<br> <input id='newStudentLast' type='text' value=''/> <br>";
+    var str = "Last Name:<br> <input id='newStudentLast' type='text' value=''/> <br>";
     console.log(str);
     form2.innerHTML = str;
     div.appendChild(form2);
-    
+
     for (i in columnData) {
         console.log("outer loop");
         var colIsShowing = columnData[i][2];
@@ -290,7 +445,7 @@ function newStudentHelper(_, columns) {
             form.setAttribute('onSubmit', 'return false;');
             if ((type == "varchar(500)") || (type == "int")) {
                 console.log("got to last loop");
-                
+
                 var str = col + ":<br> <input id='" + col + "colid' type='text' value=''/> <br>";
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
@@ -300,7 +455,7 @@ function newStudentHelper(_, columns) {
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "date") {
-                
+
                 var str = col + ":<br> <input id='" + col + "colid' type='date' value=''/> <br>";
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
@@ -310,8 +465,8 @@ function newStudentHelper(_, columns) {
                 div.appendChild(form);
             } else if (type == "boolean") {
                 var str = col + ": "
-                
-                  
+
+
                 str = str + " <input type='checkbox')\"/><br><br>"
                 updateString = updateString + "updateProfile('','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
                 console.log(str);
@@ -339,7 +494,7 @@ function newStudentHelper(_, columns) {
     returnButton.innerHTML = "Submit";
     footer.appendChild(returnButton);
 
-    
+
 }
 
 // AS
@@ -530,14 +685,14 @@ function showAttendanceManageHelper(_, data) {
             + " onclick=\"selectColumn('" + name + "')\">";
         var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
         var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
-        //var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
+        var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
 
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = name;
         row.insertCell(-1).innerHTML = checkBox;
         //row.insertCell(-1).innerHTML = deleteButton;
         row.insertCell(-1).innerHTML = upButton;
-        //row.insertCell(-1).innerHTML = downButton;
+        row.insertCell(-1).innerHTML = downButton;
     }
 }
 
@@ -585,7 +740,14 @@ function moveAttendanceColumnUp(name) {
 // Changes order of appearance of attendance columns, displays inputted col one spot later.
 //not implemented yet...
 function moveAttendanceColumnDown(name) {
-    alert("go down down down");
+    console.log("move column down");
+    var xmlhttp = new XMLHttpRequest();
+    console.log(urlBase);
+    xmlhttp.open("POST", urlBase + "/moveAttendanceColumnDown");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name);
+    showAttendanceManage();
+    //alert("you got it up");
     return false;
 }
 
@@ -648,12 +810,16 @@ function addColumn() {
             + " onclick=\"selectColumn('" + name + "')\">";
     var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
     var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
+    var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Up</button>";
 
     var table = document.getElementById("attendanceColumnsTable");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = name;
     row.insertCell(-1).innerHTML = checkBox;
     row.insertCell(-1).innerHTML = upButton;
+    row.insertCell(-1).innerHTML = downButton;
+
+
 }
 
 // MISC
@@ -812,11 +978,10 @@ function demographicsHelper(_, columns) {
 // SP
 // Displays the edit profile popup.
 function openEditProfile() {
-    console.log("gets to here");
+    console.log("In openEditProfile");
     var name = document.getElementById('keywordStudentSearch').value;
     var studentInfo = document.getElementById("saveStudentData").innerHTML;
     var columns = document.getElementById("saveStudentColumnData").innerHTML;
-    console.log("in openEditProfile");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("editProfile");
     div.style.display = "block";
@@ -842,9 +1007,7 @@ function openEditProfile() {
                 var str = col + ":<br> <input id='" + col + "colid' type='text' value='" + value + "' /> <br>";
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
-                console.log(str);
                 updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
-                console.log(updateString);
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "date") {
@@ -855,7 +1018,6 @@ function openEditProfile() {
                 var str = col + ":<br> <input id='" + col + "colid' type='date' value='" + value + "'/> <br>";
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
-                console.log(str);
                 updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
                 form.innerHTML = str;
                 div.appendChild(form);
@@ -869,7 +1031,6 @@ function openEditProfile() {
                 }
                 str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
-                console.log(str);
                 form.innerHTML = str;
                 div.appendChild(form);
             }
@@ -877,10 +1038,15 @@ function openEditProfile() {
     }
     var returnButton = document.createElement('button');
     returnButton.setAttribute('name', 'Return to Profile');
-    console.log(updateString);
     returnButton.setAttribute('onclick', updateString + 'returnToProfile();');
     returnButton.innerHTML = "Submit";
     div.appendChild(returnButton);
+    
+    var cancelButton = document.createElement('button');
+    cancelButton.setAttribute('name', 'Cancel');
+    cancelButton.setAttribute('onclick', 'returnToProfile();');
+    cancelButton.innerHTML = "Cancel";
+    div.appendChild(cancelButton); 
 }
 
 // SP
@@ -1018,7 +1184,7 @@ function showFrequentPeers(_, data) {
 function showFrequentPeersAttendance(_, data) {
     var peerSpace = document.getElementById("frequentlyAttendsWith");
     peerSpace.innerHTML = "Suggested Students: ";
-        
+
     var nameString = data.replace(/\[/g, "").replace(/\'/g, "").replace(/\]/g, "");
 
     var nameList = nameString.split(", ");
@@ -1029,7 +1195,7 @@ function showFrequentPeersAttendance(_, data) {
         var name = nameList[i].split(" ");
         var first = name[0];
         var last = name[1];
-        
+
         var nameButton = '<span style="cursor:pointer" onclick=\"addAttendant(\'' + first + "', '" + last + '\')\">' + nameList[i] + ", " + '</span>';
         peerSpace.innerHTML += nameButton;
     }
@@ -1056,12 +1222,7 @@ function placeStudentPicture(_, data) {
   var photoSpace = document.getElementById("studentPhoto");
   photoSpace.src = data;
   photoSpace.hidden = false;
-  var div = document.getElementById("uploadPicture")
-  div.innerHTML = "<button type=\"button\" onclick=\"uploadPicture()\">Upload a Picture</button>";
-}
 
-function uploadPicture() {
-  console.log("Clicked uploadPicture!")
 }
 
 // SP
@@ -1225,7 +1386,7 @@ function fillRowAttendance(table, columns, attendeeEntry) {
     var fullName = attendeeEntry[2] + " " + attendeeEntry[3];
     var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';
     var time = attendeeEntry[1];
-    
+
     row.insertCell(-1).innerHTML = time + "  -  " + nameButton;
 
     for (i in columns) {
@@ -1367,7 +1528,7 @@ function masterAttendanceHelper(_, masterData) {
             if (j==0) {
                 row.insertCell(-1).innerHTML = makeDateReadable(myData[i][j]);
             } else {
-                row.insertCell(-1).innerHTML = myData[i][j];   
+                row.insertCell(-1).innerHTML = myData[i][j];
             }
         }
     }
@@ -1380,7 +1541,7 @@ function makeDateReadable(date) {
     var day = date.substr(8, 10);
     var year = date.substr(0, 4);
     var newDateDashes = monthStr + "/" + day + "/" + year;
-    
+
     var monthInt = parseInt(monthStr);
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     var month = months[monthInt - 1];
@@ -1585,17 +1746,6 @@ function exportToCsv(filename, rows) {
     }
 }
 
-// FF
-// Sends input in feedback textbox to database.
-function sendFeedback() {
-    var feedback = document.getElementById("feedback").value;
-    var date = getCurrentDate();
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", urlBase + "/sendFeedback");
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("date=" + date + "&feedback=" + feedback);
-    document.getElementById("feedback").value = "";
-}
 
 // AS
 // Fills the code text box under the table in an attendance sheet.

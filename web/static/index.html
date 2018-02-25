@@ -30,7 +30,6 @@
             <div class = "tablinks" onclick = "openTab(event, 'AttendanceOverview'); displayMasterAttendance()"> Attendance Overview </div>
             <div id = "studentProfileTab" class = "tablinks" onclick = "openTab(event, 'StudentProfiles')"> Student Profiles</div>
             <div class = "tablinks" onclick = "openTab(event, 'AttendanceCols'); showAttendanceManage();">Attendance Columns</div>
-            <div class = "tablinks" onclick = "openTab(event, 'Feedback Forum')"> Feedback Forum </div>
             <div class = "tablinks" onclick = "openTab(event, 'Manage Student Profile'); showManageProfile();"> Manage Profile </div>
             <div class="tablinks" onclick="openTab(event, 'Reports'); giveReport();"> Reports </div>
         </div>
@@ -58,14 +57,12 @@
                         <h2 id="attendanceName">Attendance Sheet placeholder</h2>
                         <p id="storeDate"></p>
 
-                        <div id="addingAndSuggested">
-                            <form autocomplete="off" onsubmit="return false;" id="suggestForm">
-                                <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required>
-                                <input onclick="onAddRow()" id="searchbutton" type="button" value="Add" class=tabishButton>
-                                <datalist id="suggestedStudents"></datalist>
-                            </form>
-                            <h5 id="frequentlyAttendsWith">Suggested Students: </h5>
-                        </div>
+                        <form autocomplete="off" onsubmit="return false;" id="suggestForm">
+                            <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required>
+                            <input onclick="onAddRow()" id="searchbutton" type="button" value="Add" class=tabishButton>
+                            <datalist id="suggestedStudents"></datalist>
+                        </form>
+                        <h5 id="frequentlyAttendsWith">Suggested Students: </h5>
                     </div>
 
                     <div id="rightStuff">
@@ -77,8 +74,7 @@
                     <div id="studentDiv" class="addStudentContent">
                         <div class="addStudentHeader">
                             <h2 id="popUpHeader">Add Student</h2>
-                       </div>
-                        
+                        </div>
                         <div class="modal-body" id="addNewStudentQuick"></div>
                         <p id="newStudentFirstSave"></p>
                         <p id="newStudentLastSave"></p>
@@ -153,12 +149,6 @@
             <table id="attendanceColumnsTable"></table>
         </div>
 
-        <div id="Feedback Forum" class="tabcontent">
-            <h3>Feedback Forum</h3>
-            <textarea id = "feedback" rows="4" cols="50"></textarea>
-            <button onclick="sendFeedback()">Submit</button>
-        </div>
-
         <div id="Manage Student Profile" class="tabcontent">
             <h2>Current Student Profile Columns</h2>
             <form onsubmit="return false;">
@@ -175,19 +165,51 @@
         <div id="Reports" class="tabcontent">
             <h2>Reports</h2>
 
-            <h3>Unique Attendees Report</h3>
-            <h4>This table shows the number of unique students who participated in each activity over several time spans. Does not include data for the current date (most recent data is from yesterday)</h4>
+            <h4>Unique Attendees Report</h4>
+            <h5>This table shows the number of unique students who participated in each activity over several time spans. Does not include data for the current date (most recent data is from yesterday)</h5>
 
             <table id="UniqueAttendanceTable" style="width:50%"></table>
+            <h5>To get this same data but between a custom time period, select a start date and end date below.</h5>
+            <form onsubmit="return false;">
+                Start Date <br>
+                <input type="date" id="startDateUnique" /><br>
+                End Date <br>
+                <input type="date" id="endDateUnique" /><br>
+                <input type="submit" onclick="getUniqueStudentsDate()" />
+            </form>
+
+            <h4>Student Attendance Report</h4>
+            <h5>Get the students who attended between two dates</h5>
+            <form onsubmit="return false;">
+                Start Date <br>
+                <input type="date" id="startDateStudents" /><br>
+                End Date <br>
+                <input type="date" id="endDateStudents" /><br>
+                <input type="submit" onclick="getStudentsDate()" />
+            </form>
+            <p id="savedHeadersActivities"></p>
+
+            <h4>Student Activities Report</h4>
+            <h5>Get the students who participated in an activity between two dates</h5>
+            <form onsubmit="return false;">
+                Activity <br>
+                <select id="activitySelection"></select><br>
+                Start Date <br>
+                <input type="date" id="startDateActivity" /><br>
+                End Date <br>
+                <input type="date" id="endDateActivity" /><br>
+                <input type="submit" onclick="getStudentsActivity()" />
+            </form>
 
 
 
-            <h3>New Student Report</h3>
-            <h4>This table shows the number of students who attended the key for the first time over several time spans. </h4>
+            <h4>New Student Report</h4>
+            <h5>This table shows the number of students who attended the key for the first time over several time spans. </h5>
 
             <table id="NewAttendanceTable" style="width:50%"></table>
+            
 
-            <h4>Select a start date and an end date to get an excel file that list the students who attended for the first time between those two dates. </h4>
+            <h5>Select a start date and an end date to get an excel file that list the students who attended for the first time between those two dates. </h5>
             <form onsubmit="return false;">
                 Start Date <br>
                 <input type="date" id="startDateNewStudent" /><br>
@@ -197,8 +219,8 @@
             </form>
 
             <div id="downloadStudentReport">
-                <h3>Attendance Milestone Report</h3>
-                <h4>Selelct a start date, end date and number of times attended. For instance if you select Jan 1, Jan 5, and 10 you will get back the names of students who attended for the 10th time between Jan 1 and Jan 5</h4>
+                <h4>Attendance Milestone Report</h4>
+                <h5>Selelct a start date, end date and number of times attended. For instance if you select Jan 1, Jan 5, and 10 you will get back the names of students who attended for the 10th time between Jan 1 and Jan 5</h5>
 
 
                 <form onsubmit="return false;">

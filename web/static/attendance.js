@@ -1069,14 +1069,18 @@ function openEditProfile() {
     
     var cancelButton = document.createElement('button');
     cancelButton.setAttribute('name', 'Cancel');
-    cancelButton.setAttribute('onclick', 'returnToProfile();');
+    cancelButton.setAttribute('onclick', 'returnToProfile(' + name + ');');
     cancelButton.innerHTML = "Cancel";
     div.appendChild(cancelButton); 
 }
 
 // SP
 // Closes edit profile popup.
-function returnToProfile() {
+function returnToProfile(fullName) {
+    
+    document.getElementById('keywordStudentSearch').value = fullName;
+    document.getElementById("suggestedStudents").innerHTML = "<option>" + fullName + "</option>\n";
+    
     var div = document.getElementById("editProfile");
     div.innerHTML = "";
     div.style.display = "none";
@@ -1115,7 +1119,8 @@ function editName(id) {
         xmlhttp.send("id=" + id + "&firstName=" + first + "&lastName=" + last);
 
         // Closes popup
-        returnToProfile();
+        var fullName = first + " " + last;
+        returnToProfile(fullName);
     }
 }
 

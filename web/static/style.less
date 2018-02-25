@@ -151,7 +151,7 @@ h4 {
     .studentInfo {
         position: absolute;
         width: 400px;
-        height: 250px;
+        height: 260px;
         z-index: 15;
         top: 50%;
         left: 50%;
@@ -200,7 +200,7 @@ h4 {
 }
 
 
-.tabishButton  {
+.tabishButton, input[type="submit"], button  {
     //max-height: 50px;
     //width: 16.6666%;
     font-size: ~"calc(5pt + 0.6vw)";
@@ -535,3 +535,46 @@ span:hover {
         background: #3875d7;
         color: white;
     }
+
+
+#ReportsContent {
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+
+    label {
+      background: @base2;
+      padding: .7em 1em;
+      cursor: pointer;
+      z-index: 1;
+      margin-left: -1px;
+    }
+
+    label:first-of-type {
+      margin-left: 0;
+    }
+
+    div {
+      margin-top: -1px;
+      padding: 1em;
+      border: 1px solid #ddd;
+      -webkit-order: 1;
+      order: 1;
+      width: 100%;
+    }
+
+    input[type=radio], div {
+      display: none;
+    }
+
+    input[type=radio]:checked + label {
+      background: @base03;
+    }
+
+    input[type=radio]:checked + label + div {
+      display: block;
+    }
+}
+
+
+

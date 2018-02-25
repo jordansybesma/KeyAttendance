@@ -1220,12 +1220,14 @@ def addAttendant(request):
 
 
 def editStudentName(request):
-    studentId = request.form.get('id')
-    first = request.form.get('firstName')
-    last = request.form.get('lastName')
-
-    query = "UPDATE students SET firstname = %s, lastname = %s WHERE id = %s;"
-    executeSingleQuery(query, [first, last, studentID])
+    oldName = request.form.get('oldName')
+    studentId = getJustID(oldName)
+    
+    newFirst = request.form.get('newFirst')
+    newLast = request.form.get('newLast')
+    
+    query = "UPDATE students SET first_name = %s, last_name = %s WHERE student_id = %s;"
+    executeSingleQuery(query, [newFirst, newLast, studentID])
 
 ######################This is where I stopped editing ################
 

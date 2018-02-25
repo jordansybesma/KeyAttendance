@@ -7,6 +7,8 @@ import flaskEnd
 from flask import Flask, request, redirect, url_for
 from werkzeug.utils import secure_filename
 
+import getpass
+
 
 
 
@@ -921,7 +923,7 @@ def selectActivity(request):
 
 ##Gets the path to a student's photo if one exists. Otherwise, gets the path to a default 'not found' image
 def getPhoto(id):
-    query = "SELECT * FROM studentinfo WHERE student_id = " + str(id) +  " AND info_id = 5;"
+    query = "SELECT * FROM studentinfo WHERE student_id = " + str(id) +  " AND info_id = 6;"
     result = executeSingleQuery(query, fetch=True)
     if (len(result) < 1):
         return "/static/resources/images/No-image-found.jpg"
@@ -1155,8 +1157,10 @@ def checkAlert(request):
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])
 
 def uploadPicture(studentid, name, imageObj):
+    executeSingleQuery("DELETE FROM studentinfo WHERE student_id = %s AND info_id = 6;", [studentid])
     nameExt = name.rsplit('.')[-1].lower()
-    pathString = "/home/ubuntu/404-repo-name-DNE/web/static/resources/images/" + studentid + "image"
-    imageObj.save(pathString)
-    executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);" [studentid, pathString])
-    return 1
+    shortPathString = "/static/resources/images/" + studentid + "image"
+    longPathString = "/home/ubuntu/404-repo-name-DNE/web/static/resources/images/" + studentid + "image"
+    imageObj.save(longPathString)
+    executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);", [studentid, shortPathString])
+    return "Done!"

@@ -422,9 +422,20 @@ def getStudentConfirmation(name):
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentIDs = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))
     if (len(studentIDs) < 1):
-        return "nope"
+        return ""
     studentID = studentIDs[0][0]
 
+    
+    queryAttendance = "SELECT student_id  FROM dailyAttendance WHERE activity_id = -1 AND date = \'" + date + "\' ORDER BY time DESC;"
+    attenIDs = json.loads(json.dumps(executeSingleQuery(queryAttendance, fetch=True)))
+    if (len(attenIDs) > 0):
+        recentID = attenIDs[0][0]
+        if (recentID != studentID):
+            print("got here")
+            return ""
+        
+    
+    
 
     query = "SELECT DISTINCT(student_id), time INTO temp1 FROM dailyAttendance WHERE student_id = " + str(studentID) + " AND date = \'" + date + "\';"
     executeSingleQuery(query, [])
@@ -1146,8 +1157,20 @@ def addAttendant(request):
     last  = request.form.get( 'lastName')
     date = request.form.get('date')
     time = request.form.get('time')
+    
+    
+    
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
+    
+    queryAttendance = "SELECT student_id FROM dailyAttendance WHERE student_id = " + str(studentID) + "AND date = \'" + date + "\';"
+    prevAtten = json.loads(json.dumps(executeSingleQuery(queryAttendance, fetch=True)))
+    if (len(prevAtten) > 0):
+        return "nope"
+    
+    
+    
+    
     queryVisits = "SELECT number_visits FROM students WHERE id = " + str(studentID) + ";"
     numVisits = json.loads(json.dumps(executeSingleQuery(queryVisits, fetch=True)))[0][0]
     newNum = numVisits + 1

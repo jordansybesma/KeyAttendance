@@ -1606,3 +1606,8 @@ function fillTextBox() {
 function textBoxCallback(_, js) {
     document.getElementById("codeTextBox").innerHTML = js;
 }
+
+function submitStudentPictureChange() {
+    document.getElementById().submit();
+    showStudentProfile();
+}

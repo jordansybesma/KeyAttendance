@@ -16,6 +16,10 @@ import getpass
 
 def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
+    #loginFile = open("/home/ubuntu/404-repo-name-DNE/web/static/resources/login.txt", "r")
+
+    #print(loginFile.readline())
+
     dbName = 'keyDB'
     user = 'ubuntu'
     password = 'keyComps'
@@ -409,6 +413,41 @@ def getAttendance(date):
 
     return result
 
+def getStudentConfirmation(name):
+    nameList = name.split()
+    first = nameList[0]
+    last = nameList[1]
+    date = nameList[2]
+
+    queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
+    studentIDs = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))
+    if (len(studentIDs) < 1):
+        return ""
+    studentID = studentIDs[0][0]
+
+
+    queryAttendance = "SELECT student_id  FROM dailyAttendance WHERE activity_id = -1 AND date = \'" + date + "\' ORDER BY time DESC;"
+    attenIDs = json.loads(json.dumps(executeSingleQuery(queryAttendance, fetch=True)))
+    if (len(attenIDs) > 0):
+        recentID = attenIDs[0][0]
+        if (recentID != studentID):
+            print("got here")
+            return ""
+
+
+
+
+    query = "SELECT DISTINCT(student_id), time INTO temp1 FROM dailyAttendance WHERE student_id = " + str(studentID) + " AND date = \'" + date + "\';"
+    executeSingleQuery(query, [])
+
+    resultsQuery = "SELECT temp1.time, students.first_name, students.last_name FROM temp1 LEFT JOIN students ON temp1.student_id = students.id;"
+
+    results =  json.dumps(executeSingleQuery(resultsQuery, fetch = True), indent=4, sort_keys=True, default=str)
+    queryDrop = "DROP TABLE temp1;"
+    executeSingleQuery(queryDrop, [])
+    return results
+
+
 
 #Add new student to system
 #Input: first name and last name
@@ -422,7 +461,7 @@ def addNewStudent(request):
     otherStudents = json.loads(json.dumps(executeSingleQuery("SELECT id FROM students WHERE first_name = \'" + firstName + "\' AND last_name = \'" + lastName + "\';", fetch = True), indent=4, sort_keys=True, default=str))
     if (len(otherStudents) > 0):
         return "nope"
-    
+
 
     # queryIDs = "SELECT id FROM students ORDER BY id DESC"
     # ids = json.loads(json.dumps(executeSingleQuery(queryIDs, fetch = True), indent=4, sort_keys=True, default=str))
@@ -890,10 +929,10 @@ def moveAttendanceColumnUp(request):
     executeSingleQuery(query2, [])
 
     return "Done"
-    
-    
-    
-    
+
+
+
+
 #Switch a column's placement with the column above it
 #Input: column name
 #Output: none
@@ -1113,12 +1152,25 @@ def getPhoto(id):
 #Output: none
 def addAttendant(request):
     #print(json.decode(request.data))
+
     first = request.form.get('firstName')
     last  = request.form.get( 'lastName')
     date = request.form.get('date')
     time = request.form.get('time')
+
+
+
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
+
+    queryAttendance = "SELECT student_id FROM dailyAttendance WHERE student_id = " + str(studentID) + "AND date = \'" + date + "\';"
+    prevAtten = json.loads(json.dumps(executeSingleQuery(queryAttendance, fetch=True)))
+    if (len(prevAtten) > 0):
+        return "nope"
+
+
+
+
     queryVisits = "SELECT number_visits FROM students WHERE id = " + str(studentID) + ";"
     numVisits = json.loads(json.dumps(executeSingleQuery(queryVisits, fetch=True)))[0][0]
     newNum = numVisits + 1
@@ -1165,6 +1217,14 @@ def addAttendant(request):
 
     return "done"
 
+
+def editStudentName(request):
+    studentId = request.form.get('id')
+    first = request.form.get('firstName')
+    last = request.form.get('lastName')
+
+    query = "UPDATE students SET firstname = %s, lastname = %s WHERE id = %s;"
+    executeSingleQuery(query, [first, last, studentID])
 
 ######################This is where I stopped editing ################
 

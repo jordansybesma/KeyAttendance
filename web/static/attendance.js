@@ -396,7 +396,7 @@ function openAddNewStudent() {
     document.getElementById("newStudentFirstSave").value = "";
     document.getElementById("newStudentLastSave").value = "";
     
-    //getRequest("/getStudentColumns", "", newStudentHelper);
+    getRequest("/getStudentColumns", "", newStudentHelper);
 
 
 }

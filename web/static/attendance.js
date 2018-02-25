@@ -352,9 +352,7 @@ function addNewStudent() {
     document.getElementById("newStudentLastSave").value = last;
     if (inputOkay(first, last)){
 
-        console.log("first1: " + first);
         first = replaceSpacesWithUnderscores(first);
-        console.log("first2: " + first);
         last = replaceSpacesWithUnderscores(last);
         
         // Adds student to student table
@@ -421,7 +419,7 @@ function newStudentHelper(_, columns) {
     var form = document.createElement("form");
     form.setAttribute('onSubmit', 'return false;');
 
-    var str = "First Name :<br> <input id='newStudentFirst' type='text' value=''/> <br>";
+    var str = "First Name:<br> <input id='newStudentFirst' type='text' value=''/> <br>";
     console.log(str);
     form.innerHTML = str;
     div.appendChild(form);
@@ -429,7 +427,7 @@ function newStudentHelper(_, columns) {
     var form2 = document.createElement("form");
     form2.setAttribute('onSubmit', 'return false;');
 
-    var str = "Last Name :<br> <input id='newStudentLast' type='text' value=''/> <br>";
+    var str = "Last Name:<br> <input id='newStudentLast' type='text' value=''/> <br>";
     console.log(str);
     form2.innerHTML = str;
     div.appendChild(form2);

@@ -928,9 +928,7 @@ function modifyAutofillList(_, studentNames) {
 // SP
 // Displays a student profile by using information stored in the HTML
 function showStudentProfile() {
-
-    var profileSpace = document.getElementById('studentProfileText');
-    profileSpace.innerHTML = ("");
+    document.getElementById('changePhoto').style.display = 'contents';
     var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
     var userInput = document.getElementById('keywordStudentSearch').value;
@@ -947,7 +945,6 @@ function showStudentProfile() {
     // Open student profile
     if (optionFound) {
         nameSpace.innerHTML += (userInput);
-        profileSpace.innerHTML += ("\n");
         getRequest("/getStudentInfo/" + userInput, "", showDemographics);
     }
 }
@@ -1009,6 +1006,13 @@ function openEditProfile() {
     var studData = studentData[0];
     var columnData = JSON.parse(columns);
     var updateString = "";
+    
+    var editNameHTML = getEditNameHTML();
+    var form = document.createElement("form");
+    updateString += editNameHTML[1];
+    form.innerHTML = editNameHTML[0];
+    div.appendChild(form);
+    
     for (i in columnData) {
         console.log("outer loop");
         var colIsShowing = columnData[i][1];
@@ -1076,6 +1080,21 @@ function returnToProfile() {
     div.innerHTML = "";
     div.style.display = "none";
     showStudentProfile();
+}
+
+// SP
+// Returns HTML for editing student name in popup.
+function getEditNameHTML(id, first, last) {
+    var str = "First name:<br><input type='text' name='firstname' id='editFirst'><br>Last name:<br><input type='text' name='lastname' id='editLast'>";
+    var functionToCall = "editName();"
+    return [str, functionToCall];
+}
+
+// SP
+// Changes the name of a student.
+function editName() {
+    
+    
 }
 
 // SP

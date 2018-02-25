@@ -109,16 +109,19 @@
         </div>
 
         <div id="StudentProfiles" class="tabcontent">
-
-            <div id="profileSearch">
+            <div id="ProfileSearch">
                 <h3>Student Profiles</h3>
                 <form autocomplete="off" onsubmit="return false;">
                     <input list="suggestedStudents" name="nameEnter" onkeypress="handleProfileBox(event, this.value)" id="keywordStudentSearch" type="text" placeholder="Name" required />
                     <input onclick="showStudentProfile()" id="searchbutton" type="button" value="Submit">
                 </form>
-                <div id="studentInfo">
-                    <h3 id = "studentName"></h3>
+                <h3 id = "studentName"></h3>
+                <p id="saveStudentData"></p>
+                <p id="saveStudentColumnData"></p>
+                <div id="StudentInfo">
                     <img id="studentPhoto" hidden>
+                    <div id="frequentPeers" ></div>
+                    <div id="demographics" ></div>
                     <form id="changePhoto" action="/uploadPicture" method="post" enctype="multipart/form-data" target="hiddenFrame">
                       <div>
                         <p>Upload a New Picture:</p>
@@ -127,16 +130,8 @@
                         <input type="hidden" id="pictureUploadHiddenId" name="id"/>
                       </div>
                     </form>
-                    <p id="saveStudentData"></p>
-                    <p id="saveStudentColumnData"></p>
-                    <div id="demographics" ></div>
-                    <p id="studentProfileText"></p>
-
-                    <div style="width: 100%; overflow: hidden;">
-                        <div id="graphStudent" style="width: 500px; float: left;"></div>
-                        <div id="studentTimes" style="width: 500px; float: left;"></div>
-                        <div id="frequentPeers" style="width: 200px; float: left;"></div>
-                    </div>
+                    <div id="graphStudent"></div>
+                    <div id="studentTimes"></div>
                     <table id="profileAttendanceTable"></table>
                 </div>
             </div>
@@ -149,7 +144,7 @@
             <h2>Current Attendance Columns</h2>
             <form onsubmit="return false;">
                 <input type="text" id="newColumn" />
-                <input type="submit" onclick="addColumn();" />
+                <input type="submit" onclick="addColumn();" class="tabishButton"/>
             </form>
             <table id="attendanceColumnsTable"></table>
         </div>

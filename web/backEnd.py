@@ -18,8 +18,6 @@ def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
     loginFile = open("/home/ubuntu/404-repo-name-DNE/web/static/resources/login.txt", "r")
 
-    print(loginFile.readline())
-
     dbName = 'keyDB'
     user = 'ubuntu'
     # password = 'keyComps'
@@ -1222,10 +1220,10 @@ def addAttendant(request):
 def editStudentName(request):
     oldName = request.form.get('oldName')
     studentId = getJustID(oldName)
-    
+
     newFirst = request.form.get('newFirst')
     newLast = request.form.get('newLast')
-    
+
     query = "UPDATE students SET first_name = %s, last_name = %s WHERE student_id = %s;"
     executeSingleQuery(query, [newFirst, newLast, studentID])
 

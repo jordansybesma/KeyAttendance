@@ -948,7 +948,7 @@ function modifyAutofillList(_, studentNames) {
 // SP
 // Displays a student profile by using information stored in the HTML
 function showStudentProfile() {
-    document.getElementById('changePhoto').style.display = 'contents';
+    document.getElementById('changePhoto').style.visibility = 'visible';
     var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
     var userInput = document.getElementById('keywordStudentSearch').value;

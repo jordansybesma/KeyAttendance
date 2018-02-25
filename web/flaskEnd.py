@@ -96,10 +96,6 @@ def deleteStudentColumn():
 def getStudentColumns():
     return backEnd.getStudentColumns()
 
-@app.route('/sendFeedback', methods = ["POST"])
-def sendFeedback():
-    return backEnd.sendFeedback(request)
-
 @app.route('/getAttendance/<date>')
 def getAttendance(date):
     return backEnd.getAttendance(date)

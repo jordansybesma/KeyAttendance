@@ -74,12 +74,12 @@ def getStudentsByActivity(dates):
     end = dateList[1]
     column = dateList[2]
     activityID = json.loads(json.dumps(executeSingleQuery("SELECT activity_id FROM activities WHERE name = \'" + column + "\';", fetch = True), indent=4, sort_keys=True, default=str))[0][0]
-    
+
     queryStudents = "SELECT DISTINCT(student_id) INTO tempIDs FROM dailyAttendance WHERE date <= \'" + end + "\' AND date >= \'" + start + "\' AND activity_id = " + str(activityID) + ";"
     query2 = "SELECT tempIDs.student_ID, students.first_name, students.last_name INTO tempNames FROM tempIDs LEFT JOIN students ON tempIDs.student_id = students.id;"
     queryStudents = queryStudents + " " + query2
     executeSingleQuery(queryStudents, [])
-     
+
     totalQuery = "SELECT DISTINCT id as student_id INTO temp1 FROM students;"
     #executeSingleQuery(query1, [])
 
@@ -142,15 +142,15 @@ def getStudentsByActivity(dates):
     for table in range(1, tempCount + 1):
         queryDrop = queryDrop + "DROP TABLE temp" + str(table) + "; "
     executeSingleQuery(queryDrop, [])
-    
+
     return result
- 
+
 
 def getUniqueStudentsDates(dates):
     dateList = dates.split()
     start = dateList[0]
     end = dateList[1]
-    
+
     query = "SELECT DISTINCT(student_id) INTO temp1 FROM dailyAttendance WHERE date <= \'" + end + "\' AND date >= \'" + start + "\';"
     query2 = "SELECT temp1.student_id, students.first_name, students.last_name INTO temp2 FROM temp1 LEFT JOIN students ON temp1.student_id = students.id;"
     queryTotal = query + " " + query2
@@ -210,23 +210,23 @@ def getFirstAttendance():
     executeSingleQuery(queryDrop, [])
 
     return returnVal
-    
-    
-    
+
+
+
 def getUniqueAttendanceDates(dates):
-    
+
     dateList = dates.split()
     start = dateList[0]
     end = dateList[1]
-    
+
     queryColumns = "SELECT activity_id, name FROM activities WHERE is_showing = 'true' ORDER BY ordering;"
     columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
     columns =json.loads(columnResults)
 
-    
+
 
     queryWeek = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE date <= \'" + end + "\' AND date > \'" + start + "\'"
-    
+
 
 
     tableCreate = "CREATE TABLE uniqueAtten (name varchar(100), week int);"
@@ -237,7 +237,7 @@ def getUniqueAttendanceDates(dates):
         colName = columns[i][1]
         colID = columns[i][0]
         queryInsert = "INSERT INTO uniqueAtten VALUES (\'" + colName + "\'"
-        
+
         queryCount = "SELECT COUNT(DISTINCT student_id) FROM dailyAttendance WHERE date <= \'" + end + "\' AND date > \'" + start + "\'"
         queryCount = queryCount + " AND activity_id = " + str(colID) + ""
         queryInsert = queryInsert + ", (" + queryCount + ")"
@@ -258,7 +258,7 @@ def getUniqueAttendanceDates(dates):
 
 
 
-    
+
 
 def uniqueAttendance():
 
@@ -421,10 +421,10 @@ def addNewStudent(request):
 
 
 
-    queryIDs = "SELECT id FROM students ORDER BY id DESC"
-    ids = json.loads(json.dumps(executeSingleQuery(queryIDs, fetch = True), indent=4, sort_keys=True, default=str))
-    largeID = ids[0][0]
-    newID = largeID + 1
+    # queryIDs = "SELECT id FROM students ORDER BY id DESC"
+    # ids = json.loads(json.dumps(executeSingleQuery(queryIDs, fetch = True), indent=4, sort_keys=True, default=str))
+    # largeID = ids[0][0]
+    # newID = largeID + 1
 
 
     #executeSingleQuery("INSERT INTO students VALUES (\'" + firstName + "\', \'" + lastName + "\', " + str(newID) + ");", [])
@@ -723,14 +723,14 @@ def getStudentColumns():
     query = "SELECT * FROM studentcolumns ORDER BY info_id"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
-# 
+#
 # #Not sure if this will end up being in use
 # def sendFeedback(request):
 #     feedback = request.form.get('feedback')
 #     date = request.form.get('date')
 #     query = "INSERT INTO feedback VALUES ('" + date +"', '" + feedback + "');"
 #     executeSingleQuery(query,[])
-# 
+#
 
 
 
@@ -1193,82 +1193,88 @@ def autofill(partialString):
     return suggestions
 
 def frequentPeers(name):
-    studentID = getJustID(name)
-    query = "SELECT date, time FROM dailyattendance WHERE student_id = '" + studentID + "' AND activity_id = -1;"
+    try:
+        studentID = getJustID(name)
+        query = "SELECT date, time FROM dailyattendance WHERE student_id = '" + studentID + "' AND activity_id = -1;"
 
-    result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
-    result = result.replace("\n","").replace(" ","").replace("[", "").replace("]", "").replace("\"","")
-    result = result.split(",")
+        result = json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
+        result = result.replace("\n","").replace(" ","").replace("[", "").replace("]", "").replace("\"","")
+        result = result.split(",")
 
 
-    studentDict = {}
-    peersDict = {}
+        studentDict = {}
+        peersDict = {}
 
-    for i in range(0, len(result), 2):
-        if result[i] not in studentDict.keys():
-            studentDict[result[i]] = []
+        for i in range(0, len(result), 2):
+            if result[i] not in studentDict.keys():
+                studentDict[result[i]] = []
         # studentDict[result[i]].append(result[i + 1])
-        timeList = result[i + 1].replace("\"", "").replace("\'","").split(":")
-        timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
-        studentDict[result[i]] = timeNum
+            timeList = result[i + 1].replace("\"", "").replace("\'","").split(":")
+            timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
+            studentDict[result[i]] = timeNum
 
-    for key in studentDict:
-        print(key)
-        if key not in peersDict.keys():
-            peersDict[key] = {}
 
-        query2 = "SELECT student_id, time FROM dailyAttendance WHERE date = '" + key + "';"
-        print(query2)
-        curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
-        curResult = curResult.replace("\n", "").replace("[q", "").replace(" ", "").replace("]","").replace("[","")
 
-        curResult = curResult.split(",")
-        print(curResult)
+            for key in studentDict:
+                print(key)
+                if key not in peersDict.keys():
+                    peersDict[key] = {}
 
-        for i in range(0, len(curResult), 2):
-            if curResult[i] not in peersDict[key].keys():
-                peersDict[key][curResult[i]] = []
-            timeList = curResult[i + 1].replace("\"", "").replace("\'","").split(":")
-            try:
-                timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
-                peersDict[key][curResult[i]] = timeNum
-                print(timeList)
-            except ValueError:
-                print("Some data wasn't there. Sad. Very sad.")
+                    query2 = "SELECT student_id, time FROM dailyAttendance WHERE date = '" + key + "';"
+                    print(query2)
+                    curResult = json.dumps(executeSingleQuery(query2, fetch = True), indent=4, sort_keys=True, default=str)
+                    curResult = curResult.replace("\n", "").replace("[q", "").replace(" ", "").replace("]","").replace("[","")
+
+                    curResult = curResult.split(",")
+                    print(curResult)
+
+                    for i in range(0, len(curResult), 2):
+                        if curResult[i] not in peersDict[key].keys():
+                            peersDict[key][curResult[i]] = []
+                            timeList = curResult[i + 1].replace("\"", "").replace("\'","").split(":")
+                            try:
+                                timeNum = int(timeList[0]) + (int(timeList[1]) / 60) + (int(timeList[2]) / 3600)
+                                peersDict[key][curResult[i]] = timeNum
+                                print(timeList)
+                            except ValueError:
+                                print("Some data wasn't there. Sad. Very sad.")
             # peersDict[key][curResult[i]].append(curResult[i + 1])
 
-    closeAppearancesDict = {}
-    testString = ""
+            closeAppearancesDict = {}
+            testString = ""
 
-    for key in studentDict.keys():
-        if key != studentID:
-            curDate = key
-            curTime = studentDict[key]
-            for key2 in peersDict[curDate]:
-                peerDate = key2
-                peerTime = peersDict[curDate][key2]
-                if abs(curTime - peerTime) < 2:
-                    if key2 not in closeAppearancesDict:
-                        closeAppearancesDict[key2] = 1
-                    else:
-                        closeAppearancesDict[key2] += 1
+            for key in studentDict.keys():
+                if key != studentID:
+                    curDate = key
+                    curTime = studentDict[key]
+                    for key2 in peersDict[curDate]:
+                        peerDate = key2
+                        peerTime = peersDict[curDate][key2]
+                        if abs(curTime - peerTime) < 2:
+                            if key2 not in closeAppearancesDict:
+                                closeAppearancesDict[key2] = 1
+                            else:
+                                closeAppearancesDict[key2] += 1
 
 
-    closeAppearancesList = sorted(closeAppearancesDict.items(), key=lambda x: x[1])[::-1]
-    frequentPeersList = []
+                                closeAppearancesList = sorted(closeAppearancesDict.items(), key=lambda x: x[1])[::-1]
+                                frequentPeersList = []
 
-    peerListLength = len(closeAppearancesList)
-    if (peerListLength > 5):
-        for i in range(5):
-            frequentPeer = getStudentByID(closeAppearancesList[i][0])
-            frequentPeersList.append(frequentPeer)
-    else:
-        for i in range(peerListLength):
-            frequentPeer = getStudentByID(closeAppearancesList[i][0])
-            frequentPeersList.append(frequentPeer)
+                                peerListLength = len(closeAppearancesList)
+                                if (peerListLength > 5):
+                                    for i in range(5):
+                                        frequentPeer = getStudentByID(closeAppearancesList[i][0])
+                                        frequentPeersList.append(frequentPeer)
+        else:
+            for i in range(peerListLength):
+                frequentPeer = getStudentByID(closeAppearancesList[i][0])
+                frequentPeersList.append(frequentPeer)
 
-    print("Hello, RUSS!")
-    return str(frequentPeersList)
+                print("Hello, RUSS!")
+                return str(frequentPeersList)
+    except IndexError:
+        print("IndexError!")
+        return ("")
 
 def studentProfile(string):
     nameList = string.split()
@@ -1311,14 +1317,18 @@ def getStudentByID(string):
 # WE SHOULD do a query that sees if fullName can be found from firstName+lastName in DB
 # This would account for problems with multiple spaces in students' names.
 def getJustID(string):
-    nameList = string.split()
-    first = nameList[0].upper()
-    last = nameList[1].upper()
-    query = "SELECT id FROM students WHERE UPPER(first_name) LIKE '%" + first + "%' AND UPPER(last_name) LIKE '%" + last + "%';"
-    databaseResult = executeSingleQuery(query, fetch = True)
-    print(databaseResult[0][0])
-    result = json.dumps(databaseResult[0][0])
-    return result
+    try:
+        nameList = string.split()
+        first = nameList[0].upper()
+        last = nameList[1].upper()
+        query = "SELECT id FROM students WHERE UPPER(first_name) LIKE '%" + first + "%' AND UPPER(last_name) LIKE '%" + last + "%';"
+        databaseResult = executeSingleQuery(query, fetch = True)
+        print(databaseResult[0][0])
+        result = json.dumps(databaseResult[0][0])
+        return result
+    except IndexError:
+        print("IndexError!")
+        return 0
 
 def getAlerts():
     query = "SELECT students.firstName, students.lastName, alerts.alert, alerts.studentid FROM students, alerts WHERE alerts.completed = FALSE AND alerts.studentid = students.id;"

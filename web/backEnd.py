@@ -16,13 +16,12 @@ import getpass
 
 def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
-    #loginFile = open("/home/ubuntu/404-repo-name-DNE/web/static/resources/login.txt", "r")
-
-    #print(loginFile.readline())
+    loginFile = open("/home/ubuntu/404-repo-name-DNE/web/static/resources/login.txt", "r")
 
     dbName = 'keyDB'
     user = 'ubuntu'
-    password = 'keyComps'
+    # password = 'keyComps'
+    password = loginFile.readline().replace("\n","")
     hostName = 'ec2-34-213-2-88.us-west-2.compute.amazonaws.com'
     conn = psycopg2.connect(database=dbName, user=user, password=password, host=hostName)
     cur = conn.cursor()
@@ -1219,12 +1218,14 @@ def addAttendant(request):
 
 
 def editStudentName(request):
-    studentId = request.form.get('id')
-    first = request.form.get('firstName')
-    last = request.form.get('lastName')
+    oldName = request.form.get('oldName')
+    studentId = getJustID(oldName)
 
-    query = "UPDATE students SET firstname = %s, lastname = %s WHERE id = %s;"
-    executeSingleQuery(query, [first, last, studentID])
+    newFirst = request.form.get('newFirst')
+    newLast = request.form.get('newLast')
+
+    query = "UPDATE students SET first_name = %s, last_name = %s WHERE student_id = %s;"
+    executeSingleQuery(query, [newFirst, newLast, studentID])
 
 ######################This is where I stopped editing ################
 

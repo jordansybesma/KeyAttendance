@@ -58,7 +58,7 @@
                         <p id="storeDate"></p>
 
                         <form autocomplete="off" onsubmit="return false;" id="suggestForm">
-                            <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required>
+                            <input list="suggestedStudents" name="nameEnter" onkeyup="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required autofocus>
                             <input onclick="onAddRow()" id="searchbutton" type="button" value="Add" class=tabishButton>
                             <datalist id="suggestedStudents"></datalist>
                         </form>
@@ -164,78 +164,84 @@
         </div>
         <div id="Reports" class="tabcontent">
             <h2>Reports</h2>
+            <div id="ReportsContent">
+                <input type="radio"  id="tab0" checked="checked" name="grp"/> 
+                <label for="tab0">Unique Attendees</label>
+                <div>
 
-            <h4>Unique Attendees Report</h4>
-            <h5>This table shows the number of unique students who participated in each activity over several time spans. Does not include data for the current date (most recent data is from yesterday)</h5>
+                    <h5>This table shows the number of unique students who participated in each activity over several time spans. Does not include data for the current date (most recent data is from yesterday)</h5>
 
-            <table id="UniqueAttendanceTable" style="width:50%"></table>
-            <h5>To get this same data but between a custom time period, select a start date and end date below.</h5>
-            <form onsubmit="return false;">
-                Start Date <br>
-                <input type="date" id="startDateUnique" /><br>
-                End Date <br>
-                <input type="date" id="endDateUnique" /><br>
-                <input type="submit" onclick="getUniqueStudentsDate()" />
-            </form>
+                    <table id="UniqueAttendanceTable" style="width:50%"></table>
+                    <h5>To get this same data but between a custom time period, select a start date and end date below.</h5>
+                    <form onsubmit="return false;">
+                        Start Date <br>
+                        <input type="date" id="startDateUnique" /><br>
+                        End Date <br>
+                        <input type="date" id="endDateUnique" /><br>
+                        <input type="submit" onclick="getUniqueStudentsDate()" />
+                    </form>
+                </div>
 
-            <h4>Student Attendance Report</h4>
-            <h5>Get the students who attended between two dates</h5>
-            <form onsubmit="return false;">
-                Start Date <br>
-                <input type="date" id="startDateStudents" /><br>
-                End Date <br>
-                <input type="date" id="endDateStudents" /><br>
-                <input type="submit" onclick="getStudentsDate()" />
-            </form>
-            <p id="savedHeadersActivities"></p>
-
-            <h4>Student Activities Report</h4>
-            <h5>Get the students who participated in an activity between two dates</h5>
-            <form onsubmit="return false;">
-                Activity <br>
-                <select id="activitySelection"></select><br>
-                Start Date <br>
-                <input type="date" id="startDateActivity" /><br>
-                End Date <br>
-                <input type="date" id="endDateActivity" /><br>
-                <input type="submit" onclick="getStudentsActivity()" />
-            </form>
-
-
-
-            <h4>New Student Report</h4>
-            <h5>This table shows the number of students who attended the key for the first time over several time spans. </h5>
-
-            <table id="NewAttendanceTable" style="width:50%"></table>
-            
-
-            <h5>Select a start date and an end date to get an excel file that list the students who attended for the first time between those two dates. </h5>
-            <form onsubmit="return false;">
-                Start Date <br>
-                <input type="date" id="startDateNewStudent" /><br>
-                End Date <br>
-                <input type="date" id="endDateNewStudent" /><br>
-                <input type="submit" onclick="getNewStudentsAttended()" />
-            </form>
-
-            <div id="downloadStudentReport">
-                <h4>Attendance Milestone Report</h4>
-                <h5>Selelct a start date, end date and number of times attended. For instance if you select Jan 1, Jan 5, and 10 you will get back the names of students who attended for the 10th time between Jan 1 and Jan 5</h5>
-
-
+                <input type="radio"  id="tab1" name="grp"/> 
+                <label for="tab1"> Student Attendance </label>
+                <div>
+                    <h5>Get the students who attended between two dates</h5>
+                    <form onsubmit="return false;">
+                        Start Date <br>
+                        <input type="date" id="startDateStudents" /><br>
+                        End Date <br>
+                        <input type="date" id="endDateStudents" /><br>
+                        <input type="submit" onclick="getStudentsDate()" />
+                    </form>
+                    <p id="savedHeadersActivities"></p>
+                </div>
+                <input type="radio"  id="tab2" name="grp"/> 
+                <label for="tab2"> Student Activities </label>
+                <div class="ReportTabContents">
+                <h5>Get the students who participated in an activity between two dates</h5>
                 <form onsubmit="return false;">
+                    Activity <br>
+                    <select id="activitySelection"></select><br>
                     Start Date <br>
-                    <input type="date" id="startDateReport" /><br>
+                    <input type="date" id="startDateActivity" /><br>
                     End Date <br>
-                    <input type="date" id="endDateReport" /><br>
-                    Number of Times Attended <br>
-                    <input type="number" id="numTimesAttended" /><br>
-                    <input type="submit" onclick="getTimesAttended()" />
+                    <input type="date" id="endDateActivity" /><br>
+                    <input type="submit" onclick="getStudentsActivity()" />
                 </form>
+                </div>
+                <input type="radio"  id="tab3" name="grp"/> 
+                <label for="tab3"> New Students </label>
+                <div>
+                    <h5>This table shows the number of students who attended the key for the first time over several time spans. </h5>
+
+                    <table id="NewAttendanceTable" style="width:50%"></table>
+                    
+                    <h5>Select a start date and an end date to get an excel file that list the students who attended for the first time between those two dates. </h5>
+                    <form onsubmit="return false;">
+                        Start Date <br>
+                        <input type="date" id="startDateNewStudent" /><br>
+                        End Date <br>
+                        <input type="date" id="endDateNewStudent" /><br>
+                        <input type="submit" onclick="getNewStudentsAttended()" />
+                    </form>
+                </div>     
+                <input type="radio"  id="tab4" name="grp"/>
+                <label for="tab4"> Attendance Milestone </label>
+                <div id="downloadStudentReport">
+                    <h5>Selelct a start date, end date and number of times attended. For instance if you select Jan 1, Jan 5, and 10 you will get back the names of students who attended for the 10th time between Jan 1 and Jan 5</h5>
+
+                    <form onsubmit="return false;">
+                        Start Date <br>
+                        <input type="date" id="startDateReport" /><br>
+                        End Date <br>
+                        <input type="date" id="endDateReport" /><br>
+                        Number of Times Attended <br>
+                        <input type="number" id="numTimesAttended" /><br>
+                        <input type="submit" onclick="getTimesAttended()" />
+                    </form>
+                </div>
             </div>
-
         </div>
-
     </body>
 <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
 </html>

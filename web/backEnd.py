@@ -16,9 +16,11 @@ import getpass
 
 def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
+    loginFile = open("static/resources/login.txt", "r")
+
     dbName = 'keyDB'
     user = 'ubuntu'
-    password = 'keyComps'
+    password = loginFile.readline()
     hostName = 'ec2-34-213-2-88.us-west-2.compute.amazonaws.com'
     conn = psycopg2.connect(database=dbName, user=user, password=password, host=hostName)
     cur = conn.cursor()
@@ -414,19 +416,19 @@ def getStudentConfirmation(name):
     first = nameList[0]
     last = nameList[1]
     date = nameList[2]
-    
+
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentIDs = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))
     if (len(studentIDs) < 1):
         return "nope"
     studentID = studentIDs[0][0]
-    
-    
+
+
     query = "SELECT DISTINCT(student_id), time INTO temp1 FROM dailyAttendance WHERE student_id = " + str(studentID) + " AND date = \'" + date + "\';"
     executeSingleQuery(query, [])
-    
+
     resultsQuery = "SELECT temp1.time, students.first_name, students.last_name FROM temp1 LEFT JOIN students ON temp1.student_id = students.id;"
-    
+
     results =  json.dumps(executeSingleQuery(resultsQuery, fetch = True), indent=4, sort_keys=True, default=str)
     queryDrop = "DROP TABLE temp1;"
     executeSingleQuery(queryDrop, [])
@@ -446,7 +448,7 @@ def addNewStudent(request):
     otherStudents = json.loads(json.dumps(executeSingleQuery("SELECT id FROM students WHERE first_name = \'" + firstName + "\' AND last_name = \'" + lastName + "\';", fetch = True), indent=4, sort_keys=True, default=str))
     if (len(otherStudents) > 0):
         return "nope"
-    
+
 
     # queryIDs = "SELECT id FROM students ORDER BY id DESC"
     # ids = json.loads(json.dumps(executeSingleQuery(queryIDs, fetch = True), indent=4, sort_keys=True, default=str))
@@ -914,10 +916,10 @@ def moveAttendanceColumnUp(request):
     executeSingleQuery(query2, [])
 
     return "Done"
-    
-    
-    
-    
+
+
+
+
 #Switch a column's placement with the column above it
 #Input: column name
 #Output: none
@@ -1137,7 +1139,7 @@ def getPhoto(id):
 #Output: none
 def addAttendant(request):
     #print(json.decode(request.data))
-    
+
     first = request.form.get('firstName')
     last  = request.form.get( 'lastName')
     date = request.form.get('date')
@@ -1195,7 +1197,7 @@ def editStudentName(request):
     studentId = request.form.get('id')
     first = request.form.get('firstName')
     last = request.form.get('lastName')
-    
+
     query = "UPDATE students SET firstname = %s, lastname = %s WHERE id = %s;"
     executeSingleQuery(query, [first, last, studentID])
 

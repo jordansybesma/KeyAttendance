@@ -16,13 +16,14 @@ import getpass
 
 def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
-    #loginFile = open("/home/ubuntu/404-repo-name-DNE/web/static/resources/login.txt", "r")
+    loginFile = open("/home/ubuntu/404-repo-name-DNE/web/static/resources/login.txt", "r")
 
-    #print(loginFile.readline())
+    print(loginFile.readline())
 
     dbName = 'keyDB'
     user = 'ubuntu'
-    password = 'keyComps'
+    # password = 'keyComps'
+    password = loginFile.readline().replace("\n","")
     hostName = 'ec2-34-213-2-88.us-west-2.compute.amazonaws.com'
     conn = psycopg2.connect(database=dbName, user=user, password=password, host=hostName)
     cur = conn.cursor()

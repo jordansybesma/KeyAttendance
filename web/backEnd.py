@@ -419,7 +419,10 @@ def addNewStudent(request):
     now = datetime.datetime.now()
     today = transformDate(now)
 
-
+    otherStudents = json.loads(json.dumps(executeSingleQuery("SELECT id FROM students WHERE first_name = \'" + firstName + "\' AND last_name = \'" + lastName + "\';", fetch = True), indent=4, sort_keys=True, default=str))
+    if (len(otherStudents) > 0):
+        return "nope"
+    
 
     # queryIDs = "SELECT id FROM students ORDER BY id DESC"
     # ids = json.loads(json.dumps(executeSingleQuery(queryIDs, fetch = True), indent=4, sort_keys=True, default=str))
@@ -723,15 +726,6 @@ def getStudentColumns():
     query = "SELECT * FROM studentcolumns ORDER BY info_id"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
-#
-# #Not sure if this will end up being in use
-# def sendFeedback(request):
-#     feedback = request.form.get('feedback')
-#     date = request.form.get('date')
-#     query = "INSERT INTO feedback VALUES ('" + date +"', '" + feedback + "');"
-#     executeSingleQuery(query,[])
-#
-
 
 
 # Theoretically not necessary anymore
@@ -892,6 +886,42 @@ def moveAttendanceColumnUp(request):
         return
     query1 = "UPDATE activities SET ordering = " + str(prevID) + " WHERE name = \'" + name + "\';"
     query2 = "UPDATE activities SET ordering = " + str(colID) + " WHERE name = \'" + prevCol + "\';"
+    executeSingleQuery(query1, [])
+    executeSingleQuery(query2, [])
+
+    return "Done"
+    
+    
+    
+    
+#Switch a column's placement with the column above it
+#Input: column name
+#Output: none
+def moveAttendanceColumnDown(request):
+    print("got to column up")
+    name = request.form.get("name")
+    query = "SELECT name, ordering FROM activities ORDER BY ordering;"
+    result = json.dumps(executeSingleQuery(query,fetch = True))
+    print(result)
+    ids =json.loads(result)
+    colID = 0
+    nextCol = ""
+    nextID = 0
+    print(name)
+    for i in range(1, len(ids)):
+        print(ids[i][0])
+        if (ids[i][0] == name):
+            if (i == (len(ids)-1)):
+                return ""
+
+            colID = ids[i][1]
+            nextCol = ids[i+1][0]
+            nextID = ids[i+1][1]
+    if (colID == 0 or nextID == 0):
+        print("did not find... oops!")
+        return
+    query1 = "UPDATE activities SET ordering = " + str(nextID) + " WHERE name = \'" + name + "\';"
+    query2 = "UPDATE activities SET ordering = " + str(colID) + " WHERE name = \'" + nextCol + "\';"
     executeSingleQuery(query1, [])
     executeSingleQuery(query2, [])
 

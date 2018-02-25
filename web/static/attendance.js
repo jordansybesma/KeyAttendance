@@ -968,11 +968,10 @@ function demographicsHelper(_, columns) {
 // SP
 // Displays the edit profile popup.
 function openEditProfile() {
-    console.log("gets to here");
+    console.log("In openEditProfile");
     var name = document.getElementById('keywordStudentSearch').value;
     var studentInfo = document.getElementById("saveStudentData").innerHTML;
     var columns = document.getElementById("saveStudentColumnData").innerHTML;
-    console.log("in openEditProfile");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("editProfile");
     div.style.display = "block";
@@ -998,9 +997,7 @@ function openEditProfile() {
                 var str = col + ":<br> <input id='" + col + "colid' type='text' value='" + value + "' /> <br>";
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
-                console.log(str);
                 updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
-                console.log(updateString);
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "date") {
@@ -1011,7 +1008,6 @@ function openEditProfile() {
                 var str = col + ":<br> <input id='" + col + "colid' type='date' value='" + value + "'/> <br>";
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
-                console.log(str);
                 updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
                 form.innerHTML = str;
                 div.appendChild(form);
@@ -1025,7 +1021,6 @@ function openEditProfile() {
                 }
                 str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
-                console.log(str);
                 form.innerHTML = str;
                 div.appendChild(form);
             }
@@ -1033,10 +1028,15 @@ function openEditProfile() {
     }
     var returnButton = document.createElement('button');
     returnButton.setAttribute('name', 'Return to Profile');
-    console.log(updateString);
     returnButton.setAttribute('onclick', updateString + 'returnToProfile();');
     returnButton.innerHTML = "Submit";
     div.appendChild(returnButton);
+    
+    var cancelButton = document.createElement('button');
+    cancelButton.setAttribute('name', 'Cancel');
+    cancelButton.setAttribute('onclick', 'returnToProfile();');
+    cancelButton.innerHTML = "Cancel";
+    div.appendChild(cancelButton); 
 }
 
 // SP

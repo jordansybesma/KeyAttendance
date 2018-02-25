@@ -1848,7 +1848,7 @@ function textBoxCallback(_, js) {
 }
 
 function submitStudentPictureChange() {
-    document.getElementById().submit();
+    document.getElementById("changePhoto").submit();
     showStudentProfile();
 }
 

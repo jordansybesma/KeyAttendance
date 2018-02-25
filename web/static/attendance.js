@@ -317,6 +317,8 @@ function addAttendant(first, last) {
 // Function does not use database info (that's being stored right before displayNewAttendant() is called in addAttendant())
 function displayNewAttendant(first, last, time) {
     // Get data about columns
+   
+
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
 
@@ -683,14 +685,14 @@ function showAttendanceManageHelper(_, data) {
             + " onclick=\"selectColumn('" + name + "')\">";
         var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
         var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
-        //var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
+        var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
 
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = name;
         row.insertCell(-1).innerHTML = checkBox;
         //row.insertCell(-1).innerHTML = deleteButton;
         row.insertCell(-1).innerHTML = upButton;
-        //row.insertCell(-1).innerHTML = downButton;
+        row.insertCell(-1).innerHTML = downButton;
     }
 }
 
@@ -738,7 +740,14 @@ function moveAttendanceColumnUp(name) {
 // Changes order of appearance of attendance columns, displays inputted col one spot later.
 //not implemented yet...
 function moveAttendanceColumnDown(name) {
-    alert("go down down down");
+    console.log("move column down");
+    var xmlhttp = new XMLHttpRequest();
+    console.log(urlBase);
+    xmlhttp.open("POST", urlBase + "/moveAttendanceColumnDown");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name);
+    showAttendanceManage();
+    //alert("you got it up");
     return false;
 }
 
@@ -801,12 +810,16 @@ function addColumn() {
             + " onclick=\"selectColumn('" + name + "')\">";
     var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
     var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
+    var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Up</button>";
 
     var table = document.getElementById("attendanceColumnsTable");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = name;
     row.insertCell(-1).innerHTML = checkBox;
     row.insertCell(-1).innerHTML = upButton;
+    row.insertCell(-1).innerHTML = downButton;
+
+
 }
 
 // MISC
@@ -898,9 +911,7 @@ function modifyAutofillList(_, studentNames) {
 // SP
 // Displays a student profile by using information stored in the HTML
 function showStudentProfile() {
-
-    var profileSpace = document.getElementById('studentProfileText');
-    profileSpace.innerHTML = ("");
+    document.getElementById('changePhoto').style.display = 'contents';
     var nameSpace = document.getElementById('studentName');
     nameSpace.innerHTML = ("");
     var userInput = document.getElementById('keywordStudentSearch').value;
@@ -917,7 +928,6 @@ function showStudentProfile() {
     // Open student profile
     if (optionFound) {
         nameSpace.innerHTML += (userInput);
-        profileSpace.innerHTML += ("\n");
         getRequest("/getStudentInfo/" + userInput, "", showDemographics);
     }
 }
@@ -968,11 +978,10 @@ function demographicsHelper(_, columns) {
 // SP
 // Displays the edit profile popup.
 function openEditProfile() {
-    console.log("gets to here");
+    console.log("In openEditProfile");
     var name = document.getElementById('keywordStudentSearch').value;
     var studentInfo = document.getElementById("saveStudentData").innerHTML;
     var columns = document.getElementById("saveStudentColumnData").innerHTML;
-    console.log("in openEditProfile");
     var keywordElement = document.getElementById('keywordStudentSearch').value;
     var div = document.getElementById("editProfile");
     div.style.display = "block";
@@ -1005,9 +1014,7 @@ function openEditProfile() {
                 var str = col + ":<br> <input id='" + col + "colid' type='text' value='" + value + "' /> <br>";
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
-                console.log(str);
                 updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
-                console.log(updateString);
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "date") {
@@ -1018,7 +1025,6 @@ function openEditProfile() {
                 var str = col + ":<br> <input id='" + col + "colid' type='date' value='" + value + "'/> <br>";
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
-                console.log(str);
                 updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
                 form.innerHTML = str;
                 div.appendChild(form);
@@ -1032,7 +1038,6 @@ function openEditProfile() {
                 }
                 str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
                 updateString = updateString + "updateProfile('" + keywordElement + "','" + col + "','" + col + "colid', '" + type + "'); "
-                console.log(str);
                 form.innerHTML = str;
                 div.appendChild(form);
             }
@@ -1040,10 +1045,15 @@ function openEditProfile() {
     }
     var returnButton = document.createElement('button');
     returnButton.setAttribute('name', 'Return to Profile');
-    console.log(updateString);
     returnButton.setAttribute('onclick', updateString + 'returnToProfile();');
     returnButton.innerHTML = "Submit";
     div.appendChild(returnButton);
+    
+    var cancelButton = document.createElement('button');
+    cancelButton.setAttribute('name', 'Cancel');
+    cancelButton.setAttribute('onclick', 'returnToProfile();');
+    cancelButton.innerHTML = "Cancel";
+    div.appendChild(cancelButton); 
 }
 
 // SP
@@ -1758,17 +1768,6 @@ function exportToCsv(filename, rows) {
     }
 }
 
-// FF
-// Sends input in feedback textbox to database.
-function sendFeedback() {
-    var feedback = document.getElementById("feedback").value;
-    var date = getCurrentDate();
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", urlBase + "/sendFeedback");
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("date=" + date + "&feedback=" + feedback);
-    document.getElementById("feedback").value = "";
-}
 
 // AS
 // Fills the code text box under the table in an attendance sheet.

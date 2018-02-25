@@ -96,10 +96,6 @@ def deleteStudentColumn():
 def getStudentColumns():
     return backEnd.getStudentColumns()
 
-@app.route('/sendFeedback', methods = ["POST"])
-def sendFeedback():
-    return backEnd.sendFeedback(request)
-
 @app.route('/getAttendance/<date>')
 def getAttendance(date):
     return backEnd.getAttendance(date)
@@ -135,6 +131,10 @@ def getAttendanceColumns():
 @app.route('/moveAttendanceColumnUp', methods = ["POST"])
 def moveAttendanceColumnUp():
     return backEnd.moveAttendanceColumnUp(request)
+    
+@app.route('/moveAttendanceColumnDown', methods = ["POST"])
+def moveAttendanceColumnDown():
+    return backEnd.moveAttendanceColumnDown(request)
 
 @app.route('/getMasterAttendanceDate/<dates>')
 def getMasterAttendanceDate(dates):

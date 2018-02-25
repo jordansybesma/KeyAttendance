@@ -168,6 +168,7 @@ h4 {
         //border: 2px solid black;
         //margin: auto;
     }
+    
 
     #saveStudentData {
         display: none;
@@ -176,6 +177,25 @@ h4 {
         display: none;
     }
     #saveStudentColumnData {
+        display: none;
+    }
+
+    #studentPhoto {
+        height: 200px;
+        width: 200px;
+        outline: none;
+        border: 0;
+    }
+
+    #StudentInfo {
+        
+        display:grid;
+        grid: auto auto / 30% auto auto;
+        grid-gap: 10px;
+        justify-content: space-around;
+    }
+
+    #changePhoto {
         display: none;
     }
 }
@@ -389,12 +409,6 @@ span:hover {
     width: 100%;
 }
 
-#studentPhoto {
-    height: 200px;
-    width: 200px;
-    outline: none;
-    border: 0;
-}
 
 #editProfile {
     position: absolute;
@@ -496,17 +510,17 @@ span:hover {
 
 // Datalist-polyfill:
 .datalist-polyfill {
-	list-style: none;
-	display: none;
-	background: white;
-	box-shadow: 0 2px 2px #999;
-	position: absolute;
-	left: 0;
-	top: 0;
-	margin: 0;
-	padding: 0;
-	max-height: 300px;
-	overflow-y: auto;
+    list-style: none;
+    display: none;
+    background: white;
+    box-shadow: 0 2px 2px #999;
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .datalist-polyfill:empty {

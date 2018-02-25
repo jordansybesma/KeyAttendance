@@ -120,8 +120,8 @@
                 <p id="saveStudentColumnData"></p>
                 <div id="StudentInfo">
                     <img id="studentPhoto" hidden>
-                    <div id="frequentPeers" ></div>
                     <div id="demographics" ></div>
+                    <div id="frequentPeers" ></div>
                     <form id="changePhoto" action="/uploadPicture" method="post" enctype="multipart/form-data" target="hiddenFrame">
                       <div>
                         <p>Upload a New Picture:</p>
@@ -169,7 +169,7 @@
                 <label for="tab0">Unique Attendees</label>
                 <div>
 
-                    <h5>This table shows the number of unique students who participated in each activity over several time spans. Does not include data for the current date (most recent data is from yesterday)</h5>
+                    <h5>This table shows the number of unique students who participated in each activity over several time spans. It does not include data for the current date (most recent data is from yesterday).</h5>
 
                     <table id="UniqueAttendanceTable" style="width:50%"></table>
                     <h5>To get this same data but between a custom time period, select a start date and end date below.</h5>
@@ -185,7 +185,7 @@
                 <input type="radio"  id="tab1" name="grp"/> 
                 <label for="tab1"> Student Attendance </label>
                 <div>
-                    <h5>Get the students who attended between two dates</h5>
+                    <h5>Get the csv of students who attended between two dates.</h5>
                     <form onsubmit="return false;">
                         Start Date <br>
                         <input type="date" id="startDateStudents" /><br>
@@ -196,9 +196,10 @@
                     <p id="savedHeadersActivities"></p>
                 </div>
                 <input type="radio"  id="tab2" name="grp"/> 
+                
                 <label for="tab2"> Student Activities </label>
                 <div class="ReportTabContents">
-                <h5>Get the students who participated in an activity between two dates</h5>
+                <h5>Get the csv of students who participated in an activity between two dates.</h5>
                 <form onsubmit="return false;">
                     Activity <br>
                     <select id="activitySelection"></select><br>

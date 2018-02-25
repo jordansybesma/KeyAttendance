@@ -1157,6 +1157,7 @@ def checkAlert(request):
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])
 
 def uploadPicture(studentid, name, imageObj):
+    executeSingleQuery("DELETE FROM studentinfo WHERE studentid = %s AND info_id = 6;", [studentid])
     nameExt = name.rsplit('.')[-1].lower()
     shortPathString = "/static/resources/images/" + studentid + "image"
     longPathString = "/home/ubuntu/404-repo-name-DNE/web/static/resources/images/" + studentid + "image"

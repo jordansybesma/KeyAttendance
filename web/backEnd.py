@@ -7,6 +7,8 @@ import flaskEnd
 from flask import Flask, request, redirect, url_for
 from werkzeug.utils import secure_filename
 
+import getpass
+
 
 
 
@@ -163,13 +165,13 @@ def getUniqueStudentsDates(dates):
 
 
 def getFirstAttendanceDates(dates):
-    
+
     dateList = dates.split()
     start = dateList[0]
     end = dateList[1]
-    
+
     query = "SELECT first_name, last_name FROM students WHERE first_attendance <= \'" + end + "\' AND first_attendance >= \'" + start + "\';"
-    
+
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
 #Could be combined with unique table probably...
@@ -345,7 +347,7 @@ def fixShit():
         queryTotal = queryTotal + " " + queryInsert
     executeSingleQuery(queryTotal, [])
     return "done"
-            
+
 
 
 
@@ -417,21 +419,21 @@ def addNewStudent(request):
     now = datetime.datetime.now()
     today = transformDate(now)
 
-    
-    
+
+
     queryIDs = "SELECT id FROM students ORDER BY id DESC"
     ids = json.loads(json.dumps(executeSingleQuery(queryIDs, fetch = True), indent=4, sort_keys=True, default=str))
     largeID = ids[0][0]
     newID = largeID + 1
-    
-    
+
+
     #executeSingleQuery("INSERT INTO students VALUES (\'" + firstName + "\', \'" + lastName + "\', " + str(newID) + ");", [])
     executeSingleQuery("INSERT INTO students VALUES (\'" + firstName + "\', \'" + lastName + "\');", [])
-    
-    
+
+
     #queryUpdateID = "UPDATE students SET id = " + newID + "WHERE first_name = \'" + firstName + "\', AND last_name = \'" + lastName + "\';"
     #executeSingleQuery(queryUpdateID, [])
-    
+
     queryUpdate = "UPDATE students SET first_attendance = \'" + today + "\', number_visits = 0 WHERE first_name = \'" + firstName + "\' AND last_name = \'" + lastName + "\';"
     executeSingleQuery(queryUpdate, [])
     return "\nHello frontend:)\n"
@@ -478,7 +480,7 @@ def updateStudentInfo(request):
         colName = "int_value"
     elif (columnType == "boolean"):
         colName = "bool_value"
-        
+
         curVal = json.loads(json.dumps(executeSingleQuery("SELECT bool_value FROM studentInfo WHERE student_id = " + str(studentID) + " AND activity_id = " + str(colID) + ";", [])))
         if (len(curVal) == 0):
             value = 'true'
@@ -487,8 +489,8 @@ def updateStudentInfo(request):
                 value = 'true'
             else:
                 value = 'false'
-                
-        
+
+
     elif (columnType == "date"):
         colName = "date_value"
         if (value != "null"):
@@ -1063,7 +1065,7 @@ def selectActivity(request):
 
 ##Gets the path to a student's photo if one exists. Otherwise, gets the path to a default 'not found' image
 def getPhoto(id):
-    query = "SELECT * FROM studentinfo WHERE student_id = " + str(id) +  " AND info_id = 5;"
+    query = "SELECT * FROM studentinfo WHERE student_id = " + str(id) +  " AND info_id = 6;"
     result = executeSingleQuery(query, fetch=True)
     if (len(result) < 1):
         return "/static/resources/images/No-image-found.jpg"
@@ -1297,8 +1299,10 @@ def checkAlert(request):
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])
 
 def uploadPicture(studentid, name, imageObj):
+    executeSingleQuery("DELETE FROM studentinfo WHERE student_id = %s AND info_id = 6;", [studentid])
     nameExt = name.rsplit('.')[-1].lower()
-    pathString = "/static/resources/images/" + studentid + nameExt
-    imageObj.save(pathString)
-    executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);" [studentid, pathString])
-    return 1
+    shortPathString = "/static/resources/images/" + studentid + "image"
+    longPathString = "/home/ubuntu/404-repo-name-DNE/web/static/resources/images/" + studentid + "image"
+    imageObj.save(longPathString)
+    executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);", [studentid, shortPathString])
+    return "Done!"

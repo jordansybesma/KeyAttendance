@@ -1027,11 +1027,11 @@ function openEditProfile() {
     var columnData = JSON.parse(columns);
     var updateString = "";
     
-    var editNameHTML = getEditNameHTML(name);
-    var form = document.createElement("form");
-    updateString = updateString + editNameHTML[1];
-    form.innerHTML = editNameHTML[0];
-    div.appendChild(form);
+//    var editNameHTML = getEditNameHTML(name);
+//    var form = document.createElement("form");
+//    updateString = updateString + editNameHTML[1];
+//    form.innerHTML = editNameHTML[0];
+//    div.appendChild(form);
     
     for (i in columnData) {
         console.log("outer loop");
@@ -1082,23 +1082,23 @@ function openEditProfile() {
     }
     var returnButton = document.createElement('button');
     returnButton.setAttribute('name', 'Return to Profile');
-    returnButton.setAttribute('onclick', updateString);
+    returnButton.setAttribute('onclick', updateString + "returnToProfile();");
     returnButton.innerHTML = "Submit";
     div.appendChild(returnButton);
     
     var cancelButton = document.createElement('button');
     cancelButton.setAttribute('name', 'Cancel');
-    cancelButton.setAttribute('onclick', 'returnToProfile(' + name + ');');
+    cancelButton.setAttribute('onclick', 'returnToProfile();');
     cancelButton.innerHTML = "Cancel";
     div.appendChild(cancelButton); 
 }
 
 // SP
 // Closes edit profile popup.
-function returnToProfile(fullName) {
+function returnToProfile() {
     
-    document.getElementById('keywordStudentSearch').value = fullName;
-    document.getElementById("suggestedStudents").innerHTML = "<option>" + fullName + "</option>\n";
+//    document.getElementById('keywordStudentSearch').value = fullName;
+//    document.getElementById("suggestedStudents").innerHTML = "<option>" + fullName + "</option>\n";
     
     var div = document.getElementById("editProfile");
     div.innerHTML = "";

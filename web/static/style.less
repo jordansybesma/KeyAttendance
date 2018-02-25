@@ -151,7 +151,7 @@ h4 {
     .studentInfo {
         position: absolute;
         width: 400px;
-        height: 250px;
+        height: 260px;
         z-index: 15;
         top: 50%;
         left: 50%;
@@ -190,18 +190,17 @@ h4 {
     #StudentInfo {
         
         display:grid;
-        grid: auto auto / 30% auto auto;
+        grid: auto auto / auto auto auto;
         grid-gap: 10px;
-        justify-content: space-around;
     }
 
     #changePhoto {
-        display: none;
+        //display: none;
     }
 }
 
 
-.tabishButton  {
+.tabishButton, input[type="submit"], button  {
     //max-height: 50px;
     //width: 16.6666%;
     font-size: ~"calc(5pt + 0.6vw)";
@@ -412,27 +411,27 @@ span:hover {
 
 #editProfile {
     position: absolute;
-        width: 400px;
-        height: 250px;
-        z-index: 15;
-        top: 50%;
-        left: 50%;
-        margin: -100px 0 0 -150px;
-        padding-top: 10px;
-        padding-bottom: 5px;
-        padding-left: 10px;
-        padding-right: 10px;
-        display: none; /* Hidden by default */
-        //position: fixed; /* Stay in place */
-        //z-index: 1; /* Sit on top */
-        //left: 0;
-        //top: 0;
-        //width: 50%; /* Full width */
-        //height: 50%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: white; /* Fallback color */
-        border: 2px solid black;
-        //margin: auto;
+    width: 400px;
+    height: 250px;
+    z-index: 15;
+    top: 50%;
+    left: 50%;
+    margin: -100px 0 0 -150px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: none; /* Hidden by default */
+    //position: fixed; /* Stay in place */
+    //z-index: 1; /* Sit on top */
+    //left: 0;
+    //top: 0;
+    //width: 50%; /* Full width */
+    //height: 50%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: white; /* Fallback color */
+    border: 2px solid black;
+    //margin: auto;
 }
 
 
@@ -536,3 +535,46 @@ span:hover {
         background: #3875d7;
         color: white;
     }
+
+
+#ReportsContent {
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+
+    label {
+      background: @base2;
+      padding: .7em 1em;
+      cursor: pointer;
+      z-index: 1;
+      margin-left: -1px;
+    }
+
+    label:first-of-type {
+      margin-left: 0;
+    }
+
+    div {
+      margin-top: -1px;
+      padding: 1em;
+      border: 1px solid #ddd;
+      -webkit-order: 1;
+      order: 1;
+      width: 100%;
+    }
+
+    input[type=radio], div {
+      display: none;
+    }
+
+    input[type=radio]:checked + label {
+      background: @base03;
+    }
+
+    input[type=radio]:checked + label + div {
+      display: block;
+    }
+}
+
+
+

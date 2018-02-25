@@ -48,6 +48,9 @@ def addNewStudent():
 def updateStudentInfo():
     return backEnd.updateStudentInfo(request)
 
+@app.route('/editStudentName/', methods = ["POST"])
+def editStudentName():
+    return backEnd.editStudentName(request)
 
 @app.route('/getStudentsByActivity/<dates>')
 def getStudentsByActivity(dates):
@@ -103,6 +106,12 @@ def getAttendance(date):
 @app.route('/getLogin/<login>')
 def getLogin(login):
     return backEnd.getLogin(login)
+    
+
+
+@app.route('/getStudentConfirmation/<name>/')
+def getStudentConfirmation(name):
+    return backEnd.getStudentConfirmation(name)
 
 @app.route('/getStudentAttendance/<student>/')
 def getStudentAttendance(student):

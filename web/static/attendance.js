@@ -306,6 +306,30 @@ function addAttendant(first, last) {
     xmlhttp.open("POST", urlBase + "/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&date=" + date + "&time=" + time + "&id=");
+    console.log(date);
+    getRequest("/getStudentConfirmation/" + first + " " + last + " " + date, "", studentConfirmationHelper);
+    
+
+    
+}
+
+function studentConfirmationHelper(_, row) {
+    if (row == "") {
+        alert("Student already added");
+        //getRequest("/frequentPeers/" + first + " " + last, "", showFrequentPeersAttendance);
+        return;
+    }
+    data = JSON.parse(row);
+    if (data.length < 1) {
+        alert("WARNING: STUDENT WAS NOT ADDED TO ATTENDANCE");
+        //getRequest("/frequentPeers/" + first + " " + last, "", showFrequentPeersAttendance);
+        return;
+    }
+    console.log(data);
+    
+    time = data[0][0];
+    first = data[0][1];
+    last = data[0][2];
 
     displayNewAttendant(first, last, time);
 
@@ -339,7 +363,16 @@ function displayNewAttendant(first, last, time) {
     for (i = 5; i < arrayLength; i++) {
         attendantData[i] = false;
     }
+    var stringToBeAdded = time + "  -  " + first + " " + last
+    //console.log(stringToBeAdded);
     var table = document.getElementById("Attendance-Table");
+    var row = table.rows[1].cells;
+    //console.log(row[0].innerHTML)
+    var full = row[0].innerHTML;
+    if ((full.includes(first)) && (full.includes(last))) {
+        alert("Student already added");
+        return;
+    }
     fillRowAttendance(table, myColumns, attendantData);
 }
 
@@ -357,6 +390,9 @@ function addNewStudent() {
         first = replaceSpacesWithUnderscores(first);
         last = replaceSpacesWithUnderscores(last);
         
+        first = capitalizeFirstLetter(first);
+        last = capitalizeFirstLetter(last);
+        
         // Adds student to student table
         sendNewStudent(first, last);
 
@@ -368,7 +404,7 @@ function addNewStudent() {
     }
 }
 
-// AS
+// MISC
 // Check if input is valid.
 function inputOkay(first, last) {
     if (first === "") {
@@ -478,6 +514,7 @@ function newStudentHelper(_, columns) {
 
 
     footer = document.getElementById("newStudentFooter");
+    footer.innerHTML = "";
     var closeButton = document.createElement('button');
     closeButton.setAttribute('name', 'Return to Profile');
     //console.log(updateString);
@@ -989,6 +1026,13 @@ function openEditProfile() {
     var studData = studentData[0];
     var columnData = JSON.parse(columns);
     var updateString = "";
+    
+//    var editNameHTML = getEditNameHTML(name);
+//    var form = document.createElement("form");
+//    updateString = updateString + editNameHTML[1];
+//    form.innerHTML = editNameHTML[0];
+//    div.appendChild(form);
+    
     for (i in columnData) {
         console.log("outer loop");
         var colIsShowing = columnData[i][1];
@@ -1038,7 +1082,7 @@ function openEditProfile() {
     }
     var returnButton = document.createElement('button');
     returnButton.setAttribute('name', 'Return to Profile');
-    returnButton.setAttribute('onclick', updateString + 'returnToProfile();');
+    returnButton.setAttribute('onclick', updateString + "returnToProfile();");
     returnButton.innerHTML = "Submit";
     div.appendChild(returnButton);
     
@@ -1052,10 +1096,54 @@ function openEditProfile() {
 // SP
 // Closes edit profile popup.
 function returnToProfile() {
+    
+//    document.getElementById('keywordStudentSearch').value = fullName;
+//    document.getElementById("suggestedStudents").innerHTML = "<option>" + fullName + "</option>\n";
+    
     var div = document.getElementById("editProfile");
     div.innerHTML = "";
     div.style.display = "none";
     showStudentProfile();
+}
+
+// SP
+// Returns HTML for editing student name in popup.
+function getEditNameHTML(oldName) {
+    var nameArray = name.split(" ");
+    var first = nameArray[0];
+    var last = nameArray[1];
+    var firstStr = "First name:<br><input type='text' value='" + first + "' name='firstname' id='editFirst'><br>";
+    var lastStr = "Last name:<br><input type='text' value='" + last + "' name='lastname' id='editLast'>";
+    var fullStr = firstStr + lastStr;
+    var functionToCall = "editName('" + oldName + "');"
+    return [fullStr, functionToCall];
+}
+
+// SP
+// Changes the name of a student.
+function editName(oldName) {
+
+    var first = document.getElementById("editFirst").value.trim();
+    var last = document.getElementById("editLast").value.trim();
+
+    if (inputOkay(first, last)){
+
+        first = replaceSpacesWithUnderscores(first);
+        last = replaceSpacesWithUnderscores(last);
+        
+        first = capitalizeFirstLetter(first);
+        last = capitalizeFirstLetter(last);
+
+        // Adds student to student table
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", urlBase + "/editStudentName/");
+        xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        xmlhttp.send("oldName=" + oldName + "&newFirst=" + first + "&newLast=" + last);
+
+        // Closes popup
+        var fullName = first + " " + last;
+        returnToProfile(fullName);
+    }
 }
 
 // SP
@@ -1762,4 +1850,12 @@ function textBoxCallback(_, js) {
 function submitStudentPictureChange() {
     document.getElementById().submit();
     showStudentProfile();
+}
+
+
+// AS
+// Capitalizes first letter of string
+// Thanks to https://paulund.co.uk/capitalize-first-letter-string-javascript
+function capitalizeFirstLetter(string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }

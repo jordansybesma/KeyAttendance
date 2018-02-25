@@ -306,6 +306,23 @@ function addAttendant(first, last) {
     xmlhttp.open("POST", urlBase + "/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&date=" + date + "&time=" + time + "&id=");
+    console.log(date);
+    getRequest("/getStudentConfirmation/" + first + " " + last + " " + date, "", studentConfirmationHelper);
+    
+
+    
+}
+
+function studentConfirmationHelper(_, row) {
+    data = JSON.parse(row);
+    if (data.length < 1) {
+        alert("WARNING: STUDENT WAS NOT ADDED TO ATTENDANCE");
+    }
+    console.log(data);
+    
+    time = data[0][0];
+    first = data[0][1];
+    last = data[0][2];
 
     displayNewAttendant(first, last, time);
 

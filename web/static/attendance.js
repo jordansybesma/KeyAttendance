@@ -317,6 +317,8 @@ function addAttendant(first, last) {
 // Function does not use database info (that's being stored right before displayNewAttendant() is called in addAttendant())
 function displayNewAttendant(first, last, time) {
     // Get data about columns
+   
+
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
 
@@ -683,14 +685,14 @@ function showAttendanceManageHelper(_, data) {
             + " onclick=\"selectColumn('" + name + "')\">";
         var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
         var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
-        //var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
+        var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
 
         var row = table.insertRow(-1);
         row.insertCell(-1).innerHTML = name;
         row.insertCell(-1).innerHTML = checkBox;
         //row.insertCell(-1).innerHTML = deleteButton;
         row.insertCell(-1).innerHTML = upButton;
-        //row.insertCell(-1).innerHTML = downButton;
+        row.insertCell(-1).innerHTML = downButton;
     }
 }
 
@@ -738,7 +740,14 @@ function moveAttendanceColumnUp(name) {
 // Changes order of appearance of attendance columns, displays inputted col one spot later.
 //not implemented yet...
 function moveAttendanceColumnDown(name) {
-    alert("go down down down");
+    console.log("move column down");
+    var xmlhttp = new XMLHttpRequest();
+    console.log(urlBase);
+    xmlhttp.open("POST", urlBase + "/moveAttendanceColumnDown");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.send("name=" + name);
+    showAttendanceManage();
+    //alert("you got it up");
     return false;
 }
 
@@ -801,12 +810,16 @@ function addColumn() {
             + " onclick=\"selectColumn('" + name + "')\">";
     var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
     var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
+    var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Up</button>";
 
     var table = document.getElementById("attendanceColumnsTable");
     var row = table.insertRow(-1);
     row.insertCell(-1).innerHTML = name;
     row.insertCell(-1).innerHTML = checkBox;
     row.insertCell(-1).innerHTML = upButton;
+    row.insertCell(-1).innerHTML = downButton;
+
+
 }
 
 // MISC
@@ -1736,19 +1749,6 @@ function exportToCsv(filename, rows) {
     }
 }
 
-// FF
-// Sends input in feedback textbox to database.
-/* 
-function sendFeedback() {
-    var feedback = document.getElementById("feedback").value;
-    var date = getCurrentDate();
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", urlBase + "/sendFeedback");
-    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.send("date=" + date + "&feedback=" + feedback);
-    document.getElementById("feedback").value = "";
-}
- */
 
 // AS
 // Fills the code text box under the table in an attendance sheet.

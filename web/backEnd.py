@@ -409,6 +409,30 @@ def getAttendance(date):
 
     return result
 
+def getStudentConfirmation(name):
+    nameList = name.split()
+    first = nameList[0]
+    last = nameList[1]
+    date = nameList[2]
+    
+    queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
+    studentIDs = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))
+    if (len(studentIDs) < 1):
+        return "nope"
+    studentID = studentIDs[0][0]
+    
+    
+    query = "SELECT DISTINCT(student_id), time INTO temp1 FROM dailyAttendance WHERE student_id = " + str(studentID) + " AND date = \'" + date + "\';"
+    executeSingleQuery(query, [])
+    
+    resultsQuery = "SELECT temp1.time, students.first_name, students.last_name FROM temp1 LEFT JOIN students ON temp1.student_id = students.id;"
+    
+    results =  json.dumps(executeSingleQuery(resultsQuery, fetch = True), indent=4, sort_keys=True, default=str)
+    queryDrop = "DROP TABLE temp1;"
+    executeSingleQuery(queryDrop, [])
+    return results
+
+
 
 #Add new student to system
 #Input: first name and last name
@@ -1113,6 +1137,7 @@ def getPhoto(id):
 #Output: none
 def addAttendant(request):
     #print(json.decode(request.data))
+    
     first = request.form.get('firstName')
     last  = request.form.get( 'lastName')
     date = request.form.get('date')

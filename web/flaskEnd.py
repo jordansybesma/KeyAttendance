@@ -103,6 +103,12 @@ def getAttendance(date):
 @app.route('/getLogin/<login>')
 def getLogin(login):
     return backEnd.getLogin(login)
+    
+
+
+@app.route('/getStudentConfirmation/<name>/')
+def getStudentConfirmation(name):
+    return backEnd.getStudentConfirmation(name)
 
 @app.route('/getStudentAttendance/<student>/')
 def getStudentAttendance(student):

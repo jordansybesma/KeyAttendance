@@ -342,10 +342,13 @@ function displayNewAttendant(first, last, time) {
     var row = table.rows[1].cells;
     //console.log(row[0].innerHTML)
     var full = row[0].innerHTML;
+    // this was erroring
+    /*
     if ((full.includes(first)) && (full.includes(last))) {
         alert("Student already added");
         return;
     }
+    */
     fillRowAttendance(table, myColumns, attendantData);
 }
 

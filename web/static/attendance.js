@@ -8,12 +8,12 @@ function getTimesAttended() {
     startDate = document.getElementById("startDateReport").value;
     endDate = document.getElementById("endDateReport").value;
     num = document.getElementById("numTimesAttended").value;
-    console.log(startDate);
-    console.log(endDate);
-    console.log(num);
+    //console.log(startDate);
+    //console.log(endDate);
+    //console.log(num);
     addOn = startDate + " " + endDate + " " + num
-    console.log("got to times attended");
-    console.log(addOn);
+    //console.log("got to times attended");
+    //console.log(addOn);
     getRequest("/getNumberAttended/" + addOn, "", getTimesAttendedHelper);
 
 }
@@ -22,7 +22,7 @@ function getTimesAttended() {
 // Downloads a CSV file of students who attended for num-th time using exportToCSV.
 function getTimesAttendedHelper(_, students) {
     var students = JSON.parse(students);
-    console.log(students);
+    //console.log(students);
     rows = [];
     for (i in students) {
         rows.push(students[i]);
@@ -39,16 +39,13 @@ function getTimesAttendedHelper(_, students) {
 // This data is passed to reportHelper!
 function giveReport() {
     //getRequest("/getStudentColumns", "", reportHelper);
-    console.log("got to report");
+    //console.log("got to report");
     getRequest("/uniqueAttendance/", "", reportHelper);
 }
 
 function getUniqueStudentsDate() {
     start = document.getElementById("startDateUnique").value;
     end = document.getElementById("endDateUnique").value;
-    console.log(start);
-    console.log(end);
-    console.log(typeof start);
     if (start == "") {
         alert("Please enter a start date");
         return false;
@@ -57,8 +54,6 @@ function getUniqueStudentsDate() {
         alert("Please enter an end date");
         return false;
     }
-    console.log(start + " " + end);
-    console.log("/getUniqueAttendanceDates/" + start + " " + end);
     getRequest("/getUniqueAttendanceDates/" + start + " " + end, "", reportHelper4);
     return false;
 
@@ -67,7 +62,6 @@ function getUniqueStudentsDate() {
 function reportHelper4(_, students) {
     data = JSON.parse(students);
 
-    console.log(data);
     rows = [];
     for (i in data) {
         rows.push(data[i]);
@@ -82,7 +76,6 @@ function reportHelper4(_, students) {
 function reportHelper5(_, students) {
     data = JSON.parse(students);
 
-    console.log(data);
     rows = [];
     for (i in data) {
         rows.push(data[i]);
@@ -98,7 +91,6 @@ function reportHelper6(_, students) {
     data = JSON.parse(students);
     headers = document.getElementById("savedHeadersActivities").value;
 
-    console.log(data);
     rows = [];
     row = [];
     row.push("First");
@@ -127,15 +119,11 @@ function getStudentsActivity() {
     
 }
 function getStudentActivityHelper(_, headers) {
-    console.log(headers);
     document.getElementById("savedHeadersActivities").value = JSON.parse(headers);
 
     start = document.getElementById("startDateActivity").value;
     end = document.getElementById("endDateActivity").value;
     column = document.getElementById("activitySelection").value;
-    console.log(start);
-    console.log(end);
-    console.log(typeof start);
     if (start == "") {
         alert("Please enter a start date");
         return false;
@@ -144,16 +132,12 @@ function getStudentActivityHelper(_, headers) {
         alert("Please enter an end date");
         return false;
     }
-    console.log(start + " " + end);
     //console.log("/getStudentsByActivity/" + start + " " + end);
     getRequest("/getStudentsByActivity/" + start + " " + end + " " + column, "", reportHelper6);
 }
 function getStudentsDate() {
     start = document.getElementById("startDateStudents").value;
     end = document.getElementById("endDateStudents").value;
-    console.log(start);
-    console.log(end);
-    console.log(typeof start);
     if (start == "") {
         alert("Please enter a start date");
         return false;
@@ -162,8 +146,6 @@ function getStudentsDate() {
         alert("Please enter an end date");
         return false;
     }
-    console.log(start + " " + end);
-    console.log("/getUniqueStudentsDates/" + start + " " + end);
     getRequest("/getUniqueStudentsDates/" + start + " " + end, "", reportHelper5);
     return false;
 
@@ -187,7 +169,6 @@ function addOptions(data) {
 // Displays data on the different time intervals, day/week/month/year.
 // Retrieves data on num students who attended the Key for the first time in past week/month/year, passes it to reportHelper2.
 function reportHelper(_, columns) {
-    console.log(columns);
     uniqueAttenData = JSON.parse(columns);
 
     addOptions(uniqueAttenData);
@@ -215,7 +196,6 @@ function reportHelper(_, columns) {
 // R
 // Displays data on first attendances for week/month/year.
 function reportHelper2(_, columns) {
-    console.log(columns);
     uniqueAttenData = JSON.parse(columns);
     table = document.getElementById("NewAttendanceTable");
     table.innerHTML = "";
@@ -238,9 +218,6 @@ function reportHelper2(_, columns) {
 function getNewStudentsAttended(){
     var start = document.getElementById("startDateNewStudent").value;
     var end = document.getElementById("endDateNewStudent").value;
-    console.log(start);
-    console.log(end);
-    console.log(typeof start);
     if (start == "") {
         alert("Please enter a start date");
         return false;
@@ -249,8 +226,6 @@ function getNewStudentsAttended(){
         alert("Please enter an end date");
         return false;
     }
-    console.log(start + " " + end);
-    console.log("/getFirstAttendanceDates/" + start + " " + end);
     getRequest("/getFirstAttendanceDates/" + start + " " + end, "", reportHelper3);
     return false;
 }
@@ -260,7 +235,6 @@ function getNewStudentsAttended(){
 function reportHelper3(_, students) {
     data = JSON.parse(students);
 
-    console.log(data);
     rows = [];
     for (i in data) {
         rows.push(data[i]);
@@ -306,7 +280,6 @@ function addAttendant(first, last) {
     xmlhttp.open("POST", urlBase + "/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&date=" + date + "&time=" + time + "&id=");
-    console.log(date);
     getRequest("/getStudentConfirmation/" + first + " " + last + " " + date, "", studentConfirmationHelper);
     
 
@@ -325,7 +298,7 @@ function studentConfirmationHelper(_, row) {
         //getRequest("/frequentPeers/" + first + " " + last, "", showFrequentPeersAttendance);
         return;
     }
-    console.log(data);
+    //console.log(data);
     
     time = data[0][0];
     first = data[0][1];
@@ -458,7 +431,6 @@ function newStudentHelper(_, columns) {
     form.setAttribute('onSubmit', 'return false;');
 
     var str = "First Name:<br> <input id='newStudentFirst' type='text' value=''/> <br>";
-    console.log(str);
     form.innerHTML = str;
     div.appendChild(form);
 
@@ -466,28 +438,22 @@ function newStudentHelper(_, columns) {
     form2.setAttribute('onSubmit', 'return false;');
 
     var str = "Last Name:<br> <input id='newStudentLast' type='text' value=''/> <br>";
-    console.log(str);
     form2.innerHTML = str;
     div.appendChild(form2);
 
     for (i in columnData) {
-        console.log("outer loop");
         var colIsShowing = columnData[i][2];
         if (colIsShowing) {
-            console.log("next loop");
             var col = columnData[i][3];
             var form = document.createElement("form");
             var type = columnData[i][4];
             form.setAttribute('onSubmit', 'return false;');
             if ((type == "varchar(500)") || (type == "int")) {
-                console.log("got to last loop");
 
                 var str = col + ":<br> <input id='" + col + "colid' type='text' value=''/> <br>";
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
-                console.log(str);
                 updateString = updateString + "updateProfile('','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
-                console.log(updateString);
                 form.innerHTML = str;
                 div.appendChild(form);
             } else if (type == "date") {
@@ -495,7 +461,6 @@ function newStudentHelper(_, columns) {
                 var str = col + ":<br> <input id='" + col + "colid' type='date' value=''/> <br>";
                 //str = str + " <input type='submit' value='Save' onclick=\"updateProfile('" + keywordElement + "','" + col;
                 //str = str + "','" + col + "colid', '" + columnData[i][3] + "')\"/><br><br>"
-                console.log(str);
                 updateString = updateString + "updateProfile('','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
                 form.innerHTML = str;
                 div.appendChild(form);
@@ -505,7 +470,6 @@ function newStudentHelper(_, columns) {
 
                 str = str + " <input type='checkbox')\"/><br><br>"
                 updateString = updateString + "updateProfile('','" + col + "','" + col + "colid', '" + columnData[i][3] + "'); "
-                console.log(str);
                 form.innerHTML = str;
                 div.appendChild(form);
             }
@@ -517,7 +481,6 @@ function newStudentHelper(_, columns) {
     footer.innerHTML = "";
     var closeButton = document.createElement('button');
     closeButton.setAttribute('name', 'Return to Profile');
-    //console.log(updateString);
     closeButton.setAttribute('onclick', "closeAddNewStudent()");
     closeButton.setAttribute('id', "close");
     closeButton.innerHTML = "Cancel";
@@ -526,7 +489,6 @@ function newStudentHelper(_, columns) {
     var returnButton = document.createElement('button');
     returnButton.setAttribute('name', 'Return to Profile');
     returnButton.setAttribute('id',"submitStudent");
-    console.log(updateString);
     returnButton.setAttribute('onclick', updateString);
     returnButton.innerHTML = "Submit";
     footer.appendChild(returnButton);
@@ -714,7 +676,7 @@ function showAttendanceManageHelper(_, data) {
     // Insert data into table
     var myData = JSON.parse(data);
     for (i in myData) {
-        console.log(myData[i]);
+        //console.log(myData[i]);
 
         var name = myData[i][2];
         var checkBox = "<input type=\"checkbox\" "
@@ -736,7 +698,7 @@ function showAttendanceManageHelper(_, data) {
 // Ac
 // Toggles whether the selected attendance column shows up in the attendance table (when checkbox becomes checked/unchecked).
 function selectColumn(name) {
-    console.log("got here");
+    //console.log("got here");
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/updateAttendanceColumn");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
@@ -762,9 +724,9 @@ function deleteColumn(name) {
 // AC
 // Changes order of appearance of attendance columns, displays inputted col one spot earlier.
 function moveAttendanceColumnUp(name) {
-    console.log("move column up");
+    //console.log("move column up");
     var xmlhttp = new XMLHttpRequest();
-    console.log(urlBase);
+    //console.log(urlBase);
     xmlhttp.open("POST", urlBase + "/moveAttendanceColumnUp");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
@@ -777,9 +739,9 @@ function moveAttendanceColumnUp(name) {
 // Changes order of appearance of attendance columns, displays inputted col one spot later.
 //not implemented yet...
 function moveAttendanceColumnDown(name) {
-    console.log("move column down");
+    //console.log("move column down");
     var xmlhttp = new XMLHttpRequest();
-    console.log(urlBase);
+    //console.log(urlBase);
     xmlhttp.open("POST", urlBase + "/moveAttendanceColumnDown");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
@@ -973,7 +935,7 @@ function showStudentProfile() {
 // Stores student's demographic information and retrieves/passes the active elements of demographics as specified in Manage Profile
 function showDemographics(_, data) {
     var parsedData = JSON.parse(data);
-    console.log(parsedData);
+    //console.log(parsedData);
     document.getElementById("saveStudentData").innerHTML = data;
 
     getRequest("/getStudentColumns", "", demographicsHelper);
@@ -986,11 +948,11 @@ function demographicsHelper(_, columns) {
 
     var data = document.getElementById("saveStudentData").innerHTML;
     document.getElementById("saveStudentColumnData").innerHTML = columns;
-    console.log(columns);
+    //console.log(columns);
 
     var studentInfo = JSON.parse(data);
-    console.log("studentInfo:");
-    console.log(studentInfo);
+    //console.log("studentInfo:");
+    //console.log(studentInfo);
     // set the hidden form input for picture upload to be the ID
     // this lets the backend know the student ID of the assosiated picture
     document.getElementById("pictureUploadHiddenId").value = studentInfo[0][0];
@@ -1015,7 +977,7 @@ function demographicsHelper(_, columns) {
 // SP
 // Displays the edit profile popup.
 function openEditProfile() {
-    console.log("In openEditProfile");
+    //console.log("In openEditProfile");
     var name = document.getElementById('keywordStudentSearch').value;
     var studentInfo = document.getElementById("saveStudentData").innerHTML;
     var columns = document.getElementById("saveStudentColumnData").innerHTML;
@@ -1034,16 +996,16 @@ function openEditProfile() {
 //    div.appendChild(form);
     
     for (i in columnData) {
-        console.log("outer loop");
+        //console.log("outer loop");
         var colIsShowing = columnData[i][1];
         if (colIsShowing) {
-            console.log("next loop");
+            //console.log("next loop");
             var col = columnData[i][3];
             var form = document.createElement("form");
             var type = columnData[i][4];
             form.setAttribute('onSubmit', 'return false;');
             if ((type == "varchar(500)") || (type == "int")) {
-                console.log("got to last loop");
+                //console.log("got to last loop");
                 var value = studData[parseInt(i) + 1];
                 if (value == null) {
                     value = "";
@@ -1149,7 +1111,7 @@ function editName(oldName) {
 // SP
 // Updates profile.
 function updateProfile(name, col, colid, type) {
-    console.log(type);
+    //console.log(type);
     if ((type == "boolean")||(type == "checkbox")) {
         var value = "";
     } else {
@@ -1179,20 +1141,20 @@ function displayStudentInfo(colName, info, type) {
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
     var displayName = makeHeaderReadable(colName);
-    console.log(type);
+    //console.log(type);
     if (info == null) {
         var text = document.createTextNode(displayName + ": ");
     } else if ((type == "varchar") || (type == "varchar(500)")) {
-        console.log("var");
+        //console.log("var");
         var text = document.createTextNode(displayName + ": " + info);
     } else if (type == "int") {
-        console.log("int");
+        //console.log("int");
         var text = document.createTextNode(displayName + ": " + info.toString());
     } else if (type == "date") {
-        console.log("date");
+        //console.log("date");
         var text = document.createTextNode(displayName + ": " + makeDateReadable(info));
     } else if (type == "boolean") {
-        console.log("bool");
+        //console.log("bool");
         if (info) {
             var text = document.createTextNode(displayName + ": yes");
         } else {
@@ -1208,8 +1170,8 @@ function displayStudentInfo(colName, info, type) {
 function showStudentAttendance(_, data) {
 
     var parsedData = JSON.parse(data);
-    console.log("got to showstudentattendance");
-    console.log(parsedData);
+    //console.log("got to showstudentattendance");
+    //console.log(parsedData);
 
     var dateCounts = [0, 0, 0, 0, 0, 0, 0];
 
@@ -1223,22 +1185,22 @@ function showStudentAttendance(_, data) {
 
 
             var dateString = parsedData[i][0];
-            console.log(dateString);
+            //console.log(dateString);
             var dateList = dateString.split("-")
             var myDate = new Date(parseInt(dateList[0]), parseInt(dateList[1]), parseInt(dateList[2]), 1, 1, 1, 1);
             var day = myDate.getDay();
             dateCounts[day] = dateCounts[day] + 1;
-            console.log(myDate.getDay());
+            //console.log(myDate.getDay());
 
             var time = parsedData[i][1];
-            console.log(time);
+            //console.log(time);
             var timeList = time.split(":");
             var hour = parseInt(timeList[0]);
             scatterx.push(convertDay(day));
             scattery.push(hour);
         }
     }
-    console.log(dateTimes);
+    //console.log(dateTimes);
 
     graphStudentAttendance(dateCounts);
 
@@ -1278,7 +1240,7 @@ function showFrequentPeersAttendance(_, data) {
     var nameList = nameString.split(", ");
 
     nameListLength = nameList.length;
-    console.log("nameListLength: "+nameListLength);
+    //console.log("nameListLength: "+nameListLength);
     for (var i=0; i < nameListLength-1; i++) {
         var name = nameList[i].split(" ");
         var first = name[0];
@@ -1298,15 +1260,15 @@ function showFrequentPeersAttendance(_, data) {
 // SP
 // Take an id and pass on the path to the image.
 function getStudentPicture(_, data) {
-  console.log("arrived at get student picture")
-  console.log(data);
+  //console.log("arrived at get student picture")
+  //console.log(data);
   // var photoSpace = document.getElementById("studentPhoto");
   // photoSpace.src = "/static/resources/images/No-image-found.jpg";
   getRequest("/getPhoto/" + data, "", placeStudentPicture);
 }
 
 function placeStudentPicture(_, data) {
-  console.log("arrived at placeStudentPicture")
+  //console.log("arrived at placeStudentPicture")
   var photoSpace = document.getElementById("studentPhoto");
   photoSpace.src = data;
   photoSpace.hidden = false;
@@ -1316,22 +1278,10 @@ function placeStudentPicture(_, data) {
 // SP
 // Converts int to day of the week.
 function convertDay(day) {
-    if (day == 0) {
-        return "Sunday";
-    } else if (day == 1) {
-        return "Monday"
-    } else if (day == 2) {
-        return "Tuesday"
-    } else if (day == 3) {
-        return "Wednesday"
-    } else if (day == 4) {
-        return "Thursday"
-    } else if (day == 5) {
-        return "Friday"
-    } else if (day == 6) {
-        return "Saturday"
-    }
+    var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    return days[day]
 }
+
 
 // SP
 // Shows "Attendance Times" plot on student profile.
@@ -1428,7 +1378,7 @@ function fillAttendanceTable() {
 // AS
 // Called through a getRequest from fillAttendanceTable.
 function fillAttendanceTableHelper(_, data) {
-    console.log("got to helper");
+    //console.log("got to helper");
     document.getElementById("columns").innerHTML = data;
     var table = document.getElementById("Attendance-Table");
 
@@ -1499,7 +1449,7 @@ function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
 
     var hasDoneActivity = attendeeEntry[index];
     var col = columns[i][2];
-    console.log(col);
+    //console.log(col);
 
     var box = "<input type=\"checkbox\" "
         + (hasDoneActivity ? "checked" : "")
@@ -1511,7 +1461,7 @@ function getCheckboxString(i, attendeeEntry, columns, date, fullName) {
 // AS
 // Toggles whether a student has done the specified activity (when checkbox becomes checked/unchecked).
 function selectActivity(name, column, date) {
-    console.log("selecting activity");
+    //console.log("selecting activity");
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/selectActivity");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
@@ -1672,7 +1622,7 @@ function getCurrentDate() {
 // Displays the attendance table of the date from date picker (in index.html).
 function getDate() {
     var date = document.getElementById("datePicker").value;
-    console.log(date);
+    //console.log(date);
     displayAttendanceTable(date);
     return false;
 }
@@ -1694,20 +1644,20 @@ function createFile() {
 function createFileHelper(_, attendance) {
     var rows = [];
     var columns = JSON.parse(document.getElementById("columns").innerHTML);
-    console.log(columns);
+    //console.log(columns);
     var nameRow = [];
     nameRow.push("Time", "First", "Last");
 
     for (i in columns) {
-        console.log(columns[i][1]);
+        //console.log(columns[i][1]);
         var colIsShowing = columns[i][1];
         if (colIsShowing) {
-            console.log(columns[i][2]);
+            //console.log(columns[i][2]);
             nameRow.push(columns[i][2]);
         }
     }
     rows.push(nameRow);
-    console.log(rows);
+    //console.log(rows);
     var myData = JSON.parse(attendance);
     for (i in myData) {
         newRow = []
@@ -1726,7 +1676,7 @@ function createFileHelper(_, attendance) {
         }
         rows.push(newRow);
     }
-    console.log(rows);
+    //console.log(rows);
     var date = document.getElementById("storeDate").innerHTML;
     var filename = "Attendance_" + date + ".csv";
 
@@ -1746,9 +1696,9 @@ function downloadAllMaster() {
 function downloadMasterDates() {
     var start = document.getElementById("startDate").value;
     var end = document.getElementById("endDate").value;
-    console.log(start);
-    console.log(end);
-    console.log(typeof start);
+    //console.log(start);
+    //console.log(end);
+    //console.log(typeof start);
     if (start == "") {
         alert("Please enter a start date");
         return false;
@@ -1757,8 +1707,8 @@ function downloadMasterDates() {
         alert("Please enter an end date");
         return false;
     }
-    console.log(start + " " + end);
-    console.log("/getMasterAttendanceDate/" + start + " " + end);
+    //console.log(start + " " + end);
+    //console.log("/getMasterAttendanceDate/" + start + " " + end);
     getRequest("/getMasterAttendanceDate/" + start + " " + end, "", downloadAllMasterHelper);
     return false;
 }
@@ -1768,18 +1718,18 @@ function downloadMasterDates() {
 function downloadAllMasterHelper(_, data) {
     var rows = [];
     columns = JSON.parse(document.getElementById("columns").innerHTML);
-    console.log(columns);
+    //console.log(columns);
     var nameRow = [];
     nameRow.push("Date", "#Attended")
     for (i in columns) {
-        console.log(columns[i][1]);
+        //console.log(columns[i][1]);
         if (columns[i][1]) {
-            console.log(columns[i][2]);
+            //console.log(columns[i][2]);
             nameRow.push(columns[i][2]);
         }
     }
     rows.push(nameRow);
-    console.log(rows);
+    //console.log(rows);
     var myData = JSON.parse(data);
     for (i in myData) {
         rows.push(myData[i]);
@@ -1848,7 +1798,7 @@ function textBoxCallback(_, js) {
 }
 
 function submitStudentPictureChange() {
-    document.getElementById().submit();
+    document.getElementById("changePhoto").submit();
     showStudentProfile();
 }
 

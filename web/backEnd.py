@@ -1394,6 +1394,7 @@ def checkAlert(request):
     executeSingleQuery("UPDATE alerts SET completed = 't' WHERE studentid = %s;", [id])
 
 def uploadPicture(studentid, name, imageObj):
+    print("upload picture!")
     executeSingleQuery("DELETE FROM studentinfo WHERE student_id = %s AND info_id = 6;", [studentid])
     nameExt = name.rsplit('.')[-1].lower()
     shortPathString = "/static/resources/images/" + studentid + "image"

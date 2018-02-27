@@ -293,12 +293,12 @@ function studentConfirmationHelper(_, row) {
         return;
     }
     data = JSON.parse(row);
+    console.log(data);
     if (data.length < 1) {
         alert("WARNING: STUDENT WAS NOT ADDED TO ATTENDANCE");
         //getRequest("/frequentPeers/" + first + " " + last, "", showFrequentPeersAttendance);
         return;
     }
-    console.log(data);
     
     time = data[0][0];
     first = data[0][1];

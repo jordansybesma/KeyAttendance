@@ -298,7 +298,7 @@ function studentConfirmationHelper(_, row) {
         //getRequest("/frequentPeers/" + first + " " + last, "", showFrequentPeersAttendance);
         return;
     }
-    //console.log(data);
+    console.log(data);
     
     time = data[0][0];
     first = data[0][1];

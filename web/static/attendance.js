@@ -973,7 +973,8 @@ function demographicsHelper(_, columns) {
             var colName = columnInfo[i][3];
             var info = studentInfo[0][parseInt(i) + 1];
             var type = columnInfo[i][4];
-
+            console.log(info);
+            console.log(studentInfo);
             displayStudentInfo(colName, info, type);
         }
     }

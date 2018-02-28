@@ -967,6 +967,7 @@ function demographicsHelper(_, columns) {
     div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Edit Profile</button>";
 
     for (i in columnInfo) {
+        console.log("i: " + i);
         var isShowing = columnInfo[i][1];
         if (isShowing) {
             var colName = columnInfo[i][3];

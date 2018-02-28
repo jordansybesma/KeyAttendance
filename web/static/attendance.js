@@ -280,7 +280,9 @@ function addAttendant(first, last) {
     xmlhttp.open("POST", urlBase + "/addAttendant/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("firstName=" + first + "&lastName=" + last + "&date=" + date + "&time=" + time + "&id=");
-    getRequest("/getStudentConfirmation/" + first + " " + last + " " + date, "", studentConfirmationHelper);
+    //this was screwing up
+    //getRequest("/getStudentConfirmation/" + first + " " + last + " " + date, "", studentConfirmationHelper);
+    displayNewAttendant(first, last, time);
     
 
     

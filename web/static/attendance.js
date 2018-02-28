@@ -1009,7 +1009,7 @@ function openEditProfile() {
             var form = document.createElement("form");
             var type = columnData[i][4];
             form.setAttribute('onSubmit', 'return false;');
-            if ((type.startsWith("varchar") || (type == "int")) {
+            if (type.startsWith("varchar") || type == "int") {
                 //console.log("got to last loop");
                 var value = studData[parseInt(i) + 1];
                 if (value == null) {

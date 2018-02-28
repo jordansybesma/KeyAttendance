@@ -759,7 +759,7 @@ def deleteStudentColumn(request):
 #Input: nothing
 #Output: contents of studentColumns table
 def getStudentColumns():
-    query = "SELECT * FROM studentcolumns ORDER BY info_id"
+    query = "SELECT * FROM studentcolumns WHERE is_showing = 'true' ORDER BY info_id;"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
 

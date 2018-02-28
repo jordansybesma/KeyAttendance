@@ -940,7 +940,7 @@ function showStudentProfile() {
 // Stores student's demographic information and retrieves/passes the active elements of demographics as specified in Manage Profile
 function showDemographics(_, data) {
     var parsedData = JSON.parse(data);
-    //console.log(parsedData);
+    
     document.getElementById("saveStudentData").innerHTML = data;
 
     getRequest("/getStudentColumns", "", demographicsHelper);
@@ -1143,6 +1143,10 @@ function updateProfile(name, col, colid, type) {
 // SP
 // Displays student info such as age and gender.
 function displayStudentInfo(colName, info, type) {
+    console.log(colName);
+    console.log(info);
+    console.log(type);
+
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
     var displayName = makeHeaderReadable(colName);

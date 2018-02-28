@@ -638,7 +638,7 @@ def getStudentInfo(name):
     queryID = "SELECT id FROM students WHERE first_name = \'" + first + "\' AND last_name = \'" + last + "\';"
     studentID = json.loads(json.dumps(executeSingleQuery(queryID, fetch=True)))[0][0]
 
-    queryColumns = "SELECT info_id, name, type FROM studentcolumns WHERE is_showing = 'true' ORDER BY info_id;"
+    queryColumns = "SELECT info_id, name, type FROM studentcolumns ORDER BY info_id;"
     columnResults = json.dumps(executeSingleQuery(queryColumns, fetch=True))
     columns =json.loads(columnResults)
     newTable = "temp1"
@@ -761,7 +761,7 @@ def deleteStudentColumn(request):
 #Input: nothing
 #Output: contents of studentColumns table
 def getStudentColumns():
-    query = "SELECT * FROM studentcolumns WHERE is_showing = 'true' ORDER BY info_id;"
+    query = "SELECT * FROM studentcolumns  ORDER BY info_id;"
     return json.dumps(executeSingleQuery(query, fetch = True), indent=4, sort_keys=True, default=str)
 
 

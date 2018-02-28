@@ -1580,6 +1580,7 @@ function masterAttendanceHelper(_, masterData) {
 // MISC
 // Formats date for humans.
 function makeDateReadable(date) {
+    console.log(typeof(date));
     var monthStr = date.substr(5, 7).substr(0, 2);
     var day = date.substr(8, 10);
     var year = date.substr(0, 4);

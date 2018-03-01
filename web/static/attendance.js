@@ -372,10 +372,8 @@ function addNewStudent() {
         last = capitalizeFirstLetter(last);
         
         // Adds student to student table
+        // Also adds their attendance to the attendance table
         sendNewStudent(first, last);
-
-        // Adds student to daily attendance table
-        addAttendant(first, last);
 
         // Closes popup
         closeAddNewStudent();
@@ -516,6 +514,7 @@ function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addNewStudent/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xmlhttp.onload = (firstname, lastname) => addAttendant;
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
 

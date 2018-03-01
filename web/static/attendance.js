@@ -1275,6 +1275,7 @@ function getStudentPicture(_, data) {
 
 function placeStudentPicture(_, data) {
   console.log("arrived at placeStudentPicture");
+  console.log(data);
   var photoSpace = document.getElementById("studentPhoto");
   photoSpace.src = data;
   photoSpace.hidden = false;

@@ -514,7 +514,10 @@ function sendNewStudent(firstname, lastname) {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", urlBase + "/addNewStudent/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.onload = (firstname, lastname) => addAttendant;
+    xmlhttp.onload = function() {
+        console.log("blue");
+        addAttendan(firstname, lastname);
+    }
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }
 

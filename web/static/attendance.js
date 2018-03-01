@@ -726,6 +726,15 @@ function deleteColumn(name) {
     }
 }
 
+function wait(ms){
+  var start = new Date().getTime();
+  var end = start;
+  while(end < start + ms) {
+    end = new Date().getTime();
+ }
+}
+
+
 // AC
 // Changes order of appearance of attendance columns, displays inputted col one spot earlier.
 function moveAttendanceColumnUp(name) {
@@ -735,6 +744,7 @@ function moveAttendanceColumnUp(name) {
     xmlhttp.open("POST", urlBase + "/moveAttendanceColumnUp");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
+    wait(500);
     showAttendanceManage();
     //alert("you got it up");
     return false;
@@ -750,6 +760,7 @@ function moveAttendanceColumnDown(name) {
     xmlhttp.open("POST", urlBase + "/moveAttendanceColumnDown");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.send("name=" + name);
+    wait(500);
     showAttendanceManage();
     //alert("you got it up");
     return false;

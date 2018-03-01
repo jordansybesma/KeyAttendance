@@ -816,7 +816,7 @@ function addColumn() {
             + " onclick=\"selectColumn('" + name + "')\">";
     var deleteButton = "<button type=\"button\" onclick=\"deleteColumn('" + name + "')\">Delete</button>";
     var upButton = "<button type=\"button\" onclick=\"moveAttendanceColumnUp('" + name + "')\">Move Up</button>";
-    var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Up</button>";
+    var downButton = "<button type=\"button\" onclick=\"moveAttendanceColumnDown('" + name + "')\">Move Down</button>";
 
     var table = document.getElementById("attendanceColumnsTable");
     var row = table.insertRow(-1);

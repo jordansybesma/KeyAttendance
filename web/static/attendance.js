@@ -295,7 +295,6 @@ function studentConfirmationHelper(_, row) {
         return;
     }
     data = JSON.parse(row);
-    console.log(data);
     if (data.length < 1) {
         alert("WARNING: STUDENT WAS NOT ADDED TO ATTENDANCE");
         //getRequest("/frequentPeers/" + first + " " + last, "", showFrequentPeersAttendance);
@@ -969,14 +968,11 @@ function demographicsHelper(_, columns) {
     div.innerHTML = "<button type=\"button\" onclick=\"openEditProfile()\">Edit Profile</button>";
 
     for (i in columnInfo) {
-        console.log("i: " + i);
         var isShowing = columnInfo[i][1];
         if (isShowing) {
             var colName = columnInfo[i][3];
             var info = studentInfo[0][parseInt(i) + 1];
             var type = columnInfo[i][4];
-            console.log(info);
-            console.log(studentInfo);
             displayStudentInfo(colName, info, type);
         }
     }
@@ -1147,9 +1143,6 @@ function updateProfile(name, col, colid, type) {
 // SP
 // Displays student info such as age and gender.
 function displayStudentInfo(colName, info, type) {
-    console.log(colName);
-    console.log(info);
-    console.log(type);
 
     var parent = document.getElementById("demographics");
     var node = document.createElement("p");
@@ -1273,7 +1266,7 @@ function showFrequentPeersAttendance(_, data) {
 // SP
 // Take an id and pass on the path to the image.
 function getStudentPicture(_, data) {
-  //console.log("arrived at get student picture")
+  console.log("arrived at get student picture");
   //console.log(data);
   // var photoSpace = document.getElementById("studentPhoto");
   // photoSpace.src = "/static/resources/images/No-image-found.jpg";
@@ -1588,7 +1581,6 @@ function masterAttendanceHelper(_, masterData) {
 // MISC
 // Formats date for humans.
 function makeDateReadable(date) {
-    console.log(typeof(date));
     var monthStr = date.substr(5, 7).substr(0, 2);
     var day = date.substr(8, 10);
     var year = date.substr(0, 4);

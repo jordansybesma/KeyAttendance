@@ -515,7 +515,6 @@ function sendNewStudent(firstname, lastname) {
     xmlhttp.open("POST", urlBase + "/addNewStudent/");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.onload = function() {
-        console.log("blue");
         addAttendant(firstname, lastname);
     }
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
@@ -934,6 +933,7 @@ function showStudentProfile() {
     // Open student profile
     if (optionFound) {
         nameSpace.innerHTML += (userInput);
+
         getRequest("/getStudentInfo/" + userInput, "", showDemographics);
     }
 }
@@ -1281,7 +1281,7 @@ function getStudentPicture(_, data) {
 }
 
 function placeStudentPicture(_, data) {
-  //console.log("arrived at placeStudentPicture")
+  console.log("arrived at placeStudentPicture")
   var photoSpace = document.getElementById("studentPhoto");
   photoSpace.src = data;
   photoSpace.hidden = false;

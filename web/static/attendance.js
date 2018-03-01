@@ -516,7 +516,7 @@ function sendNewStudent(firstname, lastname) {
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     xmlhttp.onload = function() {
         console.log("blue");
-        addAttendan(firstname, lastname);
+        addAttendant(firstname, lastname);
     }
     xmlhttp.send("firstName=" + firstname + "&lastName=" + lastname);
 }

@@ -743,7 +743,7 @@ function moveAttendanceColumnUp(name) {
     //console.log(urlBase);
     xmlhttp.open("POST", urlBase + "/moveAttendanceColumnUp");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.onload(showAttendanceManage);
+    xmlhttp.onload = showAttendanceManage;
     xmlhttp.send("name=" + name);
     //alert("you got it up");
     return false;
@@ -758,7 +758,7 @@ function moveAttendanceColumnDown(name) {
     //console.log(urlBase);
     xmlhttp.open("POST", urlBase + "/moveAttendanceColumnDown");
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    xmlhttp.onload(showAttendanceManage);
+    xmlhttp.onload = showAttendanceManage;
     xmlhttp.send("name=" + name);
     //alert("you got it up");
     return false;

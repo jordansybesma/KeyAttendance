@@ -1,3 +1,4 @@
+//https://stackoverflow.com/questions/39584694/how-to-hide-a-main-page-div-when-clicking-on-another-tab
 function openTab(evt, tabName) {
     // Declare all variables
     var i, tabcontent, tablinks;

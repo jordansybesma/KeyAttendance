@@ -1179,10 +1179,13 @@ def addAttendant(request):
     keyID = json.loads(json.dumps(executeSingleQuery(querykeyID, fetch=True)))[0][0]
     now = datetime.datetime.now()
     today = transformDate(now)
-    if (len(date) == 9):
-        date = date[0:5] + "0" + date[5:]
-    if (len(today) == 9):
-        today = today[0:5] + "0" + today[5:]
+    #if (len(date) == 9):
+        #date = date[0:5] + "0" + date[5:]
+    if (len(today) < 10):
+        if (len(now.month) < 2):
+            today = today[0:5] + "0" + today[5:]
+        if (len(now.day) < 2):
+            today = today[0:7] + "0" + today[7:]
     print(date)
     print(today)
     if (today != date):

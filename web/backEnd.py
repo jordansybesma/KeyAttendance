@@ -24,7 +24,8 @@ def setupDatabase():
                             user=login['user'],
                             password=login['password'], 
                             host=login['host'])
-    return pool, login['host']
+
+    return pool, login['URL' if 'URL' in login else 'host']
 
 
 

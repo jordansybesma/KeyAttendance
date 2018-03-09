@@ -1409,6 +1409,7 @@ function fillAttendanceTableHelper(_, data) {
             row.insertCell(-1).innerHTML = newHeader;
         }
     }
+    row.insertCell(-1).innerHTML = " ";
 
     // Fill attendance table with recorded attendants
     var table_date = document.getElementById("storeDate").innerHTML;

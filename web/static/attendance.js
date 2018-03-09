@@ -339,7 +339,7 @@ function displayNewAttendant(first, last, time) {
     }
     var stringToBeAdded = time + "  -  " + first + " " + last
     //console.log(stringToBeAdded);
-    var table = document.getElementById("Attendance-Table");
+    var table = document.getElementById("Attendance-Table-Contents").tBodies[0];
     //var row = table.rows[1].cells;
     //console.log(row[0].innerHTML)
     //var full = row.length != 0? row[0].innerHTML;
@@ -1422,7 +1422,7 @@ function fillAttendance(_, attendance) {
     var myData = JSON.parse(attendance);
     var columnData = document.getElementById("columns").innerHTML;
     var myColumns = JSON.parse(columnData);
-    var table = document.getElementById("Attendance-Table");
+    var table = document.getElementById("Attendance-Table-Contents").tBodies[0];
     for (i in myData) {
         fillRowAttendance(table, myColumns, myData[i]);
     }
@@ -1435,7 +1435,7 @@ function fillRowAttendance(table, columns, attendeeEntry) {
     var date = document.getElementById("storeDate").innerHTML;
     document.getElementById("keyword").value = "";
 
-    var row = table.insertRow(1);
+    var row = table.insertRow(-1);
 
     var fullName = attendeeEntry[2] + " " + attendeeEntry[3];
     var nameButton = '<span style="cursor:pointer" onclick=\"showAttendeeProfile(\'' + fullName + '\')\">' + fullName + '</span>';

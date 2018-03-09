@@ -221,8 +221,10 @@ def uploadPicture():
 
 
 if __name__ == "__main__":
-   # print("Site booting up...")
+    # print("Site booting up...")
+    pool, appHost = backEnd.setupDatabase()
+    app.config['pool'] = pool
     if len(sys.argv) > 1 and sys.argv[1] == "local":
         app.run()
     else:
-        app.run(host='ec2-35-160-216-144.us-west-2.compute.amazonaws.com')
+        app.run(host=appHost)

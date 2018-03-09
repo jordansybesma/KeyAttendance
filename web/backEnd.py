@@ -1,28 +1,38 @@
 import json
 import psycopg2
+import psycopg2.pool
 import sys
 import datetime
 import flaskEnd
 
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect, url_for, current_app
 from werkzeug.utils import secure_filename
+from os.path import isfile
+from os import getcwd
 
 import getpass
 
 
+def setupDatabase():
+    deployPath= "/home/ubuntu/404-repo-name-DNE/web/login.json"
+    altPath = getcwd() + "/login.json"
+    chosenPath = deployPath if isfile(deployPath) else altPath
+    with open(chosenPath, 'r') as f:
+        login = json.loads(f.read())
+    pool = psycopg2.pool.ThreadedConnectionPool(2, 6,
+                            database=login['dbName'],
+                            user=login['user'],
+                            password=login['password'], 
+                            host=login['host'])
+    return pool, login['host']
 
 
 
 
 def executeSingleQuery(query, params = [], fetch = False):
     print(query, params)
-    loginFile = open("/home/ubuntu/404-repo-name-DNE/web/login.txt", "r")
-
-    dbName = 'keyDB'
-    user = 'ubuntu'
-    password = loginFile.readline().replace("\n","")
-    hostName = 'ec2-34-213-2-88.us-west-2.compute.amazonaws.com'
-    conn = psycopg2.connect(database=dbName, user=user, password=password, host=hostName)
+    pool = current_app.config['pool']
+    conn = pool.getconn()
     cur = conn.cursor()
     if len(params) == 0:
         cur.execute(query)
@@ -31,7 +41,7 @@ def executeSingleQuery(query, params = [], fetch = False):
     conn.commit()
     result = cur.fetchall() if fetch else  None
     cur.close()
-    conn.close()
+    pool.putconn(conn)
     return result
 
 

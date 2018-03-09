@@ -1396,7 +1396,7 @@ function fillAttendanceTable() {
 function fillAttendanceTableHelper(_, data) {
     //console.log("got to helper");
     document.getElementById("columns").innerHTML = data;
-    var table = document.getElementById("Attendance-Table");
+    var table = document.getElementById("Attendance-Table").tHead;
 
 
     table.innerHTML = "";

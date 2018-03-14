@@ -222,9 +222,6 @@ def uploadPicture():
 
 if __name__ == "__main__":
     # print("Site booting up...")
-    pool, appHost = backEnd.setupDatabase()
-    app.config['pool'] = pool
+    app.config['pool'] = backEnd.setupDatabase()
     if len(sys.argv) > 1 and sys.argv[1] == "local":
         app.run()
-    else:
-        app.run(host=appHost)

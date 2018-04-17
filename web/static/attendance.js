@@ -909,15 +909,15 @@ function handleProfileBox(e, curText) {
 // MISC
 // Retrieves all students with names similar to curText, passes that data to modifyAutofillList()
 function showSuggestions(curText) {
-    
-    console.log("showSuggestions hit");
-    
     getRequest("/autofill/" + curText, "", modifyAutofillList);
 }
 
 // MISC
 // Displays suggested students in a dropdown list from the textbox
 function modifyAutofillList(_, studentNames) {
+    
+    console.log("modifyAutofillList hit");
+    
     var list = document.getElementById("suggestedStudents");
     var myData = JSON.parse(studentNames);
     inner = "";

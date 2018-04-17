@@ -855,7 +855,6 @@ function isValidColumnName(name) {
 // If enter key is hit, tries to add student to attendance table
 // If any other key is hit, suggests students with names similar to input
 function handleAddBox(e, curText) {
-    console.log("handleAddBox hit");
     var enterKey = 13;
     if (e.keyCode === enterKey) {
         onAddRow();
@@ -868,6 +867,9 @@ function handleAddBox(e, curText) {
 // AS
 // Adds attendee to attendance table if input (from textbox) is a student.
 function onAddRow() {
+    
+    console.log("onAddRow hit");
+    
     var input = document.getElementById('keyword').value;
     var optionFound = false;
     var datalist = document.getElementById("suggestedStudents");
@@ -907,6 +909,9 @@ function handleProfileBox(e, curText) {
 // MISC
 // Retrieves all students with names similar to curText, passes that data to modifyAutofillList()
 function showSuggestions(curText) {
+    
+    console.log("showSuggestions hit");
+    
     getRequest("/autofill/" + curText, "", modifyAutofillList);
 }
 

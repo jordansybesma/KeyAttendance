@@ -219,8 +219,8 @@ def uploadPicture():
     print(studentid)
     return backEnd.uploadPicture(studentid, name, imageObj)
 
-pool, appHost = backEnd.setupDatabase()
-app.config['pool'] = pool
+#pool, appHost = backEnd.setupDatabase()
+#app.config['pool'] = pool
 
 app.config['pool'] = backEnd.setupDatabase()
 if __name__ == "__main__":

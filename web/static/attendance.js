@@ -855,6 +855,7 @@ function isValidColumnName(name) {
 // If enter key is hit, tries to add student to attendance table
 // If any other key is hit, suggests students with names similar to input
 function handleAddBox(e, curText) {
+    console.log("handleAddBox hit");
     var enterKey = 13;
     if (e.keyCode === enterKey) {
         onAddRow();

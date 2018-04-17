@@ -219,11 +219,11 @@ def uploadPicture():
     print(studentid)
     return backEnd.uploadPicture(studentid, name, imageObj)
 
+pool, appHost = backEnd.setupDatabase()
+app.config['pool'] = pool
 
 if __name__ == "__main__":
     # print("Site booting up...")
-    pool, appHost = backEnd.setupDatabase()
-    app.config['pool'] = pool
     if len(sys.argv) > 1 and sys.argv[1] == "local":
         app.run()
     else:

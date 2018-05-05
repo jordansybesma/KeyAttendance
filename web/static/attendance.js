@@ -917,13 +917,11 @@ function showSuggestions(curText) {
 function modifyAutofillList(_, studentNames) {
     
     console.log("modifyAutofillList hit");
-    
+
     var list = document.getElementById("suggestedStudents");
     var myData = JSON.parse(studentNames);
-    inner = "";
-    console.log("outside for loop");
+    var inner = "";
     for (i in myData) {
-        console.log("inside for loop");
         console.log("My very own data! " + myData[i][0] + " " + myData[i][1]);
 //        inner += "<option>" + myData[i][0] + " " + myData[i][1] + "</option>\n";
         inner += "<option value=\"" + myData[i][0] + " " + myData[i][1] + "\"/>\n";

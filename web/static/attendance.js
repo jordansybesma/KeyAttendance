@@ -922,7 +922,8 @@ function modifyAutofillList(_, studentNames) {
     var myData = JSON.parse(studentNames);
     inner = "";
     for (i in myData) {
-        inner += "<option>" + myData[i][0] + " " + myData[i][1] + "</option>\n";
+//        inner += "<option>" + myData[i][0] + " " + myData[i][1] + "</option>\n";
+        inner += "<option value=\"" + myData[i][0] + " " + myData[i][1] + "\"/>\n";
     }
     list.innerHTML = inner;
 }

@@ -254,7 +254,24 @@
                 </div>
             </div>
         </div>
+        
+        
+        <script>
+            (function() {
+                var inputs = document.getElementsByTagName('input');
+                for( var i = 0; i < inputs.length; i++ ) {
+                    var input = inputs[i];
+                    input.onchange = function(evt) {
+                        var elem = evt ? evt.target : window.event.srcElement;
+                        alert('new value: ' + elem.value);
+                    };
+                }
+            }());
+        </script>
+        
         <script src="datalist.polyfill.min.js" type="text/javascript"></script>
+        
+        
     </body>
 <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
 </html>

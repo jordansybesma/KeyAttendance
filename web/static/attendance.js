@@ -915,16 +915,14 @@ function showSuggestions(curText) {
 // MISC
 // Displays suggested students in a dropdown list from the textbox
 function modifyAutofillList(_, studentNames) {
-    
-    console.log("modifyAutofillList hit");
 
     var list = document.getElementById("suggestedStudents");
     var myData = JSON.parse(studentNames);
     var inner = "";
     for (i in myData) {
-        console.log("My very own data! " + myData[i][0] + " " + myData[i][1]);
-//        inner += "<option>" + myData[i][0] + " " + myData[i][1] + "</option>\n";
-        inner += "<option value=\"" + myData[i][0] + " " + myData[i][1] + "\"/>\n";
+//        console.log("My very own data! " + myData[i][0] + " " + myData[i][1]);
+        inner += "<option>" + myData[i][0] + " " + myData[i][1] + "</option>\n";
+//        inner += "<option value=\"" + myData[i][0] + " " + myData[i][1] + "\"/>\n";
     }
     list.innerHTML = inner;
 }

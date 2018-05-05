@@ -60,7 +60,9 @@
                         <form autocomplete="off" onsubmit="return false;" id="suggestForm">
                             <input list="suggestedStudents" name="nameEnter" oninput="handleAddBox(event, this.value)" id="keyword" type="text" placeholder="Name" required autofocus>
                             <input onclick="onAddRow()" id="searchbutton" type="button" value="Add" class=tabishButton>
+                            
                             <datalist id="suggestedStudents"></datalist>
+                            
                         </form>
                         <h5 id="frequentlyAttendsWith">Suggested Students: </h5>
                     </div>
@@ -250,7 +252,7 @@
                 </div>
             </div>
         </div>
-        <script> src="datalist.polyfill.min.js"</script>
+        <script src="datalist.polyfill.min.js" type="text/javascript"></script>
     </body>
 <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
 </html>

@@ -30,8 +30,8 @@ def foo():
 @app.route('/getReports')
 def getReports():
     return backEnd.getReports()
-    
-    
+
+
 @app.route('/fixShit')
 def fixShit():
     return backEnd.fixShit()
@@ -106,7 +106,7 @@ def getAttendance(date):
 @app.route('/getLogin/<login>')
 def getLogin(login):
     return backEnd.getLogin(login)
-    
+
 
 
 @app.route('/getStudentConfirmation/<name>/')
@@ -140,7 +140,7 @@ def getAttendanceColumns():
 @app.route('/moveAttendanceColumnUp', methods = ["POST"])
 def moveAttendanceColumnUp():
     return backEnd.moveAttendanceColumnUp(request)
-    
+
 @app.route('/moveAttendanceColumnDown', methods = ["POST"])
 def moveAttendanceColumnDown():
     return backEnd.moveAttendanceColumnDown(request)

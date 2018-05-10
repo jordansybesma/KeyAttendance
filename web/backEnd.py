@@ -5,7 +5,8 @@ import sys
 import datetime
 import flaskEnd
 
-from flask import Flask, request, redirect, url_for, current_app
+from functools import wraps
+from flask import Flask, request, Response, redirect, url_for, current_app
 from werkzeug.utils import secure_filename
 from os.path import isfile
 from os import getcwd
@@ -22,7 +23,7 @@ def setupDatabase():
     pool = psycopg2.pool.ThreadedConnectionPool(2, 6,
                             database=login['dbName'],
                             user=login['user'],
-                            password=login['password'], 
+                            password=login['password'],
                             host=login['host'])
 
     return pool
@@ -1417,3 +1418,29 @@ def uploadPicture(studentid, name, imageObj):
     imageObj.save(longPathString)
     executeSingleQuery("INSERT INTO studentinfo VALUES (%s, 6, null, %s, null, null, null);", [studentid, shortPathString])
     return "Done!"
+
+
+def checkAuth(username, password):
+    """This function is called to check if a username /
+    password combination is valid.
+    """
+    query = "SELECT pass_hash = crypt(" + password + ", pass_hash) FROM authentication WHERE username = " + username + ";"
+    databaseResult = executeSingleQuery(query, fetch = True)
+    return json.dumps(databaseResult)
+
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+    'Whoa there sneaky darg - Trying to get past my security?\n'
+    'You have to login with proper credentials', 401,
+    {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+def requiresAuth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated

@@ -3,7 +3,6 @@ import psycopg2
 import psycopg2.pool
 import sys
 import datetime
-import flaskEnd
 
 from functools import wraps
 from flask import Flask, request, Response, redirect, url_for, current_app
@@ -16,7 +15,7 @@ import getpass
 
 def setupDatabase():
     deployPath= "/home/ubuntu/404-repo-name-DNE/web/login.json"
-    altPath = getcwd() + "/login.json"
+    altPath = "loginLocal.json"
     chosenPath = deployPath if isfile(deployPath) else altPath
     with open(chosenPath, 'r') as f:
         login = json.loads(f.read())
@@ -24,8 +23,8 @@ def setupDatabase():
                             database=login['dbName'],
                             user=login['user'],
                             password=login['password'],
-                            host=login['host'])
-
+                            host=login['host'],
+                            port=login['port'])
     return pool
 
 

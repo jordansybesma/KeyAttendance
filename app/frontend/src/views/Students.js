@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class App extends Component {
+class Students extends Component {
   state = {
     key: []
   }
@@ -20,11 +20,11 @@ class App extends Component {
   render() {
     return (
       <div>
-        <h1> Key Youths </h1>
+        <h1> Key Students </h1>
         {this.state.key.map(item => (
           <div key={item.id}>
-            <h2>{item.name}</h2>
-            <span>Key: {item.key.toString()}</span>
+            <h2>{`${item.first_name} ${item.last_name}`}</h2>
+            <span>id: {item.id.toString()}</span>
           </div>
         ))}
       </div>
@@ -32,4 +32,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Students;

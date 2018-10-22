@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Label } from 'react-bootstrap';
 
 class Students extends Component {
   state = {
@@ -19,12 +20,11 @@ class Students extends Component {
 
   render() {
     return (
-      <div>
+      <div className='content'>
         <h1> Key Students </h1>
         {this.state.key.map(item => (
           <div key={item.id}>
-            <h2>{`${item.first_name} ${item.last_name}`}</h2>
-            <span>id: {item.id.toString()}</span>
+            <h2>{`${item.first_name} ${item.last_name}`} <Label>{item.id.toString()}</Label></h2>
           </div>
         ))}
       </div>

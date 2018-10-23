@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import Layout from './components/Layout';
-import Students from './views/Students';
+import Router from './components/Router';
 
 class App extends Component {
   render() {
     return (
       <div>
         <Layout>
-          <Students/>
+          <Router/>
         </Layout>
       </div>
     );

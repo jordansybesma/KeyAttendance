@@ -1,5 +1,5 @@
 from django.core import serializers
-from ..models import Students
+from ..models import Students as StudentsModel
 from ..serializers import StudentSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,17 +9,17 @@ class Students(APIView):
 
     # Validate input for the.query_params request of this endpoint - if there are parameters that we care 
     # about, they should be valid dates that won't make django yell at me.
-    def validateGet(self, request):
-        if 'student_id' in request.query_params and isInstance(request.query_params['student_id'], int):
+    def validateGet(self, pk):
+        if isinstance(pk, int):
             return True
         else:
             return False
             
-    def get(self, request):
-        if not self.validateGet(request):
+    def get(self, request, pk):
+        if not self.validateGet(pk):
             return Response({'error':'Invalid Parameters'}, status='400')
 
-        student = Students.get(student_id=request.query_params['student_id'])
+        student = StudentsModel.objects.get(pk = pk)
         
-        serializer = StudentSerializer(student, many=True)
+        serializer = StudentSerializer(student)
         return Response(serializer.data, content_type='application/json')

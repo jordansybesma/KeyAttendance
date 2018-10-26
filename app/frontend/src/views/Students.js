@@ -8,8 +8,8 @@ class Students extends Component {
 
   async componentDidMount() {
     try {
-      var id = window.location.href.replace("http://localhost:3000/students/", "");
-      const res = await fetch('http://127.0.0.1:8000/api/' + id);
+      var id = window.location.href.replace("http://localhost:3000/students/", "");   // This feels wrong...
+      const res = await fetch('http://127.0.0.1:8000/api/students/' + id);
       const key = await res.json();
       this.setState({
         key

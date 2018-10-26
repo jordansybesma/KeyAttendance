@@ -33,12 +33,13 @@ class Alert(models.Model):
         db_table = 'alerts'
 
 
-class AttendanceItem(models.Model):
+class AttendanceItems(models.Model):
     student_id = models.IntegerField(blank=True, null=True)
     date = models.DateField(blank=True, null=True)
     time = models.TimeField(blank=True, null=True)
     activity_id = models.IntegerField(blank=True, null=True)
     visit_number = models.IntegerField(blank=True, null=True)
+    id = models.AutoField(primary_key=True, unique=True)
 
     class Meta:
         managed = False

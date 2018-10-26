@@ -8,7 +8,8 @@ class Students extends Component {
 
   async componentDidMount() {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/');
+      var id = window.location.href.replace("http://localhost:3000/students/", "");
+      const res = await fetch('http://127.0.0.1:8000/api/' + id);
       const key = await res.json();
       this.setState({
         key
@@ -22,11 +23,10 @@ class Students extends Component {
     return (
       <div className='content'>
         <h1> Key Students </h1>
-        {this.state.key.map(item => (
-          <div key={item.id}>
-            <h2>{`${item.first_name} ${item.last_name}`} <Label>{item.id.toString()}</Label></h2>
-          </div>
-        ))}
+          Name: {this.state.key.first_name} {this.state.key.last_name} <br />
+          ID: <Label>{this.state.key.id}</Label> <br />
+          First Attendance: {this.state.key.first_attendance} <br />
+          Number of Visits: {this.state.key.number_visits}
       </div>
     );
   }

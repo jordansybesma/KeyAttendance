@@ -8,6 +8,11 @@ class Students extends Component {
     mode: 'search'
   }
 
+  constructor(props) {
+    super(props);
+    this.handler = this.handler.bind(this);
+  }
+
   async componentDidMount() {
     try {
       var id = window.location.href.replace("http://localhost:3000/students/", "");   // This feels wrong...
@@ -26,8 +31,6 @@ class Students extends Component {
           key,
           mode: 'search'}) 
       }
-
-
     } catch (e) {
       console.log(e);
     }
@@ -44,6 +47,12 @@ class Students extends Component {
     return array;
   }
 
+  handler(e) {
+    var id = "906";   // This needs to be dynamic
+    window.location.href = "http://localhost:3000/students/" + id;
+    this.componentDidMount();
+  }
+
   render() {
     if(this.state.mode === "search"){
       return (
@@ -51,6 +60,7 @@ class Students extends Component {
           <h1> Key Students </h1>
           <Autocomplete
             suggestions={this.state.key}
+            handler={this.handler}
           />
         </div>
       );

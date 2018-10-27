@@ -7,11 +7,13 @@ import PropTypes from "prop-types";
 
 class Autocomplete extends Component {
   static propTypes = {
-    suggestions: PropTypes.instanceOf(Array)
+    suggestions: PropTypes.instanceOf(Array),
+    handler: PropTypes.instanceOf(Function)
   };
 
   static defaultProps = {
-    suggestions: []
+    suggestions: [],
+    handler: null
   };
 
   constructor(props) {
@@ -37,7 +39,7 @@ class Autocomplete extends Component {
     // Filter our suggestions that don't contain the user's input
     const filteredSuggestions = suggestions.filter(
       suggestion =>
-        suggestion.toLowerCase().startsWith(userInput.toLowerCase()) == true
+        suggestion.toLowerCase().startsWith(userInput.toLowerCase()) === true
     );
 
     // Update the user input and filtered suggestions, reset the active
@@ -46,7 +48,7 @@ class Autocomplete extends Component {
       activeSuggestion: 0,
       filteredSuggestions,
       showSuggestions: true,
-      userInput: e.currentTarget.value
+      userInput: e.currentTarget.value,
     });
   };
 
@@ -57,8 +59,9 @@ class Autocomplete extends Component {
       activeSuggestion: 0,
       filteredSuggestions: [],
       showSuggestions: false,
-      userInput: e.currentTarget.innerText
+      userInput: e.currentTarget.innerText,
     });
+    this.props.handler();
   };
 
   // Event fired when the user presses a key down

@@ -15,15 +15,17 @@ class Students extends Component {
 
   async componentDidMount() {
     try {
-      var id = window.location.href.replace("http://localhost:3000/students/", "");   // This feels wrong...
-      if (id) {
-        const res = await fetch('http://127.0.0.1:8000/api/students/' + id);
+      var id = window.location.href.replace("http://localhost:3000/students", "");   // This feels wrong...
+      if (id && id !== "/") {   // Need to decide if pages will have trailing slash or not
+        console.log(id);
+        const res = await fetch('http://127.0.0.1:8000/api/students' + id);
         const key = await res.json();
         this.setState({
           key,
           mode: 'display'
         });
       } else {
+        console.log("ELSE");
         const res = await fetch('http://127.0.0.1:8000/api/');
         var key = await res.json();
         key = this.makeSuggestionsArray(key);
@@ -48,8 +50,9 @@ class Students extends Component {
   }
 
   handler(e) {
-    var id = "906";   // This needs to be dynamic
-    window.location.href = "http://localhost:3000/students/" + id;
+    console.log(e);
+    var id2 = "906";   // This needs to be dynamic
+    window.location.href = "http://localhost:3000/students/" + id2;
     this.componentDidMount();
   }
 

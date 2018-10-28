@@ -17,7 +17,6 @@ class Students extends Component {
     try {
       var id = window.location.href.replace("http://localhost:3000/students", "");   // This feels wrong...
       if (id && id !== "/") {   // Need to decide if pages will have trailing slash or not
-        console.log(id);
         const res = await fetch('http://127.0.0.1:8000/api/students' + id);
         const key = await res.json();
         this.setState({
@@ -25,7 +24,6 @@ class Students extends Component {
           mode: 'display'
         });
       } else {
-        console.log("ELSE");
         const res = await fetch('http://127.0.0.1:8000/api/');
         var key = await res.json();
         key = this.makeSuggestionsArray(key);
@@ -43,15 +41,14 @@ class Students extends Component {
 
     for (var object in key) {
       var fullName = (key[object]['first_name'] + ' ' + key[object]['last_name']);
-      array.push(fullName);
+      array.push({name: fullName, id: key[object]['id']});
     }
-    console.log(array);
+
     return array;
   }
 
-  handler(e) {
-    console.log(e);
-    var id2 = "906";   // This needs to be dynamic
+  handler(e, student) {
+    var id2 = student.split(" ")[2];
     window.location.href = "http://localhost:3000/students/" + id2;
     this.componentDidMount();
   }

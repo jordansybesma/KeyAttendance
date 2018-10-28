@@ -39,7 +39,7 @@ class Autocomplete extends Component {
     // Filter our suggestions that don't contain the user's input
     const filteredSuggestions = suggestions.filter(
       suggestion =>
-        suggestion.toLowerCase().startsWith(userInput.toLowerCase()) === true
+        suggestion.name.toLowerCase().startsWith(userInput.toLowerCase()) === true
     );
 
     // Update the user input and filtered suggestions, reset the active
@@ -61,7 +61,7 @@ class Autocomplete extends Component {
       showSuggestions: false,
       userInput: e.currentTarget.innerText,
     });
-    this.props.handler();
+    this.props.handler(e, e.currentTarget.innerText);
   };
 
   // Event fired when the user presses a key down
@@ -125,10 +125,10 @@ class Autocomplete extends Component {
               return (
                 <p
                   className={className}
-                  key={suggestion}
+                  key={suggestion.name}
                   onClick={onClick}
                 >
-                  {suggestion}
+                  {suggestion.name} {suggestion.id}
                 </p>
               );
             })}

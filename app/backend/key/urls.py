@@ -1,8 +1,9 @@
 from django.urls import path
 
-from . import views
+from key.views import attendance, misc
 
 urlpatterns = [
-    path('', views.ListStudents.as_view()),
-    path('<int:pk>/', views.DetailStudents.as_view()),
-]
+    path('', misc.ListStudents.as_view()),
+    path('<int:pk>/', misc.DetailStudents.as_view()),
+    path('attendance', attendance.Attendance.as_view()),
+] 

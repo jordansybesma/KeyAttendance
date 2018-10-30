@@ -1,10 +1,13 @@
 from django.core import serializers
 from ..models import AttendanceItems
+from ..models import Students
 from ..serializers import AttendanceItemSerializer
 from ..helpers import isValidDateTime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.db import transaction
+from django.db import IntegrityError
 
 class Attendance(APIView):
 
@@ -27,7 +30,22 @@ class Attendance(APIView):
             AttendanceItems.objects.get(pk=request.query_params['key'])
         except:
             return False
-        return True     
+        return True    
+
+    def validatePost(self, request):
+        if not 'student_id' in request.data or not 'activities' in request.data:
+            return None
+        #TODO: ideally .get() should suffice rather than .filter(), however it looks like there are currently 
+        # duplicate student records (at least in my test DB)?
+        if Students.objects.filter(id=request.data['student_id']).count() < 1:
+            return None
+        try:
+            activities = request.data['activities'].split(',')
+            for activity in activities:
+                activity = int(activity)
+        except:
+            return None
+        return activities 
 
     def get(self, request):
         if not self.validateGet(request):
@@ -55,3 +73,28 @@ class Attendance(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request):
+        activities = self.validatePost(request)
+        if activities is None:
+            return Response({'error':'Invalid Parameters'}, status='400')
+        serializersData = []
+        try:
+            # add potentially multiple attendance items to DB as a single transaction - none will be saved if one fails
+            with transaction.atomic():
+                for activity in activities:
+                    newData = {
+                        'student_id': request.data['student_id'],
+                        'date': request.data['date'],
+                        'time': request.data['time'],
+                        'activity_id': activity
+                    }
+                    serializer = AttendanceItemSerializer(data=newData)
+                    if serializer.is_valid():
+                        serializer.save()
+                    else:
+                        raise IntegrityError
+                    serializersData.append(serializer.data)
+        except IntegrityError:
+            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializersData)

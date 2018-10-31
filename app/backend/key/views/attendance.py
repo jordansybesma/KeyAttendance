@@ -1,8 +1,7 @@
 from django.core import serializers
-from ..models import AttendanceItems
-from ..models import Students
+from ..models import AttendanceItems, Students, Activity
 from ..serializers import AttendanceItemSerializer
-from ..helpers import isValidDateTime
+from ..helpers import isValidDateTime, isValidTime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -32,20 +31,24 @@ class Attendance(APIView):
             return False
         return True    
 
+    # Validate input for POST request of this endpoint - checks student_id and activity_id are present and valid
+    # If timestamps are provided, validates they are in the correct format
     def validatePost(self, request):
-        if not 'student_id' in request.data or not 'activities' in request.data:
-            return None
-        #TODO: ideally .get() should suffice rather than .filter(), however it looks like there are currently 
-        # duplicate student records (at least in my test DB)?
-        if Students.objects.filter(id=request.data['student_id']).count() < 1:
-            return None
+        if not 'student_id' in request.data or not 'activity_id' in request.data:
+            return False
         try:
-            activities = request.data['activities'].split(',')
-            for activity in activities:
-                activity = int(activity)
+            Students.objects.get(id=request.data['student_id'])
         except:
-            return None
-        return activities 
+            return False
+        try:
+            Activity.objects.get(activity_id=request.data['activity_id'])
+        except:
+            return False
+        if 'date' in request.data and not isValidDateTime(request.data['date']):
+            return False
+        if 'time' in request.data and not isValidTime(request.data['time']):
+            return False
+        return True
 
     def get(self, request):
         if not self.validateGet(request):
@@ -75,26 +78,11 @@ class Attendance(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
-        activities = self.validatePost(request)
-        if activities is None:
+        if not self.validatePost(request):
             return Response({'error':'Invalid Parameters'}, status='400')
-        serializersData = []
-        try:
-            # add potentially multiple attendance items to DB as a single transaction - none will be saved if one fails
-            with transaction.atomic():
-                for activity in activities:
-                    newData = {
-                        'student_id': request.data['student_id'],
-                        'date': request.data['date'],
-                        'time': request.data['time'],
-                        'activity_id': activity
-                    }
-                    serializer = AttendanceItemSerializer(data=newData)
-                    if serializer.is_valid():
-                        serializer.save()
-                    else:
-                        raise IntegrityError
-                    serializersData.append(serializer.data)
-        except IntegrityError:
-            return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializersData)
+        
+        serializer = AttendanceItemSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)

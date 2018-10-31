@@ -6,6 +6,8 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from .helpers import getCurrentDate, getCurrentTime
+import datetime
 
 
 class Activity(models.Model):
@@ -35,8 +37,8 @@ class Alert(models.Model):
 
 class AttendanceItems(models.Model):
     student_id = models.IntegerField(blank=True, null=True)
-    date = models.DateField(blank=True, null=True)
-    time = models.TimeField(blank=True, null=True)
+    date = models.DateField(blank=True, null=True, default=getCurrentDate)
+    time = models.TimeField(blank=True, null=True, default=getCurrentTime)
     activity_id = models.IntegerField(blank=True, null=True)
     visit_number = models.IntegerField(blank=True, null=True)
     id = models.AutoField(primary_key=True, unique=True)

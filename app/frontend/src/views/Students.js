@@ -48,8 +48,8 @@ class Students extends Component {
   }
 
   handler(e, student) {
-    var id2 = student.split(" ")[2];
-    window.location.href = "http://localhost:3000/students/" + id2;
+    var id = student.split(" ")[2];
+    window.location.href = "http://localhost:3000/students/" + id;
     this.componentDidMount();
   }
 

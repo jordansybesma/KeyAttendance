@@ -4,6 +4,7 @@
 
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
+import "./Autocomplete.css"
 
 class Autocomplete extends Component {
   static propTypes = {
@@ -70,11 +71,14 @@ class Autocomplete extends Component {
 
     // User pressed the enter key, update the input and close the
     // suggestions
-    if (e.keyCode === 13) {
+    if (e.keyCode === 13 && this.state.activeSuggestion === -1) {
+      this.props.handler(e, this.state.userInput)
+    }
+    else if (e.keyCode === 13) {
       this.setState({
-        activeSuggestion: 0,
+        activeSuggestion: -1,
         showSuggestions: false,
-        userInput: filteredSuggestions[activeSuggestion]
+        userInput: filteredSuggestions[activeSuggestion].name + " " + filteredSuggestions[activeSuggestion].id
       });
     }
     // User pressed the up arrow, decrement the index
@@ -87,7 +91,7 @@ class Autocomplete extends Component {
     }
     // User pressed the down arrow, increment the index
     else if (e.keyCode === 40) {
-      if (activeSuggestion - 1 === filteredSuggestions.length) {
+      if (activeSuggestion === filteredSuggestions.length - 1) {  // Improvements should be made
         return;
       }
 
@@ -136,8 +140,8 @@ class Autocomplete extends Component {
         );
       } else {
         suggestionsListComponent = (
-          <div class="no-suggestions">
-            <em>No suggestions, you're on your own!</em>
+          <div className="no-suggestions">
+            <em>No suggestions.</em>
           </div>
         );
       }

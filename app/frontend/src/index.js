@@ -6,7 +6,8 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
-    <BrowserRouter>
+	// ForceRefresh fixes issues with Students page not reloading but decreases site responsiveness
+    <BrowserRouter forceRefresh={true}>
         <App />
     </BrowserRouter>, 
     document.getElementById('root'));

@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
 	// ForceRefresh fixes issues with Students page not reloading but decreases site responsiveness
-    <BrowserRouter forceRefresh={true}>
+    <BrowserRouter>
         <App />
     </BrowserRouter>, 
     document.getElementById('root'));

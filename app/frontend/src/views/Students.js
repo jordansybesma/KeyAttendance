@@ -3,96 +3,104 @@ import Autocomplete from '../components/Autocomplete';
 import { Label } from 'react-bootstrap';
 
 class Students extends Component {
-  state = {
-    key: [],
-    mode: 'search'
-  }
 
   constructor(props) {
     super(props);
+    this.state = {
+      mode: 'search',
+      studentsJson: {},
+      suggestionsArray: [],
+      id: null,
+      profileData: {}
+    };
     this.handler = this.handler.bind(this);
   }
 
-  async componentDidMount() {
-  /**  try {
-      var id = window.location.href.replace("http://localhost:3000/students", "");   // This feels wrong...
-      if (id && id !== "/") {   // Need to decide if pages will have trailing slash or not
-        const res = await fetch('http://127.0.0.1:8000/api/students' + id);
-        const key = await res.json();
-        this.setState({
-          key,
-          mode: 'display',
-		  id
-        });
-      } else {
-	  **/
-        const res = await fetch('http://127.0.0.1:8000/api/');
-        var studentDatabase = await res.json();
-        studentDatabase = this.makeSuggestionsArray(studentDatabase);
-        this.setState({
-          studentDatabase,
-          mode: 'search'
-		}); 
-      /**}
-    } catch (e) {
-      console.log(e);
-    }**/
+  componentDidUpdate(previousProps, previousState) {
+    if (previousState.mode === "display") {
+      this.setState(function(previousProps, previousState) {
+        return { mode: "search" };
+      })
+    }
   }
 
-  makeSuggestionsArray(key) {
-    var array = [];
-
-    for (var object in key) {
-      var fullName = (key[object]['first_name'] + ' ' + key[object]['last_name']);
-      array.push({name: fullName, id: key[object]['id']});
+  async componentDidMount() {
+    try {
+      const res = await fetch('http://127.0.0.1:8000/api/');
+      var studentsJson = await res.json();
+      var suggestionsArray = this.makeSuggestionsArray(studentsJson);
+      this.setState(function(previousState, currentProps) {
+        return {
+          mode: 'search',
+          studentsJson: studentsJson,
+          suggestionsArray: suggestionsArray,
+          id: null,
+          profileData: {}
+        };
+      });
+    } catch (e) {
+      console.log(e);
     }
+  }
 
+  makeSuggestionsArray(suggestions) {
+    var array = [];
+    for (var object in suggestions) {
+      array.push({firstName: suggestions[object]['first_name'],
+                  lastName: suggestions[object]['last_name'],
+                  id: suggestions[object]['id']});
+    }
     return array;
   }
 
   handler(e, studentId) {
-	this.setState({
-		mode: 'display',
-		id: studentId
-	});
-    window.location.href = "http://localhost:3000/students/" + studentId; 
-    //this.componentDidMount();
+    var state = {
+      mode: 'display',
+      id: studentId
+    };
+    this.getStudentProfile(state);
   }
 
-async getStudentProfile(){
-	try {
-	const res = await fetch('http://127.0.0.1:8000/api/students/' + this.state.id);
-	const studentProfileData = await res.json();
-	this.studentProfileData = studentProfileData;
-	}
-	catch(e){
-		console.log(e);
-	}
-}
+  async getStudentProfile(state) {
+    try {
+      const studentProfileData = await fetch('http://127.0.0.1:8000/api/students/' + state.id);
+      const studentProfileJson = await studentProfileData.json();
+      state.profileData = studentProfileJson;
+      this.setState(function (previousState, currentProps) {
+        return state;
+      });
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
 
-render() {
-    if(this.state.mode === "search"){
+  render() {
+    if (this.state.mode === "search") {
       return (
         <div className='content'>
           <h1> Key Students </h1>
           <Autocomplete
-            suggestions={this.state.studentDatabase}
+            suggestions={this.state.suggestionsArray}
             handler={this.handler}
           />
         </div>
       );
-    }else{
-		this.getStudentProfile();
+    } else if (this.state.mode === "display") {
       return (
         <div className='content'>
-        <h1> Student Profile </h1>
-        <div>
-          Name: {this.state.studentProfileData.first_name} {this.state.studentProfileData.last_name} <br />
-          ID: <Label>{this.state.studentProfileData.id}</Label> <br />
-          First Attendance: {this.state.studentProfileData.first_attendance} <br />
-          Number of Visits: {this.state.studentProfileData.number_visits}
+          <h1> Student Profile </h1>
+          {/* <Autocomplete
+            suggestions={this.state.suggestionsArray}
+            handler={this.handler}
+          /> */}
+          <div>
+            Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br />
+            ID: <Label>{this.state.profileData.id}</Label> <br />
+            First Attendance: {this.state.profileData.first_attendance} <br />
+            Number of Visits: {this.state.profileData.number_visits}
+          </div>
         </div>
-      </div>
       );
     }
   }

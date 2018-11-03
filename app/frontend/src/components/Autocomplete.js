@@ -40,7 +40,12 @@ class Autocomplete extends Component {
     // Filter our suggestions that don't contain the user's input
     const filteredSuggestions = suggestions.filter(
       suggestion =>
-        suggestion.name.toLowerCase().startsWith(userInput.toLowerCase()) === true
+        (suggestion.firstName.toLowerCase().startsWith(userInput.toLowerCase()) === true ||
+        suggestion.lastName.toLowerCase().startsWith(userInput.toLowerCase()) === true ||
+        suggestion.id.toString().startsWith(userInput.toLowerCase()) === true ||
+        (suggestion.firstName.toLowerCase() + " " + 
+          suggestion.lastName.toLowerCase() + " " + 
+          suggestion.id.toString()).startsWith(userInput.toLowerCase()) === true)
     );
 
     // Update the user input and filtered suggestions, reset the active
@@ -75,11 +80,13 @@ class Autocomplete extends Component {
       this.props.handler(e, this.state.selectedId)
     }
     else if (e.keyCode === 13) {
+      var fullName = (filteredSuggestions[activeSuggestion].firstName + " " +
+                      filteredSuggestions[activeSuggestion].lastName)
       this.setState({
         activeSuggestion: -1,
         showSuggestions: false,
-        userInput: filteredSuggestions[activeSuggestion].name,
-		selectedId: filteredSuggestions[activeSuggestion].id
+        userInput: fullName,
+		    selectedId: filteredSuggestions[activeSuggestion].id
       });
     }
     // User pressed the up arrow, decrement the index
@@ -133,7 +140,7 @@ class Autocomplete extends Component {
                   key={suggestion.id}
                   onClick={onClick}
                 >
-                  {suggestion.name}
+                  {suggestion.firstName} {suggestion.lastName} {suggestion.id}
                 </p>
               );
             })}

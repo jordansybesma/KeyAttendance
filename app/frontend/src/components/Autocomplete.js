@@ -40,7 +40,12 @@ class Autocomplete extends Component {
     // Filter our suggestions that don't contain the user's input
     const filteredSuggestions = suggestions.filter(
       suggestion =>
-        suggestion.name.toLowerCase().startsWith(userInput.toLowerCase()) === true
+        (suggestion.firstName.toLowerCase().startsWith(userInput.toLowerCase()) === true ||
+        suggestion.lastName.toLowerCase().startsWith(userInput.toLowerCase()) === true ||
+        suggestion.id.toString().startsWith(userInput.toLowerCase()) === true ||
+        (suggestion.firstName.toLowerCase() + " " + 
+          suggestion.lastName.toLowerCase() + " " + 
+          suggestion.id.toString()).startsWith(userInput.toLowerCase()) === true)
     );
 
     // Update the user input and filtered suggestions, reset the active
@@ -60,9 +65,9 @@ class Autocomplete extends Component {
       activeSuggestion: 0,
       filteredSuggestions: [],
       showSuggestions: false,
-      userInput: e.currentTarget.innerText,
+      userInput: e.currentTarget.innerText
     });
-    this.props.handler(e, e.currentTarget.innerText);
+    this.props.handler(e, e._targetInst.key);
   };
 
   // Event fired when the user presses a key down
@@ -72,13 +77,16 @@ class Autocomplete extends Component {
     // User pressed the enter key, update the input and close the
     // suggestions
     if (e.keyCode === 13 && this.state.activeSuggestion === -1) {
-      this.props.handler(e, this.state.userInput)
+      this.props.handler(e, this.state.selectedId)
     }
     else if (e.keyCode === 13) {
+      var fullName = (filteredSuggestions[activeSuggestion].firstName + " " +
+                      filteredSuggestions[activeSuggestion].lastName)
       this.setState({
         activeSuggestion: -1,
         showSuggestions: false,
-        userInput: filteredSuggestions[activeSuggestion].name + " " + filteredSuggestions[activeSuggestion].id
+        userInput: fullName,
+		    selectedId: filteredSuggestions[activeSuggestion].id
       });
     }
     // User pressed the up arrow, decrement the index
@@ -129,10 +137,10 @@ class Autocomplete extends Component {
               return (
                 <p
                   className={className}
-                  key={suggestion.name}
+                  key={suggestion.id}
                   onClick={onClick}
                 >
-                  {suggestion.name} {suggestion.id}
+                  {suggestion.firstName} {suggestion.lastName} {suggestion.id}
                 </p>
               );
             })}

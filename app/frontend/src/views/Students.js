@@ -90,10 +90,10 @@ class Students extends Component {
       return (
         <div className='content'>
           <h1> Student Profile </h1>
-          {/* <Autocomplete
+          <Autocomplete
             suggestions={this.state.suggestionsArray}
             handler={this.handler}
-          /> */}
+          />
           <div>
             Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br />
             ID: <Label>{this.state.profileData.id}</Label> <br />

@@ -8,20 +8,24 @@
   border-top-width: 0;
   list-style: none;
   margin-top: 0;
-  max-height: 143px;
+  max-height: 153px;
   overflow-y: auto;
   padding-left: 0;
   width: calc(300px + 1rem);
+  position:absolute;
+  background-color: rgb(232,232,232);
+
 }
 
 .suggestions p {
   padding: 0.5rem;
+  margin-bottom: 0px;
 }
 
 .suggestion-active,
 .suggestions p:hover {
-  background-color: #008f68;
-  color: #fae042;
+  background-color: #C0C0C0;
+  color: #2f4f4f;
   cursor: pointer;
   font-weight: 700;
 }

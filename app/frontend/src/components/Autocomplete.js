@@ -96,6 +96,7 @@ class Autocomplete extends Component {
       }
 
       this.setState({ activeSuggestion: activeSuggestion - 1 });
+	  this.scrollUpHandler();
     }
     // User pressed the down arrow, increment the index
     else if (e.keyCode === 40) {
@@ -104,8 +105,33 @@ class Autocomplete extends Component {
       }
 
       this.setState({ activeSuggestion: activeSuggestion + 1 });
+	  this.scrollDownHandler();
     }
   };
+
+  //temp fix for autoscroll when user presss down arrow through dropdown menu
+  scrollDownHandler(){
+	var dropdown = document.getElementsByClassName("suggestions");
+	var activeItem = document.getElementsByClassName("suggestion-active");
+	var itemHeight = activeItem[0].getBoundingClientRect().height;
+	var scrollPos = dropdown[0].scrollTop;
+	var dropdownHeight = dropdown[0].getBoundingClientRect().height;
+	if(((this.state.activeSuggestion+1) * itemHeight)>= scrollPos + dropdownHeight) {
+	  dropdown[0].scrollTop = dropdown[0].scrollTop + (itemHeight * 3);
+	}	
+}
+
+  //temp fix for autoscroll when user presss up arrow through dropdown menu
+  scrollUpHandler(){
+	var dropdown = document.getElementsByClassName("suggestions");
+	var activeItem = document.getElementsByClassName("suggestion-active");
+	var itemHeight = activeItem[0].getBoundingClientRect().height;
+	var scrollPos = dropdown[0].scrollTop;
+	var dropdownHeight = dropdown[0].getBoundingClientRect().height;
+	if(((this.state.activeSuggestion-1) * itemHeight)<= scrollPos) {
+	  dropdown[0].scrollTop = dropdown[0].scrollTop - (itemHeight * 3);
+	}	
+  }
 
   render() {
     const {

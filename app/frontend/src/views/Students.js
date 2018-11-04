@@ -16,12 +16,18 @@ class Students extends Component {
     this.handler = this.handler.bind(this);
   }
 
+  prevLen = -1;
   componentDidUpdate(previousProps, previousState) {
-    if (previousState.mode === "display") {
+    // This check is trying to go back to the "search" state when the students nav button is clicked
+    if (this.prevLen < previousProps.history.length || (previousState.mode === "display" && previousState.id === this.state.id)) {
       this.setState(function(previousProps, previousState) {
-        return { mode: "search" };
+        return {
+          mode: "search",
+          id: null
+        };
       })
     }
+    this.prevLen = previousProps.history.length;
   }
 
   async componentDidMount() {
@@ -90,10 +96,10 @@ class Students extends Component {
       return (
         <div className='content'>
           <h1> Student Profile </h1>
-          {/* <Autocomplete
+          <Autocomplete
             suggestions={this.state.suggestionsArray}
             handler={this.handler}
-          /> */}
+          />
           <div>
             Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br />
             ID: <Label>{this.state.profileData.id}</Label> <br />

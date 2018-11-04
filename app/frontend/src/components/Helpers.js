@@ -1,5 +1,3 @@
-import { join } from 'path';
-
 // Store helper functions that we'll probably re-use here!
 
 function compareActivities(a,b) {
@@ -13,15 +11,18 @@ function compareActivities(a,b) {
 async function downloadAttendanceCSV(startDate, endDate=null) {
 	// Get data
 	const url = (startDate === endDate || endDate === null) ? `http://127.0.0.1:8000/api/attendance?day=${startDate}` : `http://127.0.0.1:8000/api/attendance?startdate=${startDate}&enddate=${endDate}`;
-	const rawAttendanceData = await fetch(url); 
+	const rawAttendanceData = await fetch(url);
 	const attendanceData = await rawAttendanceData.json();
 	const rawActivityData = await fetch(`http://127.0.0.1:8000/api/activities`);
 	const activityData = await rawActivityData.json();
-	activityData.sort(compareActivities)
+	activityData.sort(compareActivities) // Make sure that our columns are in a consistent order
 
-	// TODO: Error checking? Otherwise this will either break or download an empty file for anything other than a 200 OK from the server.
+	// Make sure we got the data we came for.
+	if (attendanceData.length === 0 || activityData.length === 0) {
+		return
+	}
 
-	// Build activity lookup
+	// Build activity lookup table
 	var activities = {}
 	for (var i = 0; i < activityData.length; i++) {
 		if (activityData[i].is_showing) {
@@ -29,36 +30,39 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 		}
 	}
 
-	// Combine attendance data
+	// Combine attendance items. Need to sort by date and student id.
 	var entries = {}
 	for (var i = 0; i < attendanceData.length; i++) {
-		if (entries[attendanceData[i].student_id] == null) {
-			entries[attendanceData[i].student_id] = {}
+		if (entries[`${attendanceData[i].student_id}${attendanceData[i].date}`] == null) {
+			entries[`${attendanceData[i].student_id}${attendanceData[i].date}`] = {'date':attendanceData[i].date, 'id': attendanceData[i].student_id}
 		}
-		entries[attendanceData[i].student_id][attendanceData[i].activity_id] = 'Y'
+		entries[`${attendanceData[i].student_id}${attendanceData[i].date}`][attendanceData[i].activity_id] = 'Y'
 	}
 
 	// Build spreadsheet
 	var sheet = []
-	var columns = ['First', 'Last', 'Student Key'] // Build spreadsheet columns
+	var columns = ['Date','First', 'Last', 'Student Key']
 	for (var i = 0; i < activityData.length; i++) {
 		columns.push(activityData[i].name)
 	}
 	const keys = Object.keys(entries)
-	for (var i = 0; i < keys.length ; i++) { // Fill in the rows
+	for (var i = 0; i < keys.length ; i++) {
 		var row = []
 		for (var j = 0; j < columns.length; j++) {
 			switch (columns[j]) {
+				case 'Date':
+					row[j] = entries[keys[i]].date
+					break;
 				case 'First':
-					row[j] = 'N/A' // needs student data to match ids to
+					row[j] = 'N/A' // Needs student data to match ids to
 					break;
 				case 'Last':
 					row[j] = 'N/A'
 					break;
 				case 'Student Key':
-					row[j] = keys[i]
+					row[j] = 'N/A' // Needs student keys to be added to the database
 					break;
-				default: // The rest of the columns are activities
+				default:
 					// If this row has a value for this column, put it in the table. Else plop an 'N' in this column.
 					if (entries[keys[i]][activities[columns[j]].id] != null) {
 						row[j] = entries[keys[i]][activities[columns[j]].id];
@@ -70,33 +74,17 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 		sheet.push(row);
 	}
 
-	console.log(sheet)
-
 	// Put data in a CSV
-	var papa = require('papaparse') // why it's named this i have no idea, but it makes more sense than other node.js libraries
+	var papa = require('papaparse') // a strangely named but fairly effective CSV library
 	var csvString = papa.unparse({
 		fields: columns,
 		data: sheet
 	});
-	console.log(csvString);
 
-	var csv = papa.unparse([
-		{
-			"Column 1": "foo",
-			"Column 2": "bar"
-		},
-		{
-			"Column 1": "abc",
-			"Column 2": "def"
-		}
-	]);
-
-	console.log(csv);
-
-	// Download
+	// Download - it's a lil janky but it works. Thanks, stackoverflow!
 	var element = document.createElement('a');
 	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csvString));
-	element.setAttribute('download', `Attendance_${(startDate === endDate || endDate === null) ? startDate : `${startDate}-${endDate}`}.csv`);
+	element.setAttribute('download', `Attendance_${(startDate === endDate || endDate === null) ? startDate : `${startDate}_${endDate}`}.csv`);
 	element.style.display = 'none';
 	document.body.appendChild(element);
 	element.click();

@@ -17,7 +17,7 @@ class Attendance extends React.Component {
     downloadCSV() {
         const today = new Date()
         this.setState({ buildingCSV: true });
-        downloadAttendanceCSV(`2018-02-12`) // `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+        downloadAttendanceCSV('2018-02-13') // `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
         this.setState({ buildingCSV: false });
     }
     

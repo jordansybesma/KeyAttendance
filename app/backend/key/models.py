@@ -37,8 +37,8 @@ class Alert(models.Model):
 
 class AttendanceItems(models.Model):
     student_id = models.IntegerField(blank=True, null=True)
-    date = models.DateField(blank=True, null=True, default=getCurrentDate)
-    time = models.TimeField(blank=True, null=True, default=getCurrentTime)
+    date = models.DateField(default=getCurrentDate)
+    time = models.TimeField(default=getCurrentTime)
     activity_id = models.IntegerField(blank=True, null=True)
     visit_number = models.IntegerField(blank=True, null=True)
     id = models.AutoField(primary_key=True, unique=True)

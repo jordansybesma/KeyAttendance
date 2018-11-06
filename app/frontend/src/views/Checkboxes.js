@@ -1,30 +1,8 @@
 import React from 'react';
 import Checkbox from'./Checkbox.js'
+import { httpDelete, httpPost } from '../components/Helpers';
 
 class Checkboxes extends React.Component {
-    
-    componentWillMount = () => {
-        this.selectedCheckboxes = new Set();
-    };
-
-    toggleCheckbox = label => {
-        if (this.selectedCheckboxes.has(label)) {
-            this.selectedCheckboxes.delete(label);
-        } else {
-            this.selectedCheckboxes.add(label);
-        }
-    };
-
-    handleFormSubmit = formSubmitEvent => {
-        formSubmitEvent.preventDefault();
-        const selectedBoxes = [];
-        for (const checkbox of this.selectedCheckboxes) {
-            selectedBoxes.push(checkbox);
-        }
-
-        alert('The following checkboxes are checked off: ' + selectedBoxes);
-
-    };
 
     createCheckboxes = () => {
         var boxes = []
@@ -34,9 +12,11 @@ class Checkboxes extends React.Component {
             boxes.push(
                 <Checkbox
                     label={keys[i]}
-                    handleCheckboxChange={this.toggleCheckbox}
                     key={keys[i]}
-                    checked={activities[keys[i]]}
+                    checked={activities[keys[i]].value}
+                    activityID={activities[keys[i]].activityID}
+                    attendanceItemID={activities[keys[i]].attendanceItemID}
+                    studentID={this.props.row.studentID}
                 />
             )
         }
@@ -49,12 +29,11 @@ class Checkboxes extends React.Component {
                 <span className="row">
                     <span className="col-sm-12">
                         {this.createCheckboxes()}
-                        <button className="btn btn-default" onClick={this.handleFormSubmit} type="submit">Save</button>
                     </span>
                 </span>
             </span>
         );
     }
-
 }
+
 export default Checkboxes;

@@ -23,7 +23,7 @@ class Attendance extends React.Component {
                 if (entries[`${attendanceItems[i].student_id}`] == null) {
                     entries[`${attendanceItems[i].student_id}`] = {'time':attendanceItems[i].time};
                 }
-                entries[`${attendanceItems[i].student_id}`][attendanceItems[i].activity_id] = true;
+                entries[`${attendanceItems[i].student_id}`][attendanceItems[i].activity_id] = {'value':true, 'itemID':attendanceItems[i].id};
             }
 
             // Build table of the form [{name, activity1, ... , activityn, time}]
@@ -39,6 +39,7 @@ class Attendance extends React.Component {
                 for (var j = 0; j < students.length; j++) { // unfortunately, student data isn't in any particular order. O(n) it is!
                     if (students[j].id == ids[i]) {
                         row['name'] = `${students[j].first_name} ${students[j].last_name}`;
+                        row['studentID'] = students[j].id;
                         break;
                     }
                 } 
@@ -46,7 +47,11 @@ class Attendance extends React.Component {
                 row['activities'] = {};
                 // fill in activities data
                 for (var j = 0; j < activities.length; j++) {
-                    row['activities'][activities[j].name] = (entries[ids[i]][activities[j].activity_id] === true) ? true : false
+                    row['activities'][activities[j].name] = {
+                        'value': (entries[ids[i]][activities[j].activity_id]) ? true : false,
+                        'activityID': activities[j].activity_id,
+                        'attendanceItemID': (entries[ids[i]][activities[j].activity_id]) ? entries[ids[i]][activities[j].activity_id].itemID : 0,
+                    }
                 }
                 sheet.push(row)
             }
@@ -85,6 +90,7 @@ class Attendance extends React.Component {
                     name: item.name,
                     time: item.time,
                     activities: item.activities,
+                    studentID: item.studentID
                 }));
 
          const columns = [

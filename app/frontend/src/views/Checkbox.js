@@ -28,7 +28,7 @@ class Checkbox extends Component {
         const { isChecked } = this.state;
 
         return (
-            <div className="checkbox">
+            <span className="checkbox">
                 <label>
                     <input
                         type="checkbox"
@@ -38,7 +38,7 @@ class Checkbox extends Component {
                     />
                     {label}
                 </label>
-            </div>
+            </span>
         );
     }
 }

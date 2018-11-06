@@ -45,19 +45,14 @@ class Checkboxes extends React.Component {
 
     render() {
         return (
-            <div className="container">
-                <div className="row">
-                    <div className="col-sm-12">
+            <span className="container">
+                <span className="row">
+                    <span className="col-sm-12">
                         {this.createCheckboxes()}
-
-                        <form onSubmit={this.handleFormSubmit}>
-
-                            <button className="btn btn-default" type="submit">Save</button>
-                        </form>
-
-                    </div>
-                </div>
-            </div>
+                        <button className="btn btn-default" onClick={this.handleFormSubmit} type="submit">Save</button>
+                    </span>
+                </span>
+            </span>
         );
     }
 

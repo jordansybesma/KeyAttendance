@@ -1,10 +1,12 @@
 from django.core import serializers
-from ..models import AttendanceItems
+from ..models import AttendanceItems, Students, Activity
 from ..serializers import AttendanceItemSerializer
-from ..helpers import isValidDateTime
+from ..helpers import isValidDateTime, isValidTime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.db import transaction
+from django.db import IntegrityError
 
 class Attendance(APIView):
 
@@ -19,15 +21,34 @@ class Attendance(APIView):
             return False
         return True
 
-    # Validate input for the PATCH request of this endpoint - should reference a valid key
-    def validatePatch(self, request):
+    # Validate input for the DELETE request of this endpoint - should reference a valid key
+    def validateDelete(self, request):
         if not 'key' in request.query_params:
             return False
         try:
             AttendanceItems.objects.get(pk=request.query_params['key'])
         except:
             return False
-        return True     
+        return True
+
+    # Validate input for POST request of this endpoint - checks student_id and activity_id are present and valid
+    # If timestamps are provided, validates they are in the correct format
+    def validatePost(self, request):
+        if not 'student_id' in request.data or not 'activity_id' in request.data:
+            return False
+        try:
+            Students.objects.get(id=request.data['student_id'])
+        except:
+            return False
+        try:
+            Activity.objects.get(activity_id=request.data['activity_id'])
+        except:
+            return False
+        if 'date' in request.data and request.data['date'] != '' and not isValidDateTime(request.data['date']):
+            return False
+        if 'time' in request.data and request.data['date'] != '' and not isValidTime(request.data['time']):
+            return False
+        return True
 
     def get(self, request):
         if not self.validateGet(request):
@@ -44,14 +65,20 @@ class Attendance(APIView):
         serializer = AttendanceItemSerializer(items, many=True)
         return Response(serializer.data, content_type='application/json')
 
-    def patch(self, request):
-        if not self.validatePatch(request):
+    def delete(self, request):
+        if not self.validateDelete(request):
             return Response({'error':'Invalid Parameters'}, status='400')
 
         attendanceItem = AttendanceItems.objects.get(pk=request.query_params['key'])
-        serializer = AttendanceItemSerializer(attendanceItem, data=request.data)
+        attendanceItem.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def post(self, request):
+        if not self.validatePost(request):
+            return Response({'error':'Invalid Parameters'}, status='400')
+        
+        serializer = AttendanceItemSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)

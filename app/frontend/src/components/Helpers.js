@@ -91,4 +91,4 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 	document.body.removeChild(element);
 }
 
-export { downloadAttendanceCSV }
+export { downloadAttendanceCSV, compareActivities }

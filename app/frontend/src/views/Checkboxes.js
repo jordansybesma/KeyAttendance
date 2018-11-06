@@ -1,19 +1,8 @@
 import React from 'react';
 import Checkbox from'./Checkbox.js'
 
-
-const activities = [
-    'The Key',
-    'Art',
-    'Food',
-    'Leadership Y B M',
-    'Health / Wellness',
-    'Volunteering',
-    'Housing',
-    'One-on-One'
-];
-
 class Checkboxes extends React.Component {
+    
     componentWillMount = () => {
         this.selectedCheckboxes = new Set();
     };
@@ -37,17 +26,22 @@ class Checkboxes extends React.Component {
 
     };
 
-    createCheckbox = label => (
-        <Checkbox
-            label={label}
-            handleCheckboxChange={this.toggleCheckbox}
-            key={label}
-        />
-    );
-
-    createCheckboxes = () => (
-        activities.map(this.createCheckbox)
-    );
+    createCheckboxes = () => {
+        var boxes = []
+        const activities = this.props.row['activities'];
+        const keys = Object.keys(activities);
+        for (var i = 0; i < keys.length; i++) {
+            boxes.push(
+                <Checkbox
+                    label={keys[i]}
+                    handleCheckboxChange={this.toggleCheckbox}
+                    key={keys[i]}
+                    checked={activities[keys[i]]}
+                />
+            )
+        }
+        return boxes;
+    };
 
     render() {
         return (

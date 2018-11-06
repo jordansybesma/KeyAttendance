@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Button, Form, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
 class NameForm extends React.Component {
     constructor(props) {
@@ -31,13 +31,14 @@ class NameForm extends React.Component {
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <label>
-                    Name:
-                    <input type="text" value={this.state.value} onChange={this.handleChange} />
-                </label>
-                <input type="submit" value="Submit" />
-            </form>
+            <Form inline onSubmit={this.handleSubmit}>
+                <FormGroup controlId="searchPlaceholder">
+                    <ControlLabel>Name</ControlLabel>{' '}
+                    <FormControl type="text" onChange={this.handleChange} value={this.state.value} placeholder="Jane Doe"/>
+                </FormGroup>{' '}
+                
+                <Button type="submit">Submit</Button>
+            </Form>
         );
     }
 }

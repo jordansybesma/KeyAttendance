@@ -68,6 +68,7 @@ class Autocomplete extends Component {
       userInput: e.currentTarget.innerText
     });
     this.props.handler(e, e._targetInst.key);
+    this.setState({userInput: ""});
   };
 
   // Event fired when the user presses a key down
@@ -78,6 +79,7 @@ class Autocomplete extends Component {
     // suggestions
     if (e.keyCode === 13 && this.state.activeSuggestion === -1) {
       this.props.handler(e, this.state.selectedId)
+      this.setState({userInput: ""});
     }
     else if (e.keyCode === 13) {
       var fullName = (filteredSuggestions[activeSuggestion].firstName + " " +

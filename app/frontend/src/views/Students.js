@@ -16,20 +16,6 @@ class Students extends Component {
     this.handler = this.handler.bind(this);
   }
 
-  prevLen = -1;
-  componentDidUpdate(previousProps, previousState) {
-    // This check is trying to go back to the "search" state when the students nav button is clicked
-    if (this.prevLen < previousProps.history.length || (previousState.mode === "display" && previousState.id === this.state.id)) {
-      this.setState(function(previousProps, previousState) {
-        return {
-          mode: "search",
-          id: null
-        };
-      })
-    }
-    this.prevLen = previousProps.history.length;
-  }
-
   async componentDidMount() {
     try {
       const res = await fetch('http://127.0.0.1:8000/api/');

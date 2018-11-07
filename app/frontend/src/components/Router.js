@@ -14,7 +14,7 @@ class Router extends React.Component {
             <Switch>
                 <Route exact path='/' component={Login}/>
                 <Route exact path='/attendance' component={Attendance}/>
-                <Route path='/students' component={Students}/>
+                <Route path='/students' component={(props) => <Students/>} />}/> {/* Referencing the component this way causes a re-mount every time the NavBar button is clicked, which solves our problem of refreshing the page but costs some performance in teh frontend and calls to the database */}
                 <Route path='/reports' component={Reports}/>
                 <Route path='/admin' component={Admin}/>
                 <Route path='/alerts' component={Alerts}/>

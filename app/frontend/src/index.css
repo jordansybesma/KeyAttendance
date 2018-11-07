@@ -24,3 +24,7 @@ code {
 	width: 97%;
 	margin: 0% 1.5% 0% 1.5%;
 }
+
+.noPadding {
+	padding: 0 !important;
+}

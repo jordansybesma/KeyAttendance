@@ -116,8 +116,9 @@ class Autocomplete extends Component {
 	var itemHeight = activeItem[0].getBoundingClientRect().height;
 	var scrollPos = dropdown[0].scrollTop;
 	var dropdownHeight = dropdown[0].getBoundingClientRect().height;
-	if(((this.state.activeSuggestion+1) * itemHeight)>= scrollPos + dropdownHeight) {
-	  dropdown[0].scrollTop = dropdown[0].scrollTop + (itemHeight * 3);
+	var halfway = Math.round(Math.round(dropdownHeight / itemHeight) / 2) * itemHeight;
+	if(((this.state.activeSuggestion+2) * itemHeight)>= scrollPos + dropdownHeight) {
+	  dropdown[0].scrollTop = dropdown[0].scrollTop + halfway;
 	}	
 }
 
@@ -128,8 +129,9 @@ class Autocomplete extends Component {
 	var itemHeight = activeItem[0].getBoundingClientRect().height;
 	var scrollPos = dropdown[0].scrollTop;
 	var dropdownHeight = dropdown[0].getBoundingClientRect().height;
+    var halfway = Math.round(Math.round(dropdownHeight / itemHeight) / 2) * itemHeight;
 	if(((this.state.activeSuggestion-1) * itemHeight)<= scrollPos) {
-	  dropdown[0].scrollTop = dropdown[0].scrollTop - (itemHeight * 3);
+	  dropdown[0].scrollTop = dropdown[0].scrollTop - halfway;
 	}	
   }
 

@@ -8,10 +8,10 @@
   border-top-width: 0;
   list-style: none;
   margin-top: 0;
-  max-height: 153px;
+  max-height: 11em;
   overflow-y: auto;
   padding-left: 0;
-  width: calc(300px + 1rem);
+  width: calc(18.75em + 1rem);
   position:absolute;
   background-color: rgb(232,232,232);
 
@@ -31,5 +31,5 @@
 }
 
 .suggestions p:not(:last-of-type) {
-  border-bottom: 1px solid #999;
+  border-bottom: 0.0625em solid #999;
 }

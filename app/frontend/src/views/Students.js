@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
-import { Label } from 'react-bootstrap';
+import { Label, Col, Container, Row } from 'react-bootstrap';
 
 class Students extends Component {
 
@@ -96,17 +96,23 @@ class Students extends Component {
       return (
         <div className='content'>
           <h1> Student Profile </h1>
-          <Autocomplete
-            suggestions={this.state.suggestionsArray}
-            handler={this.handler}
-          />
-          <div>
-            Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br />
-            ID: <Label>{this.state.profileData.id}</Label> <br />
-            First Attendance: {this.state.profileData.first_attendance} <br />
-            Number of Visits: {this.state.profileData.number_visits}
-          </div>
-        </div>
+		  <div className="container-fluid noPadding">
+  			<div className="row justify-content-start">
+			  <div className="col-md-4">
+				  <Autocomplete
+					suggestions={this.state.suggestionsArray}
+					handler={this.handler}
+				  />
+			  </div>
+			  <div className='col-md-8'>
+				Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br />
+				ID: <Label>{this.state.profileData.id}</Label> <br />
+				First Attendance: {this.state.profileData.first_attendance} <br />
+				Number of Visits: {this.state.profileData.number_visits}
+			  </div>
+        	</div>
+		  </div>
+		</div>
       );
     }
   }

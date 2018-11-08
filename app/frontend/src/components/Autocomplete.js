@@ -41,10 +41,11 @@ class Autocomplete extends Component {
     const filteredSuggestions = suggestions.filter(
       suggestion =>
         (suggestion.firstName.toLowerCase().startsWith(userInput.toLowerCase()) === true ||
-        suggestion.lastName.toLowerCase().startsWith(userInput.toLowerCase()) === true ||
+        suggestion.lastName1.toLowerCase().startsWith(userInput.toLowerCase()) === true ||
+        suggestion.lastName2.toLowerCase().startsWith(userInput.toLowerCase()) === true ||
         suggestion.id.toString().startsWith(userInput.toLowerCase()) === true ||
         (suggestion.firstName.toLowerCase() + " " + 
-          suggestion.lastName.toLowerCase() + " " + 
+          suggestion.lastName1.toLowerCase() + " " + 
           suggestion.id.toString()).startsWith(userInput.toLowerCase()) === true)
     );
 
@@ -82,14 +83,17 @@ class Autocomplete extends Component {
       this.setState({userInput: ""});
     }
     else if (e.keyCode === 13) {
-      var fullName = (filteredSuggestions[activeSuggestion].firstName + " " +
-                      filteredSuggestions[activeSuggestion].lastName)
+      if (typeof filteredSuggestions[activeSuggestion] === 'object'){
+          var fullName = (filteredSuggestions[activeSuggestion].firstName + " " +
+                      filteredSuggestions[activeSuggestion].lastName1)
       this.setState({
         activeSuggestion: -1,
         showSuggestions: false,
         userInput: fullName,
 		    selectedId: filteredSuggestions[activeSuggestion].id
       });
+      }
+
     }
     // User pressed the up arrow, decrement the index
     else if (e.keyCode === 38) {
@@ -170,7 +174,7 @@ class Autocomplete extends Component {
                   key={suggestion.id}
                   onClick={onClick}
                 >
-                  {suggestion.firstName} {suggestion.lastName} {suggestion.id}
+                  {suggestion.firstName} {suggestion.lastName1} {suggestion.lastName2}
                 </p>
               );
             })}

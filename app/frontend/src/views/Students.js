@@ -37,9 +37,22 @@ class Students extends Component {
 
   makeSuggestionsArray(suggestions) {
     var array = [];
+    var lastHolder1;
+    var lastHolder2;
+    var tempArray;
     for (var object in suggestions) {
+      if (suggestions[object]['last_name'].includes(" ")){
+        tempArray = suggestions[object]['last_name'].split(" ");
+        lastHolder1 = tempArray[0];
+        lastHolder2 = tempArray[1];
+      }
+      else {
+        lastHolder1 = suggestions[object]['last_name'];
+        lastHolder2 = "";
+      }
       array.push({firstName: suggestions[object]['first_name'],
-                  lastName: suggestions[object]['last_name'],
+                  lastName1: lastHolder1,
+                  lastName2: lastHolder2,
                   id: suggestions[object]['id']});
     }
     return array;
@@ -92,9 +105,12 @@ class Students extends Component {
 			  </div>
 			  <div className='col-md-8'>
 				Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br />
-				ID: <Label>{this.state.profileData.id}</Label> <br />
-				First Attendance: {this.state.profileData.first_attendance} <br />
-				Number of Visits: {this.state.profileData.number_visits}
+                ID: <Label>N/A</Label> <br />
+                Birthday: xx/xx/xxxx <br />
+                Nickname: N/A <br />
+                Gender: N/A <br />
+                First Attendance: {this.state.profileData.first_attendance} <br />
+                Number of Visits: {this.state.profileData.number_visits}
 			  </div>
         	</div>
 		  </div>

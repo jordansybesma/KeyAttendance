@@ -81,36 +81,42 @@ class Students extends Component {
   }
 
   render() {
-    if (this.state.mode === "search") {
+    if (this.state.mode === 'search') {
       return (
         <div className='content'>
           <h1> Key Students </h1>
-          <Autocomplete
-            suggestions={this.state.suggestionsArray}
-            handler={this.handler}
-          />
+			  	<div className='container-fluid no-padding'>
+					<div className='row justify-content-start'>
+				  		<div className='col-md-12 to-front top-bottom-padding'>
+							<Autocomplete
+								suggestions={this.state.suggestionsArray}
+								handler={this.handler}
+						  	/>
+		  				</div>
+		  			</div>
+		  		</div>  
         </div>
       );
-    } else if (this.state.mode === "display") {
+    } else if (this.state.mode === 'display') {
       return (
         <div className='content'>
           <h1> Student Profile </h1>
-		  <div className="container-fluid noPadding">
-  			<div className="row justify-content-start">
-			  <div className="col-md-4">
+		  <div className='container-fluid no-padding'>
+  			<div className='row justify-content-start'>
+			  <div className='col-md-4 to-front top-bottom-padding'>
 				  <Autocomplete
 					suggestions={this.state.suggestionsArray}
 					handler={this.handler}
 				  />
 			  </div>
-			  <div className='col-md-8'>
-				Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br />
-                ID: <Label>N/A</Label> <br />
-                Birthday: xx/xx/xxxx <br />
-                Nickname: N/A <br />
-                Gender: N/A <br />
-                First Attendance: {this.state.profileData.first_attendance} <br />
-                Number of Visits: {this.state.profileData.number_visits}
+			  <div className='col-md-8 top-bottom-padding'>
+				Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br/>
+                ID: <Label>N/A</Label> <br/>
+                Birthday: xx/xx/xxxx <br/>
+                Nickname: N/A <br/>
+                Gender: N/A <br/>
+                First Attendance: {this.state.profileData.first_attendance} <br/>
+                Number of Visits: {this.state.profileData.number_visits} <br/>
 			  </div>
         	</div>
 		  </div>

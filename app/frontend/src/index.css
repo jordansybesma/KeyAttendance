@@ -25,6 +25,17 @@ code {
 	margin: 0% 1.5% 0% 1.5%;
 }
 
-.noPadding {
+.no-padding {
 	padding: 0 !important;
+}
+
+.top-bottom-padding {
+	padding-top: 1em; 
+	padding-bottom: 1em;	
+}
+
+
+.to-front {
+	position: relative;
+	z-index: 100;
 }

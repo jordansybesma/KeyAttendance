@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
-import { Label, Col, Container, Row } from 'react-bootstrap';
+import { Label } from 'react-bootstrap';
 
 class Students extends Component {
 
@@ -21,7 +21,7 @@ class Students extends Component {
       const res = await fetch('http://127.0.0.1:8000/api/');
       var studentsJson = await res.json();
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
-      this.setState(function(previousState, currentProps) {
+      this.setState(function (previousState, currentProps) {
         return {
           mode: 'search',
           studentsJson: studentsJson,
@@ -41,7 +41,7 @@ class Students extends Component {
     var lastHolder2;
     var tempArray;
     for (var object in suggestions) {
-      if (suggestions[object]['last_name'].includes(" ")){
+      if (suggestions[object]['last_name'].includes(" ")) {
         tempArray = suggestions[object]['last_name'].split(" ");
         lastHolder1 = tempArray[0];
         lastHolder2 = tempArray[1];
@@ -50,10 +50,12 @@ class Students extends Component {
         lastHolder1 = suggestions[object]['last_name'];
         lastHolder2 = "";
       }
-      array.push({firstName: suggestions[object]['first_name'],
-                  lastName1: lastHolder1,
-                  lastName2: lastHolder2,
-                  id: suggestions[object]['id']});
+      array.push({
+        firstName: suggestions[object]['first_name'],
+        lastName1: lastHolder1,
+        lastName2: lastHolder2,
+        id: suggestions[object]['id']
+      });
     }
     return array;
   }
@@ -101,26 +103,26 @@ class Students extends Component {
       return (
         <div className='content'>
           <h1> Student Profile </h1>
-		  <div className='container-fluid no-padding'>
-  			<div className='row justify-content-start'>
-			  <div className='col-md-4 to-front top-bottom-padding'>
-				  <Autocomplete
-					suggestions={this.state.suggestionsArray}
-					handler={this.handler}
-				  />
-			  </div>
-			  <div className='col-md-8 top-bottom-padding'>
-				Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br/>
-                ID: <Label>N/A</Label> <br/>
-                Birthday: xx/xx/xxxx <br/>
-                Nickname: N/A <br/>
-                Gender: N/A <br/>
-                First Attendance: {this.state.profileData.first_attendance} <br/>
-                Number of Visits: {this.state.profileData.number_visits} <br/>
-			  </div>
-        	</div>
-		  </div>
-		</div>
+          <div className="container-fluid noPadding">
+            <div className="row justify-content-start">
+              <div className="col-md-4">
+                <Autocomplete
+                  suggestions={this.state.suggestionsArray}
+                  handler={this.handler}
+                />
+              </div>
+              <div className='col-md-8'>
+                Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br />
+                ID: <Label>N/A</Label> <br />
+                Birthday: xx/xx/xxxx <br />
+                Nickname: N/A <br />
+                Gender: N/A <br />
+                First Attendance: {this.state.profileData.first_attendance} <br />
+                Number of Visits: {this.state.profileData.number_visits}
+              </div>
+            </div>
+          </div>
+        </div>
       );
     }
   }

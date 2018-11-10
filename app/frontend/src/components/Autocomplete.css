@@ -33,3 +33,7 @@
 .suggestions p:not(:last-of-type) {
   border-bottom: 0.0625em solid #999;
 }
+
+.form-control {
+  width: 20rem;
+}

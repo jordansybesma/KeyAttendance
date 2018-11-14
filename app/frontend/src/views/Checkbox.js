@@ -8,33 +8,20 @@ class Checkbox extends Component {
         attendanceItemID:0
     };
 
-
     componentDidMount() {
         this.setState({ isChecked: this.props.checked, attendanceItemID: this.props.attendanceItemID ? this.props.attendanceItemID : 0 })
     }
 
     toggleCheckboxChange = () => {
-        const { handleCheckboxChange, activityID, studentID } = this.props;
+        const { toggleCheckbox, label } = this.props;
 
         this.setState(({ isChecked }) => (
             {
                 isChecked: !isChecked,
             }
         ));
-
-        if (!this.state.isChecked) { // POST
-            const today = new Date()
-            // "date":`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
-
-            const result = httpPost('http://127.0.0.1:8000/api/attendance', {
-                "student_id":studentID,
-                "activity_id":activityID,
-                "date":'2018-02-12',
-                "time":`${today.getHours()}:${today.getMinutes() > 10 ? today.getMinutes() : `0${today.getMinutes()}`}:${today.getSeconds() > 10 ? today.getSeconds() : `0${today.getSeconds()}`}`,
-            }).then(result => this.setState({attendanceItemID: result.id}))
-        } else { // DELETE
-            httpDelete(`http://127.0.0.1:8000/api/attendance?key=${this.state.attendanceItemID}`);
-        }
+        
+        toggleCheckbox(this.state.isChecked, label)
     };
 
     render() {
@@ -59,10 +46,7 @@ class Checkbox extends Component {
 
 Checkbox.propTypes = {
     label: PropTypes.string.isRequired,
-    activityID: PropTypes.number.isRequired,
-    studentID: PropTypes.number.isRequired,
-    attendanceItemID: PropTypes.number.isRequired,
-    checked: PropTypes.bool.isRequired
+    toggleCheckbox: PropTypes.func.isRequired
 };
 
 export default Checkbox;

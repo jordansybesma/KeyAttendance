@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
-import { httpPost, httpDelete } from '../components/Helpers';
 
 class Checkbox extends Component {
     state = {
         isChecked: false,
-        attendanceItemID:0
     };
 
     componentDidMount() {
         this.setState({ isChecked: this.props.checked, attendanceItemID: this.props.attendanceItemID ? this.props.attendanceItemID : 0 })
     }
 
+    // Handles checked/unchecked state of checkbox
     toggleCheckboxChange = () => {
         const { toggleCheckbox, label } = this.props;
 

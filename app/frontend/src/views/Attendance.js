@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactCollapsingTable from 'react-collapsing-table';
-import Checkboxes from './Checkboxes';
+import Checkboxes from '../components/Checkboxes';
 import NameForm from "./NameForm.js";
 import { Button } from 'react-bootstrap';
 import { downloadAttendanceCSV, compareActivities } from '../components/Helpers';
@@ -9,9 +9,10 @@ class Attendance extends React.Component {
 
     async componentDidMount() {
         try {
-            const rawStudents = await fetch('http://127.0.0.1:8000/api/');
-            const rawAttendance = await(fetch(`http://127.0.0.1:8000/api/attendance?day=${'2018-02-12'}`));
-            const rawActivities = await(fetch('http://127.0.0.1:8000/api/activities'));
+            const today = new Date();
+            const rawStudents = await fetch('http://127.0.0.1:8000/api/students');
+            const rawAttendance = await fetch(`http://127.0.0.1:8000/api/attendance?day=${`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`}`);
+            const rawActivities = await fetch('http://127.0.0.1:8000/api/activities');
             const students = await rawStudents.json();
             const attendanceItems = await rawAttendance.json();
             const activities = await rawActivities.json();
@@ -79,10 +80,10 @@ class Attendance extends React.Component {
     downloadCSV() {
         const today = new Date()
         this.setState({ buildingCSV: true });
-        downloadAttendanceCSV('2018-02-12') // `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+        downloadAttendanceCSV(`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`)
         this.setState({ buildingCSV: false });
     }
-    
+
     render() {
          const rows = this.state.attendance.map(item =>
              (
@@ -123,7 +124,7 @@ class Attendance extends React.Component {
 
         return (
             <div className='content'>
-                <h1>Attendance for 02-12-2018</h1>
+                <h1>Attendance for {today.getFullYear()}-{today.getMonth() + 1}-{today.getDate()}</h1>
                 <br/>
                 <Button style={{ float: 'right'}} onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
                 <NameForm />

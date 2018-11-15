@@ -1,6 +1,6 @@
 import React from 'react';
 import Checkbox from'./Checkbox.js'
-import { httpDelete, httpPost } from '../components/Helpers';
+import { httpDelete, httpPost } from './Helpers';
 
 class Checkboxes extends React.Component {
 
@@ -22,6 +22,7 @@ class Checkboxes extends React.Component {
         });
     }
 
+    // Makes sure that the checkbox reflects whether it has been selected
     toggleCheckbox = (isChecked, label) => {
         const { activities, studentID } = this.state;
         const keys = Object.keys(activities);
@@ -52,6 +53,7 @@ class Checkboxes extends React.Component {
         }
     }
 
+    // Creates a checkbox for each activity
     createCheckboxes = () => {
         const { activities } = this.state;
         const keys = Object.keys(activities);

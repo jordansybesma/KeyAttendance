@@ -15,6 +15,13 @@ class Students(APIView):
                 return False
         else:
             return True
+
+    def validatePatch(self, request):
+        try:
+            Students.objects.get(id=request.data['id'])
+        except:
+            return False
+        return True
     
     # Get existing student data
     def get(self, request):
@@ -31,8 +38,25 @@ class Students(APIView):
         return Response(serializer.data, content_type='application/json')
 
     # Create a new student
+    # Note: Until we convert student.id to an autofield/serial, this will require that we create a new student ID for new students.
     def post(self, request):
-
+        serializer = StudentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
 
     # Update an existing student
-    def patch(self, request:)
+    def patch(self, request):
+        if not self.validatePatch(request):
+            return Response({'error':'Invalid Paremeters'}, status='400')
+
+        obj = students.get(pk=request.query_params['id'])
+        serializer = StudentSerializer(obj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+
+
+        

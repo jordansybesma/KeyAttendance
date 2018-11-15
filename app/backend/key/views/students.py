@@ -8,17 +8,17 @@ from rest_framework import status
 class Students(APIView):
 
     def validateGet(self, request):
-        if 'id' in request.query_params and not isinstance(request.query_params['id'], int):
+        if 'id' in request.query_params:
             try:
-                AttendanceItems.objects.get(pk=request.query_params['id'])
-            except:
+                StudentsModel.objects.get(pk=int(request.query_params['id']))
+            except Exception as e:
                 return False
-        else:
-            return True
+
+        return True
 
     def validatePatch(self, request):
         try:
-            Students.objects.get(id=request.data['id'])
+            StudentsModel.objects.get(pk=request.data['id'])
         except:
             return False
         return True
@@ -28,13 +28,13 @@ class Students(APIView):
         if not self.validateGet(request):
             return Response({'error':'Invalid Parameters'}, status='400')
 
-        students = StudentsModel.objects.all()
-        print(students) 
-
         if 'id' in request.query_params:
-            students = students.get(pk=request.query_params['id'])
+            student = StudentsModel.objects.get(pk=request.query_params['id'])
+            serializer = StudentSerializer(student)
+        else:
+            students = StudentsModel.objects.all()
+            serializer = StudentSerializer(students, many=True)
         
-        serializer = StudentSerializer(students, many=True)
         return Response(serializer.data, content_type='application/json')
 
     # Create a new student
@@ -51,12 +51,9 @@ class Students(APIView):
         if not self.validatePatch(request):
             return Response({'error':'Invalid Paremeters'}, status='400')
 
-        obj = students.get(pk=request.query_params['id'])
+        obj = StudentsModel.objects.get(pk=request.data['id'])
         serializer = StudentSerializer(obj, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
-
-
-        

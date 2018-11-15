@@ -20,7 +20,7 @@ class Activity(models.Model):
     ordering = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'activities'
 
 
@@ -31,7 +31,7 @@ class Alert(models.Model):
     student_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'alerts'
 
 
@@ -44,7 +44,7 @@ class AttendanceItems(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'dailyattendance'
 
 
@@ -53,7 +53,7 @@ class Feedback(models.Model):
     comment = models.CharField(max_length=2000, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'feedback'
 
 
@@ -65,7 +65,7 @@ class OldStudent(models.Model):
     number_visits = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'old_students'
 
 
@@ -78,7 +78,7 @@ class StudentColumn(models.Model):
     defined_options = models.CharField(max_length=1000, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'studentcolumns'
 
 
@@ -92,7 +92,7 @@ class StudentInfo(models.Model):
     time_value = models.TimeField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'studentinfo'
 
 
@@ -104,5 +104,5 @@ class Students(models.Model):
     number_visits = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'students'

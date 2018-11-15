@@ -52,7 +52,7 @@ class Attendance(APIView):
 
     def get(self, request):
         if not self.validateGet(request):
-            return Response({'error':'Invalid Parameters'}, status='400')
+            return Response({'error':'Invalid Parameters'}, status=status.HTTP_400_BAD_REQUEST)
 
         items = AttendanceItems.objects.all()
         if 'day' in request.query_params:
@@ -67,7 +67,7 @@ class Attendance(APIView):
 
     def delete(self, request):
         if not self.validateDelete(request):
-            return Response({'error':'Invalid Parameters'}, status='400')
+            return Response({'error':'Invalid Parameters'}, status=status.HTTP_400_BAD_REQUEST)
 
         attendanceItem = AttendanceItems.objects.get(pk=request.query_params['key'])
         attendanceItem.delete()
@@ -75,7 +75,7 @@ class Attendance(APIView):
 
     def post(self, request):
         if not self.validatePost(request):
-            return Response({'error':'Invalid Parameters'}, status='400')
+            return Response({'error':'Invalid Parameters'}, status=status.HTTP_400_BAD_REQUEST)
         
         serializer = AttendanceItemSerializer(data=request.data)
         if serializer.is_valid():

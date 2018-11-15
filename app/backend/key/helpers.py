@@ -11,10 +11,14 @@ def isValidDateTime(text):
 # Determines if string is valid time
 def isValidTime(text):
     try:
-        datetime.datetime.strptime(text, '%H:%M:%S')
+        datetime.datetime.strptime(text, '%H:%M:%S.%f')
         return True
-    except ValueError:
-        return False
+    except:
+        try:
+            datetime.datetime.strptime(text, '%H:%M:%S')
+            return True
+        except ValueError:
+            return False
 
 # Returns current date in format YYYY-mm-dd
 def getCurrentDate():

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Students, AttendanceItems
+from .models import Students, AttendanceItems, Activity
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,3 +22,13 @@ class AttendanceItemSerializer(serializers.ModelSerializer):
             'id',
         )
         model = AttendanceItems
+
+class ActivitySerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'name',
+            'ordering',
+            'is_showing',
+            'activity_id'
+        )
+        model = Activity

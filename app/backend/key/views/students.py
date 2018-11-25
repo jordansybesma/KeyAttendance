@@ -4,6 +4,7 @@ from ..serializers import StudentSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+import time;
 
 class Students(APIView):
 
@@ -22,7 +23,7 @@ class Students(APIView):
         except:
             return False
         return True
-    
+
     # Get existing student data
     def get(self, request):
         if not self.validateGet(request):
@@ -38,13 +39,18 @@ class Students(APIView):
         return Response(serializer.data, content_type='application/json')
 
     # Create a new student
-    # Note: Until we convert student.id to an autofield/serial, this will require that we create a new student ID for new students.
     def post(self, request):
+        # Note: Until we convert student.id to an autofield/serial, this will require that we create a new student ID for new students.
+        # So, for now we'll just assign them the UNIX timestamp, since that should be pretty unique.
+        # This approach will break on January 17, 2038, when UNIX timestamps will exceed 32 bits, so we'll probably want to fix this.
+        if not 'id' in request.data:
+            request.data['id'] = round(time.time())
+
         serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Update an existing student
     def patch(self, request):
@@ -56,4 +62,4 @@ class Students(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

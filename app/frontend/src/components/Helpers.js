@@ -6,7 +6,7 @@ function httpPost(url, body={}, headers={'Content-Type':'application/json'}) {
 		headers: headers,
 		body: JSON.stringify(body)
 	}).then(response => {
-		if (response.status > 400) {
+		if (response.status >= 400) {
 			return {'error':response.status}
 		} else {
 			return response.json()
@@ -19,7 +19,7 @@ function httpGet(url, headers={'Content-Type':'application/json'}) {
 		method: "GET",
 		headers: headers,
 	}).then(response => {
-		if (response.status > 400) {
+		if (response.status >= 400) {
 			return {'error':response.status}
 		} else {
 			return response.json()
@@ -33,7 +33,7 @@ function httpDelete(url, body={}, headers={'Content-Type':'application/json'}) {
 		headers: headers,
 		body: JSON.stringify(body)
 	}).then(response => {
-		if (response.status > 400) {
+		if (response.status >= 400) {
 			return {'error':response.status}
 		} else {
 			return {};

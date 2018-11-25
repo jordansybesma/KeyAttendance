@@ -2,9 +2,10 @@ import React from 'react';
 import ReactCollapsingTable from 'react-collapsing-table';
 import Checkboxes from '../components/Checkboxes';
 import AttendanceOptions from '../components/AttendanceOptions';
+import AddStudentModal from '../components/AddStudentModal';
 import Autocomplete from "../components/Autocomplete";
 import { httpPost} from '../components/Helpers';
-import { Button, ButtonToolbar, Form, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { Button, ButtonToolbar } from 'react-bootstrap';
 import { downloadAttendanceCSV, compareActivities } from '../components/Helpers';
 
 class Attendance extends React.Component {
@@ -19,11 +20,14 @@ class Attendance extends React.Component {
             attendanceItems: [],
             suggestionsArray: [],
             attendance: [],
+            showStudentModal: false,
         }
 
         this.downloadCSV = this.downloadCSV.bind(this);
         this.addStudent = this.addStudent.bind(this);
         this.removeAttendanceRow = this.removeAttendanceRow.bind(this);
+        this.openModal = this.openModal.bind(this);
+        this.closeModal = this.closeModal.bind(this);
     }
 
     async componentDidMount() {
@@ -98,10 +102,17 @@ class Attendance extends React.Component {
     }
 
     addStudent(e, studentID) {
-        // TODO: Add student, update state to redraw table.
         const { students, attendance, activities } = this.state;
-        const today = new Date()
+        const today = new Date();
         const self = this;
+
+        // make sure we don't already have this student.
+        for (let i = 0; i < attendance.length; i++) {
+            if (parseInt(studentID) === attendance[i].studentID) {
+                return;
+            }
+        }
+
         httpPost('http://127.0.0.1:8000/api/attendance/', {
             "student_id": studentID,
             "activity_id": 7, // Key    
@@ -166,8 +177,8 @@ class Attendance extends React.Component {
         this.setState({ buildingCSV: false });
     }
 
-    // Allows the AttendanceOptions object update state here
-   removeAttendanceRow(studentID) {
+    // Allows the AttendanceOptions object to  update state here
+    removeAttendanceRow(studentID) {
         const { attendance } = this.state;
         for (let i = 0; i < attendance.length; i++) {
             if (attendance[i].studentID === studentID) {
@@ -175,6 +186,25 @@ class Attendance extends React.Component {
             }
         }
         this.setState({attendance: attendance});
+    }
+
+    openModal() {
+        this.setState({showStudentModal: true});
+    }
+
+    closeModal(student=null) {
+        const { students } = this.state;
+        let suggestions = []
+
+        if (student !== null) {
+            // First, add student to students list
+            students.push({'first_name': student.first_name, 'last_name': student.last_name, 'id': student.id});
+            suggestions = this.makeSuggestionsArray(students);
+            // Then, add student to the array.
+            this.addStudent(null, student.id);
+        }
+
+        this.setState({showStudentModal: false, students: students, suggestions: suggestions});
     }
 
     render() {
@@ -233,10 +263,11 @@ class Attendance extends React.Component {
 
         return (
             <div className='content'>
-                <h1>Attendance for {today.getFullYear()}-{today.getMonth() + 1}-{today.getDate()}</h1>
+                <AddStudentModal show={this.state.showStudentModal} onSubmit={this.closeModal}/>
+                <h1>Attendance for {today.getMonth() + 1}-{today.getDate()}-{today.getFullYear()}</h1>
                 <br/>
                 <ButtonToolbar style={{ float: 'right'}}>
-                    <Button>New Student</Button>
+                    <Button onClick={this.openModal}>New Student</Button>
                     <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
                 </ButtonToolbar>
                 <Autocomplete

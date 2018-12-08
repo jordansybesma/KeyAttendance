@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
+import Heatmap from '../components/Heatmap';
 import { Label } from 'react-bootstrap';
+import LabeledHeatmap from '../components/Heatmap';
 
 class Students extends Component {
 
@@ -100,6 +102,7 @@ class Students extends Component {
         </div>
       );
     } else if (this.state.mode === 'display') {
+      
       return (
         <div className='content'>
           <h1> Student Profile </h1>
@@ -122,6 +125,7 @@ class Students extends Component {
 			  </div>
         	</div>
 		  </div>
+      <LabeledHeatmap />
 		</div>
       );
     }

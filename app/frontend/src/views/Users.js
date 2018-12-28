@@ -1,21 +1,17 @@
 import React from 'react';
-import AuthService from '../components/AuthService'
+import AuthService from '../components/AuthService';
 
-class Login extends React.Component {
+class Users extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             username: '',
             password: '',
+            is_staff: false
           };
-        this.handleLogin = this.handleLogin.bind(this);
+        this.handleCreate = this.handleCreate.bind(this);
         this.Auth = new AuthService();
       }
-
-    componentWillMount(){
-        if(this.Auth.loggedIn())
-            this.props.history.replace('/attendance');
-    }
 
     handleChange = e => {
         const name = e.target.name;
@@ -27,25 +23,23 @@ class Login extends React.Component {
         });
     };
 
-    handleLogin = (e) => {
+    handleCheckbox = e => {
+        this.setState({is_staff: this.state.checked});
+    }
+
+    handleCreate = (e) => {
         e.preventDefault();
-        this.Auth.login(this.state.username, this.state.password)
-            .then(res => {
-                this.props.history.replace('/attendance');
+        this.Auth.fetch('http://127.0.0.1:8000/api/users/', 'POST', {body: JSON.stringify(this.state)})
+            .catch(err =>{
+                alert("Failed to create new account. Please try again.");
             })
-            .catch(err => {
-                alert("Login failed. Please try again.");
-            })
-        this.setState({
-            username: '',
-            password: ''
-        });
     }
 
     render() {
         return (
-            <form onSubmit={e => this.handleLogin(e)}>
-                <h2>Log In</h2>
+            <div className='content'>
+                <form onSubmit={e => this.handleCreate(e)}>
+                <h2>Create New Account</h2>
                 <label>Username</label>
                 <input
                     type="text"
@@ -60,10 +54,18 @@ class Login extends React.Component {
                     value={this.state.password}
                     onChange={this.handleChange}
                 />
+                <label>Is Admin</label>
+                <input
+                    type="checkbox"
+                    name="is_staff"
+                    value={this.state.is_staff}
+                    onChange={this.handleCheckbox}
+                />
                 <input type="submit" />
             </form>
+            </div>
         );
     }
 }
 
-export default Login;
+export default Users;

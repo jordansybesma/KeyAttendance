@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import { Label } from 'react-bootstrap';
+import AuthService from '../components/AuthService';
 
 class Students extends Component {
 
@@ -14,12 +15,12 @@ class Students extends Component {
       profileData: {}
     };
     this.handler = this.handler.bind(this);
+    this.Auth = new AuthService();
   }
 
   async componentDidMount() {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/');
-      var studentsJson = await res.json();
+      var studentsJson = await this.Auth.fetch('http://127.0.0.1:8000/api/', 'GET');
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
       this.setState(function (previousState, currentProps) {
         return {
@@ -70,8 +71,7 @@ class Students extends Component {
 
   async getStudentProfile(state) {
     try {
-      const studentProfileData = await fetch('http://127.0.0.1:8000/api/students/' + state.id);
-      const studentProfileJson = await studentProfileData.json();
+      const studentProfileJson = await this.Auth.fetch('http://127.0.0.1:8000/api/students/' + state.id, 'GET');
       state.profileData = studentProfileJson;
       this.setState(function (previousState, currentProps) {
         return state;

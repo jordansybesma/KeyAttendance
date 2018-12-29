@@ -3,6 +3,12 @@ import Users from './Users'
 
 class Admin extends React.Component {
 
+    componentWillMount() {
+        if (!this.props.user.is_staff) {
+            this.props.history.replace('/attendance');
+        }
+    }
+
     render() {
         return (
             <div className='content'>

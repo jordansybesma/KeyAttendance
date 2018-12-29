@@ -29,10 +29,15 @@ class Users extends React.Component {
 
     handleCreate = (e) => {
         e.preventDefault();
-        this.Auth.fetch('http://127.0.0.1:8000/api/users/', 'POST', {body: JSON.stringify(this.state)})
-            .catch(err =>{
+        this.Auth.fetch('http://127.0.0.1:8000/api/users/', 'POST', { body: JSON.stringify(this.state) })
+            .catch(err => {
                 alert("Failed to create new account. Please try again.");
-            })
+            });
+        this.setState({
+            username: '',
+            password: '',
+            is_staff: false
+        });
     }
 
     render() {

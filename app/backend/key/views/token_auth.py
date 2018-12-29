@@ -1,11 +1,10 @@
 from rest_framework_jwt.views import ObtainJSONWebToken
 from rest_framework import permissions
 from rest_framework.decorators import permission_classes
-from rest_framework_jwt.settings import api_settings
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
-jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
+from key.custom_jwt import jwt_response_payload_handler
 
 class TokenAuth(ObtainJSONWebToken):
     permission_classes = (permissions.AllowAny,)

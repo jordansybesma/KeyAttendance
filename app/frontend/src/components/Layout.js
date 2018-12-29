@@ -25,6 +25,21 @@ class Layout extends Component {
  }
 
   render() {
+    let nav;
+    if (this.props.user.is_staff) {
+      nav = <Nav>
+        <NavItem onClick={this.handleItemClick('attendance')}>Attendance</NavItem>
+        <NavItem onClick={this.handleItemClick('students')}>Students</NavItem>
+        <NavItem onClick={this.handleItemClick('reports')}>Reports</NavItem>
+        <NavItem onClick={this.handleItemClick('alerts')}>Alerts</NavItem>
+        <NavItem onClick={this.handleItemClick('admin')}>Admin</NavItem>
+      </Nav>
+    } else {
+      nav = <Nav>
+        <NavItem onClick={this.handleItemClick('attendance')}>Attendance</NavItem>
+        <NavItem onClick={this.handleItemClick('students')}>Students</NavItem>
+      </Nav>
+    }
     return (
       <div>
         <Navbar>
@@ -35,13 +50,7 @@ class Layout extends Component {
                 <Navbar.Toggle />
             </Navbar.Header>
             <Navbar.Collapse>
-              <Nav>
-                  <NavItem onClick={this.handleItemClick('attendance')}>Attendance</NavItem>
-                  <NavItem onClick={this.handleItemClick('students')}>Students</NavItem>
-                  <NavItem onClick={this.handleItemClick('reports')}>Reports</NavItem>
-                  <NavItem onClick={this.handleItemClick('alerts')}>Alerts</NavItem>
-                  <NavItem onClick={this.handleItemClick('admin')}>Admin</NavItem>
-            </Nav>
+            {nav}
             <Nav pullRight>
               <NavItem>Hello, {this.props.user.username}</NavItem>
               <NavItem onClick={this.handleLogout}>Logout</NavItem>

@@ -39,8 +39,8 @@ export default class AuthService {
         }
     }
 
-    setToken(idToken) {
-        localStorage.setItem('token', idToken)
+    setToken(token) {
+        localStorage.setItem('token', token)
     }
 
     getToken() {

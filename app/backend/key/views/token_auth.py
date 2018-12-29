@@ -1,14 +1,24 @@
-from django.contrib.auth.models import update_last_login
 from rest_framework_jwt.views import ObtainJSONWebToken
-from rest_framework.authtoken.models import Token
 from rest_framework import permissions
 from rest_framework.decorators import permission_classes
+from rest_framework_jwt.settings import api_settings
+from rest_framework.response import Response
+from rest_framework import status
+from django.utils import timezone
+jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
 
 class TokenAuth(ObtainJSONWebToken):
     permission_classes = (permissions.AllowAny,)
     def post(self, request,  *args, **kwargs):
-        result = super().post(request, *args, **kwargs)
-        print(result.data['user'])
-        #token = Token.objects.get(key=result.data['token'])
-        #update_last_login(None, token.user)
-        return result
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            user = serializer.object.get('user') or request.user
+            user.last_login = timezone.now()
+            user.save(update_fields=['last_login'])
+            token = serializer.object.get('token')
+            response_data = jwt_response_payload_handler(token, user, request)
+            response = Response(response_data)
+            return response
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

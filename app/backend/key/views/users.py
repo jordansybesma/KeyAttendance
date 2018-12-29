@@ -6,7 +6,6 @@ from rest_framework.views import APIView
 from ..serializers import UserSerializer, UserSerializerCreate
 from rest_framework.decorators import permission_classes
 
-
 class Users(APIView):
     permission_classes = (permissions.IsAdminUser,)
 

@@ -23,8 +23,8 @@ class Users extends React.Component {
         });
     };
 
-    handleCheckbox = e => {
-        this.setState({is_staff: this.state.checked});
+    handleCheckClick = () => {
+        this.setState({ is_staff: !this.state.is_staff });
     }
 
     handleCreate = (e) => {
@@ -59,7 +59,7 @@ class Users extends React.Component {
                     type="checkbox"
                     name="is_staff"
                     value={this.state.is_staff}
-                    onChange={this.handleCheckbox}
+                    onChange={this.handleCheckClick}
                 />
                 <input type="submit" />
             </form>

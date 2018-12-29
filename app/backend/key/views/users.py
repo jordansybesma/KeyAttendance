@@ -8,8 +8,7 @@ from rest_framework.decorators import permission_classes
 
 
 class Users(APIView):
-    permission_classes = (permissions.IsA
-    dminUser,)
+    permission_classes = (permissions.IsAdminUser,)
 
     def get(self, request):
         serializer = UserSerializer(request.user)

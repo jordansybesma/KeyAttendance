@@ -47,6 +47,17 @@ class AttendanceItems(models.Model):
         managed = False
         db_table = 'dailyattendance'
 
+class Reports(models.Model):
+    student_id = models.IntegerField(blank=True, primary_key=True)
+    date = models.DateField(default=getCurrentDate)
+    time = models.TimeField(default=getCurrentTime)
+    activity_id = models.IntegerField(blank=True, null=True)
+    visit_number = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'dailyattendance'
+
 
 class Feedback(models.Model):
     date = models.DateField(blank=True, null=True)

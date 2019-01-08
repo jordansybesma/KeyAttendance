@@ -50,7 +50,8 @@ class Reports(APIView):
     # Could possibly use attendance model + view here ... instead of reports model
     # as (reports model is basically a copy of attendance model, querying dailyattendance db)
     def retrieveIndividualHeatmapData(self, student_id, startdate, enddate):
-        allAttendanceItems = ReportsModel.objects.all()
+        allAttendanceItems = ReportsModel.objects.all().values("student_id", "date")
+        allAttendanceItems = allAttendanceItems.order_by('date')
         studentItems = allAttendanceItems.filter(student_id=student_id)
         studentItems = studentItems.filter(date__range=[startdate, enddate])
         serializer = ReportSerializer(studentItems, many=True)
@@ -58,7 +59,7 @@ class Reports(APIView):
     
     #Test method to represent an alternative visualization type
     def retrieveAttendanceDataInDateRange(self, startdate, enddate):
-        allAttendanceItems = ReportsModel.objects.all()
+        allAttendanceItems = ReportsModel.objects.all().order_by('date')
         allAttendanceItems = allAttendanceItems.filter(date__range=[startdate, enddate])
         serializer = ReportSerializer(allAttendanceItems, many=True)
         return Response(serializer.data, content_type='application/json')

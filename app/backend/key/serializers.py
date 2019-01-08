@@ -27,10 +27,6 @@ class AttendanceItemSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
-            'student_id',
             'date',
-            'time',
-            'activity_id',
-            'visit_number',
         )
         model = Reports

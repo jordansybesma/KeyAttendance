@@ -1,68 +1,104 @@
 import React from 'react';
-import AuthService from '../components/AuthService'
+import { FormGroup, ControlLabel, FormControl, Well, Button, Alert } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 
 class Login extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            username: '',
-            password: '',
-          };
-        this.handleLogin = this.handleLogin.bind(this);
-        this.Auth = new AuthService();
-      }
 
-    componentWillMount(){
-        if(this.Auth.loggedIn())
-            this.props.history.replace('/attendance');
+    constructor(props) {
+		super(props)
+		
+        this.state = {
+			username: "",
+            password:"",
+            error: false,
+            firstLogin: true
+		}
+		
+		this.onUsernameChange = this.onUsernameChange.bind(this);
+        this.onPasswordChange = this.onPasswordChange.bind(this);
+        this.submit = this.submit.bind(this);
     }
 
-    handleChange = e => {
-        const name = e.target.name;
-        const value = e.target.value;
-        this.setState(prevstate => {
-            const newState = { ...prevstate };
-            newState[name] = value;
-            return newState;
-        });
-    };
+    componentDidMount() {
+        if (localStorage.getItem('loggedIn') != null) {
+            this.setState({firstLogin: false});
+        }
+    }
 
-    handleLogin = (e) => {
-        e.preventDefault();
-        this.Auth.login(this.state.username, this.state.password)
-            .then(res => {
-                this.props.history.replace('/attendance');
-            })
-            .catch(err => {
-                alert("Login failed. Please try again.");
-            })
-        this.setState({
-            username: '',
-            password: ''
+    onUsernameChange(e) {
+		this.setState({username: e.target.value})
+	}
+
+	onPasswordChange(e) {
+		this.setState({password: e.target.value})
+    }
+    
+    submit() {
+        // Submit username and password to backend
+        fetch('http://127.0.0.1:8000/api-token-auth/', {
+            method: "POST", 
+            headers:{'Content-Type':'application/json'}, 
+            body: JSON.stringify({username: this.state.username, password: this.state.password})
+        }).then(response => {
+            if (response.status >= 400) {
+                // If we get a negative response, display some sort of error and wipe the fields.
+                this.setState({error: true, username: "", password: ""});
+            } else {
+                response.json().then(result => {
+                    // Store token in browser
+                    window.localStorage.setItem("key_credentials", result.token);
+                    // Store permissions / role in browser
+                    let partitions = result.token.split('.');
+                    let tokenData = JSON.parse(atob(partitions[1]));
+                    window.localStorage.setItem("isAdmin", tokenData.is_staff);
+                    // Flag that we've logged in before
+                    window.localStorage.setItem("loggedIn", 'true');
+                    this.props.history.push(`/attendance`);
+                })
+            }
         });
     }
 
     render() {
-        return (
-            <form onSubmit={e => this.handleLogin(e)}>
-                <h2>Log In</h2>
-                <label>Username</label>
-                <input
-                    type="text"
-                    name="username"
-                    value={this.state.username}
-                    onChange={this.handleChange}
-                />
-                <label>Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                />
-                <input type="submit" />
-            </form>
-        );
+        const centerStyle={'textAlign':'center'}
+        const token = window.localStorage.getItem("key_credentials");
+        if (token !== null) {
+            return (<Redirect to='/attendance'/>);
+        } else {
+            return (
+                <div className='center'>
+                    <div className='login-container'>
+                        <Well>
+                            <h2 style={centerStyle}>Key Attendance</h2>
+                                <h4 style={centerStyle}>Sign In</h4>
+                                    <form>
+                                        <FormGroup>
+                                            <ControlLabel>Username</ControlLabel>
+                                            <FormControl
+                                                type="text"
+                                                value={this.state.username}
+                                                placeholder="Username"
+                                                onChange={this.onUsernameChange}
+                                            />
+                                            <br/>
+                                            <ControlLabel>Password</ControlLabel>
+                                            <FormControl
+                                                type="password"
+                                                value={this.state.password}
+                                                placeholder='Password'
+                                                 onChange={this.onPasswordChange}
+                                             />
+                                        </FormGroup>
+                                        <Button block onClick={this.submit} bsStyle="primary">Continue</Button>
+                                        <br/>
+                                        {this.state.error && <Alert bsStyle='danger'>Invalid username or password. Please try again.</Alert>}
+                                        {!this.state.firstLogin && <Alert bsStyle='info'>You have been logged out.</Alert>}
+                                    </form>
+                                </Well>
+                            </div>
+                        </div> 
+            );
+        }
     }
 }
 

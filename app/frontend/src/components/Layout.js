@@ -2,44 +2,28 @@ import React, { Component } from 'react';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import AuthService from './AuthService';
 
 class Layout extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      activeItem: 'home'
-    };
-    this.handleLogout = this.handleLogout.bind(this);
-    this.Auth = new AuthService();
+    this.state ={
+        activeItem: 'home'
+      }
   }
 
   handleItemClick = (name) => () => {
     this.props.history.push(`/${name}`);
   }
 
-  handleLogout(){
-    this.Auth.logout()
-    this.props.history.replace('/');
- }
+  logout = () => () => {
+    window.localStorage.removeItem("key_credentials");
+    window.localStorage.removeItem("isAdmin")
+    this.props.history.push(`/`)
+  }
 
   render() {
-    let nav;
-    if (this.props.user.is_staff) {
-      nav = <Nav>
-        <NavItem onClick={this.handleItemClick('attendance')}>Attendance</NavItem>
-        <NavItem onClick={this.handleItemClick('students')}>Students</NavItem>
-        <NavItem onClick={this.handleItemClick('reports')}>Reports</NavItem>
-        <NavItem onClick={this.handleItemClick('alerts')}>Alerts</NavItem>
-        <NavItem onClick={this.handleItemClick('admin')}>Admin</NavItem>
-      </Nav>
-    } else {
-      nav = <Nav>
-        <NavItem onClick={this.handleItemClick('attendance')}>Attendance</NavItem>
-        <NavItem onClick={this.handleItemClick('students')}>Students</NavItem>
-      </Nav>
-    }
+    if (!this.props.show) { return this.props.children }
     return (
       <div>
         <Navbar>
@@ -50,12 +34,17 @@ class Layout extends Component {
                 <Navbar.Toggle />
             </Navbar.Header>
             <Navbar.Collapse>
-            {nav}
-            <Nav pullRight>
-              <NavItem>Hello, {this.props.user.username}</NavItem>
-              <NavItem onClick={this.handleLogout}>Logout</NavItem>
-            </Nav>
-          </Navbar.Collapse>
+              <Nav>
+                  <NavItem onClick={this.handleItemClick('attendance')}>Attendance</NavItem>
+                  <NavItem onClick={this.handleItemClick('students')}>Students</NavItem>
+                  <NavItem onClick={this.handleItemClick('reports')}>Reports</NavItem>
+                  <NavItem onClick={this.handleItemClick('alerts')}>Alerts</NavItem>
+                  <NavItem onClick={this.handleItemClick('admin')}>Admin</NavItem>
+              </Nav>
+              <Nav pullRight>
+                <NavItem onClick={this.logout()}>Logout</NavItem>
+              </Nav>
+            </Navbar.Collapse>
         </Navbar>
         {this.props.children}
       </div>

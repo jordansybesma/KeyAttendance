@@ -5,21 +5,39 @@ function httpPost(url, body={}, headers={'Content-Type':'application/json'}) {
 		method: "POST",
 		headers: headers,
 		body: JSON.stringify(body)
-	}).then(response => response.json()); 
+	}).then(response => {
+		if (response.status >= 400) {
+			return {'error':response.status}
+		} else {
+			return response.json()
+		}
+	}); 
 }
 
 function httpGet(url, headers={'Content-Type':'application/json'}) {
 	return fetch(url, {
 		method: "GET",
 		headers: headers,
-	}).then(response => response.json()); 
+	}).then(response => {
+		if (response.status >= 400) {
+			return {'error':response.status}
+		} else {
+			return response.json()
+		}
+	}); 
 }
 
 function httpDelete(url, body={}, headers={'Content-Type':'application/json'}) {
-	fetch(url, {
+	return fetch(url, {
 		method: "DELETE",
 		headers: headers,
 		body: JSON.stringify(body)
+	}).then(response => {
+		if (response.status >= 400) {
+			return {'error':response.status}
+		} else {
+			return {};
+		}
 	}); 
 }
 
@@ -36,7 +54,7 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 	const url = (startDate === endDate || endDate === null) ? `http://127.0.0.1:8000/api/attendance?day=${startDate}` : `http://127.0.0.1:8000/api/attendance?startdate=${startDate}&enddate=${endDate}`;
 	const rawAttendanceData = await fetch(url);
 	const attendanceData = await rawAttendanceData.json();
-	const rawStudentData = await fetch('http://127.0.0.1:8000/api/');
+	const rawStudentData = await fetch('http://127.0.0.1:8000/api/students');
 	const studentData = await rawStudentData.json();
 	const rawActivityData = await fetch(`http://127.0.0.1:8000/api/activities`);
 	const activityData = await rawActivityData.json();
@@ -75,7 +93,7 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 		var row = []
 		// match student data to current id
 		for (var j = 0; j < studentData.length; j++) { // unfortunately, student data isn't in any particular order. O(n) it is!
-			if (studentData[j].id == entries[keys[i]].id) {
+			if (studentData[j].id === entries[keys[i]].id) {
 				row[1] = studentData[j].first_name;
 				row[2] = studentData[j].last_name;
 				break;

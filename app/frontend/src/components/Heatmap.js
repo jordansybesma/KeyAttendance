@@ -24,23 +24,13 @@ import {scaleLinear} from 'd3-scale';
 import {XYPlot, XAxis, YAxis, HeatmapSeries, LabelSeries} from 'react-vis';
 import continuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
 
-const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
-const data = alphabet.reduce((acc, letter1, idx) => {
-  return acc.concat(
-    alphabet.map((letter2, jdx) => ({
-      x: `${letter1}1`,
-      y: `${letter2}2`,
-      color: (idx + jdx) % Math.floor(jdx / idx) || idx
-    }))
-  );
-}, []);
-const {min, max} = data.reduce(
-  (acc, row) => ({
-    min: Math.min(acc.min, row.color),
-    max: Math.max(acc.max, row.color)
-  }),
-  {min: Infinity, max: -Infinity}
-);
+// const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const data = [{x: 'Sun', y:0, color:-1}, {x: 'Mon', y:0, color:2}, {x: 'Tue', y:0, color:5}, {x: 'Wed', y:0, color:7}, {x: 'Thu', y:0, color:10}, {x: 'Fri', y:0, color:12}, {x: 'Sat', y:0, color:15},
+			  {x: 'Sun', y:1, color:0}, {x: 'Mon', y:1, color:2}, {x: 'Tue', y:1, color:5}, {x: 'Wed', y:1, color:0}, {x: 'Thu', y:1, color:2}, {x: 'Fri', y:1, color:5}, {x: 'Sat', y:1, color:3},
+			  {x: 'Sun', y:2, color:0}, {x: 'Mon', y:2, color:2}, {x: 'Tue', y:2, color:5}, {x: 'Wed', y:2, color:0}, {x: 'Thu', y:2, color:2}, {x: 'Fri', y:2, color:5}, {x: 'Sat', y:2, color:3},
+			  {x: 'Sun', y:3, color:0}, {x: 'Mon', y:3, color:2}, {x: 'Tue', y:3, color:5}, {x: 'Wed', y:3, color:0}, {x: 'Thu', y:3, color:2}, {x: 'Fri', y:3, color:5}, {x: 'Sat', y:3, color:3}];
+const min = 0;
+const max = 10;
 
 
 function sameDay(d1, d2) {
@@ -48,6 +38,8 @@ function sameDay(d1, d2) {
     d1.getMonth() === d2.getMonth() &&
     d1.getDate() === d2.getDate();
 }
+
+
 function compareTime(time1, time2) {
   return new Date(time1) > new Date(time2); // true if time1 is later
 }
@@ -117,43 +109,33 @@ async function formatData(){
   }
 }
 
+
 export default function LabeledHeatmap() {
   formatData();
-  const exampleColorScale = scaleLinear()
-    .domain([min, (min + max) / 2, max])
-    .range(['orange', 'white', 'cyan']);
   return (
-    <XYPlot
-      xType="ordinal"
-      xDomain={alphabet.map(letter => `${letter}1`)}
-      yType="ordinal"
-      yDomain={alphabet.map(letter => `${letter}2`).reverse()}
-      margin={50}
-      width={500}
-      height={500}
-    >
-      <XAxis orientation="top" />
-      <YAxis />
-      <HeatmapSeries
-        colorType="literal"
-        getColor={d => exampleColorScale(d.color)}
-        style={{
+  <XYPlot
+	  width={500}
+    height={300}
+    xType="ordinal"
+    yDomain={[4, -1]}>
+	  <XAxis tickValues={['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']} tickLabelAngle={-45}/>
+	  <HeatmapSeries
+		className="heatmap-series-example"
+		colorRange={["white", "orange"]}
+		data={data} 
+		style={{
           stroke: 'white',
           strokeWidth: '2px',
           rectStyle: {
             rx: 10,
             ry: 10
           }
-        }}
-        className="heatmap-series-example"
-        data={data}
-      />
-      <LabelSeries
-        data={data}
-        labelAnchorX="middle"
-        labelAnchorY="baseline"
-        getLabel={d => `${d.color}`}
-      />
-    </XYPlot>
+        }} />
+
+	  <LabelSeries
+		animation
+		allowOffsetToBeReversed
+		data={data} />
+	</XYPlot>
   );
 }

@@ -13,7 +13,8 @@ class Students extends Component {
       studentsJson: {},
       suggestionsArray: [],
       id: null,
-      profileData: {}
+      profileData: {},
+      heatMapJson: {}
     };
     this.handler = this.handler.bind(this);
   }
@@ -23,13 +24,15 @@ class Students extends Component {
       const res = await fetch('http://127.0.0.1:8000/api/');
       var studentsJson = await res.json();
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
+      
       this.setState(function (previousState, currentProps) {
         return {
           mode: 'search',
           studentsJson: studentsJson,
           suggestionsArray: suggestionsArray,
           id: null,
-          profileData: {}
+          profileData: {},
+          heatMapJson: {}
         };
       });
     } catch (e) {
@@ -75,6 +78,15 @@ class Students extends Component {
       const studentProfileData = await fetch('http://127.0.0.1:8000/api/students/' + state.id);
       const studentProfileJson = await studentProfileData.json();
       state.profileData = studentProfileJson;
+
+      console.log("Hit the endpoint with studentid=906, startdate=2018-01-28, enddate=2018-03-03");
+      var studentId = "906";
+      var startDateString = "2018-01-28";
+      var endDateString = "2018-03-03";
+      const heatMapData = await fetch('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + studentId + '&startdate=' + startDateString + '&enddate=' + endDateString);
+      state.heatMapJson = await heatMapData.json();
+      console.log(state.heatMapJson);
+
       this.setState(function (previousState, currentProps) {
         return state;
       });
@@ -125,7 +137,8 @@ class Students extends Component {
 			  </div>
         	</div>
 		  </div>
-      <LabeledHeatmap />
+      <LabeledHeatmap 
+        heatMapJson = {this.state.heatMapJson}/>
 		</div>
       );
     }

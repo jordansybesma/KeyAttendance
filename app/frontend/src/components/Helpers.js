@@ -17,7 +17,7 @@ function httpPost(url, body={}) {
 
 	return fetch(url, {
 		method: "POST",
-		headers: {'Content-Type':'application/json', 'Authorization': 'JTW ' + token},
+		headers: {'Content-Type':'application/json', 'Authorization': 'JWT ' + token},
 		body: JSON.stringify(body)
 	}).then(response => {
 		if (response.status >= 400) {
@@ -62,7 +62,6 @@ function httpPatch(url, body={}) {
 
 function httpGet(url) {
 	const token = window.localStorage.getItem("key_credentials");
-
 	// if we don't have a token, we shouldn't be trying to call this function.
 	if (token === null) {
 		history.push(`/`)

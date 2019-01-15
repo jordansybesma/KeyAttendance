@@ -23,11 +23,11 @@ import {scaleLinear} from 'd3-scale';
 
 import {XYPlot, XAxis, YAxis, HeatmapSeries, LabelSeries} from 'react-vis';
 
-const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const data = [{x: 0, y:0, color:0}, {x: 1, y:0, color:2}, {x: 2, y:0, color:5}, {x: 3, y:0, color:0}, {x: 4, y:0, color:2}, {x: 6, y:0, color:5}, {x: 7, y:0, color:3},
-			  {x: 0, y:1, color:0}, {x: 1, y:1, color:2}, {x: 2, y:1, color:5}, {x: 3, y:1, color:0}, {x: 4, y:1, color:2}, {x: 6, y:1, color:5}, {x: 7, y:1, color:3},
-			  {x: 0, y:2, color:0}, {x: 1, y:2, color:2}, {x: 2, y:2, color:5}, {x: 3, y:2, color:0}, {x: 4, y:2, color:2}, {x: 6, y:2, color:5}, {x: 7, y:2, color:3},
-			  {x: 0, y:3, color:0}, {x: 1, y:3, color:2}, {x: 2, y:3, color:5}, {x: 3, y:3, color:0}, {x: 4, y:3, color:2}, {x: 6, y:3, color:5}, {x: 7, y:3, color:3}];
+// const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const data = [{x: 'Sun', y:0, color:-1}, {x: 'Mon', y:0, color:2}, {x: 'Tue', y:0, color:5}, {x: 'Wed', y:0, color:7}, {x: 'Thu', y:0, color:10}, {x: 'Fri', y:0, color:12}, {x: 'Sat', y:0, color:15},
+			  {x: 'Sun', y:1, color:0}, {x: 'Mon', y:1, color:2}, {x: 'Tue', y:1, color:5}, {x: 'Wed', y:1, color:0}, {x: 'Thu', y:1, color:2}, {x: 'Fri', y:1, color:5}, {x: 'Sat', y:1, color:3},
+			  {x: 'Sun', y:2, color:0}, {x: 'Mon', y:2, color:2}, {x: 'Tue', y:2, color:5}, {x: 'Wed', y:2, color:0}, {x: 'Thu', y:2, color:2}, {x: 'Fri', y:2, color:5}, {x: 'Sat', y:2, color:3},
+			  {x: 'Sun', y:3, color:0}, {x: 'Mon', y:3, color:2}, {x: 'Tue', y:3, color:5}, {x: 'Wed', y:3, color:0}, {x: 'Thu', y:3, color:2}, {x: 'Fri', y:3, color:5}, {x: 'Sat', y:3, color:3}];
 const min = 0;
 const max = 10;
 
@@ -141,15 +141,13 @@ async function formatData(){
 
 export default function LabeledHeatmap() {
   formatData();
-  const exampleColorScale = scaleLinear()
-    .domain([min, (min + max) / 2, max])
-    .range(['orange', 'white', 'cyan']);
   return (
-	<XYPlot
-	  width={300}
-	  height={300}>
-	  <XAxis />
-	  <YAxis />
+  <XYPlot
+	  width={500}
+    height={300}
+    xType="ordinal"
+    yDomain={[4, -1]}>
+	  <XAxis tickValues={['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']} tickLabelAngle={-45}/>
 	  <HeatmapSeries
 		className="heatmap-series-example"
 		colorRange={["white", "orange"]}

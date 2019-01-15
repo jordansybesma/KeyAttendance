@@ -28,5 +28,6 @@ class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (
             'date',
+            'daily_visits',
         )
         model = Reports

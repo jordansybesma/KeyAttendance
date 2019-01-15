@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from ..helpers import isValidDateTime, isValidTime
+from django.db.models import Count
 
 class Reports(APIView):
 
@@ -40,6 +41,7 @@ class Reports(APIView):
             #for value in request.query_params:
                 #print ("%s" % (value))
             return self.retrieveIndividualHeatmapData(student_id, startdate, enddate)
+            
         elif(vizType == "alternativeVizType"):
             startdate = request.query_params['startdate']
             enddate = request.query_params['enddate']
@@ -54,6 +56,7 @@ class Reports(APIView):
         allAttendanceItems = allAttendanceItems.order_by('date')
         studentItems = allAttendanceItems.filter(student_id=student_id)
         studentItems = studentItems.filter(date__range=[startdate, enddate])
+        studentItems = studentItems.values('date').annotate(daily_visits = Count('student_id'))
         serializer = ReportSerializer(studentItems, many=True)
         return Response(serializer.data, content_type='application/json')
     

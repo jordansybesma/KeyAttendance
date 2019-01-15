@@ -53,6 +53,7 @@ class Reports(models.Model):
     time = models.TimeField(default=getCurrentTime)
     activity_id = models.IntegerField(blank=True, null=True)
     visit_number = models.IntegerField(blank=True, null=True)
+    daily_visits = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False

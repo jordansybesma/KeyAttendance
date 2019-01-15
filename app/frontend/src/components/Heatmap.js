@@ -22,6 +22,7 @@ import React from 'react';
 import {scaleLinear} from 'd3-scale';
 
 import {XYPlot, XAxis, YAxis, HeatmapSeries, LabelSeries} from 'react-vis';
+import continuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
 
 const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 const data = alphabet.reduce((acc, letter1, idx) => {
@@ -41,16 +42,15 @@ const {min, max} = data.reduce(
   {min: Infinity, max: -Infinity}
 );
 
+
 function sameDay(d1, d2) {
   return d1.getFullYear() === d2.getFullYear() &&
     d1.getMonth() === d2.getMonth() &&
     d1.getDate() === d2.getDate();
 }
-
 function compareTime(time1, time2) {
   return new Date(time1) > new Date(time2); // true if time1 is later
 }
-
 
 async function formatData(){
   try {
@@ -60,14 +60,15 @@ async function formatData(){
     var endDateString = "2018-03-03";
     const heatMapData = await fetch('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + studentId + '&startdate=' + startDateString + '&enddate=' + endDateString);
     const heatMapJson = await heatMapData.json();
+    console.log(heatMapJson);
    //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
    var startDate = new Date(startDateString.replace(/-/g, '\/'));
    var endDate = new Date(endDateString.replace(/-/g, '\/'));
    var dateToCompare = startDate;
    var currEntryDate;
    var currIdx = 0;
-
    //Add dummy date entries for missing dates (dates with no engagements) to json btwn start and end date
+   //dateToCompare always incremented by 1
    while (compareTime(dateToCompare, endDate) == false){
     //if reached the end of json but there's still dates to fill in up to the end date, stay on end entry
     if(currIdx > heatMapJson.length-1){
@@ -75,71 +76,41 @@ async function formatData(){
     }
 
     currEntryDate = new Date(heatMapJson[currIdx]["date"].replace(/-/g, '\/'));
-
-    //add dummy date entry for missing date.
-    //if previous entry does not have same date as current, or we're at first/last entry of json
-    if((currIdx != 0 && heatMapJson[currIdx-1]["date"] != heatMapJson[currIdx]["date"]) || currIdx == 0 || currIdx == heatMapJson.length-1){
-      //and if current entry does not match date to compare
-      if (sameDay(dateToCompare, currEntryDate) == false){
-        var dateEntryZeroEngagements = {"date": dateToCompare.toISOString().slice(0, 10), "empty": true};
-        //add entry in place if not at end of json, add to end if at end of json   
-        if(currIdx != heatMapJson.length-1){
-          heatMapJson.splice(currIdx, 0, dateEntryZeroEngagements);
-        }else{
-          heatMapJson.splice(currIdx+1, 0, dateEntryZeroEngagements);
-        }
+    //identified missing date, so add dummy date entry for missing date
+    if (sameDay(dateToCompare, currEntryDate) == false){
+      var dateEntryZeroEngagements = {"date": dateToCompare.toISOString().slice(0, 10), "daily_visits": 0};
+      //add entry in place if not at end of json OR final date entry has not been added yet/surpassed
+      //else add to very end of json 
+      if(currIdx != heatMapJson.length-1 || compareTime(currEntryDate, dateToCompare)){
+        heatMapJson.splice(currIdx, 0, dateEntryZeroEngagements);
+      }else{
+        heatMapJson.splice(currIdx+1, 0, dateEntryZeroEngagements);
       }
     }
-
-    //increment date to compare if reading first entry of json, last entry of json, or previous entry has same date as current
-    if((currIdx != 0 && heatMapJson[currIdx-1]["date"] != heatMapJson[currIdx]["date"]) || currIdx == 0 || currIdx == heatMapJson.length-1){
-      dateToCompare.setDate(dateToCompare.getDate() + 1);
-    }
+    dateToCompare.setDate(dateToCompare.getDate() + 1);
     currIdx++;
    }
-   console.log("heatmap json with missing dates added: " + heatMapJson);
 
-
-   //Time to convert updated JSON with missing dates added in into
-   //a list called processedData of {"dayOfWeek": 1, "weekNum": Week #, "numEngagements": 3} objs
-   var processedData = [];
-   var dayOfWeek, weekNum, dayEntry;
-   var entriesAdded = 0;
-   var numEngagements = 1;
-   var nextDateString;
-   var currDateObj;
-   var mdyArray;
-   var m, d ,y;
-    for (var i = 0; i < heatMapJson.length; i++) {
-
-      if(heatMapJson[i+1] == undefined){
-        nextDateString = "reachedEndOfData";
-      }else{
-        nextDateString = heatMapJson[i+1]['date'];
-      }
-      //Compare curr date to next date to count engagements for a single day
-      if (heatMapJson[i]['date'] == nextDateString){
-        numEngagements++;
-      //All engagements counted for this day, add entry representing current day  
-      }else{
-        if(heatMapJson[i]['empty']){
-          numEngagements = 0;
-        }
-        currDateObj = new Date(heatMapJson[i]['date'].replace(/-/g, '\/'));
-        dayOfWeek = currDateObj.getDay();
-        weekNum = Math.floor(entriesAdded/7);
-
-        mdyArray = heatMapJson[i]['date'].split(/\s*\-\s*/g);
-        y = mdyArray[0];
-        m = mdyArray[1];
-        d = mdyArray[2];
-        dayEntry = {"dayOfWeek": dayOfWeek, "weekNum": weekNum, "numEngagements": numEngagements, "month": m, "day": d,"year": y};
-        processedData.push(dayEntry);
-        numEngagements = 1;
-        entriesAdded++;
-      }
+  //Time to convert updated JSON with missing dates added in into
+  //a list called processedData of {"x": integer day of week, "y": integer week # of month, "color": int num engagements per day} objs
+  var processedData = [];
+  var dayOfWeek, weekNum, dayEntry;
+  var currDateObj;
+  var mdyArray;
+  var m, d ,y;
+  var strDays = ["Sun", "Mon", "Tues","Wed", "Thurs","Fri", "Sat"];
+  for (var i = 0; i < heatMapJson.length; i++) {
+      currDateObj = new Date(heatMapJson[i]['date'].replace(/-/g, '\/'));
+      dayOfWeek = strDays[currDateObj.getDay()];
+      weekNum = Math.floor(i/7);
+      mdyArray = heatMapJson[i]['date'].split(/\s*\-\s*/g);
+      y = mdyArray[0];
+      m = mdyArray[1];
+      d = mdyArray[2];
+      dayEntry = {"x": dayOfWeek, "y": weekNum, "numEngagements": heatMapJson[i]['daily_visits'], "month": m, "day": d,"year": y};
+      processedData.push(dayEntry);
     }
-    console.log("processedData: " + processedData);
+    console.log(processedData);
   }
   catch (e) {
     console.log(e);

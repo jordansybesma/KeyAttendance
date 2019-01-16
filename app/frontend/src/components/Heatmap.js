@@ -26,12 +26,6 @@ import { XYPlot, XAxis, YAxis, HeatmapSeries, LabelSeries } from 'react-vis';
 import continuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
 
 class Heatmap extends Component {
-  // const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  // const testData = [{ x: 'Sun', y: 0, color: -1 }, { x: 'Mon', y: 0, color: 2 }, { x: 'Tue', y: 0, color: 5 }, { x: 'Wed', y: 0, color: 7 }, { x: 'Thu', y: 0, color: 10 }, { x: 'Fri', y: 0, color: 12 }, { x: 'Sat', y: 0, color: 15 },
-  // { x: 'Sun', y: 1, color: 0 }, { x: 'Mon', y: 1, color: 2 }, { x: 'Tue', y: 1, color: 5 }, { x: 'Wed', y: 1, color: 0 }, { x: 'Thu', y: 1, color: 2 }, { x: 'Fri', y: 1, color: 5 }, { x: 'Sat', y: 1, color: 3 },
-  // { x: 'Sun', y: 2, color: 0 }, { x: 'Mon', y: 2, color: 2 }, { x: 'Tue', y: 2, color: 5 }, { x: 'Wed', y: 2, color: 0 }, { x: 'Thu', y: 2, color: 2 }, { x: 'Fri', y: 2, color: 5 }, { x: 'Sat', y: 2, color: 3 },
-  // { x: 'Sun', y: 3, color: 0 }, { x: 'Mon', y: 3, color: 2 }, { x: 'Tue', y: 3, color: 5 }, { x: 'Wed', y: 3, color: 0 }, { x: 'Thu', y: 3, color: 2 }, { x: 'Fri', y: 3, color: 5 }, { x: 'Sat', y: 3, color: 3 }];
-
 
   static propTypes = {
     heatMapJson: PropTypes.instanceOf(Array),
@@ -49,13 +43,11 @@ class Heatmap extends Component {
     };
   }
 
-
   sameDay(d1, d2) {
     return d1.getFullYear() === d2.getFullYear() &&
       d1.getMonth() === d2.getMonth() &&
       d1.getDate() === d2.getDate();
   }
-
 
   compareTime(time1, time2) {
     return new Date(time1) > new Date(time2); // true if time1 is later
@@ -63,7 +55,6 @@ class Heatmap extends Component {
 
   formatData() {
     try {
-
       //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
       var studentId = "906";
       var startDateString = "2018-01-28";
@@ -129,15 +120,18 @@ class Heatmap extends Component {
 
   render() {    
     var data = this.formatData();
-    console.log(data);
     return (
       <XYPlot
         width={500}
         height={300}
         xType="ordinal"
-        yDomain={[5, -1]}>
-        <XAxis tickValues={['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']} tickLabelAngle={-45} />
-        <HeatmapSeries
+        yDomain={[5, -1]} >
+        
+		<XAxis 
+		  tickValues={['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']} 
+		  tickLabelAngle={-45} />
+        
+		<HeatmapSeries
           className="heatmap-series-example"
           colorRange={["white", "orange"]}
           data={data}
@@ -154,6 +148,7 @@ class Heatmap extends Component {
           animation
           allowOffsetToBeReversed
           data={this.state.heatMapJson} />
+
       </XYPlot>
     );
   };

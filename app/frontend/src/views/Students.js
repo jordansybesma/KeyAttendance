@@ -73,19 +73,38 @@ class Students extends Component {
     this.getStudentProfile(state);
   }
 
+  // Creates a date string of the form yyyy-mm-dd for the date "daysAgo"
+  // days ago. E.g. if daysAgo equals 3 the date string will be the date 
+  // three days ago. If daysAgo = 0 teh string is today's date.
+  makeDate(daysAgo) {
+	if (daysAgo < 0) {
+		console.error("Expected daysAgo to be a value >= 0 but got ", daysAgo);
+		daysAgo = -daysAgo;
+	}
+
+	var earlierDate = new Date();
+	earlierDate.setDate(-daysAgo);
+
+	var dateStringWithTime = earlierDate.toISOString();
+	var dateString = dateStringWithTime.replace(/T(\w|\W)*/, '');
+
+	return dateString;
+  }
+
   async getStudentProfile(state) {
     try {
       const studentProfileData = await fetch('http://127.0.0.1:8000/api/students/' + state.id);
       const studentProfileJson = await studentProfileData.json();
       state.profileData = studentProfileJson;
 
-      console.log("Hit the endpoint with studentid=906, startdate=2018-01-28, enddate=2018-03-03");
-      var studentId = "906";
-      var startDateString = "2018-01-28";
-      var endDateString = "2018-03-03";
-      const heatMapData = await fetch('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + studentId + '&startdate=' + startDateString + '&enddate=' + endDateString);
-      state.heatMapJson = await heatMapData.json();
-      console.log(state.heatMapJson);
+      var startDateString = this.makeDate(30);
+	  var today = new Date();
+      var endDateString = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+	  
+	  // const heatMapData = await fetch('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + "906" + '&startdate=' + "2018-01-28" + '&enddate=' + "2018-03-03");
+	  const heatMapData = await fetch('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
+      const heatMapJson = await heatMapData.json();
+	  state.heatMapJson = heatMapJson;
 
       this.setState(function (previousState, currentProps) {
         return state;
@@ -101,30 +120,31 @@ class Students extends Component {
       return (
         <div className='content'>
           <h1> Key Students </h1>
-			  	<div className='container-fluid no-padding'>
-					<div className='row justify-content-start'>
-				  		<div className='col-md-12 to-front top-bottom-padding'>
-							<Autocomplete
-								suggestions={this.state.suggestionsArray}
-								handler={this.handler}
-						  	/>
-		  				</div>
+			<div className='container-fluid no-padding'>
+				<div className='row justify-content-start'>
+					<div className='col-md-12 to-front top-bottom-padding'>
+						<Autocomplete
+							suggestions={this.state.suggestionsArray}
+							handler={this.handler}
+						/>
 		  			</div>
-		  		</div>  
+		  		</div>
+		  	</div>  
         </div>
       );
-    } else if (this.state.mode === 'display') {
-      
+    } 
+	
+	else if (this.state.mode === 'display') {
       return (
         <div className='content'>
           <h1> Student Profile </h1>
 		  <div className='container-fluid no-padding'>
   			<div className='row justify-content-start'>
 			  <div className='col-md-4 to-front top-bottom-padding'>
-				  <Autocomplete
-					suggestions={this.state.suggestionsArray}
-					handler={this.handler}
-				  />
+				<Autocomplete
+				  suggestions={this.state.suggestionsArray}
+				  handler={this.handler}
+			    />
 			  </div>
 			  <div className='col-md-8 top-bottom-padding'>
 				Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br/>

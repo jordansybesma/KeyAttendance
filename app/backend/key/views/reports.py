@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from ..helpers import isValidDateTime, isValidTime
 from django.db.models import Count
+from django.db import models as models
+from django.db.models import Q
 
 class Reports(APIView):
 
@@ -20,6 +22,10 @@ class Reports(APIView):
                 if isValidDateTime(request.query_params['startdate']) and isValidDateTime(request.query_params['enddate']):
                     if request.query_params['student_id'].isnumeric():
                         validateBool = True
+        elif(vizType == "byHourAttendance"):
+            if 'startdate' in request.query_params and 'enddate' in request.query_params:
+                if isValidDateTime(request.query_params['startdate']) and isValidDateTime(request.query_params['enddate']):
+                    validateBool = True
         elif(vizType == "alternativeVizType"):
             if 'startdate' in request.query_params and 'enddate' in request.query_params:
                 if isValidDateTime(request.query_params['startdate']) and isValidDateTime(request.query_params['enddate']):
@@ -41,6 +47,11 @@ class Reports(APIView):
             #for value in request.query_params:
                 #print ("%s" % (value))
             return self.retrieveIndividualHeatmapData(student_id, startdate, enddate)
+        
+        elif(vizType == "byHourAttendance"):
+            startdate = request.query_params['startdate']
+            enddate = request.query_params['enddate']
+            return self.retrievebyHourAttendanceData(startdate, enddate)
             
         elif(vizType == "alternativeVizType"):
             startdate = request.query_params['startdate']
@@ -58,6 +69,17 @@ class Reports(APIView):
         studentItems = studentItems.filter(date__range=[startdate, enddate])
         studentItems = studentItems.values('date').annotate(daily_visits = Count('student_id'))
         serializer = ReportSerializer(studentItems, many=True)
+        return Response(serializer.data, content_type='application/json')
+
+    # Query databases for Key-wide attendance data, aggregated by hour in a specified one wk timeframe
+    # Could possibly use attendance model + view here ... instead of reports model
+    # as (reports model is basically a copy of attendance model, querying dailyattendance db)
+    def retrievebyHourAttendanceData(self, startdate, enddate):
+        allAttendanceItems = ReportsModel.objects.all().values("student_id", "date", "time")
+        allAttendanceItems = allAttendanceItems.filter(date__range=[startdate, enddate])
+        allAttendanceItems = allAttendanceItems.order_by('date')
+        allAttendanceItems =  allAttendanceItems.values('date').annotate(daily_visits = Count('student_id'))
+        serializer = ReportSerializer(allAttendanceItems, many=True)
         return Response(serializer.data, content_type='application/json')
     
     #Test method to represent an alternative visualization type

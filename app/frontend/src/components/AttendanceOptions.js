@@ -35,14 +35,14 @@ class AttendanceOptions extends React.Component {
 
         // figure out what to delete
         for (let i = 0; i < keys.length; i++) {
-            if (activities[keys[i]].attendanceItemID != 0) {
+            if (activities[keys[i]].attendanceItemID !== 0) {
                 ids.push(activities[keys[i]].attendanceItemID)
             }
         }
 
         // delete the things
         for (let i = 0; i < ids.length; i++) {
-            httpDelete(`http://127.0.0.1:8000/api/attendance?key=${ids[i]}`);
+            httpDelete(`http://127.0.0.1:8000/api/attendance/?key=${ids[i]}`);
         }
 
         this.props.CustomFunction(row['studentID']);

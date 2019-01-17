@@ -57,15 +57,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-CORS_ORIGIN_WHITELIST = (
-    'localhost:3000/'
-)
-
-JWT_AUTH = {
-    'JWT_PAYLOAD_HANDLER': 'key.custom_jwt.jwt_payload_handler',
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'key.custom_jwt.jwt_response_payload_handler'
-}
-
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -152,3 +143,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Security Settings
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+JWT_AUTH = {
+    'JWT_PAYLOAD_HANDLER': 'key.custom_jwt.jwt_payload_handler',
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'key.custom_jwt.jwt_response_payload_handler'
+}

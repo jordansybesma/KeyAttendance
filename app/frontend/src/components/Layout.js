@@ -24,6 +24,21 @@ class Layout extends Component {
 
   render() {
     if (!this.props.show) { return this.props.children }
+    let navItems;
+    if (window.localStorage.getItem("isAdmin") === "true") {
+      navItems = <Nav>
+        <NavItem onClick={this.handleItemClick('attendance')}>Attendance</NavItem>
+        <NavItem onClick={this.handleItemClick('students')}>Students</NavItem>
+        <NavItem onClick={this.handleItemClick('reports')}>Reports</NavItem>
+        <NavItem onClick={this.handleItemClick('alerts')}>Alerts</NavItem>
+        <NavItem onClick={this.handleItemClick('admin')}>Admin</NavItem>
+      </Nav>
+    } else {
+      navItems = <Nav>
+        <NavItem onClick={this.handleItemClick('attendance')}>Attendance</NavItem>
+        <NavItem onClick={this.handleItemClick('students')}>Students</NavItem>
+      </Nav>
+    }
     return (
       <div>
         <Navbar>
@@ -34,13 +49,7 @@ class Layout extends Component {
                 <Navbar.Toggle />
             </Navbar.Header>
             <Navbar.Collapse>
-              <Nav>
-                  <NavItem onClick={this.handleItemClick('attendance')}>Attendance</NavItem>
-                  <NavItem onClick={this.handleItemClick('students')}>Students</NavItem>
-                  <NavItem onClick={this.handleItemClick('reports')}>Reports</NavItem>
-                  <NavItem onClick={this.handleItemClick('alerts')}>Alerts</NavItem>
-                  <NavItem onClick={this.handleItemClick('admin')}>Admin</NavItem>
-              </Nav>
+              {navItems}
               <Nav pullRight>
                 <NavItem onClick={this.logout()}>Logout</NavItem>
               </Nav>

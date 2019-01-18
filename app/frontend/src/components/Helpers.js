@@ -23,7 +23,7 @@ function httpPost(url, body={}) {
 		if (response.status >= 400) {
 			// Logout if we got a token validation error
 			if (response.status === 403) {
-				window.localStorage.removeItem("key_credentials");
+				logout()
 				history.push(`/`)
 			}
 			return {'error':response.status}
@@ -50,7 +50,7 @@ function httpPatch(url, body={}) {
 		if (response.status >= 400) {
 			// Logout if we got a token validation error
 			if (response.status === 403) {
-				window.localStorage.removeItem("key_credentials");
+				logout()
 				history.push(`/`)
 			}
 			return {'error':response.status}
@@ -75,7 +75,7 @@ function httpGet(url) {
 		if (response.status >= 400) {
 			// Logout if we got a token validation error
 			if (response.status === 403) {
-				window.localStorage.removeItem("key_credentials");
+				logout()
 				history.push(`/`)
 			}
 			return {'error':response.status}
@@ -102,7 +102,7 @@ function httpDelete(url, body={}) {
 		if (response.status >= 400) {
 			// Logout if we got a token validation error
 			if (response.status === 403) {
-				window.localStorage.removeItem("key_credentials");
+				logout()
 				history.push(`/`)
 			}
 			return {'error':response.status}
@@ -118,6 +118,16 @@ function compareActivities(a,b) {
 	if (a.ordering > b.ordering)
 	  return 1;
 	return 0;
+}
+
+function decodeToken(token) {
+	let partitions = token.split('.');
+    return JSON.parse(atob(partitions[1]));
+}
+
+function logout() {
+	window.localStorage.removeItem("key_credentials");
+	window.localStorage.removeItem("isAdmin");
 }
 
 async function downloadAttendanceCSV(startDate, endDate=null) {
@@ -208,11 +218,15 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 	document.body.removeChild(element);
 }
 
-// Makes sure that we have a token, else redirects to login screen
+// Makes sure that we have a valid token, else redirects to login screen
 const checkCredentials = (Component) => {
 	const token = window.localStorage.getItem("key_credentials");
+    let tokenData = decodeToken(token)
 	if (token === null) {
-		return <Redirect to='/'/>
+		return <Redirect to='/'/>;
+	} else if (tokenData.exp < Date.now() / 1000) { 
+		logout();
+		return <Redirect to='/'/>;
 	} else {
 		return <Component/>;
 	}
@@ -228,4 +242,4 @@ const withRole = (Component, role) => {
 	}
 }
 
-export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole }
+export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, decodeToken }

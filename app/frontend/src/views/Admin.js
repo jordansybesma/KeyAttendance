@@ -1,12 +1,19 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
+import AdminTabs from '../components/AdminTabs';
 
 class Admin extends React.Component {
+
     render() {
-        return (
-            <div className='content'>
-                <p>Admin</p>
-            </div>
-        );
+        if (window.localStorage.getItem("isAdmin") === "true") {
+            return (
+                <div className='content'>
+                    <AdminTabs />
+                </div>
+            );
+        } else {
+            return (<Redirect to='/attendance'/>);
+        }
     }
 }
 

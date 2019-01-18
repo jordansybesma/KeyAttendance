@@ -1,12 +1,18 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 class Alerts extends React.Component {
     render() {
-        return (
-            <div className='content'>
-                <p>Alerts</p>
-            </div>
-        );
+        console.log()
+        if (window.localStorage.getItem("isAdmin") === "true") {
+            return (
+                <div className='content'>
+                    <p>Alerts</p>
+                </div>
+            );
+        } else {
+            return (<Redirect to='/attendance'/>);
+        }
     }
 }
 

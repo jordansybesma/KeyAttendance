@@ -19,7 +19,7 @@ class Students extends Component {
 
   async componentDidMount() {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/');
+      const res = await fetch('http://127.0.0.1:8000/api/students');
       var studentsJson = await res.json();
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
       this.setState(function (previousState, currentProps) {
@@ -71,7 +71,7 @@ class Students extends Component {
 
   async getStudentProfile(state) {
     try {
-      const studentProfileData = await fetch('http://127.0.0.1:8000/api/students/' + state.id);
+      const studentProfileData = await fetch('http://127.0.0.1:8000/api/students?id=' + state.id);
       const studentProfileJson = await studentProfileData.json();
       state.profileData = studentProfileJson;
       this.setState(function (previousState, currentProps) {

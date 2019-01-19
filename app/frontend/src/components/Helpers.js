@@ -14,6 +14,20 @@ function httpPost(url, body={}, headers={'Content-Type':'application/json'}) {
 	}); 
 }
 
+function httpPatch(url, body={}, headers={'Content-Type':'application/json'}) {
+	return fetch(url, {
+		method: "PATCH",
+		headers: headers,
+		body: JSON.stringify(body)
+	}).then(response => {
+		if (response.status >= 400) {
+			return {'error':response.status}
+		} else {
+			return response.json()
+		}
+	}); 
+}
+
 function httpGet(url, headers={'Content-Type':'application/json'}) {
 	return fetch(url, {
 		method: "GET",
@@ -140,4 +154,4 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 	document.body.removeChild(element);
 }
 
-export { downloadAttendanceCSV, compareActivities, httpPost, httpGet, httpDelete }
+export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete }

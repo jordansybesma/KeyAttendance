@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import { Label } from 'react-bootstrap';
+import { httpPatch } from '../components/Helpers';
 
 class Students extends Component {
 
@@ -11,7 +12,11 @@ class Students extends Component {
       studentsJson: {},
       suggestionsArray: [],
       id: null,
-      profileData: {}
+      profileData: {},
+      formData: {
+        firstName: '',
+        lastName: '',
+      }
     };
     this.edit = this.edit.bind(this);
     this.handler = this.handler.bind(this);
@@ -87,22 +92,31 @@ class Students extends Component {
     this.setState({mode: 'edit'})
   }
   
-  handleChange(evt) {
-    console.log(this.state.profileData);
-    this.setState({
-      first_name: evt.target.value
-    });
-    console.log(this.state.profileData);
+  handleChange(evt, state) {
+    if (evt.target.id == "firstName") {
+      state.formData.firstName = evt.target.value;
+      this.setState(function (previousState, currentProps) {
+        return state;
+      });
+    } else if (evt.target.id == "lastName") {
+      state.formData.lastName = evt.target.value;
+      this.setState(function (previousState, currentProps) {
+        return state;
+      });
+    }
+    console.log(this.state);
   }
   
   handleSubmit(evt) {
+    evt.preventDefault()
     var object = {};
-    console.log(this);
     //object
-    this.setState({
-      first_name: evt.target.value
-    });
-    
+    httpPatch('http://127.0.0.1:8000/api/students/', {
+            'first_name': this.state.formData.firstName,
+            'last_name': this.state.formData.lastName,
+            'id': this.state.profileData.id
+            }
+    );
   }
 
   render() {
@@ -164,9 +178,9 @@ class Students extends Component {
 				  />
 			  </div>
           <div className='col-md-8 top-bottom-padding'>
-              <form className='col-md-8 top-bottom-padding' onSubmit={this.handleSubmit}>
-              First Name: <input type="text" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleChange(evt)} /> <br/>
-              Last Name: <input type="text" defaultValue={this.state.profileData.last_name} onChange={this.handleChange} /> <br/>
+              <form className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt)}>
+              First Name: <input type="text" id="firstName" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
+              Last Name: <input type="text" id="lastName" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               ID: <input type="text" defaultValue="N/A" onChange={this.handleChange} /> <br/>
               Birthday: <input type="text" defaultValue="xx/xx/xxxx" onChange={this.handleChange} /> <br/>
               Nickname: <input type="text" defaultValue="N/A" onChange={this.handleChange} /> <br/>

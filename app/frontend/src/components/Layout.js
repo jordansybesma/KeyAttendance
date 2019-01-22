@@ -16,7 +16,14 @@ class Layout extends Component {
     this.props.history.push(`/${name}`);
   }
 
+  logout = () => () => {
+    window.localStorage.removeItem("key_credentials");
+    window.localStorage.removeItem("isAdmin")
+    this.props.history.push(`/`)
+  }
+
   render() {
+    if (!this.props.show) { return this.props.children }
     return (
       <div>
         <Navbar>
@@ -35,7 +42,7 @@ class Layout extends Component {
                   <NavItem onClick={this.handleItemClick('admin')}>Admin</NavItem>
               </Nav>
               <Nav pullRight>
-                <NavItem>Logout</NavItem>
+                <NavItem onClick={this.logout()}>Logout</NavItem>
               </Nav>
             </Navbar.Collapse>
         </Navbar>

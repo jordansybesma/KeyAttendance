@@ -9,8 +9,13 @@ from ..helpers import isValidDateTime, isValidTime
 from django.db.models import Count
 from django.db import models as models
 from django.db.models import Q
+import datetime
 
 class Reports(APIView):
+
+    # Creates a new datetime that matches the original datetime's hour
+    def roundHour(self, dt):
+        return datetime.time(hour=dt.hour)
 
     # Validate input for the.query_params request of this endpoint
     def validateGet(self, request, vizType):
@@ -75,12 +80,29 @@ class Reports(APIView):
     # Could possibly use attendance model + view here ... instead of reports model
     # as (reports model is basically a copy of attendance model, querying dailyattendance db)
     def retrievebyHourAttendanceData(self, startdate, enddate):
+        lookup = {}
+        toReturn = []
         allAttendanceItems = ReportsModel.objects.all().values("student_id", "date", "time")
         allAttendanceItems = allAttendanceItems.filter(date__range=[startdate, enddate])
-        allAttendanceItems = allAttendanceItems.order_by('date')
-        allAttendanceItems =  allAttendanceItems.values('date').annotate(daily_visits = Count('student_id'))
-        serializer = ReportSerializer(allAttendanceItems, many=True)
-        return Response(serializer.data, content_type='application/json')
+
+        # Group by date and rounded time and count
+        for item in allAttendanceItems:
+            roundedTime = self.roundHour(item['time'])
+            if lookup.get(item['date']) == None:
+                lookup[item['date']] = {}
+            if lookup[item['date']].get(roundedTime) == None:
+                lookup[item['date']][roundedTime] = 0
+            lookup[item['date']][roundedTime] += 1
+
+        # Create list item from computed aggregates
+        for date,v in lookup.items():
+            for time, count in v.items():
+                toReturn.append({'date':date, 'time':time, 'count':count})
+
+        # Sort the resulted list by date then time, ascending
+        toReturn = sorted(toReturn, key=lambda item: (item['date'], item['time']))
+        
+        return Response(toReturn, content_type='application/json')
     
     #Test method to represent an alternative visualization type
     def retrieveAttendanceDataInDateRange(self, startdate, enddate):

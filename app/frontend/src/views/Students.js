@@ -14,11 +14,11 @@ class Students extends Component {
       id: null,
       profileData: {},
       formData: {
-        firstName: '',
-        lastName: '',
-        id: '',
-        firstAttendance: '',
-        numVisits: '',
+        'firstName': '',
+        'lastName': '',
+        'id': '',
+        'firstAttendance': '',
+        'numVisits': '',
       }
     };
     this.edit = this.edit.bind(this);
@@ -36,7 +36,14 @@ class Students extends Component {
           studentsJson: studentsJson,
           suggestionsArray: suggestionsArray,
           id: null,
-          profileData: {}
+          profileData: {},
+          formData: {
+            'firstName': '',
+            'lastName': '',
+            'id': '',
+            'firstAttendance': '',
+            'numVisits': '',
+          }
         };
       });
     } catch (e) {
@@ -82,6 +89,13 @@ class Students extends Component {
       const studentProfileData = await fetch('http://127.0.0.1:8000/api/students?id=' + state.id);
       const studentProfileJson = await studentProfileData.json();
       state.profileData = studentProfileJson;
+      state.formData = {
+        'firstName': state.profileData.first_name,
+        'lasName': state.profileData.last_name,
+        'id': state.profileData.id,
+        'firstAttendance': state.profileData.first_attendance,
+        'numVisits': state.profileData.number_visits
+      }
       this.setState(function (previousState, currentProps) {
         return state;
       });
@@ -96,62 +110,21 @@ class Students extends Component {
   }
   
   handleChange(evt, state) {
-    console.log(evt.target.id);
-    if (state.formData.firstName === "") {
-      state.formData.firstName = this.state.profileData.first_name;
-    }
-    if (state.formData.lastName === "") {
-      state.formData.lastName = this.state.profileData.last_name;
-    }
-    if (evt.target.id === "firstName") {
-      state.formData.firstName = evt.target.value;
-      this.setState(function (previousState, currentProps) {
-        return state;
-      });
-    } else if (evt.target.id === "lastName") {
-      state.formData.lastName = evt.target.value;
-      this.setState(function (previousState, currentProps) {
-        return state;
-      });
-    } else if (evt.target.id === "lastName") {
-      state.formData.lastName = evt.target.value;
-      this.setState(function (previousState, currentProps) {
-        return state;
-      });
-    }
-    /*else if (evt.target.id === "id") {
-      state.formData.id = evt.target.value;
-      this.setState(function (previousState, currentProps) {
-        return state;
-      });
-    }*/
-    else if (evt.target.id === "numVisits") {
-      console.log("here");
-      console.log(evt.target.value);
-      state.formData.numVisits = evt.target.value;
-      this.setState(function (previousState, currentProps) {
-        return state;
-      });
-    }
-    else if (evt.target.id === "firstAttendance") {
-      state.formData.firstAttendance = evt.target.value;
-      this.setState(function (previousState, currentProps) {
-        return state;
-      });
-    }
-    console.log(this.state);
+    var changedField = evt.target.id;
+    state.formData[changedField] = evt.target.value;
+    this.setState(function (previousState, currentProps) {
+      return state;
+    });
   }
   
-  handleSubmit(evt) {
-    console.log("why");
-    //evt.preventDefault()
+  handleSubmit(evt, state) {
+    // evt.preventDefault()
     httpPatch('http://127.0.0.1:8000/api/students/', {
-            'first_name': this.state.formData.firstName,
-            'last_name': this.state.formData.lastName,
-            //'first_attendance': this.state.formData.firstAttendance,
-            'id': this.state.profileData.id,
-            /*'first_attendance': this.state.formData.firstAttendance,
-            'number_visits': this.state.formData.numVisits*/
+            'first_name': state.formData['firstName'],
+            'last_name': state.formData['lastName'],
+            'id': state.profileData.id,
+            'first_attendance': state.formData['firstAttendance'],
+            'number_visits': state.formData['numVisits']
             }
     );
     //this.setState({mode: 'display'})
@@ -216,7 +189,7 @@ class Students extends Component {
 				  />
 			  </div>
           <div className='col-md-8 top-bottom-padding'>
-              <form className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt)}>
+              <form className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
               First Name: <input type="text" id="firstName" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Last Name: <input type="text" id="lastName" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               ID: <input type="text" id="id" defaultValue="N/A" onChange={evt => this.handleChange(evt, this.state)} /> <br/>

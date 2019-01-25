@@ -102,6 +102,10 @@ class Students(models.Model):
     id = models.IntegerField(blank=True, primary_key=True)
     first_attendance = models.DateField(blank=True, null=True)
     number_visits = models.IntegerField(blank=True, null=True)
+    birthday = models.DateField(blank=True, null=True)
+    nickname = models.TextField(blank=True, null=True)
+    gender = models.TextField(blank=True, null=True)
+    student_id = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True

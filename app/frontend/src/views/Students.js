@@ -190,7 +190,7 @@ class Students extends Component {
               <form className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
               First Name: <input type="text" id="firstName" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Last Name: <input type="text" id="lastName" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
-              ID: <input type="text" id="id" defaultValue="N/A" onChange={evt => this.handleChange(evt, this.state)} /> <br/>
+              Student ID: <input type="text" id="id" defaultValue="N/A" onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Birthday: <input type="text" defaultValue="xx/xx/xxxx" onChange={this.handleChange} /> <br/>
               Nickname: <input type="text" defaultValue="N/A" onChange={this.handleChange} /> <br/>
               Gender: <input type="text" defaultValue="N/A" onChange={this.handleChange} /> <br/>

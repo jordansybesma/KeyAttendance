@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
 from django.db import IntegrityError
+from django.contrib.auth.models import User
 
 class Attendance(APIView):
 
@@ -66,6 +67,8 @@ class Attendance(APIView):
         return Response(serializer.data, content_type='application/json')
 
     def delete(self, request):
+        if not request.user.has_perm('key.delete_attendanceitems'):
+            return Response({'error':'You are not authorized to delete attendance items.'}, status='401')
         if not self.validateDelete(request):
             return Response({'error':'Invalid Parameters'}, status='400')
 

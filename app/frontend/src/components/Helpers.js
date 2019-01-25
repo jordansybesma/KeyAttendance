@@ -1,12 +1,31 @@
+import React from 'react';
+import { Redirect } from 'react-router-dom';
+import createBrowserHistory from 'history/createBrowserHistory';
+
 // Store helper functions that we'll probably re-use here!
 
-function httpPost(url, body={}, headers={'Content-Type':'application/json'}) {
+const history = createBrowserHistory();
+
+function httpPost(url, body={}) {
+	const token = window.localStorage.getItem("key_credentials");
+
+	// if we don't have a token, we shouldn't be trying to call this function.
+	if (token === null) {
+		history.push(`/`)
+		return
+	}
+
 	return fetch(url, {
 		method: "POST",
-		headers: headers,
+		headers: {'Content-Type':'application/json', 'Authorization': 'JWT ' + token},
 		body: JSON.stringify(body)
 	}).then(response => {
 		if (response.status >= 400) {
+			// Logout if we got a token validation error
+			if (response.status === 403) {
+				window.localStorage.removeItem("key_credentials");
+				history.push(`/`)
+			}
 			return {'error':response.status}
 		} else {
 			return response.json()
@@ -14,13 +33,26 @@ function httpPost(url, body={}, headers={'Content-Type':'application/json'}) {
 	}); 
 }
 
-function httpPatch(url, body={}, headers={'Content-Type':'application/json'}) {
+function httpPatch(url, body={}) {
+	const token = window.localStorage.getItem("key_credentials");
+
+	// if we don't have a token, we shouldn't be trying to call this function.
+	if (token === null) {
+		history.push(`/`)
+		return
+	}
+
 	return fetch(url, {
 		method: "PATCH",
-		headers: headers,
+		headers: {'Content-Type':'application/json', 'Authorization': 'JWT ' + token},
 		body: JSON.stringify(body)
 	}).then(response => {
 		if (response.status >= 400) {
+			// Logout if we got a token validation error
+			if (response.status === 403) {
+				window.localStorage.removeItem("key_credentials");
+				history.push(`/`)
+			}
 			return {'error':response.status}
 		} else {
 			return response.json()
@@ -28,12 +60,24 @@ function httpPatch(url, body={}, headers={'Content-Type':'application/json'}) {
 	}); 
 }
 
-function httpGet(url, headers={'Content-Type':'application/json'}) {
+function httpGet(url) {
+	const token = window.localStorage.getItem("key_credentials");
+	// if we don't have a token, we shouldn't be trying to call this function.
+	if (token === null) {
+		history.push(`/`)
+		return
+	}
+
 	return fetch(url, {
 		method: "GET",
-		headers: headers,
+		headers: {'Content-Type':'application/json', 'Authorization': 'JWT ' + token},
 	}).then(response => {
 		if (response.status >= 400) {
+			// Logout if we got a token validation error
+			if (response.status === 403) {
+				window.localStorage.removeItem("key_credentials");
+				history.push(`/`)
+			}
 			return {'error':response.status}
 		} else {
 			return response.json()
@@ -41,13 +85,26 @@ function httpGet(url, headers={'Content-Type':'application/json'}) {
 	}); 
 }
 
-function httpDelete(url, body={}, headers={'Content-Type':'application/json'}) {
+function httpDelete(url, body={}) {
+	const token = window.localStorage.getItem("key_credentials");
+
+	// if we don't have a token, we shouldn't be trying to call this function.
+	if (token === null) {
+		history.push(`/`)
+		return
+	}
+
 	return fetch(url, {
 		method: "DELETE",
-		headers: headers,
+		headers: {'Content-Type':'application/json', 'Authorization': 'JWT ' + token},
 		body: JSON.stringify(body)
 	}).then(response => {
 		if (response.status >= 400) {
+			// Logout if we got a token validation error
+			if (response.status === 403) {
+				window.localStorage.removeItem("key_credentials");
+				history.push(`/`)
+			}
 			return {'error':response.status}
 		} else {
 			return {};
@@ -66,12 +123,9 @@ function compareActivities(a,b) {
 async function downloadAttendanceCSV(startDate, endDate=null) {
 	// Get data
 	const url = (startDate === endDate || endDate === null) ? `http://127.0.0.1:8000/api/attendance?day=${startDate}` : `http://127.0.0.1:8000/api/attendance?startdate=${startDate}&enddate=${endDate}`;
-	const rawAttendanceData = await fetch(url);
-	const attendanceData = await rawAttendanceData.json();
-	const rawStudentData = await fetch('http://127.0.0.1:8000/api/students');
-	const studentData = await rawStudentData.json();
-	const rawActivityData = await fetch(`http://127.0.0.1:8000/api/activities`);
-	const activityData = await rawActivityData.json();
+	const attendanceData = await httpGet(url);
+	const studentData = await httpGet('http://127.0.0.1:8000/api/students');
+	const activityData = await httpGet(`http://127.0.0.1:8000/api/activities`);
 	activityData.sort(compareActivities) // Make sure that our columns are in a consistent order
 
 	// Make sure we got the data we came for.
@@ -154,4 +208,24 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 	document.body.removeChild(element);
 }
 
-export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete }
+// Makes sure that we have a token, else redirects to login screen
+const checkCredentials = (Component) => {
+	const token = window.localStorage.getItem("key_credentials");
+	if (token === null) {
+		return <Redirect to='/'/>
+	} else {
+		return <Component/>;
+	}
+}
+
+// Only allows a component to render if the proper role is stored
+const withRole = (Component, role) => {
+	const storedRole = window.localStorage.getItem("role");
+	if (storedRole !== role) {
+		return null
+	} else {
+		return <Component/>;
+	}
+}
+
+export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole }

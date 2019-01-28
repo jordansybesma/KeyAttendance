@@ -13,13 +13,6 @@ class Students extends Component {
       suggestionsArray: [],
       id: null,
       profileData: {},
-      formData: {
-        'firstName': '',
-        'lastName': '',
-        'id': '',
-        'firstAttendance': '',
-        'numVisits': '',
-      }
     };
     this.edit = this.edit.bind(this);
     this.handler = this.handler.bind(this);
@@ -36,13 +29,6 @@ class Students extends Component {
           suggestionsArray: suggestionsArray,
           id: null,
           profileData: {},
-          formData: {
-            'firstName': '',
-            'lastName': '',
-            'id': '',
-            'firstAttendance': '',
-            'numVisits': '',
-          }
         };
       });
     } catch (e) {
@@ -87,14 +73,8 @@ class Students extends Component {
     try {
       const studentProfileJson = await httpGet('http://127.0.0.1:8000/api/students?id=' + state.id);
       state.profileData = studentProfileJson;
-      state.formData = {
-        'firstName': state.profileData.first_name,
-        'lasName': state.profileData.last_name,
-        'id': state.profileData.id,
-        'firstAttendance': state.profileData.first_attendance,
-        'numVisits': state.profileData.number_visits
-      }
-      
+      console.log(state.profileData);
+
       this.setState(function (previousState, currentProps) {
         return state;
       });
@@ -110,7 +90,7 @@ class Students extends Component {
   
   handleChange(evt, state) {
     var changedField = evt.target.id;
-    state.formData[changedField] = evt.target.value;
+    state.profileData[changedField] = evt.target.value;
     this.setState(function (previousState, currentProps) {
       return state;
     });
@@ -118,16 +98,7 @@ class Students extends Component {
   
   handleSubmit(evt, state) {
     evt.preventDefault()
-    httpPatch('http://127.0.0.1:8000/api/students/', {
-            'first_name': state.formData['firstName'],
-            'last_name': state.formData['lastName'],
-            'id': state.profileData.id,
-            'first_attendance': state.formData['firstAttendance'],
-            'number_visits': state.formData['numVisits']
-            }
-    );
-
-    state.profileData.last_name = state.formData['lastName'];
+    httpPatch('http://127.0.0.1:8000/api/students/', state.profileData);
 
     state.id = state.profileData.id;
     state.mode = 'display';
@@ -199,14 +170,14 @@ class Students extends Component {
 			  </div>
           <div className='col-md-8 top-bottom-padding'>
               <form className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
-              First Name: <input type="text" id="firstName" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
-              Last Name: <input type="text" id="lastName" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
+              First Name: <input type="text" id="first_name" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
+              Last Name: <input type="text" id="last_name" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Student ID: <input type="text" id="id" defaultValue="N/A" onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Birthday: <input type="text" defaultValue="xx/xx/xxxx" onChange={this.handleChange} /> <br/>
               Nickname: <input type="text" defaultValue="N/A" onChange={this.handleChange} /> <br/>
               Gender: <input type="text" defaultValue="N/A" onChange={this.handleChange} /> <br/>
-              First Attendance: <input type="text" id="firstAttendance" defaultValue={this.state.profileData.first_attendance} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
-              Number of Visits: <input type="text" id="numVisits" defaultValue={this.state.profileData.number_visits} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
+              First Attendance: <input type="text" id="first_attendance" defaultValue={this.state.profileData.first_attendance} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
+              Number of Visits: <input type="text" id="number_visits" defaultValue={this.state.profileData.number_visits} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               <input type="submit" value="Submit" />
               </form>
           </div>

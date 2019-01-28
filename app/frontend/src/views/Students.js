@@ -94,6 +94,7 @@ class Students extends Component {
         'firstAttendance': state.profileData.first_attendance,
         'numVisits': state.profileData.number_visits
       }
+      
       this.setState(function (previousState, currentProps) {
         return state;
       });
@@ -116,7 +117,7 @@ class Students extends Component {
   }
   
   handleSubmit(evt, state) {
-    // evt.preventDefault()
+    evt.preventDefault()
     httpPatch('http://127.0.0.1:8000/api/students/', {
             'first_name': state.formData['firstName'],
             'last_name': state.formData['lastName'],
@@ -125,7 +126,17 @@ class Students extends Component {
             'number_visits': state.formData['numVisits']
             }
     );
-    //this.setState({mode: 'display'})
+
+    state.profileData.last_name = state.formData['lastName'];
+
+    state.id = state.profileData.id;
+    state.mode = 'display';
+
+    this.setState(function (previousState, currentProps) {
+      return state;
+    });
+
+    // this.getStudentProfile(state);
   }
 
   render() {

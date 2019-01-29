@@ -4,10 +4,8 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ..serializers import UserSerializer, UserSerializerEdit
-from rest_framework.decorators import permission_classes
 
 class Users(APIView):
-    permission_classes = (permissions.IsAdminUser,)
 
     def validatePost(self, request):
         if not 'username' in request.data or not 'password' in request.data:

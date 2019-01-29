@@ -38,7 +38,7 @@ class GroupSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'last_login', 'is_active', 'id', 'groups',)
+        fields = ('username', 'first_name', 'last_name', 'last_login', 'is_active', 'id', 'groups')
 
 class UserSerializerEdit(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)

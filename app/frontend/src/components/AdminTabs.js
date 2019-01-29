@@ -34,7 +34,7 @@ class AdminTabs extends React.Component {
           <Tab eventKey={3} title="Attendance Columns">
             Tab 3 content
           </Tab>
-          <Tab eventKey={4} title="Profile Data">
+          <Tab eventKey={4} title="Student Profile Fields">
             Tab 4 content
           </Tab>
         </Tabs>

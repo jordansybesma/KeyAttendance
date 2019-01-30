@@ -16,8 +16,9 @@ class AddUserModal extends React.Component {
             is_active: true,
             error: false,
             backendError: false,
-            checkboxes: [],
-            show: false
+            radioOptions: [],
+            show: false,
+            selectedOption: ''
 		}
 		
 		this.cancel = this.cancel.bind(this);
@@ -25,18 +26,18 @@ class AddUserModal extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.validateInput = this.validateInput.bind(this);
         this.handleActiveCheckbox = this.handleActiveCheckbox.bind(this);
-        this.createCheckboxes = this.createCheckboxes.bind(this);
+        this.createRadioOptions = this.createRadioOptions.bind(this);
     }
     
     componentDidUpdate() {
         if (this.props.show !== this.state.show) {
-            const checkboxes = [];
+            const radioOptions = [];
             const role_names = Object.keys(this.props.role_ids);
             for (var index in role_names) {
-                checkboxes.push({label: role_names[index], checked: false})
+                radioOptions.push({label: role_names[index], checked: false})
             }
             this.setState({
-                checkboxes: checkboxes,
+                radioOptions: radioOptions,
                 show: this.props.show
             });
         }
@@ -74,6 +75,7 @@ class AddUserModal extends React.Component {
             last_name: '',
             password: '',
             confirmPassword: '',
+            selectedOption: '',
             is_active: true, 
             error: false, 
             backendError: false
@@ -90,13 +92,9 @@ class AddUserModal extends React.Component {
         } else {
             self.setState({error: false});
         }
-        const checkboxes = self.state.checkboxes;
+        const radioOptions = self.state.radioOptions;
         const groups = [];
-        for (var index in checkboxes) {
-            if (checkboxes[index].checked) {
-                groups.push(self.props.role_ids[checkboxes[index].label])
-            }
-        }
+        groups.push(self.props.role_ids[self.state.selectedOption])
         const body = {username: self.state.username,
             password: self.state.password,
             first_name: self.state.first_name,
@@ -113,28 +111,41 @@ class AddUserModal extends React.Component {
             })
     }
     
-    toggleCheckbox(index) {
-        const { checkboxes } = this.state;
-        checkboxes[index].checked = !checkboxes[index].checked;
+    toggleRadioOptions(index) {
+        const { radioOptions } = this.state;
+        let selectedOption = '';
+        if (!radioOptions[index].checked) {
+            selectedOption = radioOptions[index].label;
+            for (var j in radioOptions) {
+                if (j !== index) {
+                    radioOptions[j].checked = false;
+                } 
+            }
+        }
+        radioOptions[index].checked = !radioOptions[index].checked;
 
         this.setState({
-            checkboxes
+            selectedOption: selectedOption,
+            radioOptions: radioOptions
         });
     }
     
-    createCheckboxes() {
-        const { checkboxes } = this.state;
+    createRadioOptions() {
+        const { radioOptions } = this.state;
     
-        return checkboxes
-            .map((checkbox, index) =>
+        return radioOptions
+            .map((option, index) =>
                 <div key={index}>
                     <label>
                         <input
-                            type="checkbox"
-                            checked={checkbox.checked}
-                            onChange={this.toggleCheckbox.bind(this, index)}
+                            type="radio"
+                            name="userRoles"
+                            value={option.label}
+                            checked={option.checked}
+                            onChange={this.toggleRadioOptions.bind(this, index)}
+                            className="form-check-input"
                         />
-                        {checkbox.label}
+                        {option.label}
                     </label>
                 </div>
             );
@@ -205,7 +216,7 @@ class AddUserModal extends React.Component {
 								onChange={this.handleActiveCheckbox}
 							/>
                             <ControlLabel>User Roles</ControlLabel>
-                            {this.createCheckboxes()}
+                            {this.createRadioOptions()}
 							<FormControl.Feedback />
 						</FormGroup>
 					</form>

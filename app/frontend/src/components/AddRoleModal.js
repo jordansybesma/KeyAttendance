@@ -68,6 +68,7 @@ class AddRoleModal extends React.Component {
                 if ('error' in result) {
                     console.log(result);
                 } else {
+                    self.setState({name: ''});
                     self.props.onSubmit(result);
                 }
             })

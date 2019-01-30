@@ -106,6 +106,17 @@ class AddUserModal extends React.Component {
                 if ('error' in result) {
                     self.setState({backendError: true});
                 } else {
+                    self.setState({
+                        username: '',
+                        first_name: '',
+                        last_name: '',
+                        password: '',
+                        confirmPassword: '',
+                        selectedOption: '',
+                        is_active: true, 
+                        error: false, 
+                        backendError: false
+                    });
                     self.props.onSubmit(result);
                 }
             })

@@ -91,18 +91,22 @@ class Users extends React.Component {
         return group_names.join(', ');
     }
 
-    updateRow(user) {
+    updateRow(user, id = null) {
         let { users } = this.state;
-        users = users.filter(item => item.id !== user.id);
-        users.push({
-            'id': user.id,
-            'username': user.username,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'groups': user.groups,
-            'last_login': user.last_login,
-            'is_active': user.is_active
-        });
+        if (id !== null) {
+            users = users.filter(item => item.id !== id);
+        } else {
+            users = users.filter(item => item.id !== user.id);
+            users.push({
+                'id': user.id,
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'groups': user.groups,
+                'last_login': user.last_login,
+                'is_active': user.is_active
+            });
+        }
         this.setState({ users: users });
     }
 

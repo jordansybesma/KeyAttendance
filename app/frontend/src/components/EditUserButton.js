@@ -12,6 +12,7 @@ class EditUserButton extends React.Component {
         }
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.closeModalDelete = this.closeModalDelete.bind(this);
     }
 
     componentDidMount() {
@@ -32,6 +33,14 @@ class EditUserButton extends React.Component {
         this.setState({showUserModal: false});
     }
 
+    closeModalDelete(id=null) {
+        if (id !== null) {
+            const updateUser = () => this.props.CustomFunction(null, id);
+            updateUser();
+        }
+        this.setState({showUserModal: false});
+    }
+
     componentDidUpdate() {
         if (this.props.row['id'] !== this.state.row['id']) {
             this.setState({
@@ -43,7 +52,7 @@ class EditUserButton extends React.Component {
     render() {
         return(
             <div>
-                <EditUserModal show={this.state.showUserModal} row={this.props.row} onSubmit={this.closeModal}/>
+                <EditUserModal show={this.state.showUserModal} row={this.props.row} onDelete={this.closeModalDelete} onSubmit={this.closeModal}/>
                 <Button bsStyle="link" onClick={this.openModal}>Edit User</Button>
             </div>
         )

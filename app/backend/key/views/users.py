@@ -26,6 +26,15 @@ class Users(APIView):
             return False
         return True
 
+    def validateDelete(self, request):
+        if not 'id' in request.query_params:
+            return False
+        try:
+            User.objects.get(pk=request.query_params['id'])
+        except:
+            return False
+        return True
+
     def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
@@ -50,3 +59,13 @@ class Users(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        if not request.user.has_perm('key.delete_user'):
+            return Response({'error':'You are not authorized to delete users.'}, status='401')
+        if not self.validateDelete(request):
+            return Response({'error':'Invalid Parameters'}, status='400')
+
+        user = User.objects.get(pk=request.query_params['id'])
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

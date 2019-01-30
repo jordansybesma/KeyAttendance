@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, FormGroup, FormControl, ControlLabel, Alert } from 'react-bootstrap';
-import { httpPatch } from './Helpers';
+import { httpPatch, httpDelete } from './Helpers';
 
 class EditUserModal extends React.Component {
     
@@ -20,7 +20,8 @@ class EditUserModal extends React.Component {
             error: false,
             backendError: false
 		}
-		
+        
+        this.delete = this.delete.bind(this);
 		this.cancel = this.cancel.bind(this);
 		this.submit = this.submit.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -98,7 +99,21 @@ class EditUserModal extends React.Component {
             row: this.props.row,
         });
 		this.props.onSubmit();
-	}
+    }
+    
+    delete() {
+        const self = this;
+        httpDelete(`http://127.0.0.1:8000/api/users/?id=${self.state.row.id}`)
+        .then(function (result) {
+            if ('error' in result) {
+                self.setState({
+                    backendError: true
+                });
+            } else {
+                self.props.onDelete(self.state.row.id);
+            }
+        });
+    }
 
 	submit() {
         const self = this;
@@ -261,6 +276,7 @@ class EditUserModal extends React.Component {
                     {this.state.backendError && <Alert bsStyle='danger'>Server error. Please try again.</Alert>}
 					<Button onClick={this.cancel}>Cancel</Button>
 					<Button onClick={this.submit} bsStyle="primary">Save</Button>
+                    <Button onClick={() => { if (window.confirm('Are you sure you wish to delete this user?')) this.delete() } } bsStyle="danger">Delete</Button>
 				</Modal.Footer>
 			</Modal>
         )

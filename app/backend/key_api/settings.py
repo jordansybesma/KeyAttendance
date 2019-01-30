@@ -152,5 +152,5 @@ CORS_ORIGIN_ALLOW_ALL = True
 JWT_AUTH = {
     'JWT_PAYLOAD_HANDLER': 'key.custom_jwt.jwt_payload_handler',
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'key.custom_jwt.jwt_response_payload_handler',
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=18)
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=12)
 }

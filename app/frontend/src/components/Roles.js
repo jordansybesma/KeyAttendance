@@ -72,7 +72,9 @@ class Roles extends React.Component {
                    permission_ids: this.state.permission_ids
                }
            )
-        )
+        ).sort((a, b) => {
+            return a.name.localeCompare(b.name);
+        });
 
         const columns = [
             {

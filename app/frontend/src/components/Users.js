@@ -144,7 +144,9 @@ class Users extends React.Component {
                    role_ids: this.state.role_ids,
                }
            )
-        )
+        ).sort((a, b) => {
+            return a.username.localeCompare(b.username);
+        });
 
         const columns = [
             {

@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import Group
-from rest_framework import permissions, status
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ..serializers import GroupSerializer

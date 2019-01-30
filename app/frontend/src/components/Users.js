@@ -12,7 +12,7 @@ class Users extends React.Component {
             showUserModal: false,
             users: [],
             role_ids: {},
-            role_names: {}
+            role_names: {},
         };
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -32,10 +32,27 @@ class Users extends React.Component {
             this.setState({
                 users: users,
                 role_ids: role_ids, 
-                role_names: role_names
+                role_names: role_names,
             });
         } catch (e) {
             console.log(e);
+        }
+    }
+
+    async componentDidUpdate() {
+        if (this.props.refreshRoles) {
+            const roles = await httpGet('http://127.0.0.1:8000/api/groups');
+            const role_ids = {};
+            const role_names = {};
+            for (var index in roles) {
+                role_ids[roles[index].name] = roles[index].id;
+                role_names[roles[index].id] = roles[index].name;
+            }
+            this.setState({
+                role_ids: role_ids, 
+                role_names: role_names,
+            });
+            this.props.toggleRefreshRoles(false);
         }
     }
 

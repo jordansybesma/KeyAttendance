@@ -12,6 +12,7 @@ class EditRoleButton extends React.Component {
         }
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.closeModalDelete = this.closeModalDelete.bind(this);
     }
 
     componentDidMount() {
@@ -33,6 +34,14 @@ class EditRoleButton extends React.Component {
         this.setState({showModal: false, row: row});
     }
 
+    closeModalDelete(id=null) {
+        this.setState({showModal: false});
+        if (id !== null) {
+            const deleteRole = () => this.props.CustomFunction(id);
+            deleteRole();
+        }
+    }
+
     componentDidUpdate() {
         if (this.props.row['id'] !== this.state.row['id']) {
             this.setState({
@@ -44,7 +53,7 @@ class EditRoleButton extends React.Component {
     render() {
         return(
             <div>
-                <EditRoleModal show={this.state.showModal} row={this.props.row} onSubmit={this.closeModal}/>
+                <EditRoleModal show={this.state.showModal} row={this.props.row} onDelete={this.closeModalDelete} onSubmit={this.closeModal}/>
                 <Button bsStyle="link" onClick={this.openModal}>Edit User Role</Button>
             </div>
         )

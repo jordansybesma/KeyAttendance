@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, FormGroup, FormControl, ControlLabel, Alert } from 'react-bootstrap';
-import { httpPatch } from './Helpers';
+import { httpPatch, httpDelete } from './Helpers';
 
 class EditRoleModal extends React.Component {
     
@@ -12,7 +12,8 @@ class EditRoleModal extends React.Component {
             permission_ids: {},
             checkboxes: []
 		}
-		
+        
+        this.delete = this.delete.bind(this);
 		this.cancel = this.cancel.bind(this);
         this.submit = this.submit.bind(this);
         this.createCheckboxes = this.createCheckboxes.bind(this);
@@ -39,6 +40,21 @@ class EditRoleModal extends React.Component {
                 show: this.props.show
             });
         }
+    }
+
+      
+    delete() {
+        const self = this;
+        httpDelete(`http://127.0.0.1:8000/api/groups/?id=${self.state.row.id}`)
+        .then(function (result) {
+            if ('error' in result) {
+                self.setState({
+                    backendError: true
+                });
+            } else {
+                self.props.onDelete(self.state.row.id);
+            }
+        });
     }
 
 	cancel() {
@@ -98,7 +114,6 @@ class EditRoleModal extends React.Component {
     }
 
     render() {
-
         return(
             <Modal show={this.props.show}>
 				<Modal.Header>
@@ -119,6 +134,9 @@ class EditRoleModal extends React.Component {
 				<Modal.Footer>
 					<Button onClick={this.cancel}>Cancel</Button>
 					<Button onClick={this.submit} bsStyle="primary">Save</Button>
+                    <Button onClick={() => { if (window.confirm('Are you sure you wish to delete this role?')) this.delete() }}
+                        bsStyle="danger"
+                        disabled={this.state.row.name === "Admin"}>Delete</Button>
 				</Modal.Footer>
 			</Modal>
         )

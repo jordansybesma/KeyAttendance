@@ -110,7 +110,7 @@ class AddRoleModal extends React.Component {
 				<Modal.Body>
 					<form>
 						<FormGroup>
-							<ControlLabel>Username</ControlLabel>
+							<ControlLabel>Role Name</ControlLabel>
 							<FormControl
                                 type="text"
                                 name="name"

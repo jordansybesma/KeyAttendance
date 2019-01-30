@@ -8,14 +8,19 @@ class AdminTabs extends React.Component {
       super(props, context);
   
       this.handleSelect = this.handleSelect.bind(this);
-  
+      this.toggleRefreshRoles = this.toggleRefreshRoles.bind(this);
       this.state = {
+        refreshRoles: false,
         key: 1
       };
     }
   
     handleSelect(key) {
       this.setState({ key });
+    }
+
+    toggleRefreshRoles(boolean) {
+      this.setState({ refreshRoles: boolean });
     }
   
     render() {
@@ -26,10 +31,10 @@ class AdminTabs extends React.Component {
           id="admin-tabs"
         >
           <Tab eventKey={1} title="User Management">
-            <Users/>
+            <Users toggleRefreshRoles={this.toggleRefreshRoles} refreshRoles={this.state.refreshRoles}/>
           </Tab>
           <Tab eventKey={2} title="User Roles">
-            <Roles/>
+            <Roles toggleRefreshRoles={this.toggleRefreshRoles}/>
           </Tab>
           <Tab eventKey={3} title="Attendance Columns">
             Tab 3 content

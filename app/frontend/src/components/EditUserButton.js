@@ -34,11 +34,11 @@ class EditUserButton extends React.Component {
     }
 
     closeModalDelete(id=null) {
+        this.setState({showUserModal: false});
         if (id !== null) {
             const updateUser = () => this.props.CustomFunction(null, id);
             updateUser();
         }
-        this.setState({showUserModal: false});
     }
 
     componentDidUpdate() {

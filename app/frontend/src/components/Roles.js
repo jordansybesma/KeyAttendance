@@ -17,6 +17,7 @@ class Roles extends React.Component {
         };
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.deleteRole = this.deleteRole.bind(this);
     }
 
     async componentDidMount() {
@@ -47,8 +48,18 @@ class Roles extends React.Component {
             roles.push({
                 'id': role.id, 'name': role.name, 'permissions': role.permissions
             });
+            this.props.toggleRefreshRoles(true);
         }
         this.setState({showModal: false, roles: roles});
+    }
+
+    deleteRole(id = null) {
+        let { roles } = this.state;
+        if (id !== null) {
+            roles = roles.filter(item => item.id !== id);
+            this.props.toggleRefreshRoles(true);
+        }
+        this.setState({ roles: roles });
     }
 
     render() {
@@ -82,6 +93,7 @@ class Roles extends React.Component {
                 sortable: false, 
             }
         ];
+        const tableCallbacks = { edit: this.deleteRole }
         return (
             <div className="content">
                 <h1>User Roles</h1>
@@ -97,6 +109,7 @@ class Roles extends React.Component {
                         column = {'name'}
                         direction = {'descending'}
                         showPagination={ true }
+                        callbacks = { tableCallbacks }
                 />
             </div>
         );

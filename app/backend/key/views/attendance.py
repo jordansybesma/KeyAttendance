@@ -52,6 +52,8 @@ class Attendance(APIView):
         return True
 
     def get(self, request):
+        if not request.user.has_perm('key.view_attendanceitems'):
+            return Response({'error':'You are not authorized to view attendance items.'}, status='401')
         if not self.validateGet(request):
             return Response({'error':'Invalid Parameters'}, status='400')
 
@@ -77,6 +79,8 @@ class Attendance(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request):
+        if not request.user.has_perm('key.add_attendanceitems'):
+            return Response({'error':'You are not authorized to create attendance items.'}, status='401')
         if not self.validatePost(request):
             return Response({'error':'Invalid Parameters'}, status='400')
         

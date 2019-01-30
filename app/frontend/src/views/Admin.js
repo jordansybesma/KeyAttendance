@@ -5,7 +5,8 @@ import AdminTabs from '../components/AdminTabs';
 class Admin extends React.Component {
 
     render() {
-        if (window.localStorage.getItem("isAdmin") === "true") {
+        let permissions = window.localStorage.getItem('permissions').split(',')
+        if (permissions.indexOf('view_user') >= 0 || permissions.indexOf('view_group') >= 0) {
             return (
                 <div className='content'>
                     <AdminTabs />

@@ -127,7 +127,7 @@ function decodeToken(token) {
 
 function logout() {
 	window.localStorage.removeItem("key_credentials");
-	window.localStorage.removeItem("isAdmin");
+	window.localStorage.removeItem("permissions");
 }
 
 async function downloadAttendanceCSV(startDate, endDate=null) {

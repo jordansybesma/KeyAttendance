@@ -130,7 +130,7 @@ class EditUserModal extends React.Component {
         httpPatch('http://127.0.0.1:8000/api/users/', body)
             .then(function (result) {
                 if ('error' in result) {
-                    this.setState({
+                    self.setState({
                         backendError: true
                     });
                 } else {

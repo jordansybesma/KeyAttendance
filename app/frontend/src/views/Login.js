@@ -33,7 +33,7 @@ class Login extends React.Component {
 	onPasswordChange(e) {
 		this.setState({password: e.target.value})
     }
-    
+
     submit(e) {
         e.preventDefault();
         // Submit username and password to backend
@@ -49,9 +49,8 @@ class Login extends React.Component {
                 response.json().then(result => {
                     // Store token in browser
                     window.localStorage.setItem("key_credentials", result.token);
-                    // Store permissions / role in browser
-                    let tokenData = decodeToken(result.token)
-                    window.localStorage.setItem("isAdmin", tokenData.is_staff);
+                    // Store permissions in browser
+                    window.localStorage.setItem("permissions", result.permissions);
                     // Flag that we've logged in before
                     window.localStorage.setItem("loggedIn", 'true');
                     this.props.history.push(`/attendance`);

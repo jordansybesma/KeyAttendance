@@ -106,6 +106,7 @@ class Students(models.Model):
     nickname = models.TextField(blank=True, null=True)
     gender = models.TextField(blank=True, null=True)
     student_id = models.TextField(blank=True, null=True)
+    photo = models.ImageField(blank=True, null=True, upload_to='profile_photos/')
 
     class Meta:
         managed = True

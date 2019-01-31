@@ -32,7 +32,6 @@ class Students extends Component {
           profileData: {},
         };
       });
-      console.log(this.state.formData);
     } catch (e) {
       console.log(e);
     }
@@ -99,6 +98,21 @@ class Students extends Component {
   handleSubmit(evt, state) {
     evt.preventDefault()
     httpPatch('http://127.0.0.1:8000/api/students/', state.profileData);
+
+    // Ensure that the autocomplete component has an updated copy of the profile
+    var entryFound = false;
+    var entryIndex = 0;
+    while (entryFound === false) {
+      if (state.suggestionsArray[entryIndex].id === state.profileData['id']) {
+        state.suggestionsArray[entryIndex] = {firstName: state.profileData['first_name'],
+                                              id: state.profileData['id'],
+                                              lastName1: state.profileData['last_name'],
+                                              lastName2: ''};
+        entryFound = true
+      } else {
+        entryIndex++;
+      }
+    }
 
     state.id = state.profileData.id;
     state.mode = 'display';

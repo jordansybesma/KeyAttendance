@@ -22,7 +22,7 @@ import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import { scaleLinear } from 'd3-scale';
 
-import { XYPlot, XAxis, YAxis, HeatmapSeries, LabelSeries } from 'react-vis';
+import { XYPlot, XAxis, YAxis, HeatmapSeries, LabelSeries, MarkSeries } from 'react-vis';
 import continuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
 
 class Heatmap extends Component {
@@ -32,122 +32,44 @@ class Heatmap extends Component {
   };
 
   static defaultProps = {
-    heatMapJson: [],
+    data: [],
+
   };
 
   constructor(props) {
     super(props);
 
     this.state = {
-      heatMapJson: props.heatMapJson
+      data: props.data
     };
   }
 
-  sameDay(d1, d2) {
-    return d1.getFullYear() === d2.getFullYear() &&
-      d1.getMonth() === d2.getMonth() &&
-      d1.getDate() === d2.getDate();
-  }
-
-  compareTime(time1, time2) {
-    return new Date(time1) > new Date(time2); // true if time1 is later
-  }
-
-  formatData() {
-    try {
-      //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
-      var studentId = "906";
-      var startDateString = "2018-01-28";
-      var endDateString = "2018-03-03";
-      var startDate = new Date(startDateString.replace(/-/g, '\/'));
-      var endDate = new Date(endDateString.replace(/-/g, '\/'));
-      var dateToCompare = startDate;
-      var currEntryDate;
-      var currIdx = 0;
-      var heatMapJson = this.state.heatMapJson;
-      console.log(heatMapJson);
-
-      //Add dummy date entries for missing dates (dates with no engagements) to json btwn start and end date
-      //dateToCompare always incremented by 1
-      while (this.compareTime(dateToCompare, endDate) == false) {
-        //if reached the end of json but there's still dates to fill in up to the end date, stay on end entry
-        if (currIdx > heatMapJson.length - 1) {
-          currIdx = heatMapJson.length - 1;
-        }
-
-        currEntryDate = new Date(heatMapJson[currIdx]["date"].replace(/-/g, '\/'));
-        //identified missing date, so add dummy date entry for missing date
-        if (this.sameDay(dateToCompare, currEntryDate) == false) {
-          var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "daily_visits": 0 };
-          //add entry in place if not at end of json OR final date entry has not been added yet/surpassed
-          //else add to very end of json 
-          if (currIdx != heatMapJson.length - 1 || this.compareTime(currEntryDate, dateToCompare)) {
-            heatMapJson.splice(currIdx, 0, dateEntryZeroEngagements);
-          } else {
-            heatMapJson.splice(currIdx + 1, 0, dateEntryZeroEngagements);
-          }
-        }
-        dateToCompare.setDate(dateToCompare.getDate() + 1);
-        currIdx++;
-      }
-
-      //Time to convert updated JSON with missing dates added in into
-      //a list called processedData of {"x": integer day of week, "y": integer week # of month, "color": int num engagements per day} objs
-      var processedData = [];
-      var dayOfWeek, weekNum, dayEntry;
-      var currDateObj;
-      var mdyArray;
-      var m, d, y;
-      var strDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      for (var i = 0; i < heatMapJson.length; i++) {
-        currDateObj = new Date(heatMapJson[i]['date'].replace(/-/g, '\/'));
-        dayOfWeek = strDays[currDateObj.getDay()];
-        weekNum = Math.floor(i / 7);
-        mdyArray = heatMapJson[i]['date'].split(/\s*\-\s*/g);
-        y = mdyArray[0];
-        m = mdyArray[1];
-        d = mdyArray[2];
-        dayEntry = { "x": dayOfWeek, "y": weekNum, "color": heatMapJson[i]['daily_visits']};
-        processedData.push(dayEntry);
-      }
-    }
-    catch (e) {
-      console.log(e);
-    }
-
-    return processedData;
-  }
-
   render() {    
-    var data = this.formatData();
     return (
       <XYPlot
         width={500}
         height={300}
         xType="ordinal"
-        yDomain={[5, -1]} >
-        
-		<XAxis 
-		  tickValues={['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']} 
-		  tickLabelAngle={-45} />
-        
-		<HeatmapSeries
-          className="heatmap-series-example"
-          colorRange={["white", "orange"]}
-          data={data}
-          style={{
-            stroke: 'white',
-            strokeWidth: '2px',
-            rectStyle: {
-              rx: 10,
-              ry: 10
-            }
-          }} />
+      >
 
-        <LabelSeries
-          animation
-          allowOffsetToBeReversed
-          data={this.state.heatMapJson} />
+        <XAxis/>
+        <YAxis/>
+        <MarkSeries data={this.state.data}/>
+           
+        <HeatmapSeries
+              className="heatmap-series-example"
+              colorRange={["white", "orange"]}
+              data={this.state.data}
+              style={{
+                stroke: 'white',
+                strokeWidth: '2px',
+                rectStyle: {
+                  rx: 10,
+                  ry: 10
+                }
+              }} />
+
+
 
       </XYPlot>
     );

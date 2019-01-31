@@ -31,6 +31,10 @@ class Reports(APIView):
             if 'startdate' in request.query_params and 'enddate' in request.query_params:
                 if isValidDateTime(request.query_params['startdate']) and isValidDateTime(request.query_params['enddate']):
                     validateBool = True
+        elif(vizType == "byDayAttendance"):
+            if 'startdate' in request.query_params and 'enddate' in request.query_params:
+                if isValidDateTime(request.query_params['startdate']) and isValidDateTime(request.query_params['enddate']):
+                    validateBool = True
         elif(vizType == "alternativeVizType"):
             if 'startdate' in request.query_params and 'enddate' in request.query_params:
                 if isValidDateTime(request.query_params['startdate']) and isValidDateTime(request.query_params['enddate']):
@@ -57,6 +61,11 @@ class Reports(APIView):
             startdate = request.query_params['startdate']
             enddate = request.query_params['enddate']
             return self.retrievebyHourAttendanceData(startdate, enddate)
+
+        elif(vizType == "byDayAttendance"):
+            startdate = request.query_params['startdate']
+            enddate = request.query_params['enddate']
+            return self.retrievebyDayAttendanceData(startdate, enddate)
             
         elif(vizType == "alternativeVizType"):
             startdate = request.query_params['startdate']
@@ -101,8 +110,15 @@ class Reports(APIView):
 
         # Sort the resulted list by date then time, ascending
         toReturn = sorted(toReturn, key=lambda item: (item['date'], item['time']))
-        
         return Response(toReturn, content_type='application/json')
+
+    def retrievebyDayAttendanceData(self, startdate, enddate):
+        allAttendanceItems = ReportsModel.objects.all().values("date")
+        allAttendanceItems = allAttendanceItems.order_by('date')
+        allAttendanceItems =  allAttendanceItems.filter(date__range=[startdate, enddate])
+        allAttendanceItems =  allAttendanceItems.values('date').annotate(daily_visits = Count('student_id'))
+        serializer = ReportSerializer( allAttendanceItems, many=True)
+        return Response(serializer.data, content_type='application/json')
     
     #Test method to represent an alternative visualization type
     def retrieveAttendanceDataInDateRange(self, startdate, enddate):

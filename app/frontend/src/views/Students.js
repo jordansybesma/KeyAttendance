@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
 import { Label } from 'react-bootstrap';
-import LabeledHeatmap from '../components/Heatmap';
+// import LabeledHeatmap from '../components/Heatmap';
 
 class Students extends Component {
 
@@ -14,7 +14,9 @@ class Students extends Component {
       suggestionsArray: [],
       id: null,
       profileData: {},
-      heatMapJson: {}
+      heatMapJson: {},
+      startDateString: "",
+      endDateString: ""
     };
     this.handler = this.handler.bind(this);
   }
@@ -77,18 +79,17 @@ class Students extends Component {
   // days ago. E.g. if daysAgo equals 3 the date string will be the date 
   // three days ago. If daysAgo = 0 teh string is today's date.
   makeDate(daysAgo) {
-	if (daysAgo < 0) {
-		console.error("Expected daysAgo to be a value >= 0 but got ", daysAgo);
-		daysAgo = -daysAgo;
-	}
+    if (daysAgo < 0) {
+      console.error("Expected daysAgo to be a value >= 0 but got ", daysAgo);
+      daysAgo = -daysAgo;
+    }
 
-	var earlierDate = new Date();
-	earlierDate.setDate(-daysAgo);
+    var earlierDate = new Date();
+    earlierDate.setDate(earlierDate.getDate() - daysAgo);
+    var dateStringWithTime = earlierDate.toISOString();
+    var dateString = dateStringWithTime.replace(/T(\w|\W)*/, '');
 
-	var dateStringWithTime = earlierDate.toISOString();
-	var dateString = dateStringWithTime.replace(/T(\w|\W)*/, '');
-
-	return dateString;
+    return dateString;
   }
 
   async getStudentProfile(state) {
@@ -96,15 +97,19 @@ class Students extends Component {
       const studentProfileData = await fetch('http://127.0.0.1:8000/api/students/' + state.id);
       const studentProfileJson = await studentProfileData.json();
       state.profileData = studentProfileJson;
-
       var startDateString = this.makeDate(30);
+      state.startDateString = startDateString;
 	  var today = new Date();
       var endDateString = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+      state.endDateString = endDateString;
 	  
 	  // const heatMapData = await fetch('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + "906" + '&startdate=' + "2018-01-28" + '&enddate=' + "2018-03-03");
-	  const heatMapData = await fetch('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
+    const heatMapData = await fetch('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
+    console.log(state.id, startDateString, endDateString);
       const heatMapJson = await heatMapData.json();
-	  state.heatMapJson = heatMapJson;
+      console.log("json: ", heatMapJson);
+    state.heatMapJson = heatMapJson;
+    console.log("json added to state: ", state.heatMapJson);
 
       this.setState(function (previousState, currentProps) {
         return state;
@@ -113,6 +118,80 @@ class Students extends Component {
     catch (e) {
       console.log(e);
     }
+  }
+
+  sameDay(d1, d2) {
+    return d1.getFullYear() === d2.getFullYear() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getDate() === d2.getDate();
+  }
+
+  compareTime(time1, time2) {
+    return new Date(time1) > new Date(time2); // true if time1 is later
+  }
+
+  formatData(state) {
+    //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
+    var studentId = state.id;
+    var startDateString = state.startDateString;
+    var endDateString = state.endDateString;
+   // var startDateString = "2018-01-03";
+    //var endDateString = "2018-01-31";
+    var startDate = new Date(startDateString.replace(/-/g, '\/'));
+    var endDate = new Date(endDateString.replace(/-/g, '\/'));
+    var dateToCompare = startDate;
+    var currEntryDate;
+    var currIdx = 0;
+    var heatMapJson = this.state.heatMapJson;
+
+    if(heatMapJson.length == 0){
+      var firstEntry = {"date": startDateString, "daily_visits": 0}
+      heatMapJson.push(firstEntry);
+    }
+    //Add dummy date entries for missing dates (dates with no engagements) to json btwn start and end date
+    //dateToCompare always incremented by 1
+    while (this.compareTime(dateToCompare, endDate) == false) {
+      //if reached the end of json but there's still dates to fill in up to the end date, stay on end entry
+      if (currIdx > heatMapJson.length - 1) {
+        currIdx = heatMapJson.length - 1;
+      }
+      currEntryDate = new Date(heatMapJson[currIdx]["date"].replace(/-/g, '\/'));
+      //identified missing date, so add dummy date entry for missing date
+      if (this.sameDay(dateToCompare, currEntryDate) == false) {
+        var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "daily_visits": 0 };
+        //add entry in place if not at end of json OR final date entry has not been added yet/surpassed
+        //else add to very end of json 
+        if (currIdx != heatMapJson.length - 1 || this.compareTime(currEntryDate, dateToCompare)) {
+          heatMapJson.splice(currIdx, 0, dateEntryZeroEngagements);
+        } else {
+          heatMapJson.splice(currIdx + 1, 0, dateEntryZeroEngagements);
+        }
+      }
+      dateToCompare.setDate(dateToCompare.getDate() + 1);
+      currIdx++;
+    }
+
+    //Time to convert updated JSON with missing dates added in into
+    //a list called processedData of {"x": integer day of week, "y": integer week # of month, "color": int num engagements per day} objs
+    var processedData = [];
+    var dayOfWeek, weekNum, dayEntry;
+    var currDateObj;
+    var mdyArray;
+    var m, d, y;
+    var strDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    for (var i = 0; i < heatMapJson.length; i++) {
+      currDateObj = new Date(heatMapJson[i]['date'].replace(/-/g, '\/'));
+      dayOfWeek = strDays[currDateObj.getDay()];
+      weekNum = Math.floor(i / 7);
+      mdyArray = heatMapJson[i]['date'].split(/\s*\-\s*/g);
+      y = mdyArray[0];
+      m = mdyArray[1];
+      d = mdyArray[2];
+      dayEntry = { "x": dayOfWeek, "y": weekNum+1, "color": heatMapJson[i]['daily_visits']};
+      processedData.push(dayEntry);
+    }
+    console.log("processed data: ", processedData);
+    return processedData;
   }
 
   render() {
@@ -157,8 +236,8 @@ class Students extends Component {
 			  </div>
         	</div>
 		  </div>
-      <LabeledHeatmap 
-        heatMapJson = {this.state.heatMapJson}/>
+      <Heatmap 
+        data = {this.formatData(this.state)}/>
 		</div>
       );
     }

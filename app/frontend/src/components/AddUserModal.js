@@ -45,7 +45,9 @@ class AddUserModal extends React.Component {
 
 	validateInput() {
 		const { username, password, confirmPassword } = this.state;
-		if (username.length > 0 && password.length > 0 && password === confirmPassword) {
+        const regex = /^[a-z0-9\.\@\+\-\_]+$/i;
+        if (username.length > 0 && password.length > 0 && password === confirmPassword 
+            && regex.test(username) && this.state.selectedOption) {
 			return 'success';
 		} else if (username.length === 0 && password.length === 0 && confirmPassword.length === 0) {
 			return null;
@@ -92,7 +94,6 @@ class AddUserModal extends React.Component {
         } else {
             self.setState({error: false});
         }
-        const radioOptions = self.state.radioOptions;
         const groups = [];
         groups.push(self.props.role_ids[self.state.selectedOption])
         const body = {username: self.state.username,

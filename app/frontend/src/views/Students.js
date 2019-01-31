@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import { Label } from 'react-bootstrap';
 import { httpGet, httpPatch } from '../components/Helpers';
+import blankPic from '../images/blank_profile_pic.jpg'
 
 class Students extends Component {
 
@@ -89,8 +90,6 @@ class Students extends Component {
   
   handleChange(evt, state) {
     var changedField = evt.target.id;
-    console.log(evt.target.value);
-    console.log(evt.target.id);
     state.profileData[changedField] = evt.target.value;
     this.setState(function (previousState, currentProps) {
       return state;
@@ -139,6 +138,9 @@ class Students extends Component {
 				  />
 			  </div>
           <div className='col-md-8 top-bottom-padding'>
+                <img id="studentPhoto" src={blankPic} width="196" height="196"/>
+                <p> Upload Student Profile Photo </p>
+                <input id="upload-button" type="file" accept="image/*" name="file"/><br/>
 				Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br/>
                 Student ID: {this.state.profileData.student_id} <br/>
                 Birthday: {this.state.profileData.birthday} <br/>
@@ -175,7 +177,7 @@ class Students extends Component {
               Birthday: <input type="date" id="birthday" defaultValue={this.state.profileData.birthday} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Nickname: <input type="text" id="nickname" defaultValue={this.state.profileData.nickname} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Gender: <input type="text" id="gender" defaultValue={this.state.profileData.gender} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
-              First Attendance: <input type="text" id="firstAttendance" defaultValue={this.state.profileData.first_attendance} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
+              First Attendance: <input type="date" id="firstAttendance" defaultValue={this.state.profileData.first_attendance} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Number of Visits: <input type="text" id="numVisits" defaultValue={this.state.profileData.number_visits} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               <input type="submit" value="Submit" />
               </form>

@@ -34,7 +34,7 @@ class Attendance extends React.Component {
         try {
             const today = new Date();
             const students = await httpGet(`http://${domain}/api/students/`);
-            const attendanceItems = await httpGet(`http:/${domain}/api/attendance/?day=${`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`}`);
+            const attendanceItems = await httpGet(`http://${domain}/api/attendance/?day=${`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`}`);
             const activities = await httpGet(`http://${domain}/api/activities/`);
             activities.sort(compareActivities)
             const suggestions = this.makeSuggestionsArray(students);

@@ -49,23 +49,24 @@ class Heatmap extends Component {
       <XYPlot
         width={500}
         height={300}
+        margin={{top: 30}}
         xType="ordinal"
       >
 
-        <XAxis/>
-        <YAxis/>
+        <XAxis orientation='top'/>
+        <YAxis orientation='left'/>
         <MarkSeries data={this.state.data}/>
            
         <HeatmapSeries
               className="heatmap-series-example"
-              colorRange={["white", "orange"]}
+              colorRange={["#fffaf0", "orange"]}
               data={this.state.data}
               style={{
-                stroke: 'white',
-                strokeWidth: '2px',
+                stroke: 'black',
+                strokeWidth: '1px',
                 rectStyle: {
-                  rx: 10,
-                  ry: 10
+                  rx: 1,
+                  ry: 1
                 }
               }} />
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import Heatmap from '../components/Heatmap';
 import continuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
+import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString} from '../components/helpers';
 
 class Reports extends React.Component {
 
@@ -18,14 +19,23 @@ class Reports extends React.Component {
     
       async componentDidMount() {
         try {
-          //hardcoded date range for testing, for now
-          var startDateStringWeek = "2018-02-08";
-          var endDateStringWeek = "2018-02-15";
+          //hardcoded date range for testing
+          //var startDateStringWeek = "2018-02-08";
+          //var endDateStringWeek = "2018-02-15";
+          //Make timerange for last 7 days to display for weekly aggregation (broken down by hour of day)
+          var today = getEarlierDate(0);
+          var startDateWeek = getEarlierDate(6);
+          var startDateStringWeek = dateToString(startDateWeek);
+          var endDateStringWeek = dateToString(today);
           const byHourAttendanceData = await fetch('http://127.0.0.1:8000/api/reports/byHourAttendance/?startdate=' + startDateStringWeek + '&enddate=' + endDateStringWeek);
           var byHourJson = await byHourAttendanceData.json();
           console.log("byHour: ", byHourJson);
-          var startDateStringYear = "2018-01-28";
-          var endDateStringYear = "2019-01-28";
+          //Make timerange for last 365 days, extending back to the preceeding sunday and forward to the following sat to display yearly aggregation (broken down by day)
+          var startDateYear= getEarlierDate(365);
+          startDateYear = getPrevSunday(startDateYear);
+          var startDateStringYear = dateToString(startDateYear);
+          var endDateYear = getNextSaturday(today);
+          var endDateStringYear = dateToString(endDateYear);
           const byDayAttendanceData = await fetch('http://127.0.0.1:8000/api/reports/byDayAttendance/?startdate=' + startDateStringYear + '&enddate=' + endDateStringYear);
           var byDayJson = await byDayAttendanceData.json();
           console.log("byDay: ", byDayJson);

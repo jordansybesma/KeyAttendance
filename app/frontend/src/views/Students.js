@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
 import { Label } from 'react-bootstrap';
-// import LabeledHeatmap from '../components/Heatmap';
+import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString} from '../components/helpers';
 
 class Students extends Component {
 
@@ -75,35 +75,22 @@ class Students extends Component {
     this.getStudentProfile(state);
   }
 
-  // Creates a date string of the form yyyy-mm-dd for the date "daysAgo"
-  // days ago. E.g. if daysAgo equals 3 the date string will be the date 
-  // three days ago. If daysAgo = 0 teh string is today's date.
-  makeDate(daysAgo) {
-    if (daysAgo < 0) {
-      console.error("Expected daysAgo to be a value >= 0 but got ", daysAgo);
-      daysAgo = -daysAgo;
-    }
-
-    var earlierDate = new Date();
-    earlierDate.setDate(earlierDate.getDate() - daysAgo);
-    var dateStringWithTime = earlierDate.toISOString();
-    var dateString = dateStringWithTime.replace(/T(\w|\W)*/, '');
-
-    return dateString;
-  }
-
   async getStudentProfile(state) {
     try {
       const studentProfileData = await fetch('http://127.0.0.1:8000/api/students/' + state.id);
       const studentProfileJson = await studentProfileData.json();
       state.profileData = studentProfileJson;
-      var startDateString = this.makeDate(30);
+      var startDate= getEarlierDate(30);
+      startDate = getPrevSunday(startDate);
+      var startDateString = dateToString(startDate);
+      //var startDateString = "2018-01-28";
       state.startDateString = startDateString;
-	  var today = new Date();
-      var endDateString = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+      var today = getEarlierDate(0);
+      var endDate = getNextSaturday(today);
+      var endDateString = dateToString(endDate);
+      //var endDateString = "2018-03-03";
       state.endDateString = endDateString;
 	  
-	  // const heatMapData = await fetch('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + "906" + '&startdate=' + "2018-01-28" + '&enddate=' + "2018-03-03");
     const heatMapData = await fetch('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
     console.log(state.id, startDateString, endDateString);
       const heatMapJson = await heatMapData.json();

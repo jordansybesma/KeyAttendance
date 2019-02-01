@@ -1,7 +1,7 @@
 import React from 'react';
 import Checkbox from'./Checkbox.js'
 import { Label } from 'react-bootstrap';
-import { httpDelete, httpPost } from './Helpers';
+import { httpDelete, httpPost, domain } from './Helpers';
 
 class Checkboxes extends React.Component {
 
@@ -48,7 +48,7 @@ class Checkboxes extends React.Component {
         if (!isChecked) {
             // Add attendanceItem to database
             const today = new Date()
-            httpPost('http://127.0.0.1:8000/api/attendance/', {
+            httpPost(`http://${domain}/api/attendance/`, {
                 "student_id": studentID,
                 "activity_id": activityID,
                 "date":`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
@@ -69,7 +69,7 @@ class Checkboxes extends React.Component {
                 // We're trying to uncheck the last checkbox
                 // show some sort of visual error??
             } else {
-                httpDelete(`http://127.0.0.1:8000/api/attendance?key=${attendanceItemID}`).then(function(result) {
+                httpDelete(`http://${domain}/api/attendance?key=${attendanceItemID}`).then(function(result) {
                     if ('error' in result) {
                         self.setState({error: result.error})
                     } else {

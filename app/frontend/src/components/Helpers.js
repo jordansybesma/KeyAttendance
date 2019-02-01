@@ -6,6 +6,8 @@ import createBrowserHistory from 'history/createBrowserHistory';
 
 const history = createBrowserHistory();
 
+const domain = 'ec2-3-16-129-180.us-east-2.compute.amazonaws.com' // 127.0.0.1:8000
+
 function httpPost(url, body={}) {
 	const token = window.localStorage.getItem("key_credentials");
 
@@ -122,10 +124,10 @@ function compareActivities(a,b) {
 
 async function downloadAttendanceCSV(startDate, endDate=null) {
 	// Get data
-	const url = (startDate === endDate || endDate === null) ? `http://127.0.0.1:8000/api/attendance/?day=${startDate}` : `http://127.0.0.1:8000/api/attendance/?startdate=${startDate}&enddate=${endDate}`;
+	const url = (startDate === endDate || endDate === null) ? `http://${domain}/api/attendance/?day=${startDate}` : `http://${domain}/api/attendance/?startdate=${startDate}&enddate=${endDate}`;
 	const attendanceData = await httpGet(url);
-	const studentData = await httpGet('http://127.0.0.1:8000/api/students/');
-	const activityData = await httpGet(`http://127.0.0.1:8000/api/activities/`);
+	const studentData = await httpGet(`http://${domain}/api/students/`);
+	const activityData = await httpGet(`http://${domain}/api/activities/`);
 	activityData.sort(compareActivities) // Make sure that our columns are in a consistent order
 
 	// Make sure we got the data we came for.
@@ -228,4 +230,4 @@ const withRole = (Component, role) => {
 	}
 }
 
-export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole }
+export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, domain }

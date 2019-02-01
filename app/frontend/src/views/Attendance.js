@@ -4,7 +4,7 @@ import Checkboxes from '../components/Checkboxes';
 import AttendanceOptions from '../components/AttendanceOptions';
 import AddStudentModal from '../components/AddStudentModal';
 import Autocomplete from "../components/Autocomplete";
-import { httpPost, httpGet } from '../components/Helpers';
+import { httpPost, httpGet, domain } from '../components/Helpers';
 import { Button, ButtonToolbar } from 'react-bootstrap';
 import { downloadAttendanceCSV, compareActivities } from '../components/Helpers';
 
@@ -33,9 +33,9 @@ class Attendance extends React.Component {
     async componentDidMount() {
         try {
             const today = new Date();
-            const students = await httpGet('http://127.0.0.1:8000/api/students/');
-            const attendanceItems = await httpGet(`http://127.0.0.1:8000/api/attendance/?day=${`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`}`);
-            const activities = await httpGet('http://127.0.0.1:8000/api/activities/');
+            const students = await httpGet(`http://${domain}/api/students/`);
+            const attendanceItems = await httpGet(`http:/${domain}/api/attendance/?day=${`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`}`);
+            const activities = await httpGet(`http://${domain}/api/activities/`);
             activities.sort(compareActivities)
             const suggestions = this.makeSuggestionsArray(students);
 
@@ -110,7 +110,7 @@ class Attendance extends React.Component {
             }
         }
 
-        httpPost('http://127.0.0.1:8000/api/attendance/', {
+        httpPost(`http://${domain}/api/attendance/`, {
             "student_id": studentID,
             "activity_id": 7, // Key    
             "date":`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,

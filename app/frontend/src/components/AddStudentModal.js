@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
-import { httpPost } from './Helpers';
+import { httpPost, domain } from './Helpers';
 
 class AddStudentModal extends React.Component {
     
@@ -43,7 +43,7 @@ class AddStudentModal extends React.Component {
 
 	submit() {
 		const self = this;
-		httpPost('http://127.0.0.1:8000/api/students/', {
+		httpPost(`http://${domain}/api/students/`, {
 			first_name: this.state.firstName,
 			last_name: this.state.lastName
 		}).then(function(result) {

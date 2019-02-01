@@ -122,10 +122,10 @@ function compareActivities(a,b) {
 
 async function downloadAttendanceCSV(startDate, endDate=null) {
 	// Get data
-	const url = (startDate === endDate || endDate === null) ? `http://127.0.0.1:8000/api/attendance?day=${startDate}` : `http://127.0.0.1:8000/api/attendance?startdate=${startDate}&enddate=${endDate}`;
+	const url = (startDate === endDate || endDate === null) ? `http://127.0.0.1:8000/api/attendance/?day=${startDate}` : `http://127.0.0.1:8000/api/attendance/?startdate=${startDate}&enddate=${endDate}`;
 	const attendanceData = await httpGet(url);
-	const studentData = await httpGet('http://127.0.0.1:8000/api/students');
-	const activityData = await httpGet(`http://127.0.0.1:8000/api/activities`);
+	const studentData = await httpGet('http://127.0.0.1:8000/api/students/');
+	const activityData = await httpGet(`http://127.0.0.1:8000/api/activities/`);
 	activityData.sort(compareActivities) // Make sure that our columns are in a consistent order
 
 	// Make sure we got the data we came for.

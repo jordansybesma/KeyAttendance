@@ -19,7 +19,7 @@ class Students extends Component {
 
   async componentDidMount() {
     try {
-      var studentsJson = await httpGet('http://127.0.0.1:8000/api/students');
+      var studentsJson = await httpGet('http://127.0.0.1:8000/api/students/');
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
       this.setState(function (previousState, currentProps) {
         return {
@@ -70,7 +70,7 @@ class Students extends Component {
 
   async getStudentProfile(state) {
     try {
-      const studentProfileJson = await httpGet('http://127.0.0.1:8000/api/students?id=' + state.id);
+      const studentProfileJson = await httpGet('http://127.0.0.1:8000/api/students/?id=' + state.id);
       state.profileData = studentProfileJson;
       this.setState(function (previousState, currentProps) {
         return state;

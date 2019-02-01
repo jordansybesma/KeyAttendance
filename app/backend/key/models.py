@@ -102,7 +102,27 @@ class Students(models.Model):
     id = models.IntegerField(blank=True, primary_key=True)
     first_attendance = models.DateField(blank=True, null=True)
     number_visits = models.IntegerField(blank=True, null=True)
+    student_key = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True
         db_table = 'students'
+
+class StudentSuggestions(models.Model):
+    student_id = models.IntegerField(blank=True, null=True)
+    match_name = models.TextField(blank=True, null=True)
+    match_key = models.TextField(blank=True, primary_key=True)
+
+    class Meta:
+        managed = True
+        db_table = 'studentsuggestions'
+
+# Stores student names and student keys imported from CitySpan
+class CitySpanStudents(models.Model):
+    first_name = models.TextField(blank=True, null=True)
+    last_name = models.TextField(blank=True, null=True)
+    student_key = models.TextField(blank=True, primary_key=True)
+
+    class Meta:
+        managed = True
+        db_table = 'cityspanstudents'

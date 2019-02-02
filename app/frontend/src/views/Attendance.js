@@ -36,7 +36,8 @@ class Attendance extends React.Component {
             const today = new Date();
             const students = await httpGet('http://127.0.0.1:8000/api/students');
             const attendanceItems = await httpGet(`http://127.0.0.1:8000/api/attendance?day=${`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`}`);
-            const activities = await httpGet('http://127.0.0.1:8000/api/activities');
+            let activities = await httpGet('http://127.0.0.1:8000/api/activities');
+            activities = activities.filter(item => item.is_showing === true);
             activities.sort(compareActivities)
             const suggestions = this.makeSuggestionsArray(students);
 
@@ -63,7 +64,13 @@ class Attendance extends React.Component {
             if (entries[`${attendanceItems[i].student_id}`] == null) {
                 entries[`${attendanceItems[i].student_id}`] = {'time':attendanceItems[i].time};
             }
-            entries[`${attendanceItems[i].student_id}`][attendanceItems[i].activity_id] = {'value':true, 'itemID':attendanceItems[i].id};
+            let value = true;
+            if (attendanceItems[i].num_value !== null) {
+                value = attendanceItems[i].num_value;
+            } else if (attendanceItems[i].str_value !== null) {
+                value = attendanceItems[i].str_value;
+            }
+            entries[`${attendanceItems[i].student_id}`][attendanceItems[i].activity_id] = {'value':value, 'itemID':attendanceItems[i].id};
         }
 
         // Build table of the form [{name, activity1, ... , activityn, time}]
@@ -87,9 +94,20 @@ class Attendance extends React.Component {
             row['activities'] = {};
             // fill in activities data
             for (var j = 0; j < activities.length; j++) {
+                let value;
+                if (!entries[ids[i]][activities[j].activity_id]) {
+                    if (activities[j].type === 'boolean') {
+                        value = false;
+                    } else {
+                        value = '';
+                    }
+                } else {
+                    value = entries[ids[i]][activities[j].activity_id].value;
+                }
                 row['activities'][activities[j].name] = {
-                    'value': (entries[ids[i]][activities[j].activity_id]) ? true : false,
+                    'value': value,
                     'activityID': activities[j].activity_id,
+                    'type': activities[j].type,
                     'attendanceItemID': (entries[ids[i]][activities[j].activity_id]) ? entries[ids[i]][activities[j].activity_id].itemID : 0,
                 }
             }
@@ -128,10 +146,13 @@ class Attendance extends React.Component {
 
             let activityList = {};
             for (var j = 0; j < activities.length; j++) {
+                const type = activities[j].type;
+                const value = type === 'boolean' ? false : '';
                 activityList[activities[j].name] = {
                     'activityID': activities[j].activity_id,
                     'attendanceItemID': 0,
-                    'value': false,
+                    'value': value,
+                    'type': type
                 }
             }
             activityList['Key']['value'] = true;

@@ -22,6 +22,8 @@ class AttendanceItemSerializer(serializers.ModelSerializer):
             'time',
             'activity_id',
             'id',
+            'str_value',
+            'num_value'
         )
         model = AttendanceItems
 
@@ -76,6 +78,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             'name',
             'ordering',
             'is_showing',
-            'activity_id'
+            'activity_id',
+            'type'
         )
         model = Activity

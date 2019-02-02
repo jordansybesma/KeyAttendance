@@ -41,6 +41,8 @@ class AttendanceItems(models.Model):
     time = models.TimeField(default=getCurrentTime)
     activity_id = models.IntegerField(blank=True, null=True)
     visit_number = models.IntegerField(blank=True, null=True)
+    str_value = models.TextField(blank=True, null=True)
+    num_value = models.FloatField(blank=True, null=True)
     id = models.AutoField(primary_key=True, unique=True)
 
     class Meta:

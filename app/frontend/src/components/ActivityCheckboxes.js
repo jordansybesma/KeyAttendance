@@ -1,9 +1,9 @@
 import React from 'react';
-import Checkbox from'./Checkbox.js'
+import ActivityCheckbox from'./ActivityCheckbox.js'
 import { Label } from 'react-bootstrap';
 import { httpDelete, httpPost } from './Helpers';
 
-class Checkboxes extends React.Component {
+class ActivityCheckboxes extends React.Component {
 
     constructor(props) {
         super(props)
@@ -58,7 +58,7 @@ class Checkboxes extends React.Component {
                 "student_id": studentID,
                 "activity_id": activityID,
                 "date":`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
-                "time":`${today.getHours()}:${today.getMinutes() > 10 ? today.getMinutes() : `0${today.getMinutes()}`}:${today.getSeconds() > 10 ? today.getSeconds() : `0${today.getSeconds()}`}`,
+                "time":`${today.getHours()}:${today.getMinutes() >= 10 ? today.getMinutes() : `0${today.getMinutes()}`}:${today.getSeconds() >= 10 ? today.getSeconds() : `0${today.getSeconds()}`}`,
             };
             if (type === 'string') {
                 if (value === '') {
@@ -125,7 +125,7 @@ class Checkboxes extends React.Component {
                 checked = value !== ''
             }
             boxes.push(
-                <Checkbox
+                <ActivityCheckbox
                     label={keys[i]}
                     key={keys[i]}
                     activityType={type}
@@ -153,4 +153,4 @@ class Checkboxes extends React.Component {
     }
 }
 
-export default Checkboxes;
+export default ActivityCheckboxes;

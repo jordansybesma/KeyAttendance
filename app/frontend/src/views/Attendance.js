@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactCollapsingTable from 'react-collapsing-table';
-import Checkboxes from '../components/Checkboxes';
+import ActivityCheckboxes from '../components/ActivityCheckboxes';
 import AttendanceOptions from '../components/AttendanceOptions';
 import AddStudentModal from '../components/AddStudentModal';
 import Autocomplete from "../components/Autocomplete";
@@ -276,7 +276,7 @@ class Attendance extends React.Component {
                 priorityLevel: 4,
                 position: 4,
                 minWidth: 2000,
-                CustomComponent: Checkboxes,
+                CustomComponent: ActivityCheckboxes,
                 sortable: false, 
             }
         ];

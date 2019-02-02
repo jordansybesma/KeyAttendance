@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 
-class Checkbox extends Component {
+class ActivityCheckbox extends Component {
     state = {
         isChecked: false,
         value: '',
@@ -84,9 +84,9 @@ class Checkbox extends Component {
     }
 }
 
-Checkbox.propTypes = {
+ActivityCheckbox.propTypes = {
     label: PropTypes.string.isRequired,
     toggleCheckbox: PropTypes.func.isRequired
 };
 
-export default Checkbox;
+export default ActivityCheckbox;

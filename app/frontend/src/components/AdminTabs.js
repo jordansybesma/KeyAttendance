@@ -2,6 +2,7 @@ import React from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
 import Users from './Users';
 import Roles from './Roles';
+import Activities from './Activities';
 
 class AdminTabs extends React.Component {
     constructor(props, context) {
@@ -36,8 +37,8 @@ class AdminTabs extends React.Component {
           <Tab eventKey={2} title="User Roles">
             <Roles toggleRefreshRoles={this.toggleRefreshRoles}/>
           </Tab>
-          <Tab eventKey={3} title="Attendance Columns">
-            Tab 3 content
+          <Tab eventKey={3} title="Attendance Activities">
+            <Activities />
           </Tab>
           <Tab eventKey={4} title="Student Profile Fields">
             Tab 4 content

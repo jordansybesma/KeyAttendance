@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Modal, FormGroup, FormControl, ControlLabel, Alert } from 'react-bootstrap';
-import { httpPatch, httpDelete } from './Helpers';
+import { Button, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap';
+import { httpDelete, httpPatch } from './Helpers';
 
 class EditRoleModal extends React.Component {
     

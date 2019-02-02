@@ -1,9 +1,9 @@
 import React from 'react';
-import { httpGet, httpPost } from './Helpers';
-import AddUserModal from './AddUserModal';
 import { Button, ButtonToolbar } from 'react-bootstrap';
 import ReactCollapsingTable from 'react-collapsing-table';
+import AddUserModal from './AddUserModal';
 import EditUserButton from './EditUserButton';
+import { httpGet } from './Helpers';
 
 class Users extends React.Component {
     constructor(props) {

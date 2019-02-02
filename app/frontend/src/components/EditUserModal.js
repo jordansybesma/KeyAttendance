@@ -34,7 +34,7 @@ class EditUserModal extends React.Component {
 	validateInput() {
         const { password, confirmPassword, editPassword } = this.state;
         if (editPassword) {
-            if (password.length == 0 || password !== confirmPassword) {
+            if (password.length === 0 || password !== confirmPassword) {
                 return 'error';
             }
             return 'success';

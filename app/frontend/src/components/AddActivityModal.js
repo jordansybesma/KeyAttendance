@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, FormGroup, FormControl, ControlLabel, Alert } from 'react-bootstrap';
+import { Alert, Button, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap';
 import { httpPost } from './Helpers';
 
 class AddActivityModal extends React.Component {
@@ -35,7 +35,7 @@ class AddActivityModal extends React.Component {
 
     validateInput() {
 		const { name } = this.state;
-        const regex = /^[a-z0-9\.\@\+\-\_]+$/i;
+        const regex = /^[a-z0-9.@+\-_]+$/i;
         if (name.length > 0 && regex.test(name) && this.state.type) {
 			return 'success';
 		} else if (name.length === 0) {

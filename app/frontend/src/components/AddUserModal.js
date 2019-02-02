@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, FormGroup, FormControl, ControlLabel, Alert } from 'react-bootstrap';
+import { Alert, Button, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap';
 import { httpPost } from './Helpers';
 
 class AddUserModal extends React.Component {
@@ -45,7 +45,7 @@ class AddUserModal extends React.Component {
 
 	validateInput() {
 		const { username, password, confirmPassword } = this.state;
-        const regex = /^[a-z0-9\.\@\+\-\_]+$/i;
+        const regex = /^[a-z0-9.@+\-_]+$/i;
         if (username.length > 0 && password.length > 0 && password === confirmPassword 
             && regex.test(username) && this.state.selectedOption) {
 			return 'success';

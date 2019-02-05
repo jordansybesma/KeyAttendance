@@ -82,21 +82,20 @@ class Students extends Component {
       state.profileData = studentProfileJson;
       var startDate= getEarlierDate(30);
       startDate = getPrevSunday(startDate);
-      var startDateString = dateToString(startDate);
-      //var startDateString = "2018-01-28";
+      //var startDateString = dateToString(startDate);
+      var startDateString = "2018-01-28";
       state.startDateString = startDateString;
       var today = getEarlierDate(0);
       var endDate = getNextSaturday(today);
-      var endDateString = dateToString(endDate);
-      //var endDateString = "2018-03-03";
+      //var endDateString = dateToString(endDate);
+      var endDateString = "2018-03-03";
       state.endDateString = endDateString;
-	  
     const heatMapData = await fetch('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
-    console.log(state.id, startDateString, endDateString);
+    //console.log(state.id, startDateString, endDateString);
       const heatMapJson = await heatMapData.json();
-      console.log("json: ", heatMapJson);
+      //console.log("json: ", heatMapJson);
     state.heatMapJson = heatMapJson;
-    console.log("json added to state: ", state.heatMapJson);
+    //console.log("json added to state: ", state.heatMapJson);
 
       this.setState(function (previousState, currentProps) {
         return state;
@@ -120,6 +119,7 @@ class Students extends Component {
   formatData(state) {
     //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
     var studentId = state.id;
+    console.log(studentId);
     var startDateString = state.startDateString;
     var endDateString = state.endDateString;
    // var startDateString = "2018-01-03";
@@ -130,6 +130,7 @@ class Students extends Component {
     var currEntryDate;
     var currIdx = 0;
     var heatMapJson = this.state.heatMapJson;
+    console.log(heatMapJson);
 
     if(heatMapJson.length == 0){
       var firstEntry = {"date": startDateString, "daily_visits": 0}

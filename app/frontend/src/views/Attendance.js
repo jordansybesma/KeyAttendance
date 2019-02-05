@@ -36,8 +36,7 @@ class Attendance extends React.Component {
     }
 
     componentDidMount() {
-        const today = new Date()
-        this.setState({date: `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`})
+        this.setState({date: this.getCurrentDate()})
     }
 
     componentDidUpdate() {
@@ -47,10 +46,15 @@ class Attendance extends React.Component {
         }
     }
 
+    getCurrentDate() {
+        const today = new Date();
+        const month = today.getMonth() + 1;
+        const day = today.getDate();
+        return `${today.getFullYear()}-${month >= 10 ? month : `0${month}`}-${day >= 10 ? day : `0${day}`}`
+    }
+
     async fetchAndBuild() {
         const { date } = this.state;
-        console.log('rendering attendance for');
-        console.log(date);
         try {
             const students = await httpGet('http://127.0.0.1:8000/api/students');
             const attendanceItems = await httpGet(`http://127.0.0.1:8000/api/attendance?day=${date}`);
@@ -244,14 +248,12 @@ class Attendance extends React.Component {
     }
 
     updateDate(e) {
-        console.log('setting date:');
-        console.log(e.target.value);
         this.setState({date: e.target.value});
     }
 
     setDateToToday() {
         const today = new Date()
-        this.setState({date: `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`})
+        this.setState({date: this.getCurrentDate()})
     }
 
     render() {

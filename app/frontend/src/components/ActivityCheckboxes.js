@@ -13,6 +13,7 @@ class ActivityCheckboxes extends React.Component {
             studentID: 0,
             error: "",
             numChecked: 0,
+            date: ''
         }
 
         this.toggleCheckbox = this.toggleCheckbox.bind(this)
@@ -37,13 +38,14 @@ class ActivityCheckboxes extends React.Component {
         this.setState({
             activities: activities,
             studentID: this.props.row.studentID,
-            numChecked: numChecked
+            numChecked: numChecked,
+            date: this.props.row.date
         });
     }
 
     // Makes sure that the checkbox reflects whether it has been selected
     toggleCheckbox = (isChecked, label, value, type) => {
-        const { activities, studentID, numChecked } = this.state;
+        const { activities, studentID, numChecked, date } = this.state;
         var self = this; // This is a cheap hack so the .then() function can have access to state
 
         // Get attendanceItemID, studentID, activityID from activities
@@ -57,7 +59,7 @@ class ActivityCheckboxes extends React.Component {
             let body = {
                 "student_id": studentID,
                 "activity_id": activityID,
-                "date":`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
+                "date":`${date}`,
                 "time":`${today.getHours()}:${today.getMinutes() >= 10 ? today.getMinutes() : `0${today.getMinutes()}`}:${today.getSeconds() >= 10 ? today.getSeconds() : `0${today.getSeconds()}`}`,
             };
             if (type === 'string') {

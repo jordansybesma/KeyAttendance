@@ -147,7 +147,7 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 	var activities = {}
 	for (var i = 0; i < activityData.length; i++) {
 		if (activityData[i].is_showing) {
-			activities[activityData[i].name] = {'id': activityData[i].activity_id, 'ordering': activityData[i].ordering}
+			activities[activityData[i].name] = {'id': activityData[i].activity_id, 'ordering': activityData[i].ordering, 'type': activityData[i].type}
 		}
 	}
 
@@ -157,14 +157,22 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 		if (entries[`${attendanceData[i].student_id}${attendanceData[i].date}`] == null) {
 			entries[`${attendanceData[i].student_id}${attendanceData[i].date}`] = {'date':attendanceData[i].date, 'id': attendanceData[i].student_id}
 		}
-		entries[`${attendanceData[i].student_id}${attendanceData[i].date}`][attendanceData[i].activity_id] = 'Y'
+		if (attendanceData[i].str_value !== null) {
+			entries[`${attendanceData[i].student_id}${attendanceData[i].date}`][attendanceData[i].activity_id] = attendanceData[i].str_value;
+		} else if (attendanceData[i].num_value !== null) {
+			entries[`${attendanceData[i].student_id}${attendanceData[i].date}`][attendanceData[i].activity_id] = attendanceData[i].num_value;
+		} else {
+			entries[`${attendanceData[i].student_id}${attendanceData[i].date}`][attendanceData[i].activity_id] = 'Y';
+		}
 	}
 
 	// Build spreadsheet
 	var sheet = []
 	var columns = ['Date','First', 'Last', 'Student Key']
 	for (var i = 0; i < activityData.length; i++) {
-		columns.push(activityData[i].name)
+		if (activityData[i].is_showing) {
+			columns.push(activityData[i].name)
+		}
 	}
 	const keys = Object.keys(entries)
 	for (var i = 0; i < keys.length ; i++) {
@@ -191,10 +199,16 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 					break;
 				default:
 					// If this row has a value for this column, put it in the table. Else plop an 'N' in this column.
-					if (entries[keys[i]][activities[columns[j]].id] != null) {
-						row[j] = entries[keys[i]][activities[columns[j]].id];
+					const activity = activities[columns[j]];
+					console.log(entries[keys[i]][activity.id])
+					if (entries[keys[i]][activity.id] === undefined) {
+						if (activity.type === 'boolean') {
+							row[j] = 'N';
+						} else {
+							row[j] = 'N/A';
+						}
 					} else {
-						row[j] = 'N';
+						row[j] = entries[keys[i]][activity.id];
 					}
 			}
 		}

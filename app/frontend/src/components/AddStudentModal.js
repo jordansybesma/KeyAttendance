@@ -38,6 +38,10 @@ class AddStudentModal extends React.Component {
 	}
 	
 	cancel() {
+		this.setState({
+			firstName: "",
+			lastName:"",
+		});
 		this.props.onSubmit();
 	}
 
@@ -50,6 +54,10 @@ class AddStudentModal extends React.Component {
 			if ('error' in result) {
 				console.log(result);
 			} else {
+				self.setState({
+					firstName: "",
+					lastName:"",
+				});
 				self.props.onSubmit(result);
 			}
 		})

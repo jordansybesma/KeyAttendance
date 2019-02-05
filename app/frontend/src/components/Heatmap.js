@@ -31,16 +31,11 @@ class Heatmap extends Component {
     heatMapJson: PropTypes.instanceOf(Array),
   };
 
-  static defaultProps = {
-    data: [],
-
-  };
-
   constructor(props) {
     super(props);
 
     this.state = {
-      data: props.data
+      data: {}
     };
   }
 
@@ -55,12 +50,12 @@ class Heatmap extends Component {
 
         <XAxis orientation='top'/>
         <YAxis orientation='left'/>
-        <MarkSeries data={this.state.data}/>
+        <MarkSeries data={this.props.data}/>
            
         <HeatmapSeries
               className="heatmap-series-example"
               colorRange={["#fffaf0", "orange"]}
-              data={this.state.data}
+              data={this.props.data}
               style={{
                 stroke: 'black',
                 strokeWidth: '1px',
@@ -69,8 +64,6 @@ class Heatmap extends Component {
                   ry: 1
                 }
               }} />
-
-
 
       </XYPlot>
     );

@@ -92,11 +92,11 @@ class Students extends Component {
       state.endDateString = endDateString;
 	  
     const heatMapData = await fetch('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
-    console.log(state.id, startDateString, endDateString);
-      const heatMapJson = await heatMapData.json();
-      console.log("json: ", heatMapJson);
+    //console.log(state.id, startDateString, endDateString);
+    const heatMapJson = await heatMapData.json();
+    //console.log("json: ", heatMapJson);
     state.heatMapJson = heatMapJson;
-    console.log("json added to state: ", state.heatMapJson);
+    //console.log("json added to state: ", state.heatMapJson);
 
       this.setState(function (previousState, currentProps) {
         return state;

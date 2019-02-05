@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import { Label } from 'react-bootstrap';
+import { httpGet } from '../components/Helpers';
+import { Redirect } from 'react-router-dom';
 
 class Students extends Component {
 
@@ -18,8 +20,7 @@ class Students extends Component {
 
   async componentDidMount() {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/');
-      var studentsJson = await res.json();
+      var studentsJson = await httpGet('http://127.0.0.1:8000/api/students');
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
       this.setState(function (previousState, currentProps) {
         return {
@@ -70,8 +71,7 @@ class Students extends Component {
 
   async getStudentProfile(state) {
     try {
-      const studentProfileData = await fetch('http://127.0.0.1:8000/api/students/' + state.id);
-      const studentProfileJson = await studentProfileData.json();
+      const studentProfileJson = await httpGet('http://127.0.0.1:8000/api/students?id=' + state.id);
       state.profileData = studentProfileJson;
       this.setState(function (previousState, currentProps) {
         return state;
@@ -83,6 +83,10 @@ class Students extends Component {
   }
 
   render() {
+    let permissions = window.localStorage.getItem('permissions').split(',')
+    if (permissions.indexOf('view_students') < 0) {
+      return (<Redirect to='/attendance' />);
+    }
     if (this.state.mode === 'search') {
       return (
         <div className='content'>

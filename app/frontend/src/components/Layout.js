@@ -16,7 +16,31 @@ class Layout extends Component {
     this.props.history.push(`/${name}`);
   }
 
+  logout = () => () => {
+    window.localStorage.removeItem("key_credentials");
+    window.localStorage.removeItem("permissions")
+    this.props.history.push(`/`)
+  }
+
   render() {
+    if (!this.props.show) { return this.props.children }
+    let permissionString = window.localStorage.getItem("permissions");
+    let permissions = permissionString.split(",")
+    let nav = [];
+    if (permissions.indexOf('view_attendanceitems') >= 0) {
+      nav.push(<NavItem key={0} onClick={this.handleItemClick('attendance')}>Attendance</NavItem>)
+    }
+    if (permissions.indexOf('view_students') >= 0) {
+      nav.push(<NavItem key={1} onClick={this.handleItemClick('students')}>Students</NavItem>)
+    }
+    if (permissions.indexOf('view_group') >= 0 || permissions.indexOf('view_user') >= 0) {
+      nav.push(<NavItem key={2} onClick={this.handleItemClick('admin')}>Admin</NavItem>)
+    }
+    let navItems = <Nav>
+        {nav}
+        <NavItem onClick={this.handleItemClick('reports')}>Reports</NavItem>
+        <NavItem onClick={this.handleItemClick('alerts')}>Alerts</NavItem>
+      </Nav>
     return (
       <div>
         <Navbar>
@@ -27,15 +51,9 @@ class Layout extends Component {
                 <Navbar.Toggle />
             </Navbar.Header>
             <Navbar.Collapse>
-              <Nav>
-                  <NavItem onClick={this.handleItemClick('attendance')}>Attendance</NavItem>
-                  <NavItem onClick={this.handleItemClick('students')}>Students</NavItem>
-                  <NavItem onClick={this.handleItemClick('reports')}>Reports</NavItem>
-                  <NavItem onClick={this.handleItemClick('alerts')}>Alerts</NavItem>
-                  <NavItem onClick={this.handleItemClick('admin')}>Admin</NavItem>
-              </Nav>
+              {navItems}
               <Nav pullRight>
-                <NavItem>Logout</NavItem>
+                <NavItem onClick={this.logout()}>Logout</NavItem>
               </Nav>
             </Navbar.Collapse>
         </Navbar>

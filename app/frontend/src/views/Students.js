@@ -152,9 +152,7 @@ class Students extends Component {
 				  />
 			  </div>
           <div className='col-md-8 top-bottom-padding'>
-                <img id="studentPhoto" src={blankPic} width="196" height="196"/>
-                <p> Upload Student Profile Photo </p>
-                <input id="upload-button" type="file" accept="image/*" name="file"/><br/>
+                <img id="studentPhoto" src={blankPic} width="196" height="196"/><br/>
 				Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br/>
                 Student ID: {this.state.profileData.student_id} <br/>
                 Birthday: {this.state.profileData.birthday} <br/>
@@ -184,6 +182,9 @@ class Students extends Component {
 				  />
 			  </div>
           <div className='col-md-8 top-bottom-padding'>
+              <img id="studentPhoto" src={blankPic} width="196" height="196"/>
+                <p> Upload Student Profile Photo </p>
+                <input id="upload-button" type="file" accept="image/*" name="file"/><br/>
               <form className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
               First Name: <input type="text" id="first_name" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Last Name: <input type="text" id="last_name" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>

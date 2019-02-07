@@ -69,7 +69,7 @@ class Checkboxes extends React.Component {
                 // We're trying to uncheck the last checkbox
                 // show some sort of visual error??
             } else {
-                httpDelete(`http://${domain}/api/attendance?key=${attendanceItemID}`).then(function(result) {
+                httpDelete(`http://${domain}/api/attendance/?key=${attendanceItemID}`).then(function(result) {
                     if ('error' in result) {
                         self.setState({error: result.error})
                     } else {

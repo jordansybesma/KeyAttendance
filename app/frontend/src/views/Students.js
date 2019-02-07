@@ -5,6 +5,7 @@ import { Label } from 'react-bootstrap';
 import { httpGet, httpPatch } from '../components/Helpers';
 import blankPic from '../images/blank_profile_pic.jpg'
 import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString} from '../components/Helpers';
+import { Redirect } from 'react-router-dom';
 
 class Students extends Component {
 
@@ -222,6 +223,10 @@ class Students extends Component {
   }
 
   render() {
+    let permissions = window.localStorage.getItem('permissions').split(',')
+    if (permissions.indexOf('view_students') < 0) {
+      return (<Redirect to='/attendance' />);
+    }
     if (this.state.mode === 'search') {
       return (
         <div className='content'>

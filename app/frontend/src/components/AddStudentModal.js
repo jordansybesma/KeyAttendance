@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, FormGroup, FormControl, ControlLabel, HelpBlock } from 'react-bootstrap';
+import { Button, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap';
 import { httpPost } from './Helpers';
 
 class AddStudentModal extends React.Component {
@@ -38,6 +38,10 @@ class AddStudentModal extends React.Component {
 	}
 	
 	cancel() {
+		this.setState({
+			firstName: "",
+			lastName:"",
+		});
 		this.props.onSubmit();
 	}
 
@@ -50,6 +54,10 @@ class AddStudentModal extends React.Component {
 			if ('error' in result) {
 				console.log(result);
 			} else {
+				self.setState({
+					firstName: "",
+					lastName:"",
+				});
 				self.props.onSubmit(result);
 			}
 		})

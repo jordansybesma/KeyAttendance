@@ -49,6 +49,18 @@ class AttendanceItems(models.Model):
         managed = True
         db_table = 'dailyattendance'
 
+class Reports(models.Model):
+    student_id = models.IntegerField(blank=True, primary_key=True)
+    date = models.DateField(default=getCurrentDate)
+    time = models.TimeField(default=getCurrentTime)
+    activity_id = models.IntegerField(blank=True, null=True)
+    visit_number = models.IntegerField(blank=True, null=True)
+    daily_visits = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'dailyattendance'
+
 
 class Feedback(models.Model):
     date = models.DateField(blank=True, null=True)
@@ -104,6 +116,11 @@ class Students(models.Model):
     id = models.IntegerField(blank=True, primary_key=True)
     first_attendance = models.DateField(blank=True, null=True)
     number_visits = models.IntegerField(blank=True, null=True)
+    birthday = models.DateField(blank=True, null=True)
+    nickname = models.TextField(blank=True, null=True)
+    gender = models.TextField(blank=True, null=True)
+    student_id = models.TextField(blank=True, null=True)
+    #photo = models.ImageField(blank=True, null=True, upload_to='profile_photos/')
 
     class Meta:
         managed = True

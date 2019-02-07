@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
 import { Label } from 'react-bootstrap';
-import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString} from '../components/helpers';
+import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString} from '../components/Helpers';
 
 class Students extends Component {
 

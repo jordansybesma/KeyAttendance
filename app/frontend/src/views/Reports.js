@@ -1,7 +1,7 @@
 import React from 'react';
 import Heatmap from '../components/Heatmap';
 import continuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
-import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString} from '../components/helpers';
+import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString} from '../components/Helpers';
 
 class Reports extends React.Component {
 

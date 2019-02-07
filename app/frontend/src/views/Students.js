@@ -272,6 +272,8 @@ class Students extends Component {
 			  </div>
         	</div>
 		  </div>
+          <Heatmap 
+            data = {this.formatData(this.state)}/>
 		</div>
       );
     }
@@ -302,8 +304,6 @@ class Students extends Component {
               Number of Visits: <input type="text" id="numVisits" defaultValue={this.state.profileData.number_visits} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               <input type="submit" value="Submit" />
               </form>
-              <Heatmap 
-                data = {this.formatData(this.state)}/>
           </div>
         	</div>
 		  </div>

@@ -1,10 +1,7 @@
-from django.http import HttpResponseRedirect
 from ..models import AttendanceItems, Students, Activity
-from simple_history.models import HistoricalRecords
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ..serializers import GroupSerializer, HistoricalRecordSerializer
 
 class History(APIView):
 

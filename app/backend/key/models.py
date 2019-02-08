@@ -8,6 +8,7 @@
 from django.db import models
 from .helpers import getCurrentDate, getCurrentTime
 import datetime
+from simple_history.models import HistoricalRecords
 
 
 class Activity(models.Model):
@@ -43,6 +44,7 @@ class AttendanceItems(models.Model):
     visit_number = models.IntegerField(blank=True, null=True)
     str_value = models.TextField(blank=True, null=True)
     num_value = models.FloatField(blank=True, null=True)
+    history = HistoricalRecords()
     id = models.AutoField(primary_key=True, unique=True)
 
     class Meta:

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from key.views import attendance, students, activities, users, groups, permissions
+from key.views import attendance, students, activities, users, groups, permissions, history
 
 urlpatterns = [
     path('activities/', activities.Activities.as_view()),
@@ -8,5 +8,6 @@ urlpatterns = [
     path('attendance/', attendance.Attendance.as_view()),
     path('users/', users.Users.as_view()),
     path('groups/', groups.Groups.as_view()),
-    path('permissions/', permissions.Permissions.as_view())
+    path('permissions/', permissions.Permissions.as_view()),
+    path('history/', history.History.as_view())
 ] 

@@ -1,3 +1,6 @@
+//Helper functions for date selection in data visualizations
+
+
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
@@ -6,7 +9,7 @@ import createBrowserHistory from 'history/createBrowserHistory';
 
 const history = createBrowserHistory();
 
-const domain = 'ec2-3-16-129-180.us-east-2.compute.amazonaws.com' // 127.0.0.1:8000
+const domain = 'ec2-3-16-129-180.us-east-2.compute.amazonaws.com' // '127.0.0.1:8000'
 
 function httpPost(url, body={}) {
 	const token = window.localStorage.getItem("key_credentials");
@@ -25,7 +28,7 @@ function httpPost(url, body={}) {
 		if (response.status >= 400) {
 			// Logout if we got a token validation error
 			if (response.status === 403) {
-				window.localStorage.removeItem("key_credentials");
+				logout()
 				history.push(`/`)
 			}
 			return {'error':response.status}
@@ -52,7 +55,7 @@ function httpPatch(url, body={}) {
 		if (response.status >= 400) {
 			// Logout if we got a token validation error
 			if (response.status === 403) {
-				window.localStorage.removeItem("key_credentials");
+				logout()
 				history.push(`/`)
 			}
 			return {'error':response.status}
@@ -77,7 +80,7 @@ function httpGet(url) {
 		if (response.status >= 400) {
 			// Logout if we got a token validation error
 			if (response.status === 403) {
-				window.localStorage.removeItem("key_credentials");
+				logout()
 				history.push(`/`)
 			}
 			return {'error':response.status}
@@ -104,7 +107,7 @@ function httpDelete(url, body={}) {
 		if (response.status >= 400) {
 			// Logout if we got a token validation error
 			if (response.status === 403) {
-				window.localStorage.removeItem("key_credentials");
+				logout()
 				history.push(`/`)
 			}
 			return {'error':response.status}
@@ -120,6 +123,16 @@ function compareActivities(a,b) {
 	if (a.ordering > b.ordering)
 	  return 1;
 	return 0;
+}
+
+function decodeToken(token) {
+	let partitions = token.split('.');
+    return JSON.parse(atob(partitions[1]));
+}
+
+function logout() {
+	window.localStorage.removeItem("key_credentials");
+	window.localStorage.removeItem("permissions");
 }
 
 async function downloadAttendanceCSV(startDate, endDate=null) {
@@ -139,7 +152,7 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 	var activities = {}
 	for (var i = 0; i < activityData.length; i++) {
 		if (activityData[i].is_showing) {
-			activities[activityData[i].name] = {'id': activityData[i].activity_id, 'ordering': activityData[i].ordering}
+			activities[activityData[i].name] = {'id': activityData[i].activity_id, 'ordering': activityData[i].ordering, 'type': activityData[i].type}
 		}
 	}
 
@@ -149,14 +162,22 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 		if (entries[`${attendanceData[i].student_id}${attendanceData[i].date}`] == null) {
 			entries[`${attendanceData[i].student_id}${attendanceData[i].date}`] = {'date':attendanceData[i].date, 'id': attendanceData[i].student_id}
 		}
-		entries[`${attendanceData[i].student_id}${attendanceData[i].date}`][attendanceData[i].activity_id] = 'Y'
+		if (attendanceData[i].str_value !== null) {
+			entries[`${attendanceData[i].student_id}${attendanceData[i].date}`][attendanceData[i].activity_id] = attendanceData[i].str_value;
+		} else if (attendanceData[i].num_value !== null) {
+			entries[`${attendanceData[i].student_id}${attendanceData[i].date}`][attendanceData[i].activity_id] = attendanceData[i].num_value;
+		} else {
+			entries[`${attendanceData[i].student_id}${attendanceData[i].date}`][attendanceData[i].activity_id] = 'Y';
+		}
 	}
 
 	// Build spreadsheet
 	var sheet = []
 	var columns = ['Date','First', 'Last', 'Student Key']
 	for (var i = 0; i < activityData.length; i++) {
-		columns.push(activityData[i].name)
+		if (activityData[i].is_showing) {
+			columns.push(activityData[i].name)
+		}
 	}
 	const keys = Object.keys(entries)
 	for (var i = 0; i < keys.length ; i++) {
@@ -183,10 +204,16 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 					break;
 				default:
 					// If this row has a value for this column, put it in the table. Else plop an 'N' in this column.
-					if (entries[keys[i]][activities[columns[j]].id] != null) {
-						row[j] = entries[keys[i]][activities[columns[j]].id];
+					const activity = activities[columns[j]];
+					console.log(entries[keys[i]][activity.id])
+					if (entries[keys[i]][activity.id] === undefined) {
+						if (activity.type === 'boolean') {
+							row[j] = 'N';
+						} else {
+							row[j] = 'N/A';
+						}
 					} else {
-						row[j] = 'N';
+						row[j] = entries[keys[i]][activity.id];
 					}
 			}
 		}
@@ -210,11 +237,15 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 	document.body.removeChild(element);
 }
 
-// Makes sure that we have a token, else redirects to login screen
+// Makes sure that we have a valid token, else redirects to login screen
 const checkCredentials = (Component) => {
 	const token = window.localStorage.getItem("key_credentials");
+    let tokenData = decodeToken(token)
 	if (token === null) {
-		return <Redirect to='/'/>
+		return <Redirect to='/'/>;
+	} else if (tokenData.exp < Date.now() / 1000) { 
+		logout();
+		return <Redirect to='/'/>;
 	} else {
 		return <Component/>;
 	}
@@ -230,4 +261,41 @@ const withRole = (Component, role) => {
 	}
 }
 
-export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, domain }
+
+// Returns date obj for the date that is "days ago" number of days ago
+//from today's date
+//. E.g. if daysAgo equals 3 the date string will be the date 
+// three days ago. If daysAgo = 0 the string is today's date.
+function getEarlierDate(daysAgo) {
+    if (daysAgo < 0) {
+      console.error("Expected daysAgo to be a value >= 0 but recieved ", daysAgo);
+      daysAgo = -daysAgo;
+    }
+    var earlierDate = new Date();
+    earlierDate.setDate(earlierDate.getDate() - daysAgo);
+    return earlierDate;
+}
+
+//Returns date obj for previous sunday from given date
+//(or the date itself if the date falls on a sunday)
+function getPrevSunday(date) {
+    var offset = date.getDay();
+    date.setDate(date.getDate() - offset);
+    return date;
+}
+
+//Returns date obj for following saturday from given date
+//(or the date itself if the date falls on a saturday)
+function getNextSaturday(date) {
+    var offset = 6 - date.getDay();
+    date.setDate(date.getDate() + offset);
+    return date;
+}
+
+// Creates a date string of the form yyyy-mm-dd for the date
+function dateToString(date){
+    var dateString = date.getFullYear().toString() + "-" + (date.getMonth()+1).toString() + "-" + date.getDate().toString();
+    return dateString;
+}
+
+export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, domain, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }

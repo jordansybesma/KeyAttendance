@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, ControlLabel, FormControl, Well, Button, Alert } from 'react-bootstrap';
+import { Alert, Button, ControlLabel, FormControl, FormGroup, Well } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import { domain } from '../components/Helpers';
 
@@ -33,8 +33,9 @@ class Login extends React.Component {
 	onPasswordChange(e) {
 		this.setState({password: e.target.value})
     }
-    
-    submit() {
+
+    submit(e) {
+        e.preventDefault();
         // Submit username and password to backend
         fetch(`http://${domain}/api-token-auth/`, {
             method: "POST", 
@@ -48,10 +49,8 @@ class Login extends React.Component {
                 response.json().then(result => {
                     // Store token in browser
                     window.localStorage.setItem("key_credentials", result.token);
-                    // Store permissions / role in browser
-                    let partitions = result.token.split('.');
-                    let tokenData = JSON.parse(atob(partitions[1]));
-                    window.localStorage.setItem("isAdmin", tokenData.is_staff);
+                    // Store permissions in browser
+                    window.localStorage.setItem("permissions", result.permissions);
                     // Flag that we've logged in before
                     window.localStorage.setItem("loggedIn", 'true');
                     this.props.history.push(`/attendance`);
@@ -72,7 +71,7 @@ class Login extends React.Component {
                         <Well>
                             <h2 style={centerStyle}>Key Attendance</h2>
                                 <h4 style={centerStyle}>Sign In</h4>
-                                    <form>
+                                    <form onSubmit={e => this.submit(e)}>
                                         <FormGroup>
                                             <ControlLabel>Username</ControlLabel>
                                             <FormControl
@@ -90,7 +89,7 @@ class Login extends React.Component {
                                                  onChange={this.onPasswordChange}
                                              />
                                         </FormGroup>
-                                        <Button block onClick={this.submit} bsStyle="primary">Continue</Button>
+                                        <Button block type="submit" bsStyle="primary">Continue</Button>
                                         <br/>
                                         {this.state.error && <Alert bsStyle='danger'>Invalid username or password. Please try again.</Alert>}
                                         {!this.state.firstLogin && <Alert bsStyle='info'>You have been logged out.</Alert>}

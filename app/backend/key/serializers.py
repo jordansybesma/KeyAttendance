@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth.models import User, Group, Permission
-from .models import Students, AttendanceItems, Activity, Reports
+from .models import Students, AttendanceItems, Activity, Reports, StudentInfo
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -17,6 +17,19 @@ class StudentSerializer(serializers.ModelSerializer):
             'student_id',
         )
         model = Students
+        
+class StudentInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'student_id',
+            'info_id',
+            'int_value',
+            'str_value',
+            'bool_value',
+            'date_value',
+            'time_value',
+        )
+        model = StudentInfo
 
 class AttendanceItemSerializer(serializers.ModelSerializer):
     class Meta:

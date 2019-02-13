@@ -14,6 +14,7 @@ class Students extends Component {
     this.state = {
       mode: 'search',
       studentsJson: {},
+      studentInfoJson: {},
       suggestionsArray: [],
       id: null,
       profileData: {},
@@ -28,12 +29,16 @@ class Students extends Component {
   async componentDidMount() {
     try {
       var studentsJson = await httpGet('http://127.0.0.1:8000/api/students');
+      var studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info');
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
+      //var studentInfoArray = this.makeSuggestionsArray(studentInfoJson);
+      //console.log(studentInfoArray);
       
       this.setState(function (previousState, currentProps) {
         return {
           mode: 'search',
           studentsJson: studentsJson,
+          studentInfoJson: studentInfoJson,
           suggestionsArray: suggestionsArray,
           id: null,
           profileData: {},
@@ -94,7 +99,6 @@ class Students extends Component {
       state.endDateString = endDateString;
 	  
     const heatMapJson = await httpGet('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
-    console.log(heatMapJson);
     //const heatMapJson = await heatMapData.json();
     //console.log("json: ", heatMapJson);
     state.heatMapJson = heatMapJson;
@@ -218,7 +222,6 @@ class Students extends Component {
       dayEntry = { "x": dayOfWeek, "y": weekNum+1, "color": heatMapJson[i]['daily_visits']};
       processedData.push(dayEntry);
     }
-    console.log("processed data: ", processedData);
     return processedData;
   }
 

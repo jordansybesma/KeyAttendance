@@ -29,7 +29,6 @@ class Students extends Component {
   async componentDidMount() {
     try {
       var studentsJson = await httpGet('http://127.0.0.1:8000/api/students');
-      var studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info');
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
       //var studentInfoArray = this.makeSuggestionsArray(studentInfoJson);
       //console.log(studentInfoArray);
@@ -38,7 +37,6 @@ class Students extends Component {
         return {
           mode: 'search',
           studentsJson: studentsJson,
-          studentInfoJson: studentInfoJson,
           suggestionsArray: suggestionsArray,
           id: null,
           profileData: {},
@@ -86,6 +84,8 @@ class Students extends Component {
   async getStudentProfile(state) {
     try {
       const studentProfileJson = await httpGet('http://127.0.0.1:8000/api/students?id=' + state.id);
+      const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
+      console.log(studentInfoJson);
       state.profileData = studentProfileJson;
       var startDate= getEarlierDate(30);
       startDate = getPrevSunday(startDate);

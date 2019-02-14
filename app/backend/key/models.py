@@ -97,6 +97,7 @@ class StudentColumn(models.Model):
 
 
 class StudentInfo(models.Model):
+    id = models.AutoField(primary_key=True, unique=True)
     student_id = models.IntegerField(blank=True, null=True)
     info_id = models.IntegerField(blank=True, null=True)
     int_value = models.IntegerField(blank=True, null=True)
@@ -114,12 +115,6 @@ class Students(models.Model):
     first_name = models.TextField(blank=True, null=True)
     last_name = models.TextField(blank=True, null=True)
     id = models.IntegerField(blank=True, primary_key=True)
-    first_attendance = models.DateField(blank=True, null=True)
-    number_visits = models.IntegerField(blank=True, null=True)
-    birthday = models.DateField(blank=True, null=True)
-    nickname = models.TextField(blank=True, null=True)
-    gender = models.TextField(blank=True, null=True)
-    student_id = models.TextField(blank=True, null=True)
     #photo = models.ImageField(blank=True, null=True, upload_to='profile_photos/')
 
     class Meta:

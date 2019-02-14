@@ -9,12 +9,6 @@ class StudentSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'id',
-            'first_attendance',
-            'number_visits',
-            'birthday',
-            'nickname',
-            'gender',
-            'student_id',
         )
         model = Students
         

@@ -1,5 +1,5 @@
 from django.core import serializers
-from ..models import StudentInfo
+from ..models import StudentInfo as StudentInfoModel
 from ..serializers import StudentInfoSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -10,17 +10,16 @@ import time
 class StudentInfo(APIView):
 
     def validateGet(self, request):
-        if 'id' in request.query_params:
+        if 'student_id' in request.query_params:
             try:
-                StudentInfo.objects.get(pk=int(request.query_params['id']))
+                StudentInfoModel.objects.filter(student_id=int(request.query_params['student_id']))
             except Exception as e:
                 return False
-
         return True
       
     def validatePatch(self, request):
         try:
-            StudentInfo.objects.get(pk=request.data['id'])
+            StudentInfoModel.objects.get(pk=request.data['student_id'])
         except:
             return False
         return True
@@ -29,14 +28,9 @@ class StudentInfo(APIView):
     def get(self, request):
         if not self.validateGet(request):
             return Response({'error':'Invalid Parameters'}, status='400')
+        info = StudentInfoModel.objects.filter(student_id=int(request.query_params['student_id']))
 
-        info = StudentInfo.objects.all()
-        if 'student_id' in request.query_params:
-            student = StudentsInfo.objects.filter(pk=request.query_params['student_id'])
-            serializer = StudentInfoSerializer(student)
-        else:
-            students = StudentsInfo.objects.all()
-            serializer = StudentInfoSerializer(students, many=True)
+        serializer = StudentInfoSerializer(info, many=True)
         
         return Response(serializer.data, content_type='application/json')
       
@@ -45,8 +39,8 @@ class StudentInfo(APIView):
         # Note: Until we convert student.id to an autofield/serial, this will require that we create a new student ID for new students.
         # So, for now we'll just assign them the UNIX timestamp, since that should be pretty unique.
         # This approach will break on January 17, 2038, when UNIX timestamps will exceed 32 bits, so we'll probably want to fix this.
-        if not 'id' in request.data:
-            request.data['id'] = round(time.time())
+        if not 'student_id' in request.data:
+            request.data['student_id'] = round(time.time())
 
         serializer = StudentInfoSerializer(data=request.data)
         if serializer.is_valid():
@@ -59,7 +53,7 @@ class StudentInfo(APIView):
         if not self.validatePatch(request):
             return Response({'error':'Invalid Paremeters'}, status='400')
 
-        obj = StudentInfo.objects.get(pk=request.data['id'])
+        obj = StudentInfoModel.objects.get(pk=request.data['student_id'])
         serializer = StudentSerializer(obj, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()

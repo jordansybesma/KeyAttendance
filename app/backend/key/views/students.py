@@ -28,7 +28,6 @@ class Students(APIView):
     def get(self, request):
         if not self.validateGet(request):
             return Response({'error':'Invalid Parameters'}, status='400')
-
         if 'id' in request.query_params:
             student = StudentsModel.objects.get(pk=request.query_params['id'])
             serializer = StudentSerializer(student)

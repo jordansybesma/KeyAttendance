@@ -31,7 +31,6 @@ class StudentColumnSerializer(serializers.ModelSerializer):
             'info_id',
             'is_showing',
             'quick_add',
-            'activity_id',
             'name',
             'type',
             'defined_options'

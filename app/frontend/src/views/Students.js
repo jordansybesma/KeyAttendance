@@ -31,8 +31,7 @@ class Students extends Component {
       var studentsJson = await httpGet('http://127.0.0.1:8000/api/students');
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
       var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
-      var studentColumnArray = this.makeSuggestionsArray(studentColumnJson);
-      console.log(studentColumnArray);
+      console.log(studentColumnJson);
       
       this.setState(function (previousState, currentProps) {
         return {

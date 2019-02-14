@@ -28,9 +28,9 @@ class StudentColumn(APIView):
     def get(self, request):
         if not self.validateGet(request):
             return Response({'error':'Invalid Parameters'}, status='400')
-        info = StudentColumnModel.objects.get(pk=int(request.query_params['info_id']))
-
-        serializer = StudentColumnSerializer(info, many=True)
+  
+        students = StudentColumnModel.objects.all()
+        serializer = StudentColumnSerializer(students, many=True)
         
         return Response(serializer.data, content_type='application/json')
       

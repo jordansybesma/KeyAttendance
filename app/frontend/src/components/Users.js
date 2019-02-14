@@ -205,7 +205,6 @@ class Users extends React.Component {
                 if ('error' in result) {
                     console.log(result);
                 } else {
-                    console.log(result);
                     self.setState({ selectedUserHistory: result, historyView: true, selectedUsername: username});
                 }
             });

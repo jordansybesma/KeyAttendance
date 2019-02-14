@@ -305,6 +305,7 @@ class Users extends React.Component {
                     <Button onClick={this.openModal}>New User</Button>
                 </ButtonToolbar>
                 <Autocomplete
+                    hasUsername={true}
                     suggestions={this.state.suggestionsArray}
                     handler={this.handler}
                 />

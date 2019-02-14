@@ -109,7 +109,7 @@ class StudentInfo(models.Model):
     class Meta:
         managed = True
         db_table = 'studentinfo'
-
+        
 
 class Students(models.Model):
     first_name = models.TextField(blank=True, null=True)

@@ -30,8 +30,9 @@ class Students extends Component {
     try {
       var studentsJson = await httpGet('http://127.0.0.1:8000/api/students');
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
-      //var studentInfoArray = this.makeSuggestionsArray(studentInfoJson);
-      //console.log(studentInfoArray);
+      var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+      var studentColumnArray = this.makeSuggestionsArray(studentColumnJson);
+      console.log(studentColumnArray);
       
       this.setState(function (previousState, currentProps) {
         return {
@@ -299,7 +300,7 @@ class Students extends Component {
               <form className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
               First Name: <input type="text" id="first_name" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Last Name: <input type="text" id="last_name" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
-              Student ID: <input type="text" id="student_id" defaultValue={this.state.profileData.student_id} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
+              School: <input type="text" id="student_id" defaultValue={this.state.profileData.student_id} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Birthday: <input type="date" id="birthday" defaultValue={this.state.profileData.birthday} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Nickname: <input type="text" id="nickname" defaultValue={this.state.profileData.nickname} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Gender: <input type="text" id="gender" defaultValue={this.state.profileData.gender} onChange={evt => this.handleChange(evt, this.state)} /> <br/>

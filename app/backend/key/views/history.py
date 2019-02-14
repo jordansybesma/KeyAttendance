@@ -1,9 +1,19 @@
 from ..models import AttendanceItems, Students, Activity
+from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 class History(APIView):
+
+    def validateGet(self, request):
+        if 'user_id' in request.query_params:
+            try:
+                User.objects.get(pk=request.query_params['user_id'])
+                return True
+            except Exception:
+                return False
+        return False
 
     def buildActionString(self, history_type, model):
         action = ''

@@ -53,9 +53,13 @@ class EditUserModal extends React.Component {
             const radioOptions = [];
             const role_names = Object.keys(this.props.row.role_ids);
             const role_ids = this.props.row.role_ids;
+            let selectedOption = '';
             for (var index in role_names) {
                 const role_name = role_names[index];
                 const checked = this.props.row.groups.indexOf(role_ids[role_name]) > -1;
+                if (checked) {
+                    selectedOption = role_name
+                }
                 radioOptions.push({label: role_name, checked: checked})
             }
             this.setState({
@@ -63,7 +67,8 @@ class EditUserModal extends React.Component {
                 show: this.props.show,
                 first_name: this.props.row.first_name,
                 last_name: this.props.row.last_name,
-                is_active: this.props.row.is_active
+                is_active: this.props.row.is_active,
+                selectedOption: selectedOption
             });
         }
     }
@@ -97,6 +102,8 @@ class EditUserModal extends React.Component {
 	cancel() {
         this.setState({
             row: this.props.row,
+            error: false,
+            backendError: false
         });
 		this.props.onSubmit();
     }
@@ -155,8 +162,7 @@ class EditUserModal extends React.Component {
     }
     
     toggleRadioOptions(index) {
-        const { radioOptions } = this.state;
-        let selectedOption = '';
+        let { radioOptions, selectedOption } = this.state;
         if (!radioOptions[index].checked) {
             selectedOption = radioOptions[index].label;
             for (var j in radioOptions) {

@@ -87,6 +87,7 @@ class Students extends Component {
       const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
       console.log(studentInfoJson);
       state.profileData = studentProfileJson;
+      console.log(state.profileData);
       var startDate= getEarlierDate(30);
       startDate = getPrevSunday(startDate);
       var startDateString = dateToString(startDate);
@@ -263,12 +264,11 @@ class Students extends Component {
           <div className='col-md-8 top-bottom-padding'>
                 <img id="studentPhoto" src={blankPic} width="196" height="196"/><br/>
 				Name: {this.state.profileData.first_name} {this.state.profileData.last_name} <br/>
-                Student ID: {this.state.profileData.student_id} <br/>
-                Birthday: {this.state.profileData.birthday} <br/>
-                Nickname: {this.state.profileData.nickname} <br/>
-                Gender: {this.state.profileData.gender} <br/>
-                First Attendance: {this.state.profileData.first_attendance} <br/>
-                Number of Visits: {this.state.profileData.number_visits} <br/>
+                Gender:  <br/>
+                Nickname:  <br/>
+                School:  <br/>
+                Birthday:  <br/>
+                Age:  <br/>
                 <button onClick={this.edit}>
                   Edit
                 </button>
@@ -299,13 +299,11 @@ class Students extends Component {
               <form className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
               First Name: <input type="text" id="first_name" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Last Name: <input type="text" id="last_name" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
-              School: <input type="text" id="student_id" defaultValue={this.state.profileData.student_id} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
-              Birthday: <input type="date" id="birthday" defaultValue={this.state.profileData.birthday} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
-              Nickname: <input type="text" id="nickname" defaultValue={this.state.profileData.nickname} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               Gender: <input type="text" id="gender" defaultValue={this.state.profileData.gender} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
-              First Attendance: <input type="date" id="firstAttendance" defaultValue={this.state.profileData.first_attendance} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
-              Number of Visits: <input type="text" id="numVisits" defaultValue={this.state.profileData.number_visits} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
-              <input type="submit" value="Submit" />
+              Nickname: <input type="text" id="nickname" defaultValue={this.state.profileData.nickname} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
+              School: <input type="text" id="student_id" defaultValue={this.state.profileData.student_id} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
+              Age: <input type="int" id="birthday" defaultValue={this.state.profileData.birthday} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
+              Birthday: <input type="date" id="birthday" defaultValue={this.state.profileData.birthday} onChange={evt => this.handleChange(evt, this.state)} /> <br/>
               </form>
           </div>
         	</div>

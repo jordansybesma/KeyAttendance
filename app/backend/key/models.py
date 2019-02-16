@@ -41,7 +41,21 @@ class AttendanceItems(models.Model):
     time = models.TimeField(default=getCurrentTime)
     activity_id = models.IntegerField(blank=True, null=True)
     visit_number = models.IntegerField(blank=True, null=True)
+    str_value = models.TextField(blank=True, null=True)
+    num_value = models.FloatField(blank=True, null=True)
     id = models.AutoField(primary_key=True, unique=True)
+
+    class Meta:
+        managed = True
+        db_table = 'dailyattendance'
+
+class Reports(models.Model):
+    student_id = models.IntegerField(blank=True, primary_key=True)
+    date = models.DateField(default=getCurrentDate)
+    time = models.TimeField(default=getCurrentTime)
+    activity_id = models.IntegerField(blank=True, null=True)
+    visit_number = models.IntegerField(blank=True, null=True)
+    daily_visits = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = True
@@ -103,6 +117,11 @@ class Students(models.Model):
     first_attendance = models.DateField(blank=True, null=True)
     number_visits = models.IntegerField(blank=True, null=True)
     student_key = models.TextField(blank=True, null=True)
+    birthday = models.DateField(blank=True, null=True)
+    nickname = models.TextField(blank=True, null=True)
+    gender = models.TextField(blank=True, null=True)
+    student_id = models.TextField(blank=True, null=True)
+    #photo = models.ImageField(blank=True, null=True, upload_to='profile_photos/')
 
     class Meta:
         managed = True

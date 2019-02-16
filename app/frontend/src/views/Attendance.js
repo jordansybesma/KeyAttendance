@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactCollapsingTable from 'react-collapsing-table';
-import Checkboxes from '../components/Checkboxes';
+import ActivityCheckboxes from '../components/ActivityCheckboxes';
 import AttendanceOptions from '../components/AttendanceOptions';
 import AddStudentModal from '../components/AddStudentModal';
 import Autocomplete from "../components/Autocomplete";
 import { httpPost, httpGet } from '../components/Helpers';
-import { Button, ButtonToolbar } from 'react-bootstrap';
+import { Button, ButtonToolbar, Form, FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
 import { downloadAttendanceCSV, compareActivities } from '../components/Helpers';
+import { Redirect } from 'react-router-dom';
 
 class Attendance extends React.Component {
 
@@ -21,6 +22,8 @@ class Attendance extends React.Component {
             suggestionsArray: [],
             attendance: [],
             showStudentModal: false,
+            date: '',
+            prevDate: ''
         }
 
         this.downloadCSV = this.downloadCSV.bind(this);
@@ -28,14 +31,35 @@ class Attendance extends React.Component {
         this.removeAttendanceRow = this.removeAttendanceRow.bind(this);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.updateDate = this.updateDate.bind(this);
+        this.setDateToToday = this.setDateToToday.bind(this);
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+        this.setState({date: this.getCurrentDate()})
+    }
+
+    componentDidUpdate() {
+        if (this.state.date !== this.state.prevDate) {
+            this.setState({prevDate: this.state.date})
+            this.fetchAndBuild()
+        }
+    }
+
+    getCurrentDate() {
+        const today = new Date();
+        const month = today.getMonth() + 1;
+        const day = today.getDate();
+        return `${today.getFullYear()}-${month >= 10 ? month : `0${month}`}-${day >= 10 ? day : `0${day}`}`
+    }
+
+    async fetchAndBuild() {
+        const { date } = this.state;
         try {
-            const today = new Date();
             const students = await httpGet('http://127.0.0.1:8000/api/students');
-            const attendanceItems = await httpGet(`http://127.0.0.1:8000/api/attendance?day=${`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`}`);
-            const activities = await httpGet('http://127.0.0.1:8000/api/activities');
+            const attendanceItems = await httpGet(`http://127.0.0.1:8000/api/attendance?day=${date}`);
+            let activities = await httpGet('http://127.0.0.1:8000/api/activities');
+            activities = activities.filter(item => item.is_showing === true);
             activities.sort(compareActivities)
             const suggestions = this.makeSuggestionsArray(students);
 
@@ -62,7 +86,13 @@ class Attendance extends React.Component {
             if (entries[`${attendanceItems[i].student_id}`] == null) {
                 entries[`${attendanceItems[i].student_id}`] = {'time':attendanceItems[i].time};
             }
-            entries[`${attendanceItems[i].student_id}`][attendanceItems[i].activity_id] = {'value':true, 'itemID':attendanceItems[i].id};
+            let value = true;
+            if (attendanceItems[i].num_value !== null) {
+                value = attendanceItems[i].num_value;
+            } else if (attendanceItems[i].str_value !== null) {
+                value = attendanceItems[i].str_value;
+            }
+            entries[`${attendanceItems[i].student_id}`][attendanceItems[i].activity_id] = {'value':value, 'itemID':attendanceItems[i].id};
         }
 
         // Build table of the form [{name, activity1, ... , activityn, time}]
@@ -86,9 +116,20 @@ class Attendance extends React.Component {
             row['activities'] = {};
             // fill in activities data
             for (var j = 0; j < activities.length; j++) {
+                let value;
+                if (!entries[ids[i]][activities[j].activity_id]) {
+                    if (activities[j].type === 'boolean') {
+                        value = false;
+                    } else {
+                        value = '';
+                    }
+                } else {
+                    value = entries[ids[i]][activities[j].activity_id].value;
+                }
                 row['activities'][activities[j].name] = {
-                    'value': (entries[ids[i]][activities[j].activity_id]) ? true : false,
+                    'value': value,
                     'activityID': activities[j].activity_id,
+                    'type': activities[j].type,
                     'attendanceItemID': (entries[ids[i]][activities[j].activity_id]) ? entries[ids[i]][activities[j].activity_id].itemID : 0,
                 }
             }
@@ -99,7 +140,7 @@ class Attendance extends React.Component {
     }
 
     addStudent(e, studentID) {
-        const { students, attendance, activities } = this.state;
+        const { students, attendance, activities, date } = this.state;
         const today = new Date();
         const self = this;
 
@@ -113,8 +154,8 @@ class Attendance extends React.Component {
         httpPost('http://127.0.0.1:8000/api/attendance/', {
             "student_id": studentID,
             "activity_id": 7, // Key    
-            "date":`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`,
-            "time":`${today.getHours()}:${today.getMinutes() > 10 ? today.getMinutes() : `0${today.getMinutes()}`}:${today.getSeconds() > 10 ? today.getSeconds() : `0${today.getSeconds()}`}`,
+            "date":`${date}`,
+            "time":`${today.getHours()}:${today.getMinutes() >= 10 ? today.getMinutes() : `0${today.getMinutes()}`}:${today.getSeconds() >= 10 ? today.getSeconds() : `0${today.getSeconds()}`}`,
         }).then(function(result) {
             // Add new row to table
             let name = "";
@@ -127,10 +168,13 @@ class Attendance extends React.Component {
 
             let activityList = {};
             for (var j = 0; j < activities.length; j++) {
+                const type = activities[j].type;
+                const value = type === 'boolean' ? false : '';
                 activityList[activities[j].name] = {
                     'activityID': activities[j].activity_id,
                     'attendanceItemID': 0,
-                    'value': false,
+                    'value': value,
+                    'type': type
                 }
             }
             activityList['Key']['value'] = true;
@@ -167,10 +211,9 @@ class Attendance extends React.Component {
         return array;
     }
 
-    downloadCSV() {
-        const today = new Date()
+    async downloadCSV() {
         this.setState({ buildingCSV: true });
-        downloadAttendanceCSV(`${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`)
+        await downloadAttendanceCSV(`${this.state.date}`)
         this.setState({ buildingCSV: false });
     }
 
@@ -204,14 +247,28 @@ class Attendance extends React.Component {
         this.setState({showStudentModal: false, students: students, suggestions: suggestions});
     }
 
+    updateDate(e) {
+        this.setState({date: e.target.value});
+    }
+
+    setDateToToday() {
+        const today = new Date()
+        this.setState({date: this.getCurrentDate()})
+    }
+
     render() {
+        let permissions = window.localStorage.getItem('permissions').split(',')
+        if (permissions.indexOf('view_attendanceitems') < 0) {
+            return (<Redirect to='/attendance'/>);
+        }
         const rows = this.state.attendance.map(item =>
             (
                {
                    name: item.name,
                    time: item.time,
                    activities: item.activities,
-                   studentID: item.studentID
+                   studentID: item.studentID,
+                   date: this.state.date
                }
            )
         ).sort((a, b) => {
@@ -250,23 +307,29 @@ class Attendance extends React.Component {
                 priorityLevel: 4,
                 position: 4,
                 minWidth: 2000,
-                CustomComponent: Checkboxes,
+                CustomComponent: ActivityCheckboxes,
                 sortable: false, 
             }
         ];
 
         const buildingCSV = this.state.buildingCSV;
-        const today = new Date()
 
         return (
             <div className='content'>
                 <AddStudentModal show={this.state.showStudentModal} onSubmit={this.closeModal}/>
-                <h1>Attendance for {today.getMonth() + 1}-{today.getDate()}-{today.getFullYear()}</h1>
+                <h1>Attendance for {this.state.date}</h1>
                 <br/>
                 <ButtonToolbar style={{ float: 'right'}}>
-                    <Button onClick={this.openModal}>New Student</Button>
+                    <Button onClick={this.setDateToToday}>Go To Today</Button>
                     <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
+                    <Button onClick={this.openModal}>New Student</Button> 
                 </ButtonToolbar>
+                <Form inline style={{ float: 'right', paddingRight: '5px', paddingLeft: '5px'}}>
+                    <FormGroup>
+                        <ControlLabel>Date:</ControlLabel>{' '}
+                        <FormControl onChange={this.updateDate} value={this.state.date} type="date"/>
+                    </FormGroup>
+                </Form>
                 <Autocomplete
 					suggestions={this.state.suggestionsArray}
 					handler={this.addStudent}

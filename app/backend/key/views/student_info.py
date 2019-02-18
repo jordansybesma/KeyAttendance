@@ -19,7 +19,7 @@ class StudentInfo(APIView):
       
     def validatePatch(self, request):
         try:
-            StudentInfoModel.objects.get(pk=request.data['student_id'])
+            StudentInfoModel.objects.get(pk=request.data['id'])
         except:
             return False
         return True
@@ -28,8 +28,8 @@ class StudentInfo(APIView):
     def get(self, request):
         if not self.validateGet(request):
             return Response({'error':'Invalid Parameters'}, status='400')
-        info = StudentInfoModel.objects.filter(student_id=int(request.query_params['student_id']))
-
+        
+        info = StudentInfoModel.objects.filter(student_id=request.query_params['student_id'])
         serializer = StudentInfoSerializer(info, many=True)
         
         return Response(serializer.data, content_type='application/json')
@@ -53,8 +53,8 @@ class StudentInfo(APIView):
         if not self.validatePatch(request):
             return Response({'error':'Invalid Paremeters'}, status='400')
 
-        obj = StudentInfoModel.objects.get(pk=request.data['student_id'])
-        serializer = StudentSerializer(obj, data=request.data, partial=True)
+        obj = StudentInfoModel.objects.get(pk=request.data['id'])
+        serializer = StudentInfoSerializer(obj, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

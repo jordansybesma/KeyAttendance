@@ -25,7 +25,7 @@ class Layout extends Component {
   render() {
     if (!this.props.show) { return this.props.children }
     let permissionString = window.localStorage.getItem("permissions");
-    let permissions = permissionString.split(",")
+    let permissions = permissionString === null ? [] : permissionString.split(",")
     let nav = [];
     if (permissions.indexOf('view_attendanceitems') >= 0) {
       nav.push(<NavItem key={0} onClick={this.handleItemClick('attendance')}>Attendance</NavItem>)

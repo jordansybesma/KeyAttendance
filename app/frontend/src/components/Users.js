@@ -200,7 +200,7 @@ class Users extends React.Component {
 
     getUserHistory(userId, username) {
         const self = this;
-        httpGet(`http://127.0.0.1:8000/api/history?user_id=${userId}`)
+        httpGet(`http://${domain}/api/history/?user_id=${userId}`)
             .then(function (result) {
                 if ('error' in result) {
                     console.log(result);

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
-import { Label } from 'react-bootstrap';
-import { httpGet, httpPatch } from '../components/Helpers';
+import { Button, Col, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import { httpGet, httpPatch, httpPost } from '../components/Helpers';
 import blankPic from '../images/blank_profile_pic.jpg'
 import { getEarlierDate, getPrevSunday, getNextSaturday, dateToString } from '../components/Helpers';
 import { Redirect } from 'react-router-dom';
@@ -13,20 +13,6 @@ class Students extends Component {
     super(props);
     this.state = {
       mode: 'search',
-
-      studentsJson: {},
-      suggestionsArray: [],
-      id: null,
-      profileData: {},
-
-      studentColumnJson: {},
-      studentInfoJson: {},
-      parsedInfo: {},
-      infoPatchData: {},
-
-      heatMapJson: {},
-      startDateString: "",
-      endDateString: ""
     };
     this.edit = this.edit.bind(this);
     this.handler = this.handler.bind(this);
@@ -36,9 +22,9 @@ class Students extends Component {
     try {
       var studentsJson = await httpGet('http://127.0.0.1:8000/api/students');
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
+      
       var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
-      studentColumnJson.sort(this.sortCols);
-      console.log(studentColumnJson);
+      this.parseCols(studentColumnJson);
 
       this.setState(function (previousState, currentProps) {
         return {
@@ -46,8 +32,6 @@ class Students extends Component {
           suggestionsArray: suggestionsArray,
           studentColumnJson: studentColumnJson,
           id: null,
-          profileData: {},
-          heatMapJson: {},
         };
       });
     } catch (e) {
@@ -80,13 +64,49 @@ class Students extends Component {
     return array;
   }
 
+  parseCols(cols) {
+    cols.sort(this.sortCols);
+    
+    var profileInfo = [];
+    for (var col in cols) {
+      profileInfo[col] = {
+        studentInfoId: null,
+        colInfo: cols[col],
+        value: null,
+        type: null,
+        updated: false,
+        patchPost: {
+          'student_id': null,
+          'info_id': null,
+          'int_value': null,
+          'str_value': null,
+          'bool_value': null,
+          'date_value': null,
+          'time_value': null,
+          'id': null
+        }
+      }
+    }
+
+    this.setState(function (previousState, currentProps) {
+      return {
+        profileInfo: profileInfo,
+      };
+    });
+  }
+  
+  // Could be used to create a custom layout for the fields on the student profile page
+  sortCols(a, b) {
+    if (a.id > b.id) return 1;
+    if (a.id < b.id) return -1;
+    return 0;
+  }
+
   handler(e, studentId) {
     var preState = {
       mode: 'display',
       id: studentId,
-      studentColumnJson: this.state.studentColumnJson,
-      parsedInfo: {},
-      infoPatchData: {}
+      profileInfo: this.state.profileInfo
     };
     this.getStudentProfile(preState);
   }
@@ -98,7 +118,7 @@ class Students extends Component {
       state.profileData = studentProfileJson;
       state.studentInfoJson = studentInfoJson;
 
-      state.parsedInfo = this.parseStudentInfo(state, studentInfoJson);
+      state.profileInfo = this.parseStudentInfo(state, studentInfoJson);
 
       var startDate = getEarlierDate(30);
       startDate = getPrevSunday(startDate);
@@ -123,59 +143,28 @@ class Students extends Component {
     }
   }
 
-  sortCols(a, b) {
-    if (a.info_id > b.info_id) return 1;
-
-    if (a.info_id < b.info_id) return -1;
-
-    return 0;
-  }
-
   parseStudentInfo(state, info) {
-    var colArr = state.studentColumnJson;
-
-    var parsedInfo = {};
-    for (var row in info) {
-      var dict = info[row];
-      state.infoPatchData[dict.id] = dict;
-      console.log(dict);
-
-      for (var index in state.studentColumnJson) {
-        if (colArr[index].is_showing == true) {
-          // Make sure that all varchar(XXX) value are changed to just varchar
-          var colType = colArr[index].type.replace(/varchar.*/g, 'varchar');
-          
-          var dictType;
-          switch (colType) {
-            case 'int':
-            dictType = 'int_value';
-            break;
-            case 'varchar':
-            dictType = 'str_value';
-            break;
-            case 'date':
-            dictType = 'date_value';
-            break;
-          }
-          
-          if (colArr[index].info_id == dict.info_id) {
-            parsedInfo[colArr[index].name] = {value: dict[dictType], 
-                                              infoId: dict.info_id, 
-                                              type: dictType,
-                                              id: dict.id};
-            
-          } else {
-            parsedInfo[colArr[index].name] = {value: '', 
-                                              infoId: colArr[index].info_id, 
-                                              type: dictType,
-                                              id: null};
-          }
-        }
+    for (var entry in state.profileInfo) {
+      // Ensure all varchar(x) types get caught as str_value
+      var type;
+      if ((/varchar.*/g).test(state.profileInfo[entry].colInfo.type)) {
+        state.profileInfo[entry].type = 'str_value';
+      } else {
+        state.profileInfo[entry].type = state.profileInfo[entry].colInfo.type + '_value';
       }
+      console.log(state.profileInfo[entry].type);
     }
-    console.log(state.infoPatchData);
-    console.log(parsedInfo);
-    return parsedInfo;
+
+    for (var item in info) {
+      var infoId = info[item].info_id;
+      state.profileInfo[infoId - 1].patchPost = info[item];
+      state.profileInfo[infoId - 1].studentInfoId = info[item].id;
+
+      var type = state.profileInfo[infoId - 1].type;
+      state.profileInfo[infoId - 1].value = info[item][type];
+    }
+
+    return state.profileInfo;
   }
 
   edit() {
@@ -192,19 +181,13 @@ class Students extends Component {
 
   handleInfoChange(evt, state) {
     var changedField = evt.target.id;
-    console.log(changedField)
-    if (changedField) {
-      var fieldType;
-      for (var key in state.parsedInfo) {
-        if (state.parsedInfo[key].id == changedField) {
-          fieldType = state.parsedInfo[key].type;
-          state.parsedInfo[key].value = evt.target.value;
-        }
-      }
-      state.infoPatchData[changedField][fieldType] = evt.target.value;
-    } else {
-      // create post
-    }
+    var newValue = evt.target.value;
+    var type = state.profileInfo[changedField].type;
+
+    state.profileInfo[changedField].updated = true;
+    state.profileInfo[changedField].value = newValue;
+    state.profileInfo[changedField].patchPost[type] = newValue;
+
     this.setState(function (previousState, currentProps) {
       return state;
     });
@@ -214,8 +197,15 @@ class Students extends Component {
     evt.preventDefault()
     httpPatch('http://127.0.0.1:8000/api/students/', state.profileData);
     
-    for (var key in state.infoPatchData) {
-      httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + key, state.infoPatchData[key]);
+    for (var field in state.profileInfo) {
+      var field = state.profileInfo[field];
+      if (field.updated) {
+        if (field.id) {
+          httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.id, field.patchPost);
+        } else {
+          httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
+        }
+      }
     }
 
     // Ensure that the autocomplete component has an updated copy of the profile
@@ -319,36 +309,48 @@ class Students extends Component {
   renderDisplayInfo = () => {
     let info = [];
     
-    var cols = this.state.studentColumnJson;
-    console.log(cols);
-    for (var col in cols) {
-      if (cols[col].is_showing == true) {
-        info.push(cols[col].name + ': ' + this.state.parsedInfo[cols[col].name].value);
-        info.push(<br key={cols[col].name}/>);
+    var fields = this.state.profileInfo;
+    for (var field in fields) {
+      if (fields[field].colInfo.is_showing == true) {
+        var value = 'N/A';
+        if (fields[field].value != null && fields[field].value != null != '') {
+          value = fields[field].value;
+        }
+        var innerHtml = fields[field].colInfo.name + ': ' + value;
+        info.push(<ListGroupItem key={field}>{innerHtml}</ListGroupItem>);
       }
     }
 
     return info;
   }
 
-  // renderDisplayInfo = () => {
-  //   let info = [];
-
-  //   for (var entry in this.state.parsedInfo) {
-      // info.push(entry + ': ' + this.state.parsedInfo[entry].value);
-  //     info.push(<br key={entry}/>)
-  //   }
-
-  //   return info;
-  // }
-
   renderEditInfo = () => {
     let info = [];
 
-    for (var entry in this.state.parsedInfo) {
-      info.push(entry + ': ')
-      info.push(<input key={entry} type="text" id={this.state.parsedInfo[entry].id} defaultValue={this.state.parsedInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
-      info.push(<br key={entry + 'Edit'}/>)
+    for (var entry in this.state.profileInfo) {
+      var label = this.state.profileInfo[entry].colInfo.name + ': ';
+      if (this.state.profileInfo[entry].colInfo.is_showing) {
+        info.push(<Label>{label}</Label>)
+
+        var type;
+        switch (this.state.profileInfo[entry].type) {
+          case 'str_value':
+          type = "text";
+          break;
+          case 'int_value':
+          type = "int";
+          break;
+          case 'date_value':
+          type = "date";
+          break;
+          case 'time_value':
+          type = "time";
+          break;
+        }
+        
+        console.log(type);
+        info.push(<Col sm="10"><FormControl key={label} type={type} id={entry} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} /> </Col>);
+      }
     }
 
     return info;
@@ -389,14 +391,16 @@ class Students extends Component {
                   handler={this.handler}
                 />
               </div>
-              <div className='col-md-8 top-bottom-padding'>
+              <br/>
+              <div className='col-md-2 to-front top-bottom-padding'>
                 <img id="studentPhoto" src={blankPic} width="196" height="196" /><br />
-                Name: {this.state.profileData.first_name} {this.state.profileData.last_name}
-                <br/>
-                {this.renderDisplayInfo(this.state.parsedInfo)}
-                <button onClick={this.edit}>
+                <ListGroup>
+                  <ListGroupItem>Name: {this.state.profileData.first_name} {this.state.profileData.last_name}</ListGroupItem>
+                  {this.renderDisplayInfo(this.state.parsedInfo)}
+                </ListGroup>
+                <Button variant="primary" onClick={this.edit}>
                   Edit
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -421,12 +425,21 @@ class Students extends Component {
                 <img id="studentPhoto" src={blankPic} width="196" height="196" />
                 <p> Upload Student Profile Photo </p>
                 <input id="upload-button" type="file" accept="image/*" name="file" /><br />
-                <form className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
-                  First Name: <input type="text" id="first_name" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleNameChange(evt, this.state)} /> <br />
-                  Last Name: <input type="text" id="last_name" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleNameChange(evt, this.state)} /> <br />
-                  {this.renderEditInfo(this.state.parsedInfo)}
-                  <button>Submit</button> 
-                </form>
+                <Form inline className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
+                  <FormGroup>
+                    <Label>First Name: </Label>
+                    <Col sm="10">
+                      <FormControl type="text" id="first_name" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleNameChange(evt, this.state)} />
+                    </Col>
+                    <Label>Last Name: </Label>
+                    <Col sm="10">
+                      <FormControl type="text" id="last_name" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleNameChange(evt, this.state)} />
+                    </Col>
+                    {this.renderEditInfo(this.state.parsedInfo)}
+                    <br/>
+                    <Button variant="primary" type="submit">Submit</Button> 
+                  </FormGroup>
+                </Form>
               </div>
             </div>
           </div>
@@ -437,9 +450,3 @@ class Students extends Component {
 }
 
 export default Students;
-
-// Gender: <input type="text" id="gender" defaultValue={this.state.profileData.gender} onChange={evt => this.handleChange(evt, this.state)} /> <br />
-//                   Nickname: <input type="text" id="nickname" defaultValue={this.state.profileData.nickname} onChange={evt => this.handleChange(evt, this.state)} /> <br />
-//                   School: <input type="text" id="student_id" defaultValue={this.state.profileData.student_id} onChange={evt => this.handleChange(evt, this.state)} /> <br />
-//                   Age: <input type="int" id="birthday" defaultValue={this.state.profileData.birthday} onChange={evt => this.handleChange(evt, this.state)} /> <br />
-//                   Birthday: <input type="date" id="birthday" defaultValue={this.state.profileData.birthday} onChange={evt => this.handleChange(evt, this.state)} /> <br />

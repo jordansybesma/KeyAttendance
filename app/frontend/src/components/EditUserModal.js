@@ -58,12 +58,13 @@ class EditUserModal extends React.Component {
                 const role_name = role_names[index];
                 const checked = this.props.row.groups.indexOf(role_ids[role_name]) > -1;
                 if (checked) {
-                    selectedOption = role_name
+                    selectedOption = role_name;
                 }
                 radioOptions.push({label: role_name, checked: checked})
             }
             this.setState({
                 radioOptions: radioOptions,
+                selectedOption: selectedOption,
                 show: this.props.show,
                 first_name: this.props.row.first_name,
                 last_name: this.props.row.last_name,

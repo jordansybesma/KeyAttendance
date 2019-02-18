@@ -8,7 +8,7 @@ urlpatterns = [
     path('users/', users.Users.as_view()),
     path('groups/', groups.Groups.as_view()),
     path('permissions/', permissions.Permissions.as_view()),
-    path('history/', history.History.as_view())
+    path('history/', history.History.as_view()),
     re_path(r'^reports/(?P<vizType>\w*)/$', reports.Reports.as_view()),
     #above regex maps to: /api/reports/vizType/?arg1=blah&arg2=blah
 ]

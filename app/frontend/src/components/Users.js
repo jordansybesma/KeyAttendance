@@ -1,9 +1,12 @@
 import React from 'react';
+import Autocomplete from './Autocomplete';
 import { Button, ButtonToolbar } from 'react-bootstrap';
 import ReactCollapsingTable from 'react-collapsing-table';
 import AddUserModal from './AddUserModal';
 import EditUserButton from './EditUserButton';
+import UserHistoryButton from './UserHistoryButton';
 import { httpGet } from './Helpers';
+import UserHistory from './UserHistory';
 
 class Users extends React.Component {
     constructor(props) {
@@ -11,17 +14,29 @@ class Users extends React.Component {
         this.state = {
             showUserModal: false,
             users: [],
+            showingUsers: [],
             role_ids: {},
             role_names: {},
+            suggestionsArray: [],
+            showingAllUsers: true,
+            selectedUserHistory: [],
+            selectedUsername: '',
+            historyView: false
         };
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.updateRow = this.updateRow.bind(this);
+        this.getFormattedTime = this.getFormattedTime.bind(this);
+        this.handler = this.handler.bind(this);
+        this.showAllUsers = this.showAllUsers.bind(this);
+        this.getUserHistory = this.getUserHistory.bind(this);
+        this.closeHistoryView = this.closeHistoryView.bind(this);
     }
 
     async componentDidMount() {
         try {
             const users = await httpGet('http://127.0.0.1:8000/api/users');
+            let suggestionsArray = this.makeSuggestionsArray(users);
             const roles = await httpGet('http://127.0.0.1:8000/api/groups');
             const role_ids = {};
             const role_names = {};
@@ -30,9 +45,11 @@ class Users extends React.Component {
                 role_names[roles[index].id] = roles[index].name;
             }
             this.setState({
+                showingUsers: users,
                 users: users,
                 role_ids: role_ids, 
                 role_names: role_names,
+                suggestionsArray: suggestionsArray
             });
         } catch (e) {
             console.log(e);
@@ -56,14 +73,59 @@ class Users extends React.Component {
         }
     }
 
+    makeSuggestionsArray(suggestions) {
+        var array = [];
+        var lastHolder1;
+        var lastHolder2;
+        var tempArray;
+        for (var object in suggestions) {
+          if (suggestions[object]['last_name'].includes(" ")) {
+            tempArray = suggestions[object]['last_name'].split(" ");
+            lastHolder1 = tempArray[0];
+            lastHolder2 = tempArray[1];
+          } else {
+            lastHolder1 = suggestions[object]['last_name'];
+            lastHolder2 = "";
+          }
+          array.push({
+            firstName: suggestions[object]['first_name'],
+            lastName1: lastHolder1,
+            lastName2: lastHolder2,
+            username: suggestions[object]['username'],
+            id: suggestions[object]['id']
+          });
+        }
+        return array;
+      }
+
+    handler(e, userId) {
+        let showingUsers = [];
+        if (userId !== null) {
+            showingUsers.push(this.state.users.find(item => item['id'] === parseInt(userId)));
+        }
+        this.setState({
+            showingUsers: showingUsers,
+            showingAllUsers: false
+        });
+    }
+
+    showAllUsers() {
+        const { users } = this.state;
+        this.setState({
+            showingUsers: users,
+            showingAllUsers: true
+        });
+    }
+
     openModal() {
         this.setState({showUserModal: true});
     }
 
     closeModal(user=null) {
         const { users } = this.state;
+        let showingUsers = [];
         if (user !== null) {
-            users.push({
+            let newUser = {
                 'id': user.id, 
                 'username': user.username, 
                 'first_name': user.first_name,
@@ -71,9 +133,11 @@ class Users extends React.Component {
                 'groups': user.groups, 
                 'last_login': user.last_login,
                 'is_active': user.is_active
-            });
+            };
+            users.push(newUser);
+            showingUsers.push(newUser);
         }
-        this.setState({showUserModal: false, users: users});
+        this.setState({showUserModal: false, users: users, showingUsers: showingUsers, showingAllUsers: false});
     }
 
     checkmark(boolean) {
@@ -110,11 +174,15 @@ class Users extends React.Component {
 
     updateRow(user, id = null) {
         let { users } = this.state;
+        let showingUsers = [];
+        let showingAllUsers = false;
         if (id !== null) {
             users = users.filter(item => item.id !== id);
+            showingAllUsers = true;
+            showingUsers = users;
         } else {
             users = users.filter(item => item.id !== user.id);
-            users.push({
+            let newUser = {
                 'id': user.id,
                 'username': user.username,
                 'first_name': user.first_name,
@@ -122,13 +190,32 @@ class Users extends React.Component {
                 'groups': user.groups,
                 'last_login': user.last_login,
                 'is_active': user.is_active
-            });
+            };
+            users.push(newUser);
+            showingUsers.push(newUser)
         }
         this.setState({ users: users });
+        this.setState({ users: users, showingUsers: showingUsers, showingAllUsers: showingAllUsers });
+    }
+
+    getUserHistory(userId, username) {
+        const self = this;
+        httpGet(`http://127.0.0.1:8000/api/history?user_id=${userId}`)
+            .then(function (result) {
+                if ('error' in result) {
+                    console.log(result);
+                } else {
+                    self.setState({ selectedUserHistory: result, historyView: true, selectedUsername: username});
+                }
+            });
+    }
+
+    closeHistoryView() {
+        this.setState({ historyView: false });
     }
 
     render() {
-        const rows = this.state.users.map(user =>
+        const rows = this.state.showingUsers.map(user =>
             (
                {
                    username: user.username,
@@ -150,16 +237,17 @@ class Users extends React.Component {
 
         const columns = [
             {
-                accessor: 'username',
-                label: 'Username',
+                accessor: 'name',
+                label: 'Name',
                 priorityLevel: 1,
                 position: 1,
+                CustomComponent: UserHistoryButton,
                 minWidth: 100,
                 sortable: true
             },
             {
-                accessor: 'name',
-                label: 'Name',
+                accessor: 'username',
+                label: 'Username',
                 priorityLevel: 2,
                 position: 2,
                 minWidth: 100,
@@ -199,18 +287,29 @@ class Users extends React.Component {
                 sortable: false, 
             }
         ];
-        const tableCallbacks = { edit: this.updateRow }
-
+        const tableCallbacks = { edit: this.updateRow, name: this.getUserHistory }
+        if (this.state.historyView) {
+            return (
+                <UserHistory closeHistoryView={this.closeHistoryView} history={this.state.selectedUserHistory} username={this.state.selectedUsername}/>
+            );
+        }
         return (
             <div className='content'>
-                <h1>User Management</h1>
-                <br/>
-                <ButtonToolbar style={{ float: 'right'}}>
-                    <Button onClick={this.openModal}>New User</Button>
-                </ButtonToolbar>
                 <AddUserModal role_ids={this.state.role_ids}
                     show={this.state.showUserModal}
                     onSubmit={this.closeModal} />
+                <h1>User Management</h1>
+                <br />
+                <ButtonToolbar style={{ float: 'right' }}>
+                    <Button className={this.state.showingAllUsers ? 'hidden' : ''} bsStyle='link' onClick={this.showAllUsers}>Show All Users</Button>
+                    <Button onClick={this.openModal}>New User</Button>
+                </ButtonToolbar>
+                <Autocomplete
+                    hasUsername={true}
+                    suggestions={this.state.suggestionsArray}
+                    handler={this.handler}
+                />
+                <br/>
                 <ReactCollapsingTable
                         rows = { rows }
                         columns = { columns }

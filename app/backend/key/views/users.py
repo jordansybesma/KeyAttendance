@@ -43,8 +43,9 @@ class Users(APIView):
     def patch(self, request):
         if not self.validatePatch(request):
             return Response({'error':'Invalid Parameters'}, status='400')
-
         user = User.objects.get(pk=request.data['id'])
+        if request.user.id == user.id and request.data['is_active'] != user.is_active:
+            return Response({'error':'Users are not authorized to inactivate their own accounts'}, status='401')
         serializer = UserSerializerEdit(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -63,6 +64,8 @@ class Users(APIView):
     def delete(self, request):
         if not request.user.has_perm('key.delete_user'):
             return Response({'error':'You are not authorized to delete users.'}, status='401')
+        if request.user.id == int(request.query_params['id']):
+            return Response({'error': 'Users are not authorized to delete their own accounts.'}, status='401')
         if not self.validateDelete(request):
             return Response({'error':'Invalid Parameters'}, status='400')
 

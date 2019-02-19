@@ -97,8 +97,8 @@ class Students extends Component {
   
   // Could be used to create a custom layout for the fields on the student profile page
   sortCols(a, b) {
-    if (a.id > b.id) return 1;
-    if (a.id < b.id) return -1;
+    if (a.info_id > b.info_id) return 1;
+    if (a.info_id < b.info_id) return -1;
     return 0;
   }
 
@@ -152,7 +152,6 @@ class Students extends Component {
       } else {
         state.profileInfo[entry].type = state.profileInfo[entry].colInfo.type + '_value';
       }
-      console.log(state.profileInfo[entry].type);
     }
 
     for (var item in info) {
@@ -181,6 +180,7 @@ class Students extends Component {
 
   handleInfoChange(evt, state) {
     var changedField = evt.target.id;
+
     var newValue = evt.target.value;
     var type = state.profileInfo[changedField].type;
 
@@ -348,7 +348,6 @@ class Students extends Component {
           break;
         }
         
-        console.log(type);
         info.push(<FormControl key={label} type={type} id={entry} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
         info.push(<br/>);
       }

@@ -114,10 +114,10 @@ class Students extends Component {
   async getStudentProfile(state) {
     try {
       const studentProfileJson = await httpGet('http://127.0.0.1:8000/api/students?id=' + state.id);
-      const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
       state.profileData = studentProfileJson;
-      state.studentInfoJson = studentInfoJson;
-
+      
+      const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
+      // state.studentInfoJson = studentInfoJson;
       state.profileInfo = this.parseStudentInfo(state, studentInfoJson);
 
       var startDate = getEarlierDate(30);
@@ -141,6 +141,17 @@ class Students extends Component {
     catch (e) {
       console.log(e);
     }
+  }
+
+  async updateStudentInfo() {
+    const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + this.state.id);
+    var profileInfo = this.parseStudentInfo(this.state, studentInfoJson);
+
+    this.setState(function (previousState, currentProps) {
+      return {
+        profileInfo: profileInfo,
+      };
+    });
   }
 
   parseStudentInfo(state, info) {
@@ -199,15 +210,21 @@ class Students extends Component {
     evt.preventDefault()
     httpPatch('http://127.0.0.1:8000/api/students/', state.profileData);
     
+    var posted = false;
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
       if (field.updated) {
         if (field.studentInfoId) {
-          httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.id, field.patchPost);
+          httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
         } else {
           httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
+          posted = true;
         }
       }
+    }
+
+    if (posted) {
+      this.updateStudentInfo();
     }
 
     // Ensure that the autocomplete component has an updated copy of the profile

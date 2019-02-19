@@ -349,7 +349,8 @@ class Students extends Component {
         }
         
         console.log(type);
-        info.push(<Col sm="10"><FormControl key={label} type={type} id={entry} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} /> </Col>);
+        info.push(<FormControl key={label} type={type} id={entry} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
+        info.push(<br/>);
       }
     }
 
@@ -428,13 +429,13 @@ class Students extends Component {
                 <Form inline className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
                   <FormGroup>
                     <Label>First Name: </Label>
-                    <Col sm="10">
-                      <FormControl type="text" id="first_name" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleNameChange(evt, this.state)} />
-                    </Col>
+                    {/* <Col sm="10"> */}
+                      <FormControl type="text" id="first_name" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleNameChange(evt, this.state)} /> <br/>
+                    {/* </Col> */}
                     <Label>Last Name: </Label>
-                    <Col sm="10">
-                      <FormControl type="text" id="last_name" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleNameChange(evt, this.state)} />
-                    </Col>
+                    {/* <Col sm="10"> */}
+                      <FormControl type="text" id="last_name" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleNameChange(evt, this.state)} /> <br/>
+                    {/* </Col> */}
                     {this.renderEditInfo(this.state.parsedInfo)}
                     <br/>
                     <Button variant="primary" type="submit">Submit</Button> 

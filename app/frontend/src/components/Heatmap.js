@@ -31,31 +31,70 @@ class Heatmap extends Component {
     heatMapJson: PropTypes.instanceOf(Array),
   };
 
+  static defaultProps = {
+    data: [],
+      heatMapType: []
+
+  };
+
   constructor(props) {
     super(props);
 
     this.state = {
-      data: {}
+      data: props.data,
+        yArray: ["Thu", "Fri", "Sat", "Sun", "Mon", "Tue", "Wed", ]
     };
   }
 
-  render() {    
+  scaleWidth(heatMapType, dataLength) {
+    if (heatMapType === "weekly") {
+      return 8*dataLength;
+    }
+    else if (heatMapType === "annual") {
+      return 3.2*dataLength;
+    }
+  }
+
+  scaleHeight(heatMapType) {
+      if (heatMapType === "weekly") {
+          return 350;
+      }
+      else if (heatMapType === "annual") {
+          return 200;
+      }
+  }
+
+  yReversed(data) {
+      var yAxis = [];
+      for (var i=0; i < data.length; i++) {
+          yAxis.push(data[i]["y"])
+      }
+      yAxis = yAxis.reverse();
+      return yAxis
+
+  }
+
+  render() {
+    const data = this.props.data;
+    const dataLength = data.length;
+    const heatMapType = this.props.heatMapType;
+
     return (
       <XYPlot
-        width={500}
-        height={300}
+        width={this.scaleWidth(heatMapType, dataLength)}
+        height={this.scaleHeight(heatMapType)}
         margin={{top: 30}}
         xType="ordinal"
-      >
-
+        yType="ordinal"
+        yDomain={this.state.yArray.map(x => x).reverse()}
+        >
         <XAxis orientation='top'/>
         <YAxis orientation='left'/>
-        <MarkSeries data={this.props.data}/>
-           
+
         <HeatmapSeries
               className="heatmap-series-example"
-              colorRange={["#fffaf0", "orange"]}
-              data={this.props.data}
+              colorRange={["#F5FBFD", "teal"]}
+              data={data}
               style={{
                 stroke: 'black',
                 strokeWidth: '1px',
@@ -70,4 +109,4 @@ class Heatmap extends Component {
   };
 }
 
-export default Heatmap
+export default Heatmap;

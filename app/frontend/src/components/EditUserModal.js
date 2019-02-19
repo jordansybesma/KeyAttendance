@@ -68,7 +68,8 @@ class EditUserModal extends React.Component {
                 show: this.props.show,
                 first_name: this.props.row.first_name,
                 last_name: this.props.row.last_name,
-                is_active: this.props.row.is_active
+                is_active: this.props.row.is_active,
+                selectedOption: selectedOption
             });
         }
     }
@@ -102,6 +103,8 @@ class EditUserModal extends React.Component {
 	cancel() {
         this.setState({
             row: this.props.row,
+            error: false,
+            backendError: false
         });
 		this.props.onSubmit();
     }
@@ -160,8 +163,7 @@ class EditUserModal extends React.Component {
     }
     
     toggleRadioOptions(index) {
-        const { radioOptions } = this.state;
-        let selectedOption = '';
+        let { radioOptions, selectedOption } = this.state;
         if (!radioOptions[index].checked) {
             selectedOption = radioOptions[index].label;
             for (var j in radioOptions) {

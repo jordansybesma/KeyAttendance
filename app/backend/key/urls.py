@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from key.views import attendance, students, activities, users, misc, reports, groups, permissions, student_info, student_column
+from key.views import attendance, students, activities, users, misc, reports, groups, permissions, student_info, student_column, history
 
 urlpatterns = [
     path('activities/', activities.Activities.as_view()),
@@ -8,6 +8,7 @@ urlpatterns = [
     path('users/', users.Users.as_view()),
     path('groups/', groups.Groups.as_view()),
     path('permissions/', permissions.Permissions.as_view()),
+    path('history/', history.History.as_view()),
     path('student_info/', student_info.StudentInfo.as_view()),
     path('student_column/', student_column.StudentColumn.as_view()),
     re_path(r'^reports/(?P<vizType>\w*)/$', reports.Reports.as_view()),

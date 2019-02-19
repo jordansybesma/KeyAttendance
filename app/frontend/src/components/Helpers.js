@@ -238,10 +238,11 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 // Makes sure that we have a valid token, else redirects to login screen
 const checkCredentials = (Component) => {
 	const token = window.localStorage.getItem("key_credentials");
-    let tokenData = decodeToken(token)
 	if (token === null) {
 		return <Redirect to='/'/>;
-	} else if (tokenData.exp < Date.now() / 1000) { 
+	} 
+	let tokenData = decodeToken(token);
+	if (tokenData.exp < Date.now() / 1000) { 
 		logout();
 		return <Redirect to='/'/>;
 	} else {

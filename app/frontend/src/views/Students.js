@@ -77,7 +77,7 @@ class Students extends Component {
         updated: false,
         patchPost: {
           'student_id': null,
-          'info_id': null,
+          'info_id': parseInt(col) + 1,
           'int_value': null,
           'str_value': null,
           'bool_value': null,
@@ -145,6 +145,8 @@ class Students extends Component {
 
   parseStudentInfo(state, info) {
     for (var entry in state.profileInfo) {
+      state.profileInfo[entry].patchPost.student_id = info[0].student_id;
+
       // Ensure all varchar(x) types get caught as str_value
       var type;
       if ((/varchar.*/g).test(state.profileInfo[entry].colInfo.type)) {
@@ -200,7 +202,7 @@ class Students extends Component {
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
       if (field.updated) {
-        if (field.id) {
+        if (field.studentInfoId) {
           httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.id, field.patchPost);
         } else {
           httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
@@ -348,7 +350,7 @@ class Students extends Component {
           break;
         }
         
-        info.push(<FormControl key={label} type={type} id={entry} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
+        info.push(<FormControl key={label} type={type} id={parseInt(entry)} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
         info.push(<br/>);
       }
     }

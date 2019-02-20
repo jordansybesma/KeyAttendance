@@ -32,6 +32,8 @@ class Students extends Component {
           suggestionsArray: suggestionsArray,
           studentColumnJson: studentColumnJson,
           id: null,
+
+          uploadedPic: false
         };
       });
     } catch (e) {
@@ -375,6 +377,23 @@ class Students extends Component {
     return info;
   }
 
+  readImage(evt, state) {
+    evt.preventDefault();
+
+    console.log(evt.target.files[0]);
+
+    var reader = new FileReader();
+    reader.onloadend = () => {
+      this.setState(function (previousState, currentProps) {
+        return {
+          src: reader.result,
+          uploadedPic: true
+        };
+      });
+    }
+    reader.readAsDataURL(evt.target.files[0]);
+  }
+
   render() {
     let permissions = window.localStorage.getItem('permissions').split(',')
     if (permissions.indexOf('view_students') < 0) {
@@ -399,6 +418,12 @@ class Students extends Component {
     }
 
     else if (this.state.mode === 'display') {
+      var pic;
+      if (this.state.uploadedPic) {
+        pic = this.state.src;
+      } else {
+        pic = blankPic;
+      }
       return (
         <div className='content'>
           <h1> Student Profile </h1>
@@ -412,7 +437,7 @@ class Students extends Component {
               </div>
               <br/>
               <div className='col-md-2 to-front top-bottom-padding'>
-                <img id="studentPhoto" src={blankPic} width="196" height="196" /><br />
+                <img id="studentPhoto" src={pic} width="196" height="196" /><br />
                 <ListGroup>
                   <ListGroupItem>Name: {this.state.profileData.first_name} {this.state.profileData.last_name}</ListGroupItem>
                   {this.renderDisplayInfo(this.state.parsedInfo)}
@@ -443,7 +468,7 @@ class Students extends Component {
               <div className='col-md-8 top-bottom-padding'>
                 <img id="studentPhoto" src={blankPic} width="196" height="196" />
                 <p> Upload Student Profile Photo </p>
-                <input id="upload-button" type="file" accept="image/*" name="file" /><br />
+                <input id="upload-button" type="file" accept="image/*" name={this.state.profileInfo[0].patchPost.student_id} onChange={evt => this.readImage(evt, this.state)} /><br />
                 <Form inline className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
                   <FormGroup>
                     <Label>First Name: </Label>

@@ -161,7 +161,7 @@ class Students extends Component {
 
   parseStudentInfo(state, info) {
     for (var entry in state.profileInfo) {
-      state.profileInfo[entry].patchPost.student_id = info[0].student_id;
+      state.profileInfo[entry].patchPost.student_id = state.id;
 
       // Ensure all varchar(x) types get caught as str_value
       var type;

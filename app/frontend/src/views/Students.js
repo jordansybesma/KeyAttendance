@@ -85,7 +85,8 @@ class Students extends Component {
           'bool_value': null,
           'date_value': null,
           'time_value': null,
-          'id': null
+          'id': null,
+          'blob_value': null
         }
       }
     }
@@ -219,6 +220,7 @@ class Students extends Component {
         if (field.studentInfoId) {
           httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
         } else {
+          console.log(field.patchPost);
           httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
           posted = true;
         }
@@ -384,6 +386,8 @@ class Students extends Component {
 
     var reader = new FileReader();
     reader.onloadend = () => {
+      this.state.profileInfo[5].updated = true;
+      this.state.profileInfo[5].patchPost['blob_value'] = reader.result;
       this.setState(function (previousState, currentProps) {
         return {
           src: reader.result,

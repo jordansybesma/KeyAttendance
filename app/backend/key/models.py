@@ -103,10 +103,11 @@ class StudentInfo(models.Model):
     student_id = models.IntegerField(blank=True, null=True)
     info_id = models.IntegerField(blank=True, null=True)
     int_value = models.IntegerField(blank=True, null=True)
-    str_value = models.CharField(max_length=500, blank=True, null=True)
+    str_value = models.CharField(max_length=20000, blank=True, null=True)
     bool_value = models.BooleanField(blank=True, null=True)
     date_value = models.DateField(blank=True, null=True)
     time_value = models.TimeField(blank=True, null=True)
+    blob_value = models.BinaryField(blank=True, null=True)
 
     class Meta:
         managed = True

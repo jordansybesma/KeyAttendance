@@ -24,13 +24,14 @@ class Students extends Component {
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
       
       var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
-      this.parseCols(studentColumnJson);
+      var profileInfo = this.parseCols(studentColumnJson);
 
       this.setState(function (previousState, currentProps) {
         return {
           mode: 'search',
           suggestionsArray: suggestionsArray,
           studentColumnJson: studentColumnJson,
+          profileInfo: profileInfo,
           id: null,
 
           uploadedPic: false
@@ -91,11 +92,7 @@ class Students extends Component {
       }
     }
 
-    this.setState(function (previousState, currentProps) {
-      return {
-        profileInfo: profileInfo,
-      };
-    });
+    return profileInfo;
   }
   
   // Could be used to create a custom layout for the fields on the student profile page
@@ -119,9 +116,14 @@ class Students extends Component {
       const studentProfileJson = await httpGet('http://127.0.0.1:8000/api/students?id=' + state.id);
       state.profileData = studentProfileJson;
       
-      const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
-      // state.studentInfoJson = studentInfoJson;
-      state.profileInfo = this.parseStudentInfo(state, studentInfoJson);
+      try {
+        const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
+        state.profileInfo = this.parseStudentInfo(state, studentInfoJson);
+      } 
+      catch (e) {
+        var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+        state.profileInfo = this.parseCols(studentColumnJson);
+      }
 
       var startDate = getEarlierDate(30);
       startDate = getPrevSunday(startDate);

@@ -197,12 +197,18 @@ class Students extends Component {
   }
 
   handleInfoChange(evt, state) {
-    var changedField = evt.target.id;
+    var changedField = parseInt(evt.target.id);
 
     var newValue = evt.target.value;
     var type = state.profileInfo[changedField].type;
 
     state.profileInfo[changedField].updated = true;
+
+    // Ensure that empty strings are parsed as null values
+    if (newValue == '') {
+      newValue = null;
+    }
+
     state.profileInfo[changedField].value = newValue;
     state.profileInfo[changedField].patchPost[type] = newValue;
 
@@ -355,7 +361,7 @@ class Students extends Component {
     for (var entry in this.state.profileInfo) {
       var label = this.state.profileInfo[entry].colInfo.name + ': ';
       if (this.state.profileInfo[entry].colInfo.is_showing) {
-        info.push(<Label>{label}</Label>)
+        info.push(<Label key={entry + 'label'}>{label}</Label>)
 
         var type;
         switch (this.state.profileInfo[entry].type) {
@@ -373,8 +379,8 @@ class Students extends Component {
           break;
         }
         
-        info.push(<FormControl key={label} type={type} id={parseInt(entry)} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
-        info.push(<br/>);
+        info.push(<FormControl key={label} type={type} id={entry} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
+        info.push(<br key={entry + 'break'}/>);
       }
     }
 

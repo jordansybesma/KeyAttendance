@@ -44,8 +44,11 @@ class Users(APIView):
         if not self.validatePatch(request):
             return Response({'error':'Invalid Parameters'}, status='400')
         user = User.objects.get(pk=request.data['id'])
+        serializer = UserSerializer(user)
         if request.user.id == user.id and request.data['is_active'] != user.is_active:
             return Response({'error':'Users are not authorized to inactivate their own accounts'}, status='401')
+        if request.user.id == user.id and request.data['groups'] != serializer.data['groups']:
+            return Response({'error':'Users are not authorized to change their own user role'}, status='401')
         serializer = UserSerializerEdit(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()

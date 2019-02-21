@@ -158,24 +158,3 @@ JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'key.custom_jwt.jwt_response_payload_handler',
     'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=12)
 }
-
-# Logging Settings
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'filters': None,
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    },
-}
-

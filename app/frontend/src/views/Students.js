@@ -22,7 +22,7 @@ class Students extends Component {
       var studentsJson = await httpGet(`http://${domain}/api/students/`);
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
       
-      var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+      var studentColumnJson = await httpGet(`http://${domain}/api/student_column/`);
       var profileInfo = this.parseCols(studentColumnJson);
 
       this.setState(function (previousState, currentProps) {
@@ -116,11 +116,11 @@ class Students extends Component {
       state.profileData = studentProfileJson;
       
       try {
-        const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
+        const studentInfoJson = await httpGet(`http://${domain}/api/student_info/?student_id=` + state.id);
         state.profileInfo = this.parseStudentInfo(state, studentInfoJson);
       } 
       catch (e) {
-        var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+        var studentColumnJson = await httpGet(`http://${domain}/api/student_column/`);
         state.profileInfo = this.parseCols(studentColumnJson);
       }
 
@@ -135,7 +135,7 @@ class Students extends Component {
       //var endDateString = "2018-03-03";
       state.endDateString = endDateString;
 
-      // const heatMapJson = await httpGet('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
+      // const heatMapJson = await httpGet('http://${domain}/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
       // state.heatMapJson = heatMapJson;
 
       this.setState(function (previousState, currentProps) {
@@ -239,6 +239,8 @@ class Students extends Component {
     }
 
     // Ensure that the autocomplete component has an updated copy of the profile
+    var entryFound = false;
+    var entryIndex = 0;
     var entryFound = false;
     while (entryFound === false) {
       if (state.suggestionsArray[entryIndex].id === state.profileData['id']) {

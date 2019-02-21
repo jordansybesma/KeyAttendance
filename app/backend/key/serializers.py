@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth.models import User, Group, Permission
-from .models import Students, AttendanceItems, Activity, Reports, StudentSuggestions
+from .models import Students, AttendanceItems, Activity, Reports, StudentSuggestions, CitySpanStudents
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,7 +11,7 @@ class StudentSerializer(serializers.ModelSerializer):
             'id',
             'first_attendance',
             'number_visits',
-            'student_key'
+            'student_key',
             'birthday',
             'nickname',
             'gender',
@@ -104,3 +104,13 @@ class SuggestionSerializer(serializers.ModelSerializer):
             'match_key'
         )
         model = StudentSuggestions
+
+class CitySpanStudentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = (
+            'first_name',
+            'last_name',
+            'student_key'
+        )
+        model = CitySpanStudents

@@ -130,7 +130,8 @@ class Students(models.Model):
 class StudentSuggestions(models.Model):
     student_id = models.IntegerField(blank=True, null=True)
     match_name = models.TextField(blank=True, null=True)
-    match_key = models.TextField(blank=True, primary_key=True)
+    match_key = models.TextField(null=False)
+    id = models.AutoField(primary_key=True, unique=True)
 
     class Meta:
         managed = True
@@ -140,7 +141,8 @@ class StudentSuggestions(models.Model):
 class CitySpanStudents(models.Model):
     first_name = models.TextField(blank=True, null=True)
     last_name = models.TextField(blank=True, null=True)
-    student_key = models.TextField(blank=True, primary_key=True)
+    student_key = models.TextField(null=False)
+    id = models.AutoField(primary_key=True, unique=True)
 
     class Meta:
         managed = True

@@ -9,7 +9,7 @@ import createBrowserHistory from 'history/createBrowserHistory';
 
 const history = createBrowserHistory();
 
-const domain = '127.0.0.1:8000' // 'ec2-3-16-129-180.us-east-2.compute.amazonaws.com' // '127.0.0.1:8000'
+const domain = 'ec2-3-16-129-180.us-east-2.compute.amazonaws.com' // '127.0.0.1:8000'
 
 function httpPost(url, body={}) {
 	const token = window.localStorage.getItem("key_credentials");

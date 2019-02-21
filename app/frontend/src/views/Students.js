@@ -134,19 +134,9 @@ class Students extends Component {
       var endDateString = dateToString(endDate);
       //var endDateString = "2018-03-03";
       state.endDateString = endDateString;
-<<<<<<< HEAD
-	  
-    const heatMapJson = await httpGet(`http://${domain}/api/reports/individualHeatmap/?student_id=${state.id}&startdate=${startDateString}&enddate=${endDateString}`);
-    console.log(heatMapJson);
-    //const heatMapJson = await heatMapData.json();
-    //console.log("json: ", heatMapJson);
-    state.heatMapJson = heatMapJson;
-    //console.log("json added to state: ", state.heatMapJson);
-=======
 
       // const heatMapJson = await httpGet('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
       // state.heatMapJson = heatMapJson;
->>>>>>> develop
 
       this.setState(function (previousState, currentProps) {
         return state;
@@ -228,20 +218,17 @@ class Students extends Component {
 
   handleSubmit(evt, state) {
     evt.preventDefault()
-<<<<<<< HEAD
     httpPatch(`http://${domain}/api/students/`, state.profileData);
-=======
-    httpPatch('http://127.0.0.1:8000/api/students/', state.profileData);
     
     var posted = false;
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
       if (field.updated) {
         if (field.studentInfoId) {
-          httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
+          httpPatch(`http://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost);
         } else {
           console.log(field.patchPost);
-          httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
+          httpPost(`http://${domain}/api/student_info/`, field.patchPost);
           posted = true;
         }
       }
@@ -250,11 +237,9 @@ class Students extends Component {
     if (posted) {
       this.updateStudentInfo();
     }
->>>>>>> develop
 
     // Ensure that the autocomplete component has an updated copy of the profile
     var entryFound = false;
-    var entryIndex = 0;
     while (entryFound === false) {
       if (state.suggestionsArray[entryIndex].id === state.profileData['id']) {
         state.suggestionsArray[entryIndex] = {

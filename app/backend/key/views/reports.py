@@ -51,8 +51,8 @@ class Reports(APIView):
             startdate = request.query_params['startdate']
             enddate = request.query_params['enddate']
             #debugging
-            print("vizType: " + vizType)
-            print("params: " + student_id + ", " + startdate + ", " + enddate)
+            # print("vizType: " + vizType)
+            # print("params: " + student_id + ", " + startdate + ", " + enddate)
             #for value in request.query_params:
                 #print ("%s" % (value))
             return self.retrieveIndividualHeatmapData(student_id, startdate, enddate)

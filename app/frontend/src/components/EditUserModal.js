@@ -104,7 +104,10 @@ class EditUserModal extends React.Component {
         this.setState({
             row: this.props.row,
             error: false,
-            backendError: false
+            backendError: false,
+            password: '',
+            confirmPassword: '',
+            editPassword: false,
         });
 		this.props.onSubmit();
     }
@@ -157,6 +160,11 @@ class EditUserModal extends React.Component {
                         backendError: true
                     });
                 } else {
+                    self.setState({
+                        password: '',
+                        confirmPassword: '',
+                        editPassword: false,
+                    })
                     self.props.onSubmit(result);
                 }
             })

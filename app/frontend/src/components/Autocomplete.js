@@ -44,10 +44,9 @@ class Autocomplete extends Component {
         (suggestion.firstName.toLowerCase().startsWith(userInput.toLowerCase()) === true ||
           suggestion.lastName1.toLowerCase().startsWith(userInput.toLowerCase()) === true ||
           suggestion.lastName2.toLowerCase().startsWith(userInput.toLowerCase()) === true ||
-          suggestion.id.toString().startsWith(userInput.toLowerCase()) === true ||
           (suggestion.firstName.toLowerCase() + " " +
-            suggestion.lastName1.toLowerCase() + " " +
-            suggestion.id.toString()).startsWith(userInput.toLowerCase()) === true)
+            suggestion.lastName1.toLowerCase() + " ").startsWith(userInput.toLowerCase()) === true ||
+            (suggestion.username && suggestion.username.toLowerCase().startsWith(userInput.toLowerCase()) === true))
     );
 
     // Update the user input and filtered suggestions, reset the active
@@ -174,14 +173,17 @@ class Autocomplete extends Component {
               if (index === activeSuggestion) {
                 className = "suggestion-active";
               }
-
+              let username = '';
+              if (suggestion.username) {
+                username = ' | ' + suggestion.username;
+              }
               return (
                 <p
                   className={className}
                   key={suggestion.id}
                   onClick={onClick}
                 >
-                  {suggestion.firstName} {suggestion.lastName1} {suggestion.lastName2}
+                  {suggestion.firstName} {suggestion.lastName1} {suggestion.lastName2} {username}
                 </p>
               );
             })}
@@ -210,7 +212,7 @@ class Autocomplete extends Component {
               value={userInput}
               onChange={onChange}
               onKeyDown={onKeyDown}
-              placeholder="Name or ID"
+              placeholder={this.props.hasUsername ? 'Name or Username' : 'Name'}
             />
             {suggestionsListComponent}
           </FormGroup>{' '}

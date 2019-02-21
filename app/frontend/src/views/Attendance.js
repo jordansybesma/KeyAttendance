@@ -253,7 +253,6 @@ class Attendance extends React.Component {
     }
 
     setDateToToday() {
-        const today = new Date()
         this.setState({date: this.getCurrentDate()})
     }
 

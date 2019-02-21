@@ -69,7 +69,6 @@ class EditUserModal extends React.Component {
                 first_name: this.props.row.first_name,
                 last_name: this.props.row.last_name,
                 is_active: this.props.row.is_active,
-                selectedOption: selectedOption
             });
         }
     }

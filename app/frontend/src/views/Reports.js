@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Heatmap from '../components/Heatmap';
 import continuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
-import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString, domain, httpGet, httpPatch} from '../components/Helpers';
+import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString, domain, httpGet } from '../components/Helpers';
 import BarChart from './../components/BarChart.js'
 
 class Reports extends Component {
@@ -78,24 +78,24 @@ class Reports extends Component {
         var currIdx = 0;
         var byDayJson = state;
 
-        if(byDayJson.length == 0){
+        if(byDayJson.length === 0){
           var firstEntry = {"date": startDateString, "daily_visits": 0}
           byDayJson.push(firstEntry);
         }
         //Add dummy date entries for missing dates (dates with no engagements) to json btwn start and end date
         //dateToCompare always incremented by 1
-        while (this.compareTime(dateToCompare, endDate) == false) {
+        while (this.compareTime(dateToCompare, endDate) === false) {
           //if reached the end of json but there's still dates to fill in up to the end date, stay on end entry
           if (currIdx > byDayJson.length - 1) {
             currIdx = byDayJson.length - 1;
           }
           currEntryDate = new Date(byDayJson[currIdx]["date"].replace(/-/g, '\/'));
           //identified missing date, so add dummy date entry for missing date
-          if (this.sameDay(dateToCompare, currEntryDate) == false) {
+          if (this.sameDay(dateToCompare, currEntryDate) === false) {
             var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "daily_visits": 0 };
             //add entry in place if not at end of json OR final date entry has not been added yet/surpassed
             //else add to very end of json 
-            if (currIdx != byDayJson.length - 1 || this.compareTime(currEntryDate, dateToCompare)) {
+            if (currIdx !== byDayJson.length - 1 || this.compareTime(currEntryDate, dateToCompare)) {
               byDayJson.splice(currIdx, 0, dateEntryZeroEngagements);
             } else {
               byDayJson.splice(currIdx + 1, 0, dateEntryZeroEngagements);
@@ -156,17 +156,17 @@ class Reports extends Component {
         //first filter out any entries that have timestamps outside of key operating hours
         byHourJson = byHourJson.filter(function(entry) {
           var inValidTimeRange = hourArray.includes(entry.time);
-          return inValidTimeRange == true;
+          return inValidTimeRange === true;
          });
         var hourToCompareIdx= 0;
         var hourToCompare = hourArray[0];
 
-        if(byHourJson.length == 0){
+        if(byHourJson.length === 0){
           var firstEntry = {"date": startDateString, "time": hourArray[0], "count": 0};
           byHourJson.push(firstEntry);
         }
         //Add dummy date entries for missing date-hour combos (no engagements) to json btwn start and end date
-        while (this.compareTime(dateToCompare, endDate) == false) {
+        while (this.compareTime(dateToCompare, endDate) === false) {
           //if reached the end of json but there's still dates to fill in up to the end date, stay on end entry
           if (currIdx > byHourJson.length - 1) {
             currIdx = byHourJson.length - 1;
@@ -174,22 +174,22 @@ class Reports extends Component {
           currEntryDate = new Date(byHourJson[currIdx]["date"].replace(/-/g, '\/'));
           currHour = byHourJson[currIdx]["time"];
           //identified missing date, so add dummy date entry for missing date
-          if (this.sameDay(dateToCompare, currEntryDate) == false) {
+          if (this.sameDay(dateToCompare, currEntryDate) === false) {
             var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "time": hourToCompare, "count": 0 };
             //add entry in place if not at end of json OR final date entry has not been added yet/surpassed
             //else add to very end of json
-            if (currIdx != byHourJson.length - 1 || (this.compareTime(currEntryDate, dateToCompare) && currHour > hourToCompare)){
+            if (currIdx !== byHourJson.length - 1 || (this.compareTime(currEntryDate, dateToCompare) && currHour > hourToCompare)){
               byHourJson.splice(currIdx, 0, dateEntryZeroEngagements);
             } else {
               byHourJson.splice(currIdx+1,0, dateEntryZeroEngagements);
             }
           }
           //the two date-hour combos are on same day, but different hours so add the missing hour as a dummy entry
-          else if(hourToCompare != currHour){
+          else if(hourToCompare !== currHour){
             var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "time": hourToCompare, "count": 0 };
             //add entry in place if not at end of json OR final date entry has not been added yet/surpassed
             //else add to very end of json
-            if (currIdx != byHourJson.length - 1 || (this.compareTime(currEntryDate, dateToCompare) && currHour > hourToCompare)){
+            if (currIdx !== byHourJson.length - 1 || (this.compareTime(currEntryDate, dateToCompare) && currHour > hourToCompare)){
               byHourJson.splice(currIdx, 0, dateEntryZeroEngagements);
             } else {
               byHourJson.splice(currIdx+1,0, dateEntryZeroEngagements);
@@ -197,11 +197,11 @@ class Reports extends Component {
           }
           //the two date-hour combos match exactly
           currIdx++;
-          if(hourToCompare == hourArray[hourArray.length-1]){
+          if(hourToCompare === hourArray[hourArray.length-1]){
            hourToCompare = "next day";
           }
           //on last hour of the current day, increment date and set hour to first hour
-          if(hourToCompare == "next day"){
+          if(hourToCompare === "next day"){
             dateToCompare.setDate(dateToCompare.getDate() + 1);
             hourToCompare = hourArray[0];
             hourToCompareIdx = 0;

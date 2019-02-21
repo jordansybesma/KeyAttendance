@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
 import { httpGet, httpPatch, httpPost, domain, getEarlierDate, getPrevSunday, getNextSaturday, dateToString } from '../components/Helpers';
-import { Button, Col, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import { Button, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem} from "react-bootstrap";
 import blankPic from '../images/blank_profile_pic.jpg'
 import { Redirect } from 'react-router-dom';
 
@@ -176,7 +176,7 @@ class Students extends Component {
       state.profileInfo[infoId - 1].patchPost = info[item];
       state.profileInfo[infoId - 1].studentInfoId = info[item].id;
 
-      var type = state.profileInfo[infoId - 1].type;
+      type = state.profileInfo[infoId - 1].type;
       state.profileInfo[infoId - 1].value = info[item][type];
     }
 
@@ -204,7 +204,7 @@ class Students extends Component {
     state.profileInfo[changedField].updated = true;
 
     // Ensure that empty strings are parsed as null values
-    if (newValue == '') {
+    if (newValue === '') {
       newValue = null;
     }
 
@@ -241,7 +241,6 @@ class Students extends Component {
     // Ensure that the autocomplete component has an updated copy of the profile
     var entryFound = false;
     var entryIndex = 0;
-    var entryFound = false;
     while (entryFound === false) {
       if (state.suggestionsArray[entryIndex].id === state.profileData['id']) {
         state.suggestionsArray[entryIndex] = {
@@ -288,24 +287,24 @@ class Students extends Component {
     var currIdx = 0;
     var heatMapJson = this.state.heatMapJson;
 
-    if (heatMapJson.length == 0) {
+    if (heatMapJson.length === 0) {
       var firstEntry = { "date": startDateString, "daily_visits": 0 }
       heatMapJson.push(firstEntry);
     }
     //Add dummy date entries for missing dates (dates with no engagements) to json btwn start and end date
     //dateToCompare always incremented by 1
-    while (this.compareTime(dateToCompare, endDate) == false) {
+    while (this.compareTime(dateToCompare, endDate) === false) {
       //if reached the end of json but there's still dates to fill in up to the end date, stay on end entry
       if (currIdx > heatMapJson.length - 1) {
         currIdx = heatMapJson.length - 1;
       }
       currEntryDate = new Date(heatMapJson[currIdx]["date"].replace(/-/g, '\/'));
       //identified missing date, so add dummy date entry for missing date
-      if (this.sameDay(dateToCompare, currEntryDate) == false) {
+      if (this.sameDay(dateToCompare, currEntryDate) === false) {
         var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "daily_visits": 0 };
         //add entry in place if not at end of json OR final date entry has not been added yet/surpassed
         //else add to very end of json 
-        if (currIdx != heatMapJson.length - 1 || this.compareTime(currEntryDate, dateToCompare)) {
+        if (currIdx !== heatMapJson.length - 1 || this.compareTime(currEntryDate, dateToCompare)) {
           heatMapJson.splice(currIdx, 0, dateEntryZeroEngagements);
         } else {
           heatMapJson.splice(currIdx + 1, 0, dateEntryZeroEngagements);
@@ -342,9 +341,9 @@ class Students extends Component {
     
     var fields = this.state.profileInfo;
     for (var field in fields) {
-      if (fields[field].colInfo.is_showing == true) {
+      if (fields[field].colInfo.is_showing === true) {
         var value = 'N/A';
-        if (fields[field].value != null && fields[field].value != null != '') {
+        if (fields[field].value !== null && fields[field].value != null != '') {
           value = fields[field].value;
         }
         var innerHtml = fields[field].colInfo.name + ': ' + value;

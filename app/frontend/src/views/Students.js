@@ -215,7 +215,7 @@ class Students extends Component {
       y = mdyArray[0];
       m = mdyArray[1];
       d = mdyArray[2];
-      dayEntry = { "x": dayOfWeek, "y": weekNum+1, "color": heatMapJson[i]['daily_visits']};
+      dayEntry = { "x": dayOfWeek, "y": (weekNum+1).toString(), "color": heatMapJson[i]['daily_visits']};
       processedData.push(dayEntry);
     }
     console.log("processed data: ", processedData);
@@ -272,8 +272,8 @@ class Students extends Component {
 			  </div>
         	</div>
 		  </div>
-          <Heatmap 
-            data = {this.formatData(this.state)}/>
+      <Heatmap
+        data = {this.formatData(this.state)} heatMapType = "individualStudent"/>
 		</div>
       );
     }

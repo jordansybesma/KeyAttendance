@@ -23,7 +23,8 @@ import PropTypes from "prop-types";
 import { scaleLinear } from 'd3-scale';
 
 import { XYPlot, XAxis, YAxis, HeatmapSeries, LabelSeries, MarkSeries } from 'react-vis';
-import continuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
+import ContinuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
+import "./React-vizLegends.scss";
 
 class Heatmap extends Component {
 
@@ -31,31 +32,119 @@ class Heatmap extends Component {
     heatMapJson: PropTypes.instanceOf(Array),
   };
 
+  static defaultProps = {
+    data: [],
+      heatMapType: ""
+
+  };
+
   constructor(props) {
     super(props);
 
     this.state = {
-      data: {}
+      data: props.data,
+        yArray: ["Thu", "Fri", "Sat", "Sun", "Mon", "Tue", "Wed", ],
+        yArrayStudents: ["1", "2", "3", "4", "5"]
     };
   }
 
-  render() {    
+  scaleWidth(heatMapType, dataLength) {
+    if (heatMapType === "weekly" || heatMapType === "individualStudent") {
+      return 8*dataLength;
+    }
+    else if (heatMapType === "annual") {
+      return 3.2*dataLength;
+    }
+  }
+
+  scaleHeight(heatMapType) {
+      if (heatMapType === "weekly" || heatMapType === "individualStudent") {
+          return 350;
+      }
+      else if (heatMapType === "annual") {
+          return 200;
+      }
+  }
+
+  axisType(heatMapType) {
+      return "ordinal";
+  }
+
+  colorRange(max) {
+      if (max > 0) {
+            return ["#F5FBFD", "teal"]
+        }
+    return ["#F5FBFD", "#F5FBFD"];
+}
+
+  // Returns the correct y-axis dependent on heatmap type, with axes label reversed
+  reverseYAxis(heatMapType) {
+      if (heatMapType !== "individualStudent") {
+          return this.state.yArray.map(x=>x).reverse();
+      }
+      else {
+          return this.state.yArrayStudents.map(x=>x).reverse();
+      }
+
+  }
+
+  calculateMinDataPoint(data){
+    var min = 0;
+    var toCompare;
+    for(var i=0; i<data.length;i++){
+      toCompare = data[i]["color"];
+      if(toCompare && (toCompare < min)){
+        min = toCompare;
+      }
+    }
+    return min;
+  }
+
+  calculateMaxDataPoint(data){
+    var max = 0;
+    var toCompare;
+    for(var i=0; i<data.length;i++){
+      toCompare = data[i]["color"];
+      if(toCompare && (toCompare > max)){
+        max = toCompare;
+      }
+    }
+    return max;
+  }
+
+  calculateHeatmapColor(maxHeatMapColor){
+    if(maxHeatMapColor==0){
+      return "#F5FBFD";
+    } else {
+      return "teal";
+    }
+  }
+
+  render() {
+    const data = this.props.data;
+    const dataLength = data.length;
+    const heatMapType = this.props.heatMapType;
+    const minLegendLabel = this.calculateMinDataPoint(data);
+    const maxLegendLabel = this.calculateMaxDataPoint(data);
+    const maxHeatMapColor = this.calculateHeatmapColor(maxLegendLabel);
+    const heatMapColors = this.colorRange(maxLegendLabel)
+
     return (
       <XYPlot
-        width={500}
-        height={300}
+        width={this.scaleWidth(heatMapType, dataLength)}
+        height={this.scaleHeight(heatMapType)}
         margin={{top: 30}}
         xType="ordinal"
-      >
-
+        yType={this.axisType(heatMapType)}
+        yDomain={this.reverseYAxis(heatMapType)}
+        >
         <XAxis orientation='top'/>
         <YAxis orientation='left'/>
-        <MarkSeries data={this.props.data}/>
-           
+
         <HeatmapSeries
               className="heatmap-series-example"
-              colorRange={["#fffaf0", "orange"]}
-              data={this.props.data}
+              colorRange = {heatMapColors}
+              data={data}
               style={{
                 stroke: 'black',
                 strokeWidth: '1px',
@@ -65,9 +154,19 @@ class Heatmap extends Component {
                 }
               }} />
 
+          <ContinuousColorLegend
+                width={300}
+                startTitle={minLegendLabel}
+                midTitle={Math.round((maxLegendLabel+minLegendLabel)/2)}
+                endTitle= {maxLegendLabel}
+                startColor="#F5FBFD"
+                endColor={maxHeatMapColor}
+                height={100}
+              />
+
       </XYPlot>
     );
   };
 }
 
-export default Heatmap
+export default Heatmap;

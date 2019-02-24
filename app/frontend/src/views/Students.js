@@ -195,6 +195,7 @@ class Students extends Component {
   handleNameChange(evt, state) {
     var changedField = evt.target.id;
     state.profileData[changedField] = evt.target.value;
+    state.profileDataUpdated = true;
     this.setState(function (previousState, currentProps) {
       return state;
     });
@@ -223,7 +224,9 @@ class Students extends Component {
 
   handleSubmit(evt, state) {
     evt.preventDefault()
-    httpPatch('http://127.0.0.1:8000/api/students/', state.profileData);
+    if (state.profileDataUpdated) {
+      httpPatch('http://127.0.0.1:8000/api/students/', state.profileData);
+    }
     
     var posted = false;
     for (var field in state.profileInfo) {
@@ -232,7 +235,6 @@ class Students extends Component {
         if (field.studentInfoId) {
           httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
         } else {
-          console.log(field.patchPost);
           httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
           posted = true;
         }
@@ -392,8 +394,6 @@ class Students extends Component {
 
   readImage(evt, state) {
     evt.preventDefault();
-
-    console.log(evt.target.files[0]);
 
     var reader = new FileReader();
     reader.onloadend = () => {

@@ -107,7 +107,6 @@ class StudentInfo(models.Model):
     bool_value = models.BooleanField(blank=True, null=True)
     date_value = models.DateField(blank=True, null=True)
     time_value = models.TimeField(blank=True, null=True)
-    blob_value = models.BinaryField(blank=True, null=True)
 
     class Meta:
         managed = True

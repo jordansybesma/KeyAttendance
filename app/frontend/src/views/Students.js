@@ -86,8 +86,7 @@ class Students extends Component {
           'bool_value': null,
           'date_value': null,
           'time_value': null,
-          'id': null,
-          'blob_value': null
+          'id': null
         }
       }
     }
@@ -118,7 +117,12 @@ class Students extends Component {
       
       try {
         const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
-        state.profileInfo = this.parseStudentInfo(state, studentInfoJson);
+
+        if (studentInfoJson.length == 0) {
+          state.profileInfo = this.parseCols(studentColumnJson);
+        } else {
+          state.profileInfo = this.parseStudentInfo(state, studentInfoJson);
+        }
       } 
       catch (e) {
         var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');

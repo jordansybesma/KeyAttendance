@@ -2,6 +2,7 @@ import React from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
 import Users from './Users';
 import Roles from './Roles';
+import StudentKeys from './StudentKeys';
 import Activities from './Activities';
 
 class AdminTabs extends React.Component {
@@ -42,6 +43,9 @@ class AdminTabs extends React.Component {
           </Tab>
           <Tab eventKey={4} title="Student Profile Fields">
             Tab 4 content
+          </Tab>
+          <Tab eventKey={5} title="Student Key Management">
+            <StudentKeys/>
           </Tab>
         </Tabs>
       );

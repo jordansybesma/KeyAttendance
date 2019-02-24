@@ -118,6 +118,7 @@ class Students(models.Model):
     first_name = models.TextField(blank=True, null=True)
     last_name = models.TextField(blank=True, null=True)
     id = models.IntegerField(blank=True, primary_key=True)
+    student_key = models.TextField(blank=True, null=True)
     #photo = models.ImageField(blank=True, null=True, upload_to='profile_photos/')
 
     class Meta:

@@ -46,7 +46,7 @@ def levenshtein(s, t):
 class StudentKeySuggestions(APIView):
 
     def validateGet(self, request, reqType):
-        if reqType == 'suggestions':
+        if reqType == 'student':
             if 'id' in request.query_params:
                 try:
                     # There needs to be a matching student to get suggestions.
@@ -62,10 +62,10 @@ class StudentKeySuggestions(APIView):
             return Response({'error':'Invalid Parameters'}, status='400')
 
         if reqType == 'unmatchedstudents':
-            students = StudentModel.objects.get(pk=request.query_params['id']).filter(student_key = None)
-            serializer = StudentSerializer(students)
+            students = StudentModel.objects.filter(student_key__exact = None)
+            serializer = StudentSerializer(students, many=True)
             return Response(serializer.data, content_type='application/json')
-        elif reqType == 'suggestions':
+        elif reqType == 'student':
             return self.suggestions(request)
         elif reqType == 'cityspanstudents':
             students = CitySpanStudents.objects.all()
@@ -78,7 +78,7 @@ class StudentKeySuggestions(APIView):
         # as it turns out, django doesn't have a great way to bulk patch objects, especially when
         # we're updating based on first and last name instead of the primary key.
         # ...so we have to implement this ourselves
-        if reqType == 'studentkeys':
+        if reqType == 'cityspanstudents':
             try:
                  # iterate over request.data
                 for obj in request.data['students']:

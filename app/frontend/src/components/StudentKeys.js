@@ -6,12 +6,6 @@ import ReactCollapsingTable from 'react-collapsing-table';
 import { httpGet, httpPatch } from './Helpers';
 import FileUploader from './FileUploader';
 
-// TODO: 
-// - student search autocomplete opens modal automatically
-// - populate update modal with suggestion data
-// - implement patching students
-// - have the button call the CustomFunction(studentID) on submit to update the table without a full refresh.
-
 class StudentKeys extends React.Component {
     constructor(props) {
         super(props);

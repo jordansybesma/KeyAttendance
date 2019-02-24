@@ -7,15 +7,6 @@ from rest_framework.response import Response
 from rest_framework import status
 import time;
 
-## TODO ##
-# Test PATCH - make sure it avoids duplicating students
-# Test GET
-# Implement suggestion generator - needs to grab cityspan student names.
-# Implement web interface - Should have a search bar and a table of students with an edit button, 
-#   where the edit button opens a modal that gives suggestions, allows users to search the cityspan students, or manually paste in the new
-#   student key. Also should have an upload field for updating the stored cityspan student keys.
-# Modify attendance sheet download function to grab and download student keys.
-
 # Levenschtein implementation ruthlessly borrowed from https://www.python-course.eu/levenshtein_distance.php
 def memoize(func):
     mem = {}

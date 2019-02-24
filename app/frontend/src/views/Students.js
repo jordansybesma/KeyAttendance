@@ -14,6 +14,7 @@ class Students extends Component {
     this.state = {
       mode: 'search',
     };
+    this.display = this.display.bind(this);
     this.edit = this.edit.bind(this);
     this.handler = this.handler.bind(this);
   }
@@ -25,6 +26,7 @@ class Students extends Component {
       
       var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
       var profileInfo = this.parseCols(studentColumnJson);
+      var profileInfoPrelim = this.parseCols(studentColumnJson);
 
       this.setState(function (previousState, currentProps) {
         return {
@@ -32,6 +34,7 @@ class Students extends Component {
           suggestionsArray: suggestionsArray,
           studentColumnJson: studentColumnJson,
           profileInfo: profileInfo,
+          profileInfoPrelim: profileInfoPrelim,
           id: null,
 
           uploadedPic: false
@@ -105,7 +108,8 @@ class Students extends Component {
     var preState = {
       mode: 'display',
       id: studentId,
-      profileInfo: this.state.profileInfo
+      profileInfo: this.state.profileInfo,
+      profileInfoPrelim: this.state.profileInfoPrelim
     };
     this.getStudentProfile(preState);
   }
@@ -114,6 +118,8 @@ class Students extends Component {
     try {
       const studentProfileJson = await httpGet('http://127.0.0.1:8000/api/students?id=' + state.id);
       state.profileData = studentProfileJson;
+      // Deep copy
+      state.profileDataPrelim = JSON.parse(JSON.stringify(studentProfileJson));
       
       try {
         const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
@@ -121,7 +127,9 @@ class Students extends Component {
         if (studentInfoJson.length == 0) {
           state.profileInfo = this.parseCols(studentColumnJson);
         } else {
-          state.profileInfo = this.parseStudentInfo(state, studentInfoJson);
+           var returnedState = this.parseStudentInfo(state, studentInfoJson);
+           state.profileInfo = returnedState.profileInfo;
+           state.profileInfoPrelim = returnedState.profileInfoPrelim;
         }
       } 
       catch (e) {
@@ -154,47 +162,62 @@ class Students extends Component {
 
   async updateStudentInfo() {
     const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + this.state.id);
-    var profileInfo = this.parseStudentInfo(this.state, studentInfoJson);
+    var returnedState = this.parseStudentInfo(this.state, studentInfoJson);
 
     this.setState(function (previousState, currentProps) {
       return {
-        profileInfo: profileInfo,
+        profileInfo: returnedState.profileInfo,
+        profileInfoPrelim: returnedState.profileInfoPrelim
       };
     });
   }
 
   parseStudentInfo(state, info) {
     for (var entry in state.profileInfo) {
+      // state.profileInfo = {};
+      // state.profileInfoPrelim = {};
+
       state.profileInfo[entry].patchPost.student_id = state.id;
+      state.profileInfoPrelim[entry].patchPost.student_id = state.id;
 
       // Ensure all varchar(x) types get caught as str_value
       var type;
       if ((/varchar.*/g).test(state.profileInfo[entry].colInfo.type)) {
         state.profileInfo[entry].type = 'str_value';
+        state.profileInfoPrelim[entry].type = 'str_value';
       } else {
         state.profileInfo[entry].type = state.profileInfo[entry].colInfo.type + '_value';
+        state.profileInfoPrelim[entry].type = state.profileInfo[entry].colInfo.type + '_value';
       }
     }
 
     for (var item in info) {
       var infoId = info[item].info_id;
       state.profileInfo[infoId - 1].patchPost = info[item];
+      state.profileInfoPrelim[infoId - 1].patchPost = info[item];
+
       state.profileInfo[infoId - 1].studentInfoId = info[item].id;
+      state.profileInfoPrelim[infoId - 1].studentInfoId = info[item].id;
 
       var type = state.profileInfo[infoId - 1].type;
       state.profileInfo[infoId - 1].value = info[item][type];
+      state.profileInfoPrelim[infoId - 1].value = info[item][type];
     }
 
-    return state.profileInfo;
+    return state;
+  }
+
+  display() {
+    this.setState({ mode: 'display' });
   }
 
   edit() {
-    this.setState({ mode: 'edit' })
+    this.setState({ mode: 'edit' });
   }
 
   handleNameChange(evt, state) {
     var changedField = evt.target.id;
-    state.profileData[changedField] = evt.target.value;
+    state.profileDataPrelim[changedField] = evt.target.value;
     state.profileDataUpdated = true;
     this.setState(function (previousState, currentProps) {
       return state;
@@ -205,17 +228,17 @@ class Students extends Component {
     var changedField = parseInt(evt.target.id);
 
     var newValue = evt.target.value;
-    var type = state.profileInfo[changedField].type;
+    var type = state.profileInfoPrelim[changedField].type;
 
-    state.profileInfo[changedField].updated = true;
+    state.profileInfoPrelim[changedField].updated = true;
 
     // Ensure that empty strings are parsed as null values
     if (newValue == '') {
       newValue = null;
     }
 
-    state.profileInfo[changedField].value = newValue;
-    state.profileInfo[changedField].patchPost[type] = newValue;
+    state.profileInfoPrelim[changedField].value = newValue;
+    state.profileInfoPrelim[changedField].patchPost[type] = newValue;
 
     this.setState(function (previousState, currentProps) {
       return state;
@@ -223,8 +246,13 @@ class Students extends Component {
   }
 
   handleSubmit(evt, state) {
-    evt.preventDefault()
+    evt.preventDefault();
+    
+    // Deep copy
+    state.profileInfo = JSON.parse(JSON.stringify(state.profileInfoPrelim));
+
     if (state.profileDataUpdated) {
+      state.profileData = JSON.parse(JSON.stringify(state.profileDataPrelim));
       httpPatch('http://127.0.0.1:8000/api/students/', state.profileData);
     }
     
@@ -506,7 +534,8 @@ class Students extends Component {
                     {/* </Col> */}
                     {this.renderEditInfo(this.state.parsedInfo)}
                     <br/>
-                    <Button variant="primary" type="submit">Submit</Button> 
+                    <Button variant="primary" type="submit">Submit</Button>
+                    <Button variant="danger" onClick={this.display}>Cancel</Button>
                   </FormGroup>
                 </Form>
               </div>

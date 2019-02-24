@@ -144,7 +144,7 @@ class EditStudentFields extends React.Component {
             <div className="content">
                 <h1>Student Profile Fields</h1>
                 <ButtonToolbar style={{ float: 'right'}}>
-                    <Button onClick={this.openModal}>New Activity</Button>
+                    <Button onClick={this.openModal}>New Student Profile Field</Button>
                 </ButtonToolbar>
                 <AddStudentFieldModal show={this.state.showModal}
                     onSubmit={this.closeModal} />

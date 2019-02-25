@@ -231,7 +231,13 @@ class Students extends Component {
   }
 
   display() {
-    this.setState({ mode: 'display' });
+    var preState = {
+      mode: 'display',
+      id: this.state.id,
+      profileInfo: this.state.profileInfo,
+      profileInfoPrelim: this.state.profileInfoPrelim
+    };
+    this.getStudentProfile(preState);
   }
 
   edit() {

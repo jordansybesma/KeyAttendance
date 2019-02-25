@@ -38,7 +38,7 @@ class History(APIView):
     def buildStudentInfoValuesString(self, item, column, student_name):
         info_value = ' | Field: {} | Value: '.format(column.name)
         if column.type == 'str':
-            info_value += item['str_value']
+            info_value += str(item['str_value'])
         elif column.type == 'int':
             info_value += str(item['int_value'])
         elif column.type == 'date':

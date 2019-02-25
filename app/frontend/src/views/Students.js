@@ -125,11 +125,19 @@ class Students extends Component {
         const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
 
         if (studentInfoJson.length == 0) {
+          var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
           state.profileInfo = this.parseCols(studentColumnJson);
+          state.profileInfoPrelim = this.parseCols(studentColumnJson);
+          state = this.addTypes(state);
         } else {
-           var returnedState = this.parseStudentInfo(state, studentInfoJson);
-           state.profileInfo = returnedState.profileInfo;
-           state.profileInfoPrelim = returnedState.profileInfoPrelim;
+          var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+          state.profileInfo = this.parseCols(studentColumnJson);
+          state.profileInfoPrelim = this.parseCols(studentColumnJson);
+          state = this.addTypes(state);
+
+          var returnedState = this.parseStudentInfo(state, studentInfoJson);
+          state.profileInfo = returnedState.profileInfo;
+          state.profileInfoPrelim = returnedState.profileInfoPrelim;
         }
       } 
       catch (e) {
@@ -172,11 +180,26 @@ class Students extends Component {
     });
   }
 
+  addTypes(state) {
+    for (var entry in state.profileInfo) {
+      state.profileInfo[entry].patchPost.student_id = state.id;
+      state.profileInfoPrelim[entry].patchPost.student_id = state.id;
+
+      // Ensure all varchar(x) types get caught as str_value
+      var type;
+      if ((/varchar.*/g).test(state.profileInfo[entry].colInfo.type)) {
+        state.profileInfo[entry].type = 'str_value';
+        state.profileInfoPrelim[entry].type = 'str_value';
+      } else {
+        state.profileInfo[entry].type = state.profileInfo[entry].colInfo.type + '_value';
+        state.profileInfoPrelim[entry].type = state.profileInfo[entry].colInfo.type + '_value';
+      }
+    }
+    return state;
+  }
+
   parseStudentInfo(state, info) {
     for (var entry in state.profileInfo) {
-      // state.profileInfo = {};
-      // state.profileInfoPrelim = {};
-
       state.profileInfo[entry].patchPost.student_id = state.id;
       state.profileInfoPrelim[entry].patchPost.student_id = state.id;
 
@@ -226,7 +249,7 @@ class Students extends Component {
 
   handleInfoChange(evt, state) {
     var changedField = parseInt(evt.target.id);
-
+    
     var newValue = evt.target.value;
     var type = state.profileInfoPrelim[changedField].type;
 
@@ -261,8 +284,10 @@ class Students extends Component {
       var field = state.profileInfo[field];
       if (field.updated) {
         if (field.studentInfoId) {
+          field.patchPost.student_id = state.id;
           httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
         } else {
+          field.patchPost.student_id = state.id;
           httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
           posted = true;
         }
@@ -397,21 +422,22 @@ class Students extends Component {
       if (this.state.profileInfo[entry].colInfo.is_showing) {
         info.push(<Label key={entry + 'label'}>{label}</Label>)
 
-        var type;
-        switch (this.state.profileInfo[entry].type) {
-          case 'str_value':
-          type = "text";
-          break;
-          case 'int_value':
-          type = "int";
-          break;
-          case 'date_value':
-          type = "date";
-          break;
-          case 'time_value':
-          type = "time";
-          break;
-        }
+        var type = this.state.profileInfo[entry].colInfo.type;
+        // var type;
+        // switch (this.state.profileInfo[entry].type) {
+        //   case 'str_value':
+        //   type = "text";
+        //   break;
+        //   case 'int_value':
+        //   type = "int";
+        //   break;
+        //   case 'date_value':
+        //   type = "date";
+        //   break;
+        //   case 'time_value':
+        //   type = "time";
+        //   break;
+        // }
         
         info.push(<FormControl key={label} type={type} id={entry} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
         info.push(<br key={entry + 'break'}/>);

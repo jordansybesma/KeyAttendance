@@ -4,6 +4,7 @@ import Users from './Users';
 import Roles from './Roles';
 import StudentKeys from './StudentKeys';
 import Activities from './Activities';
+import EditStudentFields from './EditStudentFields';
 
 class AdminTabs extends React.Component {
     constructor(props, context) {
@@ -42,7 +43,7 @@ class AdminTabs extends React.Component {
             <Activities />
           </Tab>
           <Tab eventKey={4} title="Student Profile Fields">
-            Tab 4 content
+            <EditStudentFields />
           </Tab>
           <Tab eventKey={5} title="Student Key Management">
             <StudentKeys/>

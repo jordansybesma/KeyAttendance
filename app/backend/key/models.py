@@ -108,6 +108,7 @@ class StudentInfo(models.Model):
     date_value = models.DateField(blank=True, null=True)
     time_value = models.TimeField(blank=True, null=True)
     blob_value = models.BinaryField(blank=True, null=True)
+    history = HistoricalRecords()
 
     class Meta:
         managed = True
@@ -119,6 +120,7 @@ class Students(models.Model):
     last_name = models.TextField(blank=True, null=True)
     id = models.IntegerField(blank=True, primary_key=True)
     student_key = models.TextField(blank=True, null=True)
+    history = HistoricalRecords()
     #photo = models.ImageField(blank=True, null=True, upload_to='profile_photos/')
 
     class Meta:

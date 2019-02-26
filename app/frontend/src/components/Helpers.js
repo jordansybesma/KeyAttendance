@@ -9,6 +9,8 @@ import createBrowserHistory from 'history/createBrowserHistory';
 
 const history = createBrowserHistory();
 
+const domain = 'app.jordansybesma.com' // '127.0.0.1:8000'
+
 function httpPost(url, body={}) {
 	const token = window.localStorage.getItem("key_credentials");
 
@@ -137,10 +139,10 @@ function logout() {
 
 async function downloadAttendanceCSV(startDate, endDate=null) {
 	// Get data
-	const url = (startDate === endDate || endDate === null) ? `http://127.0.0.1:8000/api/attendance?day=${startDate}` : `http://127.0.0.1:8000/api/attendance?startdate=${startDate}&enddate=${endDate}`;
+	const url = (startDate === endDate || endDate === null) ? `https://${domain}/api/attendance/?day=${startDate}` : `https://${domain}/api/attendance/?startdate=${startDate}&enddate=${endDate}`;
 	const attendanceData = await httpGet(url);
-	const studentData = await httpGet('http://127.0.0.1:8000/api/students');
-	const activityData = await httpGet(`http://127.0.0.1:8000/api/activities`);
+	const studentData = await httpGet(`https://${domain}/api/students/`);
+	const activityData = await httpGet(`https://${domain}/api/activities/`);
 	activityData.sort(compareActivities) // Make sure that our columns are in a consistent order
 	// Make sure we got the data we came for.
 	if (attendanceData.length === 0 || activityData.length === 0) {
@@ -259,6 +261,7 @@ const withRole = (Component, role) => {
 	}
 }
 
+
 // Returns date obj for the date that is "days ago" number of days ago
 //from today's date
 //. E.g. if daysAgo equals 3 the date string will be the date 
@@ -295,4 +298,4 @@ function dateToString(date){
     return dateString;
 }
 
-export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }
+export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, domain, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }

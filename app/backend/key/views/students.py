@@ -28,7 +28,6 @@ class Students(APIView):
     def get(self, request):
         if not self.validateGet(request):
             return Response({'error':'Invalid Parameters'}, status='400')
-
         if 'id' in request.query_params:
             student = StudentsModel.objects.get(pk=request.query_params['id'])
             serializer = StudentSerializer(student)
@@ -55,7 +54,7 @@ class Students(APIView):
     # Update an existing student
     def patch(self, request):
         if not self.validatePatch(request):
-            return Response({'error':'Invalid Paremeters'}, status='400')
+            return Response({'error':'Invalid Parameters'}, status='400')
 
         obj = StudentsModel.objects.get(pk=request.data['id'])
         serializer = StudentSerializer(obj, data=request.data, partial=True)

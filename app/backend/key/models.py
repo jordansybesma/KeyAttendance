@@ -99,31 +99,51 @@ class StudentColumn(models.Model):
 
 
 class StudentInfo(models.Model):
+    id = models.AutoField(primary_key=True, unique=True)
     student_id = models.IntegerField(blank=True, null=True)
     info_id = models.IntegerField(blank=True, null=True)
     int_value = models.IntegerField(blank=True, null=True)
-    str_value = models.CharField(max_length=500, blank=True, null=True)
+    str_value = models.CharField(max_length=20000, blank=True, null=True)
     bool_value = models.BooleanField(blank=True, null=True)
     date_value = models.DateField(blank=True, null=True)
     time_value = models.TimeField(blank=True, null=True)
+    blob_value = models.BinaryField(blank=True, null=True)
+    history = HistoricalRecords()
 
     class Meta:
         managed = True
         db_table = 'studentinfo'
-
+        
 
 class Students(models.Model):
     first_name = models.TextField(blank=True, null=True)
     last_name = models.TextField(blank=True, null=True)
     id = models.IntegerField(blank=True, primary_key=True)
-    first_attendance = models.DateField(blank=True, null=True)
-    number_visits = models.IntegerField(blank=True, null=True)
-    birthday = models.DateField(blank=True, null=True)
-    nickname = models.TextField(blank=True, null=True)
-    gender = models.TextField(blank=True, null=True)
-    student_id = models.TextField(blank=True, null=True)
+    student_key = models.TextField(blank=True, null=True)
+    history = HistoricalRecords()
     #photo = models.ImageField(blank=True, null=True, upload_to='profile_photos/')
 
     class Meta:
         managed = True
         db_table = 'students'
+
+class StudentSuggestions(models.Model):
+    student_id = models.IntegerField(blank=True, null=True)
+    match_name = models.TextField(blank=True, null=True)
+    match_key = models.TextField(null=False)
+    id = models.AutoField(primary_key=True, unique=True)
+
+    class Meta:
+        managed = True
+        db_table = 'studentsuggestions'
+
+# Stores student names and student keys imported from CitySpan
+class CitySpanStudents(models.Model):
+    first_name = models.TextField(blank=True, null=True)
+    last_name = models.TextField(blank=True, null=True)
+    student_key = models.TextField(null=False)
+    id = models.AutoField(primary_key=True, unique=True)
+
+    class Meta:
+        managed = True
+        db_table = 'cityspanstudents'

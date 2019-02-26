@@ -44,7 +44,6 @@ class Heatmap extends Component {
     this.state = {
       data: props.data,
         // yArray is used for the reports Heatmaps and yArrayStudents is used for students heatmap
-        // yArray: ["Thu", "Fri", "Sat", "Sun", "Mon", "Tue", "Wed", ],
         yArrayStudents: ["1", "2", "3", "4", "5"]
     };
   }
@@ -172,6 +171,7 @@ class Heatmap extends Component {
     const heatMapColors = this.colorRange(maxLegendLabel)
     const yArray = this.setYArrayRange(data);
 
+
     return (
       <div>
         <div style={{margin:20}}>
@@ -198,6 +198,16 @@ class Heatmap extends Component {
                   ry: 1
                 }
               }} />
+
+          <ContinuousColorLegend
+                width={300}
+                startTitle={minLegendLabel}
+                midTitle={Math.round((maxLegendLabel+minLegendLabel)/2)}
+                endTitle= {maxLegendLabel}
+                startColor="#F5FBFD"
+                endColor={maxHeatMapColor}
+                height={100}
+              />
 
       </XYPlot>
       </div>

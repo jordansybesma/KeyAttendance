@@ -29,7 +29,7 @@ class Reports extends Component {
           // var startDateWeek = getEarlierDate(6);
           // var startDateStringWeek = dateToString(startDateWeek);
           // var endDateStringWeek = dateToString(today);
-          const byHourJson = await httpGet(`http://${domain}/api/reports/byHourAttendance/?startdate=` + startDateStringWeek + '&enddate=' + endDateStringWeek);
+          const byHourJson = await httpGet(`https://${domain}/api/reports/byHourAttendance/?startdate=` + startDateStringWeek + '&enddate=' + endDateStringWeek);
           console.log("By hour:",byHourJson);
           // var byHourJson = await byHourAttendanceData.json();
           //Make timerange for last 365 days, extending back to the preceeding sunday and forward to the following sat to display yearly aggregation (broken down by day)
@@ -38,7 +38,7 @@ class Reports extends Component {
           var startDateStringYear = dateToString(startDateYear);
           var endDateYear = getNextSaturday(today);
           var endDateStringYear = dateToString(endDateYear);
-          const byDayJson = await httpGet(`http://${domain}/api/reports/byDayAttendance/?startdate=` + startDateStringYear + '&enddate=' + endDateStringYear);
+          const byDayJson = await httpGet(`https://${domain}/api/reports/byDayAttendance/?startdate=` + startDateStringYear + '&enddate=' + endDateStringYear);
           // var byDayJson = await byDayAttendanceData.json();
           var dayData = await this.formatDayData(byDayJson, startDateStringYear, endDateStringYear);
           var hourData = await this.formatHourData(byHourJson, startDateStringWeek, endDateStringWeek);

@@ -47,7 +47,7 @@ class AddStudentModal extends React.Component {
 
 	submit() {
 		const self = this;
-		httpPost(`http://${domain}/api/students/`, {
+		httpPost(`https://${domain}/api/students/`, {
 			first_name: this.state.firstName,
 			last_name: this.state.lastName
 		}).then(function(result) {

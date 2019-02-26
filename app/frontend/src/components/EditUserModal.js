@@ -113,7 +113,7 @@ class EditUserModal extends React.Component {
     
     delete() {
         const self = this;
-        httpDelete(`http://${domain}/api/users/?id=${self.state.row.id}`)
+        httpDelete(`https://${domain}/api/users/?id=${self.state.row.id}`)
         .then(function (result) {
             if ('error' in result) {
                 self.setState({
@@ -152,7 +152,7 @@ class EditUserModal extends React.Component {
         if (self.state.password !== "") {
             body["password"] = self.state.password;
         }
-        httpPatch(`http://${domain}/api/users/`, body)
+        httpPatch(`https://${domain}/api/users/`, body)
             .then(function (result) {
                 if ('error' in result) {
                     self.setState({

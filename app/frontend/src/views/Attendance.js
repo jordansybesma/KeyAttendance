@@ -57,9 +57,9 @@ class Attendance extends React.Component {
         const { date } = this.state;
         try {
 
-            const students = await httpGet(`http://${domain}/api/students/`);
-            const attendanceItems = await httpGet(`http://${domain}/api/attendance/?day=${date}`);
-            let activities = await httpGet(`http://${domain}/api/activities/`);
+            const students = await httpGet(`https://${domain}/api/students/`);
+            const attendanceItems = await httpGet(`https://${domain}/api/attendance/?day=${date}`);
+            let activities = await httpGet(`https://${domain}/api/activities/`);
             activities = activities.filter(item => item.is_showing === true);
             activities.sort(compareActivities)
             const suggestions = this.makeSuggestionsArray(students);
@@ -152,7 +152,7 @@ class Attendance extends React.Component {
             }
         }
 
-        httpPost(`http://${domain}/api/attendance/`, {
+        httpPost(`https://${domain}/api/attendance/`, {
             "student_id": studentID,
             "activity_id": 7, // Key    
             "date":`${date}`,

@@ -102,7 +102,7 @@ class AddUserModal extends React.Component {
             last_name: self.state.last_name,
             groups: groups,
             is_active: self.state.is_active};
-        httpPost(`http://${domain}/api/users/`, body)
+        httpPost(`https://${domain}/api/users/`, body)
             .then(function (result) {
                 if ('error' in result) {
                     self.setState({backendError: true});

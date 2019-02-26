@@ -137,10 +137,10 @@ function logout() {
 
 async function downloadAttendanceCSV(startDate, endDate=null) {
 	// Get data
-	const url = (startDate === endDate || endDate === null) ? `http://${domain}/api/attendance/?day=${startDate}` : `http://${domain}/api/attendance/?startdate=${startDate}&enddate=${endDate}`;
+	const url = (startDate === endDate || endDate === null) ? `https://${domain}/api/attendance/?day=${startDate}` : `https://${domain}/api/attendance/?startdate=${startDate}&enddate=${endDate}`;
 	const attendanceData = await httpGet(url);
-	const studentData = await httpGet(`http://${domain}/api/students/`);
-	const activityData = await httpGet(`http://${domain}/api/activities/`);
+	const studentData = await httpGet(`https://${domain}/api/students/`);
+	const activityData = await httpGet(`https://${domain}/api/activities/`);
 	activityData.sort(compareActivities) // Make sure that our columns are in a consistent order
 
 	// Make sure we got the data we came for.

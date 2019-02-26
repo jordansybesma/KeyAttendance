@@ -63,7 +63,7 @@ class AddRoleModal extends React.Component {
             }
         }
         body["permissions"] = permissions;
-        httpPost(`http://${domain}/api/groups/`, body)
+        httpPost(`https://${domain}/api/groups/`, body)
             .then(function (result) {
                 if ('error' in result) {
                     console.log(result);

@@ -83,7 +83,7 @@ class AddActivityModal extends React.Component {
             is_showing: self.state.inUse,
             type: self.state.type
         }
-        httpPost(`http://${domain}/api/activities/`, body)
+        httpPost(`https://${domain}/api/activities/`, body)
             .then(function (result) {
                 if ('error' in result) {
                     if (result['error'] === 400) {

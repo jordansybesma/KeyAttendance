@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, ButtonToolbar, ListGroup, ListGroupItem, Modal } from 'react-bootstrap';
-import { httpGet, httpPatch } from './Helpers';
+import { httpGet, httpPatch, domain } from './Helpers';
 import Autocomplete from './Autocomplete';
 
 class AssignStudentKeyModal extends React.Component {
@@ -31,8 +31,8 @@ class AssignStudentKeyModal extends React.Component {
 
     async componentDidUpdate() {
         if (this.props.studentID !== this.state.oldID && this.props.studentID !== -1) {
-            const student = await httpGet(`http://127.0.0.1:8000/api/students/?id=${this.props.studentID}`);
-            const suggestions = await httpGet(`http://127.0.0.1:8000/api/suggestions/student/?id=${this.props.studentID}`);
+            const student = await httpGet(`https://${domain}/api/students/?id=${this.props.studentID}`);
+            const suggestions = await httpGet(`https://${domain}/api/suggestions/student/?id=${this.props.studentID}`);
             const searchArray = this.buildSuggestionsArray();
 
             this.setState({
@@ -73,7 +73,7 @@ class AssignStudentKeyModal extends React.Component {
 
     onSubmit() {
         // PATCH student
-        httpPatch(`http://127.0.0.1:8000/api/students/`, {'student_key': this.state.match, 'id': this.props.studentID});
+        httpPatch(`https://${domain}/api/students/`, {'student_key': this.state.match, 'id': this.props.studentID});
         this.setState({student: {}, match: "", suggestions: []});
         this.props.onClose(this.props.studentID);
     }

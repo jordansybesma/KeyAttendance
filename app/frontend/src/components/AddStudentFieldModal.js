@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, Button, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap';
-import { httpPost } from './Helpers';
+import { httpPost, domain } from './Helpers';
 
 class AddStudentFieldModal extends React.Component {
     
@@ -83,7 +83,7 @@ class AddStudentFieldModal extends React.Component {
             quick_add: self.state.quickAdd,
             type: self.state.type
         }
-        httpPost('http://127.0.0.1:8000/api/student_column/', body)
+        httpPost(`https://${domain}/api/student_column/`, body)
             .then(function (result) {
                 if ('error' in result) {
                     if (result['error'] === 400) {

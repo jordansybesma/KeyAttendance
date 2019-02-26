@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
-import { Button, Col, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem, Row } from "react-bootstrap";
-import { httpGet, httpPatch, httpPost } from '../components/Helpers';
+import { httpGet, httpPatch, httpPost, domain, getEarlierDate, getPrevSunday, getNextSaturday, dateToString } from '../components/Helpers';
+import { Button, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem} from "react-bootstrap";
 import blankPic from '../images/blank_profile_pic.jpg'
-import { getEarlierDate, getPrevSunday, getNextSaturday, dateToString } from '../components/Helpers';
 import { Redirect } from 'react-router-dom';
 
 class Students extends Component {
@@ -20,10 +19,10 @@ class Students extends Component {
 
   async componentDidMount() {
     try {
-      var studentsJson = await httpGet('http://127.0.0.1:8000/api/students');
+      var studentsJson = await httpGet(`https://${domain}/api/students/`);
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
       
-      var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+      var studentColumnJson = await httpGet(`https://${domain}/api/student_column/`);
       var profileInfo = this.parseCols(studentColumnJson);
 
       this.setState(function (previousState, currentProps) {
@@ -113,15 +112,15 @@ class Students extends Component {
 
   async getStudentProfile(state) {
     try {
-      const studentProfileJson = await httpGet('http://127.0.0.1:8000/api/students?id=' + state.id);
+      const studentProfileJson = await httpGet(`https://${domain}/api/students/?id=` + state.id);
       state.profileData = studentProfileJson;
       
       try {
-        const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
+        const studentInfoJson = await httpGet(`https://${domain}/api/student_info/?student_id=` + state.id);
         state.profileInfo = this.parseStudentInfo(state, studentInfoJson);
       } 
       catch (e) {
-        var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+        var studentColumnJson = await httpGet(`https://${domain}/api/student_column/`);
         state.profileInfo = this.parseCols(studentColumnJson);
       }
 
@@ -136,7 +135,7 @@ class Students extends Component {
       //var endDateString = "2018-03-03";
       state.endDateString = endDateString;
 
-      const heatMapJson = await httpGet('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
+      const heatMapJson = await httpGet(`https://${domain}/api/reports/individualHeatmap/?student_id=` + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
       state.heatMapJson = heatMapJson;
 
       this.setState(function (previousState, currentProps) {
@@ -149,7 +148,7 @@ class Students extends Component {
   }
 
   async updateStudentInfo() {
-    const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + this.state.id);
+    const studentInfoJson = await httpGet(`https://${domain}/api/student_info?student_id=` + this.state.id);
     var profileInfo = this.parseStudentInfo(this.state, studentInfoJson);
 
     this.setState(function (previousState, currentProps) {
@@ -172,7 +171,7 @@ class Students extends Component {
       state.profileInfo[infoId - 1].patchPost = info[item];
       state.profileInfo[infoId - 1].studentInfoId = info[item].id;
 
-      var type = state.profileInfo[infoId - 1].type;
+      type = state.profileInfo[infoId - 1].type;
       state.profileInfo[infoId - 1].value = info[item][type];
     }
 
@@ -200,7 +199,7 @@ class Students extends Component {
     state.profileInfo[changedField].updated = true;
 
     // Ensure that empty strings are parsed as null values
-    if (newValue == '') {
+    if (newValue === '') {
       newValue = null;
     }
 
@@ -214,17 +213,17 @@ class Students extends Component {
 
   handleSubmit(evt, state) {
     evt.preventDefault()
-    httpPatch('http://127.0.0.1:8000/api/students/', state.profileData);
+    httpPatch(`https://${domain}/api/students/`, state.profileData);
     
     var posted = false;
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
       if (field.updated) {
         if (field.studentInfoId) {
-          httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
+          httpPatch(`https://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost);
         } else {
           console.log(field.patchPost);
-          httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
+          httpPost(`https://${domain}/api/student_info/`, field.patchPost);
           posted = true;
         }
       }
@@ -283,24 +282,24 @@ class Students extends Component {
     var currIdx = 0;
     var heatMapJson = this.state.heatMapJson;
 
-    if (heatMapJson.length == 0) {
+    if (heatMapJson.length === 0) {
       var firstEntry = { "date": startDateString, "daily_visits": 0 }
       heatMapJson.push(firstEntry);
     }
     //Add dummy date entries for missing dates (dates with no engagements) to json btwn start and end date
     //dateToCompare always incremented by 1
-    while (this.compareTime(dateToCompare, endDate) == false) {
+    while (this.compareTime(dateToCompare, endDate) === false) {
       //if reached the end of json but there's still dates to fill in up to the end date, stay on end entry
       if (currIdx > heatMapJson.length - 1) {
         currIdx = heatMapJson.length - 1;
       }
       currEntryDate = new Date(heatMapJson[currIdx]["date"].replace(/-/g, '\/'));
       //identified missing date, so add dummy date entry for missing date
-      if (this.sameDay(dateToCompare, currEntryDate) == false) {
+      if (this.sameDay(dateToCompare, currEntryDate) === false) {
         var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "daily_visits": 0 };
         //add entry in place if not at end of json OR final date entry has not been added yet/surpassed
         //else add to very end of json 
-        if (currIdx != heatMapJson.length - 1 || this.compareTime(currEntryDate, dateToCompare)) {
+        if (currIdx !== heatMapJson.length - 1 || this.compareTime(currEntryDate, dateToCompare)) {
           heatMapJson.splice(currIdx, 0, dateEntryZeroEngagements);
         } else {
           heatMapJson.splice(currIdx + 1, 0, dateEntryZeroEngagements);
@@ -337,9 +336,9 @@ class Students extends Component {
     
     var fields = this.state.profileInfo;
     for (var field in fields) {
-      if (fields[field].colInfo.is_showing == true) {
+      if (fields[field].colInfo.is_showing === true) {
         var value = 'N/A';
-        if (fields[field].value != null && fields[field].value != null != '') {
+        if (fields[field].value !== null && fields[field].value != null != '') {
           value = fields[field].value;
         }
         var innerHtml = fields[field].colInfo.name + ': ' + value;

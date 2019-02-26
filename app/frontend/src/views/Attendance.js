@@ -4,7 +4,7 @@ import ActivityCheckboxes from '../components/ActivityCheckboxes';
 import AttendanceOptions from '../components/AttendanceOptions';
 import AddStudentModal from '../components/AddStudentModal';
 import Autocomplete from "../components/Autocomplete";
-import { httpPost, httpGet } from '../components/Helpers';
+import { httpPost, httpGet, domain } from '../components/Helpers';
 import { Button, ButtonToolbar, Form, FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
 import { downloadAttendanceCSV, compareActivities } from '../components/Helpers';
 import { Redirect } from 'react-router-dom';
@@ -56,10 +56,11 @@ class Attendance extends React.Component {
     async fetchAndBuild() {
         const { date } = this.state;
         try {
-            const students = await httpGet('http://127.0.0.1:8000/api/students');
-            const attendanceItems = await httpGet(`http://127.0.0.1:8000/api/attendance?day=${date}`);
-            let activities = await httpGet('http://127.0.0.1:8000/api/activities');
-            const studentFields = await httpGet('http://127.0.0.1:8000/api/student_column?quick_add=True')
+
+            const students = await httpGet(`https://${domain}/api/students/`);
+            const attendanceItems = await httpGet(`https://${domain}/api/attendance/?day=${date}`);
+            let activities = await httpGet(`https://${domain}/api/activities/`);
+            const studentFields = await httpGet(`https://${domain}/api/student_column/?quick_add=True`)
             activities = activities.filter(item => item.is_showing === true);
             activities.sort(compareActivities)
             const suggestions = this.makeSuggestionsArray(students);
@@ -153,7 +154,7 @@ class Attendance extends React.Component {
             }
         }
 
-        httpPost('http://127.0.0.1:8000/api/attendance/', {
+        httpPost(`https://${domain}/api/attendance/`, {
             "student_id": studentID,
             "activity_id": 7, // Key    
             "date":`${date}`,
@@ -254,7 +255,6 @@ class Attendance extends React.Component {
     }
 
     setDateToToday() {
-        const today = new Date()
         this.setState({date: this.getCurrentDate()})
     }
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { httpPatch } from './Helpers';
+import { httpPatch, domain } from './Helpers';
 
 class StudentFieldCheckbox extends Component {
 
@@ -36,7 +36,7 @@ class StudentFieldCheckbox extends Component {
         let { row } = self.state;
         let body = {info_id: row.info_id};
         body[self.props.accessor] = !self.state.checked;
-        httpPatch('http://127.0.0.1:8000/api/student_column/', body)
+        httpPatch(`https://${domain}/api/student_column/`, body)
             .then(function (response) {
                 if ('error' in response) {
                     console.log(response);

@@ -14,15 +14,15 @@ class Migration(migrations.Migration):
             name='reports',
             options={'managed': True},
         ),
-        migrations.AddField(
-            model_name='cityspanstudents',
-            name='id',
-            field=models.AutoField(default=None, primary_key=True, serialize=False, unique=True),
-            preserve_default=False,
-        ),
         migrations.AlterField(
             model_name='cityspanstudents',
             name='student_key',
             field=models.TextField(blank=True),
         ),
+        migrations.AddField(
+            model_name='cityspanstudents',
+            name='id',
+            field=models.AutoField(default=None, primary_key=True, serialize=False, unique=True),
+            preserve_default=False,
+        );
     ]

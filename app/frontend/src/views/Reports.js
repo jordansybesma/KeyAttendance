@@ -1,65 +1,92 @@
-import React from 'react';
+import React, {Component} from 'react';
 import Heatmap from '../components/Heatmap';
 import continuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
-import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString} from '../components/Helpers';
+import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString,downloadReportsCSV, httpGet, httpPatch} from '../components/Helpers';
+import BarChart from './../components/BarChart.js'
+import { Button, ButtonToolbar } from 'react-bootstrap';
 
-class Reports extends React.Component {
+class Reports extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-          startDateStringWeek: "",
-          endDateStringWeek: "",
-          startDateStringYear: "",
-          endDateStringYear: "",
-          byHourJson: {},
-          byDayJson: {}
+            startDateStringWeek: "",
+            endDateStringWeek: "",
+            startDateStringYear: "",
+            endDateStringYear: "",
+            byHourJson: [],
+            byHourJsonForDownload: [],
+            byDayJson: [],
+            byDayJsonForDownload: [],
+            byDayHeatMap: []
         };
+        this.downloadHourlyCSV = this.downloadHourlyCSV.bind(this);
+        this.downloadWeeklyCSV = this.downloadWeeklyCSV.bind(this);
+        this.downloadYearlyCSV = this.downloadYearlyCSV.bind(this);
       }
-    
+
       async componentDidMount() {
         try {
           //hardcoded date range for testing
-          //var startDateStringWeek = "2018-02-08";
-          //var endDateStringWeek = "2018-02-15";
+          var startDateStringWeek = "2018-02-08";
+          var endDateStringWeek = "2018-02-14";
           //Make timerange for last 7 days to display for weekly aggregation (broken down by hour of day)
           var today = getEarlierDate(0);
-          var startDateWeek = getEarlierDate(6);
-          var startDateStringWeek = dateToString(startDateWeek);
-          var endDateStringWeek = dateToString(today);
-          const byHourAttendanceData = await fetch('http://127.0.0.1:8000/api/reports/byHourAttendance/?startdate=' + startDateStringWeek + '&enddate=' + endDateStringWeek);
-          var byHourJson = await byHourAttendanceData.json();
-          console.log("byHour: ", byHourJson);
+          //var startDateWeek = getEarlierDate(6);
+          //var startDateStringWeek = dateToString(startDateWeek);
+          //var endDateStringWeek = dateToString(today);
+          const byHourJson = await httpGet('http://127.0.0.1:8000/api/reports/byHourAttendance/?startdate=' + startDateStringWeek + '&enddate=' + endDateStringWeek);
+          console.log("By hour:",byHourJson);
+          // var byHourJson = await byHourAttendanceData.json();
           //Make timerange for last 365 days, extending back to the preceeding sunday and forward to the following sat to display yearly aggregation (broken down by day)
-          var startDateYear= getEarlierDate(365);
-          startDateYear = getPrevSunday(startDateYear);
-          var startDateStringYear = dateToString(startDateYear);
-          var endDateYear = getNextSaturday(today);
-          var endDateStringYear = dateToString(endDateYear);
-          const byDayAttendanceData = await fetch('http://127.0.0.1:8000/api/reports/byDayAttendance/?startdate=' + startDateStringYear + '&enddate=' + endDateStringYear);
-          var byDayJson = await byDayAttendanceData.json();
-          console.log("byDay: ", byDayJson);
-          
-          this.setState(function (previousState, currentProps) {
-            return {
-              startDateStringWeek: startDateStringWeek,
-              endDateStringWeek: endDateStringWeek,
-              startDateStringYear: startDateStringYear,
-              endDateStringYear : endDateStringYear,
-              byHourJson: byHourJson,
-              byDayJson : byDayJson
-            };
-          });
+         // var startDateYear= getEarlierDate(365);
+         // startDateYear = getPrevSunday(startDateYear);
+          //var startDateStringYear = dateToString(startDateYear);
+         // var endDateYear = getNextSaturday(today);
+          //var endDateStringYear = dateToString(endDateYear);
+          var startDateStringYear = "2018-02-04";
+          var endDateStringYear = "2019-02-09";
+          const byDayJson = await httpGet('http://127.0.0.1:8000/api/reports/byDayAttendance/?startdate=' + startDateStringYear + '&enddate=' + endDateStringYear);
+          // var byDayJson = await byDayAttendanceData.json();
+          var dayData = await this.formatDayData(byDayJson, startDateStringYear, endDateStringYear);
+          var hourData = await this.formatHourData(byHourJson, startDateStringWeek, endDateStringWeek);
+
 
           //Delete this block later, this is just here for testing
-          var dayData = this.formatDayData(this.state);
-          console.log("processed day of year data: ", dayData);
-          var hourData = this.formatHourData(this.state);
-          console.log("processed hour of week data: ", hourData);
+          // var dayData = this.formatDayData(this.state);
+          // console.log("processed day of year data after setting state: ", this.state.byDayJson);
+          // var hourData = this.formatHourData(this.state);
+          // console.log("processed hour of week data: ", hourData);
 
         } catch (e) {
           console.log(e);
         }
+      }
+      downloadHourlyCSV() {
+        this.setState({ buildingCSV: true });
+        var title = "Reports_Hourly_Attendance_".concat(this.state.startDateStringWeek);
+        title = title.concat("_to_");
+        title = title.concat(this.state.endDateStringWeek);
+        downloadReportsCSV(this.state.byHourJsonForDownload, ["Date", "Hour", "# Engagements"], title);
+        this.setState({ buildingCSV: false });
+      }
+
+      downloadWeeklyCSV() {
+        this.setState({ buildingCSV: true });
+        var title = "Reports_Daily_Attendance_".concat(this.state.startDateStringWeek);
+        title = title.concat("_to_");
+        title = title.concat(this.state.endDateStringWeek);
+        downloadReportsCSV(this.state.byDayJsonForDownload.splice(0,7), ["Date","# Engagements"], title);
+        this.setState({ buildingCSV: false });
+      }
+
+      downloadYearlyCSV() {
+        this.setState({ buildingCSV: true });
+        var title = "Reports_Annual_Attendance_".concat(this.state.startDateStringYear);
+        title = title.concat("_to_");
+        title = title.concat(this.state.endDateStringYear);
+        downloadReportsCSV(this.state.byDayJsonForDownload, ["Date", "# Engagements"], title);
+        this.setState({ buildingCSV: false });
       }
 
       sameDay(d1, d2) {
@@ -67,23 +94,23 @@ class Reports extends React.Component {
           d1.getMonth() === d2.getMonth() &&
           d1.getDate() === d2.getDate();
       }
-    
+
+
       compareTime(time1, time2) {
         return new Date(time1) > new Date(time2); // true if time1 is later
       }
 
       //Format json data from day-of-yr endpoint into format usable by heatmap (and also add missing entries)
-      formatDayData(state) {
+      formatDayData(state, startDateStringYear, endDateStringYear) {
         //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
-        var startDateString = state.startDateStringYear;
-        var endDateString = state.endDateStringYear;
+        var startDateString = startDateStringYear;
+        var endDateString = endDateStringYear;
         var startDate = new Date(startDateString.replace(/-/g, '\/'));
         var endDate = new Date(endDateString.replace(/-/g, '\/'));
         var dateToCompare = startDate;
         var currEntryDate;
         var currIdx = 0;
-        var byDayJson = this.state.byDayJson;
-        console.log(byDayJson);
+        var byDayJson = state;
 
         if(byDayJson.length == 0){
           var firstEntry = {"date": startDateString, "daily_visits": 0}
@@ -111,46 +138,69 @@ class Reports extends React.Component {
           dateToCompare.setDate(dateToCompare.getDate() + 1);
           currIdx++;
         }
+
+        //process json into list of lists and store into state for downloading as csv
+        var byDayJsonForDownload = [];
+        var entryAsList;
+        for(var i=0; i<byDayJson.length; i++){
+          entryAsList = Object.values(byDayJson[i]);
+          byDayJsonForDownload.push(entryAsList);
+        }
+
         //Time to convert updated JSON with missing dates added in into
         //a list called processedData of {"x": integer day of week, "y": integer week # of month, "color": int num engagements per day} objs
         var processedData = [];
-        var dayOfWeek, weekNum, dayEntry;
+        var processedDataAnnual = [];
+        var dayOfWeek, weekNum, dayEntry, annualHeatMapEntry, dayOfWeekConverted;
         var currDateObj;
         var mdyArray;
         var d, m, y;
         var strDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         for (var i = 0; i < byDayJson.length; i++) {
           currDateObj = new Date(byDayJson[i]['date'].replace(/-/g, '\/'));
-          dayOfWeek = strDays[currDateObj.getDay()];
+          dayOfWeek = currDateObj.getDay();
+          dayOfWeekConverted = strDays[dayOfWeek];
           weekNum = Math.floor(i / 7);
           mdyArray = byDayJson[i]['date'].split(/\s*\-\s*/g);
           y = mdyArray[0];
           m = mdyArray[1];
           d = mdyArray[2];
-          dayEntry = {"x": weekNum, "y": dayOfWeek, "color": byDayJson[i]['daily_visits']};
+          annualHeatMapEntry = {"x": weekNum+1, "y": dayOfWeekConverted, "color": byDayJson[i]['daily_visits']};
+          processedDataAnnual.push(annualHeatMapEntry);
+          dayEntry = {"y": byDayJson[i]['daily_visits'], "x": dayOfWeekConverted};
           processedData.push(dayEntry);
         }
+          this.setState(function (previousState, currentProps) {
+              return {
+                  startDateStringYear: startDateStringYear,
+                  endDateStringYear : endDateStringYear,
+                  byDayJson : processedData,
+                  byDayJsonForDownload: byDayJsonForDownload,
+                  byDayHeatMap: processedDataAnnual
+
+              };
+          });
         return processedData;
       }
 
       //Format json data from hour-of-week endpoint into format usable by heatmap (and also add missing entries)
-      formatHourData(state) {
+      formatHourData(state, startDateStringWeek, endDateStringWeek) {
         //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
-        var startDateString = state.startDateStringWeek;
-        var endDateString = state.endDateStringWeek;
+        var startDateString = startDateStringWeek;
+        var endDateString = endDateStringWeek;
         var startDate = new Date(startDateString.replace(/-/g, '\/'));
         var endDate = new Date(endDateString.replace(/-/g, '\/'));
         var dateToCompare = startDate;
         var currEntryDate;
         var currHour;
         var currIdx = 0;
-        var byHourJson = this.state.byHourJson;
+        var byHourJson = state;
         var hourArray = ["14:00:00", "15:00:00", "16:00:00", "17:00:00","18:00:00","19:00:00","20:00:00","21:00:00","22:00:00"];
 
         //first filter out any entries that have timestamps outside of key operating hours
-        byHourJson = byHourJson.filter(function(entry) { 
+        byHourJson = byHourJson.filter(function(entry) {
           var inValidTimeRange = hourArray.includes(entry.time);
-          return inValidTimeRange == true;  
+          return inValidTimeRange == true;
          });
         var hourToCompareIdx= 0;
         var hourToCompare = hourArray[0];
@@ -171,7 +221,7 @@ class Reports extends React.Component {
           if (this.sameDay(dateToCompare, currEntryDate) == false) {
             var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "time": hourToCompare, "count": 0 };
             //add entry in place if not at end of json OR final date entry has not been added yet/surpassed
-            //else add to very end of json 
+            //else add to very end of json
             if (currIdx != byHourJson.length - 1 || (this.compareTime(currEntryDate, dateToCompare) && currHour > hourToCompare)){
               byHourJson.splice(currIdx, 0, dateEntryZeroEngagements);
             } else {
@@ -182,7 +232,7 @@ class Reports extends React.Component {
           else if(hourToCompare != currHour){
             var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "time": hourToCompare, "count": 0 };
             //add entry in place if not at end of json OR final date entry has not been added yet/surpassed
-            //else add to very end of json 
+            //else add to very end of json
             if (currIdx != byHourJson.length - 1 || (this.compareTime(currEntryDate, dateToCompare) && currHour > hourToCompare)){
               byHourJson.splice(currIdx, 0, dateEntryZeroEngagements);
             } else {
@@ -206,7 +256,15 @@ class Reports extends React.Component {
             hourToCompare = hourArray[hourToCompareIdx];
           }
         }
-    
+
+        //process json into list of lists and store into state for downloading as csv
+        var byHourJsonForDownload = [];
+        var entryAsList;
+        for(var i=0; i<byHourJson.length; i++){
+          entryAsList = Object.values(byHourJson[i]);
+          byHourJsonForDownload.push(entryAsList);
+        }
+
         //Time to convert updated JSON with missing date-hour combos added in into
         //a list called processedData of {"x": string hour of day, "y": string day of week, "color": int num engagements per day} objs
         var processedData = [];
@@ -218,29 +276,63 @@ class Reports extends React.Component {
         for (var i = 0; i < byHourJson.length; i++) {
           currDateObj = new Date(byHourJson[i]['date'].replace(/-/g, '\/'));
           dayOfWeek = strDays[currDateObj.getDay()];
-          hourOfDay = byHourJson[i]['time'];
+          hourOfDay = byHourJson[i]['time'].slice(0,2);
           mdyArray = byHourJson[i]['date'].split(/\s*\-\s*/g);
           y = mdyArray[0];
           m = mdyArray[1];
           d = mdyArray[2];
-          hourEntry = {"x": hourOfDay, "y": dayOfWeek, "color": byHourJson[i]['count']};
+          hourEntry = {"x": hourOfDay.concat(" hrs"), "y": dayOfWeek, "color": byHourJson[i]['count']};
           processedData.push(hourEntry);
         }
+          this.setState(function (previousState, currentProps) {
+              return {
+                  startDateStringWeek: startDateStringWeek,
+                  endDateStringWeek: endDateStringWeek,
+                  byHourJson: processedData,
+                  byHourJsonForDownload: byHourJsonForDownload
+              };
+          });
+
         return processedData;
       }
 
-      //add this into render later to display heatmaps
-    /*<Heatmap 
-      data = {this.formatHourData(this.state)}/>
-      <Heatmap 
-      data = {this.formatDayData(this.state)}/>
-      */
-
     render() {
+        const buildingCSV = this.state.buildingCSV;
         return (
-            <div className='content'>
-                <p>Reports</p>
+            <div className="container py-4">
+                <h1> Reports </h1>
+                <div className="row">
+                    <div className="col-md-8 align-self-center">
+                        <h3> Hourly Attendance </h3>
+                        <p> Number of engagements per hour in the past week.</p>
+                        <ButtonToolbar style={{ float: 'right'}}>
+                    <Button onClick={this.downloadHourlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Hourly'}</Button>
+                </ButtonToolbar>
+                        <Heatmap
+                        data = {this.state.byHourJson}
+                        heatMapType = "weekly" />
+
+                    </div>
+                    <div className='col-md-4 align-self-center'>
+                        <h3> Daily Attendance </h3>
+                        <p> Number of engagements per day in the past week.</p>
+                        <ButtonToolbar style={{ float: 'right'}}>
+                    <Button onClick={this.downloadWeeklyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Daily'}</Button>
+                </ButtonToolbar>
+                        <BarChart data = {this.state.byDayJson.slice(0, 7)}/> </div>
+                    </div>
+              <div className="row">
+                <div className="col-md-8">
+                    <h3> Annual Daily Attendance </h3>
+                    <p> Number of engagements per day in the past year.</p>
+                    <ButtonToolbar style={{ float: 'right'}}>
+                          <Button onClick={this.downloadYearlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Annual'}</Button>
+                        </ButtonToolbar>
+                  <Heatmap data = {this.state.byDayHeatMap} heatMapType = "annual" />
+                </div>
+                 </div>
             </div>
+
         );
     }
 }

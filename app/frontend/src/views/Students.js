@@ -84,13 +84,13 @@ class Students extends Component {
       state.profileData = studentProfileJson;
       var startDate= getEarlierDate(30);
       startDate = getPrevSunday(startDate);
-      var startDateString = dateToString(startDate);
-      //var startDateString = "2018-01-28";
+      //var startDateString = dateToString(startDate);
+      var startDateString = "2018-01-28";
       state.startDateString = startDateString;
       var today = getEarlierDate(0);
       var endDate = getNextSaturday(today);
-      var endDateString = dateToString(endDate);
-      //var endDateString = "2018-03-03";
+      //var endDateString = dateToString(endDate);
+      var endDateString = "2018-03-03";
       state.endDateString = endDateString;
 	  
     const heatMapJson = await httpGet('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
@@ -272,8 +272,10 @@ class Students extends Component {
 			  </div>
         	</div>
 		  </div>
+          <h3>Student Attendance</h3>
+          <p>Number of engagements for this individual student in the past month.</p>
           <Heatmap 
-            data = {this.formatData(this.state)}/>
+            data = {this.formatData(this.state)} heatMapType = "individualStudent"/>
 		</div>
       );
     }

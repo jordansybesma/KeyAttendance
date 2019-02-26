@@ -219,6 +219,8 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 		sheet.push(row);
 	}
 
+	console.log("sheet: ", sheet);
+	console.log("columns: ", columns);
 	// Put data in a CSV
 	var papa = require('papaparse') // a strangely named but fairly effective CSV library
 	var csvString = papa.unparse({
@@ -230,6 +232,24 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 	var element = document.createElement('a');
 	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csvString));
 	element.setAttribute('download', `Attendance_${(startDate === endDate || endDate === null) ? startDate : `${startDate}_${endDate}`}.csv`);
+	element.style.display = 'none';
+	document.body.appendChild(element);
+	element.click();
+	document.body.removeChild(element);
+}
+
+function downloadReportsCSV(json, columnHeaders, title) {
+	// Put data in a CSV
+	var papa = require('papaparse') // a strangely named but fairly effective CSV library
+	var csvString = papa.unparse({
+		fields: columnHeaders,
+		data: json
+	});
+
+	// Download - it's a lil janky but it works. Thanks, stackoverflow!
+	var element = document.createElement('a');
+	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(csvString));
+	element.setAttribute('download', `${title}.csv`);
 	element.style.display = 'none';
 	document.body.appendChild(element);
 	element.click();
@@ -298,4 +318,4 @@ function dateToString(date){
     return dateString;
 }
 
-export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, domain, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }
+export { downloadReportsCSV, downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }

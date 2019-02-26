@@ -6,7 +6,7 @@ import AddStudentModal from '../components/AddStudentModal';
 import Autocomplete from "../components/Autocomplete";
 import { httpPost, httpGet } from '../components/Helpers';
 import { Button, ButtonToolbar, Form, FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
-import { downloadAttendanceCSV, compareActivities } from '../components/Helpers';
+import { getPermissions, downloadAttendanceCSV, compareActivities } from '../components/Helpers';
 import { Redirect } from 'react-router-dom';
 
 class Attendance extends React.Component {
@@ -259,9 +259,9 @@ class Attendance extends React.Component {
     }
 
     render() {
-        let permissions = window.localStorage.getItem('permissions').split(',')
+        const permissions = getPermissions();
         if (permissions.indexOf('view_attendanceitems') < 0) {
-            return (<Redirect to='/attendance'/>);
+            return (<Redirect to='/notfound'/>);
         }
         const rows = this.state.attendance.map(item =>
             (

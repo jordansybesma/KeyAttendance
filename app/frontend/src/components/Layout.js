@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import { getPermissions } from './Helpers';
 
 class Layout extends Component {
 
@@ -24,8 +25,7 @@ class Layout extends Component {
 
   render() {
     if (!this.props.show) { return this.props.children }
-    let permissionString = window.localStorage.getItem("permissions");
-    let permissions = permissionString === null ? [] : permissionString.split(",")
+    const permissions = getPermissions();
     let nav = [];
     if (permissions.indexOf('view_attendanceitems') >= 0) {
       nav.push(<NavItem key={0} onClick={this.handleItemClick('attendance')}>Attendance</NavItem>)
@@ -33,13 +33,15 @@ class Layout extends Component {
     if (permissions.indexOf('view_students') >= 0) {
       nav.push(<NavItem key={1} onClick={this.handleItemClick('students')}>Students</NavItem>)
     }
-    if (permissions.indexOf('view_group') >= 0 || permissions.indexOf('view_user') >= 0) {
+    if (permissions.indexOf('view_group') >= 0 || permissions.indexOf('view_user') >= 0 
+      || permissions.indexOf('change_activity') >= 0 || permissions.indexOf('add_activity') >= 0
+      || permissions.indexOf('change_studentcolumn') >= 0 || permissions.indexOf('add_studentcolumn') >= 0) {
       nav.push(<NavItem key={2} onClick={this.handleItemClick('admin')}>Admin</NavItem>)
     }
-    let navItems = <Nav>
-        {nav}
-        <NavItem onClick={this.handleItemClick('reports')}>Reports</NavItem>
-      </Nav>
+    if (permissions.indexOf('view_reports') >= 0) {
+      nav.push(<NavItem key={3} onClick={this.handleItemClick('reports')}>Reports</NavItem>)
+    }
+    const navItems = <Nav>{nav}</Nav>
     return (
       <div>
         <Navbar>

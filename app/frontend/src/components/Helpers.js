@@ -238,9 +238,10 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 // Makes sure that we have a valid token, else redirects to login screen
 const checkCredentials = (Component) => {
 	const token = window.localStorage.getItem("key_credentials");
-	if (token === null) {
+	const permissions = window.localStorage.getItem('permissions')
+	if (token === null || permissions === null) {
 		return <Redirect to='/'/>;
-	} 
+	}
 	let tokenData = decodeToken(token);
 	if (tokenData.exp < Date.now() / 1000) { 
 		logout();
@@ -248,6 +249,14 @@ const checkCredentials = (Component) => {
 	} else {
 		return <Component/>;
 	}
+}
+
+function getPermissions() {
+	let permissions = window.localStorage.getItem('permissions')
+	if (permissions !== null && permissions.length > 0) {
+		return permissions.split(',');
+	}
+	return null;
 }
 
 // Only allows a component to render if the proper role is stored
@@ -296,4 +305,4 @@ function dateToString(date){
     return dateString;
 }
 
-export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }
+export { getPermissions, downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }

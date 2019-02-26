@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
 import { Button, Col, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem, Row } from "react-bootstrap";
-import { httpGet, httpPatch, httpPost } from '../components/Helpers';
+import { getPermissions, httpGet, httpPatch, httpPost } from '../components/Helpers';
 import blankPic from '../images/blank_profile_pic.jpg'
 import { getEarlierDate, getPrevSunday, getNextSaturday, dateToString } from '../components/Helpers';
 import { Redirect } from 'react-router-dom';
@@ -401,7 +401,7 @@ class Students extends Component {
   }
 
   render() {
-    let permissions = window.localStorage.getItem('permissions').split(',')
+    let permissions = getPermissions()
     if (permissions.indexOf('view_students') < 0) {
       return (<Redirect to='/attendance' />);
     }

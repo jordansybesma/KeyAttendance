@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Heatmap from '../components/Heatmap';
-import continuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
-import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString, httpGet, httpPatch} from '../components/Helpers';
-import BarChart from './../components/BarChart.js'
+import { getPermissions, dateToString, getEarlierDate, getNextSaturday, getPrevSunday, httpGet } from '../components/Helpers';
+import BarChart from './../components/BarChart.js';
+import { Redirect } from 'react-router-dom';
 
 class Reports extends Component {
 
@@ -250,6 +250,10 @@ class Reports extends Component {
       */
 
     render() {
+        const permissions = getPermissions();
+        if (permissions.indexOf('view_reports') < 0) {
+            return (<Redirect to='/attendance'/>);
+        }
         return (
             <div className="container py-4">
                 <h1> Reports </h1>

@@ -23,7 +23,8 @@ class Attendance extends React.Component {
             attendance: [],
             showStudentModal: false,
             date: '',
-            prevDate: ''
+            prevDate: '',
+            canCreateStudent: false
         }
 
         this.downloadCSV = this.downloadCSV.bind(this);
@@ -59,7 +60,13 @@ class Attendance extends React.Component {
             const students = await httpGet('http://127.0.0.1:8000/api/students');
             const attendanceItems = await httpGet(`http://127.0.0.1:8000/api/attendance?day=${date}`);
             let activities = await httpGet('http://127.0.0.1:8000/api/activities');
-            const studentFields = await httpGet('http://127.0.0.1:8000/api/student_column?quick_add=True')
+            const permissions = getPermissions()
+            let studentFields = [];
+            let canCreateStudent = false;
+            if (permissions.indexOf('add_students') >= 0) {
+                studentFields = await httpGet('http://127.0.0.1:8000/api/student_column?quick_add=True');
+                canCreateStudent = true;
+            }
             activities = activities.filter(item => item.is_showing === true);
             activities.sort(compareActivities)
             const suggestions = this.makeSuggestionsArray(students);
@@ -69,7 +76,8 @@ class Attendance extends React.Component {
                 students: students,
                 activities: activities,
                 studentFields : studentFields,
-                attendanceItems: attendanceItems
+                attendanceItems: attendanceItems,
+                canCreateStudent: canCreateStudent
             });
         } catch (e) {
             console.log(e);
@@ -159,32 +167,36 @@ class Attendance extends React.Component {
             "date":`${date}`,
             "time":`${today.getHours()}:${today.getMinutes() >= 10 ? today.getMinutes() : `0${today.getMinutes()}`}:${today.getSeconds() >= 10 ? today.getSeconds() : `0${today.getSeconds()}`}`,
         }).then(function(result) {
-            // Add new row to table
-            let name = "";
-            for (var j = 0; j < students.length; j++) {
-                if (students[j].id === parseInt(studentID)) {
-                    name = `${students[j].first_name} ${students[j].last_name}`;
-                    break;
+            if ('error' in result) {
+                result.response.then(function(response) {alert(`Error: ${response.error}`)});
+            } else {
+                // Add new row to table
+                let name = "";
+                for (var j = 0; j < students.length; j++) {
+                    if (students[j].id === parseInt(studentID)) {
+                        name = `${students[j].first_name} ${students[j].last_name}`;
+                        break;
+                    }
                 }
-            } 
 
-            let activityList = {};
-            for (var j = 0; j < activities.length; j++) {
-                const type = activities[j].type;
-                const value = type === 'boolean' ? false : '';
-                activityList[activities[j].name] = {
-                    'activityID': activities[j].activity_id,
-                    'attendanceItemID': 0,
-                    'value': value,
-                    'type': type
+                let activityList = {};
+                for (var j = 0; j < activities.length; j++) {
+                    const type = activities[j].type;
+                    const value = type === 'boolean' ? false : '';
+                    activityList[activities[j].name] = {
+                        'activityID': activities[j].activity_id,
+                        'attendanceItemID': 0,
+                        'value': value,
+                        'type': type
+                    }
                 }
+                activityList['Key']['value'] = true;
+                activityList['Key']['attendanceItemID'] = result.id;
+
+                const row = { 'name': name, 'studentID': parseInt(studentID), 'time': result.time, 'activities': activityList };
+                attendance.push(row);
+                self.setState({ attendance: attendance });
             }
-            activityList['Key']['value'] = true;
-            activityList['Key']['attendanceItemID'] = result.id;
-
-            const row = {'name': name, 'studentID': parseInt(studentID), 'time': result.time, 'activities':activityList};
-            attendance.push(row);
-            self.setState({attendance: attendance});
         });
     }
 
@@ -316,16 +328,26 @@ class Attendance extends React.Component {
 
         const buildingCSV = this.state.buildingCSV;
 
+        let buttonToolbar;
+        if (this.state.canCreateStudent) {
+            buttonToolbar = <ButtonToolbar style={{ float: 'right' }}>
+                <Button onClick={this.setDateToToday}>Go To Today</Button>
+                <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
+                <Button onClick={this.openModal}>New Student</Button>
+            </ButtonToolbar>
+        } else {
+            buttonToolbar = <ButtonToolbar style={{ float: 'right' }}>
+                <Button onClick={this.setDateToToday}>Go To Today</Button>
+                <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
+            </ButtonToolbar>
+        }
+
         return (
             <div className='content'>
                 <AddStudentModal studentFields={this.state.studentFields} show={this.state.showStudentModal} onSubmit={this.closeModal}/>
                 <h1>Attendance for {this.state.date}</h1>
                 <br/>
-                <ButtonToolbar style={{ float: 'right'}}>
-                    <Button onClick={this.setDateToToday}>Go To Today</Button>
-                    <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
-                    <Button onClick={this.openModal}>New Student</Button> 
-                </ButtonToolbar>
+                {buttonToolbar}
                 <Form inline style={{ float: 'right', paddingRight: '5px', paddingLeft: '5px'}}>
                     <FormGroup>
                         <ControlLabel>Date:</ControlLabel>{' '}

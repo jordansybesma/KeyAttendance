@@ -26,9 +26,7 @@ class Students(APIView):
 
     # Get existing student data
     def get(self, request):
-        if not request.user.has_perm('key.view_students'):
-            return Response({'error':'You are not authorized to view students.'}, status='401')
-        if not request.user.has_perm('key.view_students'):
+        if not request.user.has_perm('key.view_students') and not request.user.has_perm('key.view_attendanceitems'):
             return Response({'error':'You are not authorized to view students.'}, status='401')
         if not self.validateGet(request):
             return Response({'error':'Invalid Parameters'}, status='400')

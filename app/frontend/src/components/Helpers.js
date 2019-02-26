@@ -29,7 +29,7 @@ function httpPost(url, body={}) {
 				logout()
 				history.push(`/`)
 			}
-			return {'error':response.status}
+			return {'error' : response.status, 'response' : response.json()}
 		} else {
 			return response.json()
 		}
@@ -56,7 +56,7 @@ function httpPatch(url, body={}) {
 				logout()
 				history.push(`/`)
 			}
-			return {'error':response.status}
+			return {'error' : response.status, 'response' : response.json()}
 		} else {
 			return response.json()
 		}
@@ -81,7 +81,7 @@ function httpGet(url) {
 				logout()
 				history.push(`/`)
 			}
-			return {'error':response.status}
+			return {'error' : response.status, 'response' : response.json()}
 		} else {
 			return response.json()
 		}
@@ -108,7 +108,7 @@ function httpDelete(url, body={}) {
 				logout()
 				history.push(`/`)
 			}
-			return {'error':response.status}
+			return {'error' : response.status, 'response' : response.json()}
 		} else {
 			return {};
 		}
@@ -203,7 +203,6 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 				default:
 					// If this row has a value for this column, put it in the table. Else plop an 'N' in this column.
 					const activity = activities[columns[j]];
-					console.log(entries[keys[i]][activity.id])
 					if (entries[keys[i]][activity.id] === undefined) {
 						if (activity.type === 'boolean') {
 							row[j] = 'N';

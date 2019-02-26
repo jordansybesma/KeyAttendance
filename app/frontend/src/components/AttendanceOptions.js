@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { httpDelete } from './Helpers';
+import { httpDelete, getPermissions } from './Helpers';
 
 class AttendanceOptions extends React.Component {
     
@@ -28,24 +28,29 @@ class AttendanceOptions extends React.Component {
     }
 
     deleteRow() {
-        const { row } = this.state;
-        const activities = row['activities']
-        const keys = Object.keys(activities);
-        let ids = [];
+        const permissions = getPermissions();
+        if (permissions.indexOf('delete_attendanceitems') < 0) {
+            alert('Error: You are not authorized to delete attendance items');
+        } else {
+            const { row } = this.state;
+            const activities = row['activities']
+            const keys = Object.keys(activities);
+            let ids = [];
 
-        // figure out what to delete
-        for (let i = 0; i < keys.length; i++) {
-            if (activities[keys[i]].attendanceItemID !== 0) {
-                ids.push(activities[keys[i]].attendanceItemID)
+            // figure out what to delete
+            for (let i = 0; i < keys.length; i++) {
+                if (activities[keys[i]].attendanceItemID !== 0) {
+                    ids.push(activities[keys[i]].attendanceItemID)
+                }
             }
-        }
 
-        // delete the things
-        for (let i = 0; i < ids.length; i++) {
-            httpDelete(`http://127.0.0.1:8000/api/attendance/?key=${ids[i]}`);
-        }
+            // delete the things
+            for (let i = 0; i < ids.length; i++) {
+                httpDelete(`http://127.0.0.1:8000/api/attendance/?key=${ids[i]}`);
+            }
 
-        this.props.CustomFunction(row['studentID']);
+            this.props.CustomFunction(row['studentID']);
+        }
     }
 
     render() {

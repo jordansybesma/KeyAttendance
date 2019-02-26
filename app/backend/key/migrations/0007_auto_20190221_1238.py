@@ -10,15 +10,15 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.AlterField(
+            model_name='studentsuggestions',
+            name='match_key',
+            field=models.TextField(),
+        ),
         migrations.AddField(
             model_name='studentsuggestions',
             name='id',
             field=models.AutoField(default=None, primary_key=True, serialize=False, unique=True),
             preserve_default=False,
-        ),
-        migrations.AlterField(
-            model_name='studentsuggestions',
-            name='match_key',
-            field=models.TextField(),
         ),
     ]

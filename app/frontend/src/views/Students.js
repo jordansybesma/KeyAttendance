@@ -13,6 +13,9 @@ class Students extends Component {
     super(props);
     this.state = {
       mode: 'search',
+      canViewStudentInfo: false,
+      canViewHeatmap: false,
+      heatMapJson: []
     };
     this.edit = this.edit.bind(this);
     this.handler = this.handler.bind(this);
@@ -23,8 +26,17 @@ class Students extends Component {
       var studentsJson = await httpGet('http://127.0.0.1:8000/api/students');
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
       
-      var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
-      var profileInfo = this.parseCols(studentColumnJson);
+      let permissions = getPermissions()
+      let canViewStudentInfo = false;
+      if (permissions.indexOf('view_studentinfo') >= 0) {
+        var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+        var profileInfo = this.parseCols(studentColumnJson);
+        canViewStudentInfo = true;
+      }
+      let canViewHeatmap = false;
+      if (permissions.indexOf('view_reports') >= 0) {
+        canViewHeatmap = true;
+      }
 
       this.setState(function (previousState, currentProps) {
         return {
@@ -33,7 +45,8 @@ class Students extends Component {
           studentColumnJson: studentColumnJson,
           profileInfo: profileInfo,
           id: null,
-
+          canViewStudentInfo: canViewStudentInfo,
+          canViewHeatmap: canViewHeatmap,
           uploadedPic: false
         };
       });
@@ -116,13 +129,15 @@ class Students extends Component {
       const studentProfileJson = await httpGet('http://127.0.0.1:8000/api/students?id=' + state.id);
       state.profileData = studentProfileJson;
       
-      try {
-        const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
-        state.profileInfo = this.parseStudentInfo(state, studentInfoJson);
-      } 
-      catch (e) {
-        var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
-        state.profileInfo = this.parseCols(studentColumnJson);
+      if (state.canViewStudentInfo) {
+        try {
+          const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
+          state.profileInfo = this.parseStudentInfo(state, studentInfoJson);
+        }
+        catch (e) {
+          var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+          state.profileInfo = this.parseCols(studentColumnJson);
+        }
       }
 
       var startDate = getEarlierDate(30);
@@ -136,8 +151,10 @@ class Students extends Component {
       //var endDateString = "2018-03-03";
       state.endDateString = endDateString;
 
-      const heatMapJson = await httpGet('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
-      state.heatMapJson = heatMapJson;
+      if (this.state.canViewHeatmap) {
+        const heatMapJson = await httpGet('http://127.0.0.1:8000/api/reports/individualHeatmap/?student_id=' + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
+        state.heatMapJson = heatMapJson;
+      }
 
       this.setState(function (previousState, currentProps) {
         return state;
@@ -214,18 +231,33 @@ class Students extends Component {
 
   handleSubmit(evt, state) {
     evt.preventDefault()
-    httpPatch('http://127.0.0.1:8000/api/students/', state.profileData);
+    httpPatch('http://127.0.0.1:8000/api/students/', state.profileData)
+      .then(function (result) {
+        if ('error' in result) {
+          result.response.then(function (response) { alert(`Error: ${response.error}`) });
+        }
+      });
     
     var posted = false;
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
       if (field.updated) {
         if (field.studentInfoId) {
-          httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
+          httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost)
+            .then(function (result) {
+              if ('error' in result) {
+                result.response.then(function (response) { alert(`Error: ${response.error}`) });
+              }
+            });;
         } else {
-          console.log(field.patchPost);
-          httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
-          posted = true;
+          httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost)
+            .then(function (result) {
+              if ('error' in result) {
+                result.response.then(function (response) { alert(`Error: ${response.error}`) });
+              } else {
+                posted = true;
+              }
+            });;
         }
       }
     }
@@ -405,6 +437,7 @@ class Students extends Component {
     if (permissions.indexOf('view_students') < 0) {
       return (<Redirect to='/attendance' />);
     }
+    let heatmap = [];
     if (this.state.mode === 'search') {
       return (
         <div className='content'>
@@ -429,6 +462,10 @@ class Students extends Component {
         pic = this.state.src;
       } else {
         pic = blankPic;
+      }
+      let heatmap = [];
+      if (this.state.canViewHeatmap) {
+        heatmap = <Heatmap data = {this.formatData(this.state)} heatMapType = "individualStudent"/>
       }
       return (
         <div className='content'>
@@ -464,8 +501,7 @@ class Students extends Component {
 			  </div>
         	</div>
 		  </div>
-      <Heatmap
-        data = {this.formatData(this.state)} heatMapType = "individualStudent"/>
+      {heatmap}
 		</div>
       );
     }

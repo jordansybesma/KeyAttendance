@@ -199,16 +199,6 @@ class Heatmap extends Component {
                 }
               }} />
 
-          <ContinuousColorLegend
-                width={300}
-                startTitle={minLegendLabel}
-                midTitle={Math.round((maxLegendLabel+minLegendLabel)/2)}
-                endTitle= {maxLegendLabel}
-                startColor="#F5FBFD"
-                endColor={maxHeatMapColor}
-                height={100}
-              />
-
       </XYPlot>
       </div>
 

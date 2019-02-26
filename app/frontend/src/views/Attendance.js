@@ -60,7 +60,7 @@ class Attendance extends React.Component {
             const students = await httpGet(`https://${domain}/api/students/`);
             const attendanceItems = await httpGet(`https://${domain}/api/attendance/?day=${date}`);
             let activities = await httpGet(`https://${domain}/api/activities/`);
-            const studentFields = await httpGet(`https://${domain}/api/student_column?quick_add=True`)
+            const studentFields = await httpGet(`https://${domain}/api/student_column/?quick_add=True`)
             activities = activities.filter(item => item.is_showing === true);
             activities.sort(compareActivities)
             const suggestions = this.makeSuggestionsArray(students);

@@ -24,5 +24,5 @@ class Migration(migrations.Migration):
             name='id',
             field=models.AutoField(default=None, primary_key=True, serialize=False, unique=True),
             preserve_default=False,
-        );
+        ),
     ]

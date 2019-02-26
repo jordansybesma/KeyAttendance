@@ -4,6 +4,7 @@ import Users from './Users';
 import Roles from './Roles';
 import Activities from './Activities';
 import EditStudentFields from './EditStudentFields';
+import { getPermissions } from './Helpers';
 
 class AdminTabs extends React.Component {
     constructor(props, context) {
@@ -26,24 +27,41 @@ class AdminTabs extends React.Component {
     }
   
     render() {
+      let tabs = [];
+      let counter = 1;
+      const permissions = getPermissions()
+      if (permissions.indexOf('view_user') >= 0) {
+        tabs.push(<Tab key={counter} eventKey={counter} title="User Management">
+          <Users toggleRefreshRoles={this.toggleRefreshRoles} refreshRoles={this.state.refreshRoles} />
+        </Tab>)
+        counter++;
+      }
+      if (permissions.indexOf('view_group') >= 0) {
+        tabs.push(<Tab key={counter} eventKey={counter} title="User Roles">
+          <Roles toggleRefreshRoles={this.toggleRefreshRoles} />
+        </Tab>)
+        counter++;
+      }
+      if (permissions.indexOf('change_activity') >= 0 || permissions.indexOf('add_activity') >= 0) {
+        tabs.push(<Tab key={counter} eventKey={counter} title="Attendance Activities">
+          <Activities />
+        </Tab>)
+        counter++;
+      }
+      if (permissions.indexOf('change_studentcolumn') >= 0 || permissions.indexOf('add_studentcolumn') >= 0) {
+        tabs.push(<Tab key={counter} eventKey={counter} title="Student Profile Fields">
+          <EditStudentFields />
+        </Tab>)
+        counter++;
+      }
+
       return (
         <Tabs
           activeKey={this.state.key}
           onSelect={this.handleSelect}
           id="admin-tabs"
         >
-          <Tab eventKey={1} title="User Management">
-            <Users toggleRefreshRoles={this.toggleRefreshRoles} refreshRoles={this.state.refreshRoles}/>
-          </Tab>
-          <Tab eventKey={2} title="User Roles">
-            <Roles toggleRefreshRoles={this.toggleRefreshRoles}/>
-          </Tab>
-          <Tab eventKey={3} title="Attendance Activities">
-            <Activities />
-          </Tab>
-          <Tab eventKey={4} title="Student Profile Fields">
-            <EditStudentFields />
-          </Tab>
+          {tabs}
         </Tabs>
       );
     }

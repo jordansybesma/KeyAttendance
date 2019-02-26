@@ -18,7 +18,8 @@ class EditUserModal extends React.Component {
             confirmPassword: '',
             editPassword: false,
             error: false,
-            backendError: false
+            backendError: false,
+            errorMsg: ''
 		}
         
         this.delete = this.delete.bind(this);
@@ -108,6 +109,7 @@ class EditUserModal extends React.Component {
             password: '',
             confirmPassword: '',
             editPassword: false,
+            errorMsg: false
         });
 		this.props.onSubmit();
     }
@@ -117,10 +119,14 @@ class EditUserModal extends React.Component {
         httpDelete(`http://127.0.0.1:8000/api/users/?id=${self.state.row.id}`)
         .then(function (result) {
             if ('error' in result) {
-                self.setState({
-                    backendError: true
+                result.response.then(function(response) {
+                    self.setState({backendError: true, errorMsg: response.error});
                 });
             } else {
+                self.setState({
+                    backendError: false,
+                    errorMsg: ''
+                })
                 self.props.onDelete(self.state.row.id);
             }
         });
@@ -156,14 +162,16 @@ class EditUserModal extends React.Component {
         httpPatch('http://127.0.0.1:8000/api/users/', body)
             .then(function (result) {
                 if ('error' in result) {
-                    self.setState({
-                        backendError: true
+                    result.response.then(function(response) {
+                        self.setState({backendError: true, errorMsg: response.error});
                     });
                 } else {
                     self.setState({
                         password: '',
                         confirmPassword: '',
                         editPassword: false,
+                        backendError: false,
+                        errorMsg: ''
                     })
                     self.props.onSubmit(result);
                 }
@@ -237,8 +245,12 @@ class EditUserModal extends React.Component {
                 <br />
             </div>
         }
-
+        let errorMsg = "Server error. Please try again.";
+        if (this.state.errorMsg !== '' && this.state.errorMsg !== null) {
+            errorMsg = this.state.errorMsg;
+        }
         return(
+           
             <Modal show={this.props.show}>
 				<Modal.Header>
 					<Modal.Title>Edit User</Modal.Title>
@@ -288,7 +300,7 @@ class EditUserModal extends React.Component {
 
 				<Modal.Footer>
                     {this.state.error && <Alert bsStyle='danger'>Invalid password. Please make sure they match and try again.</Alert>}
-                    {this.state.backendError && <Alert bsStyle='danger'>Server error. Please try again.</Alert>}
+                    {this.state.backendError && <Alert bsStyle='danger'>{errorMsg}</Alert>}
 					<Button onClick={this.cancel}>Cancel</Button>
 					<Button onClick={this.submit} bsStyle="primary">Save</Button>
                     <Button onClick={() => { if (window.confirm('Are you sure you wish to delete this user?')) this.delete() } } bsStyle="danger">Delete</Button>

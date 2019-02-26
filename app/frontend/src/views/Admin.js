@@ -7,7 +7,9 @@ class Admin extends React.Component {
 
     render() {
         const permissions = getPermissions();
-        if (permissions.indexOf('view_user') >= 0 || permissions.indexOf('view_group') >= 0) {
+        if (permissions.indexOf('view_user') >= 0 || permissions.indexOf('view_group') >= 0 ||
+            permissions.indexOf('change_activity') >= 0 || permissions.indexOf('add_activity') >= 0 || 
+            permissions.indexOf('change_studentcolumn') >= 0 || permissions.indexOf('add_studentcolumn') >= 0) {
             return (
                 <div className='content'>
                     <AdminTabs />

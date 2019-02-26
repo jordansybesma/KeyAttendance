@@ -85,7 +85,7 @@ class History(APIView):
         return compiled_history  
 
     def get(self, request):
-        if not request.user.has_perm('key.view_user'):
+        if not request.user.has_perm('auth.view_user'):
             return Response({'error':'You are not authorized to view user history.'}, status='401')
         compiled_history = []
         user_id = request.query_params['user_id']

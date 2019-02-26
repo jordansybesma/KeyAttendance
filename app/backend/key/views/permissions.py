@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 class Permissions(APIView):
 
     def get(self, request):
-        if not request.user.has_perm('key.view_group'):
+        if not request.user.has_perm('auth.view_group'):
             return Response({'error':'You are not authorized to view group permissions.'}, status='401')
         content_types = ContentType.objects.filter(Q(model='activity') | 
             Q(model='attendanceitems') | Q(model='studentcolumn') | Q(model='studentinfo') | Q(model='students') | 

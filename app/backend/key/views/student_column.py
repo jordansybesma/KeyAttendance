@@ -26,6 +26,8 @@ class StudentColumn(APIView):
 
     # Get existing column data
     def get(self, request):
+        if not request.user.has_perm('key.view_students'):
+            return Response({'error':'You are not authorized to view student fields.'}, status='401')
         if not self.validateGet(request):
             return Response({'error':'Invalid Parameters'}, status='400')
   
@@ -38,6 +40,8 @@ class StudentColumn(APIView):
       
     # Create a new column
     def post(self, request):
+        if not request.user.has_perm('key.add_studentcolumn'):
+            return Response({'error':'You are not authorized to create student fields.'}, status='401')
         serializer = StudentColumnSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -46,6 +50,8 @@ class StudentColumn(APIView):
 
     # Update an existing column
     def patch(self, request):
+        if not request.user.has_perm('key.change_studentcolumn'):
+            return Response({'error':'You are not authorized to update student fields.'}, status='401')
         if not self.validatePatch(request):
             return Response({'error':'Invalid Paremeters'}, status='400')
 

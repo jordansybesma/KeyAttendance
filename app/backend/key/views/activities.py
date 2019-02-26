@@ -33,12 +33,16 @@ class Activities(APIView):
             return True
 
     def get(self, request):
+        if not request.user.has_perm('key.view_attendanceitems'):
+            return Response({'error':'You are not authorized to view attendance activities.'}, status='401')
         items = Activity.objects.all()
 
         serializer = ActivitySerializer(items, many=True)
         return Response(serializer.data, content_type='application/json')
 
     def patch(self, request):
+        if not request.user.has_perm('key.change_activity'):
+            return Response({'error':'You are not authorized to update activities.'}, status='401')
         if not self.validatePatch(request):
             return Response({'error':'Invalid Parameters'}, status='400')
         if 'activity_id' in request.data:
@@ -62,6 +66,8 @@ class Activities(APIView):
             return Response([serializer1.errors, serializer2.errors], status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, format=None):
+        if not request.user.has_perm('key.delete_activity'):
+            return Response({'error':'You are not authorized to delete activities.'}, status='401')
         if not self.validatePost(request):
             return Response({'error':'Invalid Parameters'}, status='400')
         serializer = ActivitySerializer(data=request.data)

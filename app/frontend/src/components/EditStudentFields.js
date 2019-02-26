@@ -23,7 +23,7 @@ class EditStudentFields extends React.Component {
 
     async componentDidMount() {
         try {
-            const fields = await httpGet(`https://${domain}/api/student_column`);
+            const fields = await httpGet(`https://${domain}/api/student_column/`);
             this.setState({
                 fields
             });

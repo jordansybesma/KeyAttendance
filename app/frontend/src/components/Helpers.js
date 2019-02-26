@@ -59,8 +59,10 @@ function httpPatch(url, body={}) {
 				history.push(`/`)
 			}
 			return {'error':response.status}
-		} else {
+		} else if (response) {
 			return response.json()
+		} else {
+			return // we got nothing back
 		}
 	}); 
 }
@@ -142,12 +144,10 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 	const studentData = await httpGet(`https://${domain}/api/students/`);
 	const activityData = await httpGet(`https://${domain}/api/activities/`);
 	activityData.sort(compareActivities) // Make sure that our columns are in a consistent order
-
 	// Make sure we got the data we came for.
 	if (attendanceData.length === 0 || activityData.length === 0) {
 		return
 	}
-
 	// Build activity lookup table
 	var activities = {}
 	for (var i = 0; i < activityData.length; i++) {
@@ -187,6 +187,7 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 			if (studentData[j].id === entries[keys[i]].id) {
 				row[1] = studentData[j].first_name;
 				row[2] = studentData[j].last_name;
+				row[3] = (studentData[j]["student_key"] !== null ? studentData[j]["student_key"] : 'N/A')
 				break;
 			}
 		} 
@@ -200,12 +201,10 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 				case 'Last':
 					break;
 				case 'Student Key':
-					row[j] = 'N/A' // Needs student keys to be added to the database
 					break;
 				default:
 					// If this row has a value for this column, put it in the table. Else plop an 'N' in this column.
 					const activity = activities[columns[j]];
-					console.log(entries[keys[i]][activity.id])
 					if (entries[keys[i]][activity.id] === undefined) {
 						if (activity.type === 'boolean') {
 							row[j] = 'N';

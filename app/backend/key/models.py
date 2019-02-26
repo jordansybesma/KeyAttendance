@@ -119,9 +119,31 @@ class Students(models.Model):
     first_name = models.TextField(blank=True, null=True)
     last_name = models.TextField(blank=True, null=True)
     id = models.IntegerField(blank=True, primary_key=True)
+    student_key = models.TextField(blank=True, null=True)
     history = HistoricalRecords()
     #photo = models.ImageField(blank=True, null=True, upload_to='profile_photos/')
 
     class Meta:
         managed = True
         db_table = 'students'
+
+class StudentSuggestions(models.Model):
+    student_id = models.IntegerField(blank=True, null=True)
+    match_name = models.TextField(blank=True, null=True)
+    match_key = models.TextField(null=False)
+    id = models.AutoField(primary_key=True, unique=True)
+
+    class Meta:
+        managed = True
+        db_table = 'studentsuggestions'
+
+# Stores student names and student keys imported from CitySpan
+class CitySpanStudents(models.Model):
+    first_name = models.TextField(blank=True, null=True)
+    last_name = models.TextField(blank=True, null=True)
+    student_key = models.TextField(null=False)
+    id = models.AutoField(primary_key=True, unique=True)
+
+    class Meta:
+        managed = True
+        db_table = 'cityspanstudents'

@@ -594,7 +594,7 @@ class Students extends Component {
                     <br/>
                     <Button variant="primary" type="submit">Submit</Button>
                     <Button variant="danger" onClick={this.display}>Cancel</Button>
-                    <Button variant="danger" onClick={evt => this.delete(evt, this.state)}>Delete</Button>
+                    <Button bsStyle="danger" onClick={evt => { if (window.confirm('Are you sure you wish to delete this user?')) this.delete(evt, this.state) }}>Delete</Button>
                   </FormGroup>
                 </Form>
               </div>

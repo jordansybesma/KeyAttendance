@@ -36,8 +36,6 @@ class StudentInfo(APIView):
       
     # Validate input for the DELETE request of this endpoint - should reference a valid key
     def validateDelete(self, request):
-        print("this is the rq")
-        print(request.data['id'])
         try:
             StudentInfoModel.objects.get(pk=request.data['id'])
         except:

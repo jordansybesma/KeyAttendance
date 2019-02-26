@@ -148,7 +148,7 @@ class Students extends Component {
   }
 
   async updateStudentInfo() {
-    const studentInfoJson = await httpGet('https://127.0.0.1:8000/api/student_info?student_id=' + this.state.id);
+    const studentInfoJson = await httpGet(`https://${domain}/api/student_info?student_id=` + this.state.id);
     var profileInfo = this.parseStudentInfo(this.state, studentInfoJson);
 
     this.setState(function (previousState, currentProps) {
@@ -162,13 +162,8 @@ class Students extends Component {
     for (var entry in state.profileInfo) {
       state.profileInfo[entry].patchPost.student_id = state.id;
 
-      // Ensure all varchar(x) types get caught as str_value
       var type;
-      if ((/varchar.*/g).test(state.profileInfo[entry].colInfo.type)) {
-        state.profileInfo[entry].type = 'str_value';
-      } else {
-        state.profileInfo[entry].type = state.profileInfo[entry].colInfo.type + '_value';
-      }
+      state.profileInfo[entry].type = state.profileInfo[entry].colInfo.type + '_value';
     }
 
     for (var item in info) {

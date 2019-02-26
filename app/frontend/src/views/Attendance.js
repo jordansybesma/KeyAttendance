@@ -60,6 +60,7 @@ class Attendance extends React.Component {
             const students = await httpGet(`https://${domain}/api/students/`);
             const attendanceItems = await httpGet(`https://${domain}/api/attendance/?day=${date}`);
             let activities = await httpGet(`https://${domain}/api/activities/`);
+            const studentFields = await httpGet(`https://${domain}/api/student_column?quick_add=True`)
             activities = activities.filter(item => item.is_showing === true);
             activities.sort(compareActivities)
             const suggestions = this.makeSuggestionsArray(students);
@@ -68,6 +69,7 @@ class Attendance extends React.Component {
                 suggestionsArray: suggestions,
                 students: students,
                 activities: activities,
+                studentFields : studentFields,
                 attendanceItems: attendanceItems
             });
         } catch (e) {
@@ -316,7 +318,7 @@ class Attendance extends React.Component {
 
         return (
             <div className='content'>
-                <AddStudentModal show={this.state.showStudentModal} onSubmit={this.closeModal}/>
+                <AddStudentModal studentFields={this.state.studentFields} show={this.state.showStudentModal} onSubmit={this.closeModal}/>
                 <h1>Attendance for {this.state.date}</h1>
                 <br/>
                 <ButtonToolbar style={{ float: 'right'}}>

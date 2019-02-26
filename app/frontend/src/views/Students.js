@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
 import { Button, Col, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem, Row } from "react-bootstrap";
-import { httpGet, httpPatch, httpPost } from '../components/Helpers';
+import { httpGet, httpPatch, httpPost, httpDelete } from '../components/Helpers';
 import blankPic from '../images/blank_profile_pic.jpg'
 import { getEarlierDate, getPrevSunday, getNextSaturday, dateToString } from '../components/Helpers';
 import { Redirect } from 'react-router-dom';
@@ -243,6 +243,33 @@ class Students extends Component {
   edit() {
     this.setState({ mode: 'edit' });
   }
+  
+  delete(evt, state) {
+    evt.preventDefault();
+    this.state.profileData = JSON.parse(JSON.stringify(state.profileDataPrelim));
+    console.log(this.state.profileData);
+    httpDelete('http://127.0.0.1:8000/api/students/', this.state.profileData);
+    
+    var posted = false;
+    for (var field in state.profileInfo) {
+      var field = state.profileInfo[field];
+      if (field.updated) {
+        if (field.studentInfoId) {
+          field.patchPost.student_id = this.state.id;
+          httpDelete('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
+        } else {
+          field.patchPost.student_id = this.state.id;
+          httpDelete('http://127.0.0.1:8000/api/student_info/', field.patchPost);
+          posted = true;
+        }
+      }
+    }
+    
+    this.state.mode = 'search';
+    this.setState(function (previousState, currentProps) {
+      return state;
+    });
+  }
 
   handleNameChange(evt, state) {
     var changedField = evt.target.id;
@@ -284,7 +311,6 @@ class Students extends Component {
       state.profileData = JSON.parse(JSON.stringify(state.profileDataPrelim));
       httpPatch('http://127.0.0.1:8000/api/students/', state.profileData);
     }
-    
     var posted = false;
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
@@ -568,6 +594,7 @@ class Students extends Component {
                     <br/>
                     <Button variant="primary" type="submit">Submit</Button>
                     <Button variant="danger" onClick={this.display}>Cancel</Button>
+                    <Button variant="danger" onClick={evt => this.delete(evt, this.state)}>Delete</Button>
                   </FormGroup>
                 </Form>
               </div>

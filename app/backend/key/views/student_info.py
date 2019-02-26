@@ -34,6 +34,24 @@ class StudentInfo(APIView):
         
         return Response(serializer.data, content_type='application/json')
       
+    # Validate input for the DELETE request of this endpoint - should reference a valid key
+    def validateDelete(self, request):
+        print("this is the rq")
+        print(request.data['id'])
+        try:
+            StudentInfoModel.objects.get(pk=request.data['id'])
+        except:
+            return False
+        return True
+      
+    def delete(self, request):
+        if not self.validateDelete(request):
+            return Response({'error':'Invalid Parameters'}, status='400')
+
+        studentItem = StudentInfoModel.objects.get(pk=request.data['id'])
+        studentItem.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+      
     # Create a new student
     def post(self, request):
         # Note: Until we convert student.id to an autofield/serial, this will require that we create a new student ID for new students.

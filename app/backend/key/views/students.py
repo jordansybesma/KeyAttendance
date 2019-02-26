@@ -23,6 +23,21 @@ class Students(APIView):
         except:
             return False
         return True
+    
+    # Validate input for the DELETE request of this endpoint - should reference a valid key
+    def validateDelete(self, request):
+        try:
+            StudentsModel.objects.get(pk=request.data['id'])
+        except:
+            return False
+        return True
+      
+    def delete(self, request):
+        if not self.validateDelete(request):
+            return Response({'error':'Invalid Parameters'}, status='400')
+        studentItem = StudentsModel.objects.get(pk=request.data['id'])
+        studentItem.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     # Get existing student data
     def get(self, request):

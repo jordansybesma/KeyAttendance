@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, FormGroup, FormControl, ControlLabel, Alert } from 'react-bootstrap';
-import { httpPatch, httpDelete, domain } from './Helpers';
+import { httpPatch, httpDelete, domain, protocol } from './Helpers';
 
 class EditUserModal extends React.Component {
     
@@ -113,7 +113,7 @@ class EditUserModal extends React.Component {
     
     delete() {
         const self = this;
-        httpDelete(`https://${domain}/api/users/?id=${self.state.row.id}`)
+        httpDelete(`${protocol}://${domain}/api/users/?id=${self.state.row.id}`)
         .then(function (result) {
             if ('error' in result) {
                 self.setState({
@@ -152,7 +152,7 @@ class EditUserModal extends React.Component {
         if (self.state.password !== "") {
             body["password"] = self.state.password;
         }
-        httpPatch(`https://${domain}/api/users/`, body)
+        httpPatch(`${protocol}://${domain}/api/users/`, body)
             .then(function (result) {
                 if ('error' in result) {
                     self.setState({

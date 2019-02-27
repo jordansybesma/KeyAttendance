@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Form, FormControl, FormGroup, ControlLabel, Label, Well } from 'react-bootstrap';
-import { httpGet } from './Helpers';
+import { Button, ControlLabel, Form, FormGroup, Label, Well } from 'react-bootstrap';
 
 class FileUploader extends React.Component {
 	

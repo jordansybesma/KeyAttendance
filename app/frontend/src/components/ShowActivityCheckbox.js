@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { httpPatch, domain } from './Helpers';
+import { httpPatch, domain, protocol } from './Helpers';
 
 class ShowActivityCheckbox extends Component {
 
@@ -26,7 +26,7 @@ class ShowActivityCheckbox extends Component {
         let self = this;
         let { row } = self.state;
         let body = {activity_id: row.activity_id, is_showing: !self.state.checked};
-        httpPatch(`https://${domain}/api/activities/`, body)
+        httpPatch(`${protocol}://${domain}/api/activities/`, body)
             .then(function (response) {
                 if ('error' in response) {
                     console.log(response);

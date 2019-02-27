@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import { Button, ButtonToolbar, Form, FormControl, FormGroup, Label, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Redirect } from 'react-router-dom';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
-import { Button, ButtonToolbar, Col, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem, Row } from "react-bootstrap";
-import { httpGet, httpPatch, httpPost, httpDelete, domain, getEarlierDate, getPrevSunday, getNextSaturday, dateToString } from '../components/Helpers';
-import blankPic from '../images/blank_profile_pic.jpg'
-import { Redirect } from 'react-router-dom';
+import { domain, getEarlierDate, getNextSaturday, getPrevSunday, httpDelete, httpGet, httpPatch, httpPost, protocol } from '../components/Helpers';
+import blankPic from '../images/blank_profile_pic.jpg';
 
 class Students extends Component {
 
@@ -20,10 +20,10 @@ class Students extends Component {
 
   async componentDidMount() {
     try {
-      var studentsJson = await httpGet(`https://${domain}/api/students/`);
+      var studentsJson = await httpGet(`${protocol}://${domain}/api/students/`);
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
       
-      var studentColumnJson = await httpGet(`https://${domain}/api/student_column/`);
+      var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
       var profileInfo = this.parseCols(studentColumnJson);
       var profileInfoPrelim = this.parseCols(studentColumnJson);
 
@@ -115,21 +115,21 @@ class Students extends Component {
 
   async getStudentProfile(state) {
     try {
-      const studentProfileJson = await httpGet(`https://${domain}/api/students/?id=` + state.id);
+      const studentProfileJson = await httpGet(`${protocol}://${domain}/api/students/?id=` + state.id);
       state.profileData = studentProfileJson;
       // Deep copy
       state.profileDataPrelim = JSON.parse(JSON.stringify(studentProfileJson));
       
       try {
-        const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
+        const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info?student_id=${state.id}`);
 
         if (studentInfoJson.length == 0) {
-          var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+          var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
           state.profileInfo = this.parseCols(studentColumnJson);
           state.profileInfoPrelim = this.parseCols(studentColumnJson);
           state = this.addTypes(state);
         } else {
-          var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+          var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
           state.profileInfo = this.parseCols(studentColumnJson);
           state.profileInfoPrelim = this.parseCols(studentColumnJson);
           state = this.addTypes(state);
@@ -140,7 +140,7 @@ class Students extends Component {
         }
       } 
       catch (e) {
-        var studentColumnJson = await httpGet(`https://${domain}/api/student_column/`);
+        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
         state.profileInfo = this.parseCols(studentColumnJson);
       }
 
@@ -155,7 +155,7 @@ class Students extends Component {
       var endDateString = "2018-03-03";
       state.endDateString = endDateString;
 
-      const heatMapJson = await httpGet(`https://${domain}/api/reports/individualHeatmap/?student_id=` + state.id + '&startdate=' + startDateString + '&enddate=' + endDateString);
+      const heatMapJson = await httpGet(`${protocol}://${domain}/api/reports/individualHeatmap/?student_id=${state.id}&startdate=${startDateString}&enddate=${endDateString}`);
       state.heatMapJson = heatMapJson;
 
       this.setState(function (previousState, currentProps) {
@@ -168,7 +168,7 @@ class Students extends Component {
   }
 
   async updateStudentInfo() {
-    const studentInfoJson = await httpGet(`https://${domain}/api/student_info?student_id=` + this.state.id);
+    const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info?student_id=${this.state.id}`);
     var returnedState = this.parseStudentInfo(this.state, studentInfoJson);
 
     this.setState(function (previousState, currentProps) {
@@ -264,14 +264,14 @@ class Students extends Component {
     };
 
     try {
-      const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
+      const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info?student_id=${state.id}`);
 
       if (studentInfoJson.length == 0) {
-        var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
         newState.profileInfo = this.parseCols(studentColumnJson);
         newState = this.addTypes(newState);
       } else {
-        var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
         newState.profileInfo = this.parseCols(studentColumnJson);
         newState = this.addTypes(newState);
 
@@ -280,16 +280,16 @@ class Students extends Component {
       }
     } 
     catch (e) {
-      var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+      var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
       newState.profileInfo = this.parseCols(studentColumnJson);
     }
 
-    httpDelete('http://127.0.0.1:8000/api/students/', state.profileData);
+    httpDelete(`${protocol}://${domain}/api/students/`, state.profileData);
     
     for (var field in newState.profileInfo) {
       var field = newState.profileInfo[field];
       if (field.studentInfoId) {
-        httpDelete('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
+        httpDelete(`${protocol}://${domain}/api/student_info/?id=${field.studentInfoId}`, field.patchPost);
       } else {
         console.log(field);
       }
@@ -351,16 +351,16 @@ class Students extends Component {
 
     if (state.profileDataUpdated) {
       state.profileData = JSON.parse(JSON.stringify(state.profileDataPrelim));
-      httpPatch(`http://${domain}/api/students/`, state.profileData);
+      httpPatch(`${protocol}://${domain}/api/students/`, state.profileData);
     }
     var posted = false;
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
       if (field.updated) {
         if (field.studentInfoId) {
-          httpPatch(`http://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost);
+          httpPatch(`${protocol}://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost);
         } else {
-          httpPost(`http://${domain}/api/student_info/`, field.patchPost);
+          httpPost(`${protocol}://${domain}/api/student_info/`, field.patchPost);
           posted = true;
         }
       }

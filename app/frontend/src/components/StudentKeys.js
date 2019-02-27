@@ -3,7 +3,7 @@ import Autocomplete from './Autocomplete';
 import AssignStudentKeyModal from './AssignStudentKeyModal';
 import AssignStudentKeyButton from './AssignStudentKeyButton';
 import ReactCollapsingTable from 'react-collapsing-table';
-import { httpGet, httpPatch, domain } from './Helpers';
+import { httpGet, httpPatch, domain, protocol } from './Helpers';
 import FileUploader from './FileUploader';
 
 class StudentKeys extends React.Component {
@@ -27,8 +27,8 @@ class StudentKeys extends React.Component {
 
     async componentDidMount() {
         try {
-            const unmatchedStudents = await httpGet(`https://${domain}/api/suggestions/unmatchedstudents/`);
-            const citySpanStudents = await httpGet(`https://${domain}/api/suggestions/cityspanstudents/`);
+            const unmatchedStudents = await httpGet(`${protocol}://${domain}/api/suggestions/unmatchedstudents/`);
+            const citySpanStudents = await httpGet(`${protocol}://${domain}/api/suggestions/cityspanstudents/`);
             const suggestions = this.makeSuggestionsArray(unmatchedStudents);
 
             this.setState({
@@ -57,7 +57,7 @@ class StudentKeys extends React.Component {
             } 
             output.push({first_name: obj["First Name"], last_name: obj["Last Name"], student_key: obj["Student Key"]})
         }
-        httpPatch(`https://${domain}/api/suggestions/cityspanstudents/`, {"students": output});
+        httpPatch(`${protocol}://${domain}/api/suggestions/cityspanstudents/`, {"students": output});
     }
 
     tmpfail(error, file) {

@@ -1,9 +1,5 @@
-import React, {Component} from 'react';
-import Heatmap from '../components/Heatmap';
-import continuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
-import {getEarlierDate, getPrevSunday, getNextSaturday, dateToString,downloadReportsCSV, domain, httpGet, httpPatch} from '../components/Helpers';
-import BarChart from './../components/BarChart.js'
-import { Button, ButtonToolbar } from 'react-bootstrap';
+import { Component } from 'react';
+import { domain, getEarlierDate, httpGet, protocol } from '../components/Helpers';
 
 class Reports extends Component {
 
@@ -35,7 +31,7 @@ class Reports extends Component {
           //var startDateWeek = getEarlierDate(6);
           //var startDateStringWeek = dateToString(startDateWeek);
           //var endDateStringWeek = dateToString(today);
-          const byHourJson = await httpGet('http://127.0.0.1:8000/api/reports/byHourAttendance/?startdate=' + startDateStringWeek + '&enddate=' + endDateStringWeek);
+          const byHourJson = await httpGet(`${protocol}://${domain}/api/reports/byHourAttendance/?startdate=${startDateStringWeek}&enddate=${endDateStringWeek}`);
           console.log("By hour:",byHourJson);
           // var byHourJson = await byHourAttendanceData.json();
           //Make timerange for last 365 days, extending back to the preceeding sunday and forward to the following sat to display yearly aggregation (broken down by day)
@@ -46,7 +42,7 @@ class Reports extends Component {
           //var endDateStringYear = dateToString(endDateYear);
           var startDateStringYear = "2018-02-04";
           var endDateStringYear = "2019-02-09";
-          const byDayJson = await httpGet('http://127.0.0.1:8000/api/reports/byDayAttendance/?startdate=' + startDateStringYear + '&enddate=' + endDateStringYear);
+          const byDayJson = await httpGet(`${protocol}://${domain}/api/reports/byDayAttendance/?startdate=${startDateStringYear}&enddate=${endDateStringYear}`);
           // var byDayJson = await byDayAttendanceData.json();
           var dayData = await this.formatDayData(byDayJson, startDateStringYear, endDateStringYear);
           var hourData = await this.formatHourData(byHourJson, startDateStringWeek, endDateStringWeek);

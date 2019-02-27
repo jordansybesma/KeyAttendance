@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
-import { httpPost, domain } from './Helpers';
+import { httpPost, domain, protocol } from './Helpers';
 
 class AddRoleModal extends React.Component {
     
@@ -63,7 +63,7 @@ class AddRoleModal extends React.Component {
             }
         }
         body["permissions"] = permissions;
-        httpPost(`https://${domain}/api/groups/`, body)
+        httpPost(`${protocol}://${domain}/api/groups/`, body)
             .then(function (result) {
                 if ('error' in result) {
                     console.log(result);

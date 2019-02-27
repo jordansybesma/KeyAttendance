@@ -18,13 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import { scaleLinear } from 'd3-scale';
-
-import { XYPlot, XAxis, YAxis, HeatmapSeries, LabelSeries, MarkSeries } from 'react-vis';
+import React, { Component } from 'react';
+import { HeatmapSeries, XAxis, XYPlot, YAxis } from 'react-vis';
 import ContinuousColorLegend from 'react-vis/dist/legends/continuous-color-legend';
 import "./React-vizLegends.scss";
+
 
 class Heatmap extends Component {
 

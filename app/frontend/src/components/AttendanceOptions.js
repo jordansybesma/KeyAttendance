@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { httpDelete, domain } from './Helpers';
+import { httpDelete, domain, protocol } from './Helpers';
 
 class AttendanceOptions extends React.Component {
     
@@ -42,7 +42,7 @@ class AttendanceOptions extends React.Component {
 
         // delete the things
         for (let i = 0; i < ids.length; i++) {
-            httpDelete(`https://${domain}/api/attendance/?key=${ids[i]}`);
+            httpDelete(`${protocol}://${domain}/api/attendance/?key=${ids[i]}`);
         }
 
         this.props.CustomFunction(row['studentID']);

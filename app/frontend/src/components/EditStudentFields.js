@@ -1,9 +1,9 @@
 import React from 'react';
-import ReactCollapsingTable from 'react-collapsing-table';
-import { httpGet, httpPatch, domain } from './Helpers';
-import StudentFieldCheckbox from './StudentFieldCheckbox';
 import { Button, ButtonToolbar } from 'react-bootstrap';
+import ReactCollapsingTable from 'react-collapsing-table';
 import AddStudentFieldModal from './AddStudentFieldModal';
+import { domain, httpGet, protocol } from './Helpers';
+import StudentFieldCheckbox from './StudentFieldCheckbox';
 
 class EditStudentFields extends React.Component {
     constructor(props) {
@@ -23,7 +23,7 @@ class EditStudentFields extends React.Component {
 
     async componentDidMount() {
         try {
-            const fields = await httpGet(`https://${domain}/api/student_column/`);
+            const fields = await httpGet(`${protocol}://${domain}/api/student_column/`);
             this.setState({
                 fields
             });

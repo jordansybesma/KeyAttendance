@@ -37,7 +37,7 @@ class Login extends React.Component {
     submit(e) {
         e.preventDefault();
         // Submit username and password to backend
-        fetch(`https://${domain}/api-token-auth/`, {
+        fetch(`${protocol}://${domain}/api-token-auth/`, {
             method: "POST", 
             headers:{'Content-Type':'application/json'}, 
             body: JSON.stringify({username: this.state.username, password: this.state.password})

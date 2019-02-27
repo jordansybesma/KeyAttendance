@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap';
-import { httpPost, domain } from './Helpers';
+import { httpPost, domain, protocol } from './Helpers';
 
 class AddStudentModal extends React.Component {
     
@@ -82,7 +82,7 @@ class AddStudentModal extends React.Component {
 
 	submit() {
 		const self = this;
-		httpPost(`https://${domain}/api/students/`, {
+		httpPost(`${protocol}://${domain}/api/students/`, {
 			first_name: this.state.firstName,
 			last_name: this.state.lastName
 		}).then(function(result) {
@@ -97,7 +97,7 @@ class AddStudentModal extends React.Component {
 						infoBody.push(self.createStudentInfo(field, studentInfo[field], student_id, self));
 					}
 				}
-				httpPost(`https://${domain}/api/student_info/`, infoBody)
+				httpPost(`${protocol}://${domain}/api/student_info/`, infoBody)
 					.then(function (infoResult) {
 						if ('error' in infoResult) {
 							console.log(infoResult);

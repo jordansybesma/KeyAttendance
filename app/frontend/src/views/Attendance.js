@@ -4,7 +4,7 @@ import ActivityCheckboxes from '../components/ActivityCheckboxes';
 import AttendanceOptions from '../components/AttendanceOptions';
 import AddStudentModal from '../components/AddStudentModal';
 import Autocomplete from "../components/Autocomplete";
-import { httpPost, httpGet, domain } from '../components/Helpers';
+import { httpPost, httpGet, domain, protocol } from '../components/Helpers';
 import { Button, ButtonToolbar, Form, FormControl, FormGroup, ControlLabel } from 'react-bootstrap';
 import { downloadAttendanceCSV, compareActivities } from '../components/Helpers';
 import { Redirect } from 'react-router-dom';
@@ -57,10 +57,10 @@ class Attendance extends React.Component {
         const { date } = this.state;
         try {
 
-            const students = await httpGet(`https://${domain}/api/students/`);
-            const attendanceItems = await httpGet(`https://${domain}/api/attendance/?day=${date}`);
-            let activities = await httpGet(`https://${domain}/api/activities/`);
-            const studentFields = await httpGet(`https://${domain}/api/student_column/?quick_add=True`)
+            const students = await httpGet(`${protocol}://${domain}/api/students/`);
+            const attendanceItems = await httpGet(`${protocol}://${domain}/api/attendance/?day=${date}`);
+            let activities = await httpGet(`${protocol}://${domain}/api/activities/`);
+            const studentFields = await httpGet(`${protocol}://${domain}/api/student_column/?quick_add=True`)
             activities = activities.filter(item => item.is_showing === true);
             activities.sort(compareActivities)
             const suggestions = this.makeSuggestionsArray(students);
@@ -154,7 +154,7 @@ class Attendance extends React.Component {
             }
         }
 
-        httpPost(`https://${domain}/api/attendance/`, {
+        httpPost(`${protocol}://${domain}/api/attendance/`, {
             "student_id": studentID,
             "activity_id": 7, // Key    
             "date":`${date}`,

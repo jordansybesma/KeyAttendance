@@ -22,7 +22,8 @@ class StudentInfoSerializer(serializers.ModelSerializer):
             'bool_value',
             'date_value',
             'time_value',
-            'id'
+            'id',
+            'photo_value'
         )
         model = StudentInfo
         

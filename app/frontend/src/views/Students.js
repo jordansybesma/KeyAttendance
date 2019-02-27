@@ -89,7 +89,8 @@ class Students extends Component {
           'bool_value': null,
           'date_value': null,
           'time_value': null,
-          'id': null
+          'id': null,
+          'photo_value': null
         }
       }
     }
@@ -364,6 +365,7 @@ class Students extends Component {
           httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
         } else {
           field.patchPost.student_id = state.id;
+          console.log(field.patchPost);
           httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
           posted = true;
         }
@@ -499,21 +501,6 @@ class Students extends Component {
         info.push(<Label key={entry + 'label'}>{label}</Label>)
 
         var type = this.state.profileInfo[entry].colInfo.type;
-        // var type;
-        // switch (this.state.profileInfo[entry].type) {
-        //   case 'str_value':
-        //   type = "text";
-        //   break;
-        //   case 'int_value':
-        //   type = "int";
-        //   break;
-        //   case 'date_value':
-        //   type = "date";
-        //   break;
-        //   case 'time_value':
-        //   type = "time";
-        //   break;
-        // }
         
         info.push(<FormControl key={label} type={type} id={entry} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
         info.push(<br key={entry + 'break'}/>);
@@ -527,8 +514,8 @@ class Students extends Component {
 
     var reader = new FileReader();
     reader.onloadend = () => {
-      this.state.profileInfo[5].updated = true;
-      this.state.profileInfo[5].patchPost['blob_value'] = reader.result;
+      this.state.profileInfoPrelim[5].updated = true;
+      this.state.profileInfoPrelim[5].patchPost['photo_value'] = reader.result;
       this.setState(function (previousState, currentProps) {
         return {
           src: reader.result,
@@ -592,7 +579,7 @@ class Students extends Component {
           <div className='container-fluid no-padding'>
             <div className='row justify-content-start'> 
               <div className='col-md-2 to-front top-bottom-padding'>
-                {/* <img id="studentPhoto" src={pic} width="196" height="196" /><br /> */}
+                <img id="studentPhoto" src={pic} width="196" height="196" /><br />
                 <ListGroup>
                   <ListGroupItem>Name: {this.state.profileData.first_name} {this.state.profileData.last_name}</ListGroupItem>
                   {this.renderDisplayInfo(this.state.parsedInfo)}
@@ -621,19 +608,15 @@ class Students extends Component {
                 />
               </div>
               <div className='col-md-8 top-bottom-padding'>
-                {/* <img id="studentPhoto" src={blankPic} width="196" height="196" /> */}
-                {/* <p> Upload Student Profile Photo </p> */}
-                {/* <input id="upload-button" type="file" accept="image/*" name={this.state.profileInfo[0].patchPost.student_id} onChange={evt => this.readImage(evt, this.state)} /><br /> */}
+                <img id="studentPhoto" src={blankPic} width="196" height="196" />
+                <p> Upload Student Profile Photo </p>
+                <input id="upload-button" type="file" accept="image/*" name={this.state.profileInfo[0].patchPost.student_id} onChange={evt => this.readImage(evt, this.state)} /><br />
                 <Form inline className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
                   <FormGroup>
                     <Label>First Name: </Label>
-                    {/* <Col sm="10"> */}
-                      <FormControl type="text" id="first_name" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleNameChange(evt, this.state)} /> <br/>
-                    {/* </Col> */}
+                    <FormControl type="text" id="first_name" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleNameChange(evt, this.state)} /> <br/>
                     <Label>Last Name: </Label>
-                    {/* <Col sm="10"> */}
-                      <FormControl type="text" id="last_name" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleNameChange(evt, this.state)} /> <br/>
-                    {/* </Col> */}
+                    <FormControl type="text" id="last_name" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleNameChange(evt, this.state)} /> <br/>
                     {this.renderEditInfo(this.state.parsedInfo)}
                     <br/>
                     <ButtonToolbar>

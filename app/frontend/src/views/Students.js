@@ -230,6 +230,16 @@ class Students extends Component {
     return state;
   }
 
+  search() {
+    var preState = {
+      mode: 'search',
+      id: this.state.id,
+      profileInfo: this.state.profileInfo,
+      profileInfoPrelim: this.state.profileInfoPrelim
+    };
+    this.getStudentProfile(preState);
+  }
+
   display() {
     var preState = {
       mode: 'display',
@@ -244,15 +254,46 @@ class Students extends Component {
     this.setState({ mode: 'edit' });
   }
   
-  delete(evt, state) {
+  async delete(evt, state) {
     evt.preventDefault();
-    httpDelete('http://127.0.0.1:8000/api/students/', this.state.profileData);
+
+    // Ensure we have studentInfoIds from the most recent POSTs
+    var newState = {
+      mode: 'search',
+      id: this.state.id,
+      profileInfo: this.state.profileInfo,
+      profileInfoPrelim: this.state.profileInfoPrelim
+    };
+
+    try {
+      const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
+
+      if (studentInfoJson.length == 0) {
+        var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+        newState.profileInfo = this.parseCols(studentColumnJson);
+        newState = this.addTypes(newState);
+      } else {
+        var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+        newState.profileInfo = this.parseCols(studentColumnJson);
+        newState = this.addTypes(newState);
+
+        var returnednewState = this.parseStudentInfo(newState, studentInfoJson);
+        newState.profileInfo = returnednewState.profileInfo;
+      }
+    } 
+    catch (e) {
+      var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+      newState.profileInfo = this.parseCols(studentColumnJson);
+    }
+
+    httpDelete('http://127.0.0.1:8000/api/students/', state.profileData);
     
-    for (var field in state.profileInfo) {
-      var field = state.profileInfo[field];
-      console.log(field);
+    for (var field in newState.profileInfo) {
+      var field = newState.profileInfo[field];
       if (field.studentInfoId) {
         httpDelete('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
+      } else {
+        console.log(field);
       }
     }
 

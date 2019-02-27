@@ -33,21 +33,25 @@ class Activities(APIView):
             return True
 
     def get(self, request):
+        if not request.user.has_perm('key.view_attendanceitems') and not request.user.has_perm('key.change_activity') and not request.user.has_perm('key.add_activity'):
+            return Response({'error':'You are not authorized to view attendance activities.'}, status='401')
         items = Activity.objects.all()
 
         serializer = ActivitySerializer(items, many=True)
         return Response(serializer.data, content_type='application/json')
 
     def patch(self, request):
+        if not request.user.has_perm('key.change_activity'):
+            return Response({'error':'You are not authorized to update activities.'}, status='401')
         if not self.validatePatch(request):
-            return Response({'error':'Invalid Parameters'}, status='400')
+            return Response({'error':'Invalid Parameters'}, status=status.HTTP_400_BAD_REQUEST)
         if 'activity_id' in request.data:
             activity = Activity.objects.get(pk=request.data['activity_id'])
             serializer = ActivitySerializer(activity, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error':'Invalid Parameters'}, status=status.HTTP_400_BAD_REQUEST)
         else:
             activity1 = Activity.objects.get(pk=request.data['activity_id1'])
             activity2 = Activity.objects.get(pk=request.data['activity_id2'])
@@ -59,9 +63,11 @@ class Activities(APIView):
                 serializer1.save()
                 serializer2.save()
                 return Response([serializer1.data, serializer2.data], status=status.HTTP_201_CREATED)
-            return Response([serializer1.errors, serializer2.errors], status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error':'Invalid Parameters'}, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, format=None):
+        if not request.user.has_perm('key.add_activity'):
+            return Response({'error':'You are not authorized to create activities.'}, status='401')
         if not self.validatePost(request):
             return Response({'error':'Invalid Parameters'}, status='400')
         serializer = ActivitySerializer(data=request.data)

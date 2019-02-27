@@ -36,11 +36,15 @@ class Users(APIView):
         return True
 
     def get(self, request):
+        if not request.user.has_perm('auth.view_user'):
+            return Response({'error':'You are not authorized to view users.'}, status='401')
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, content_type='application/json')
 
     def patch(self, request):
+        if not request.user.has_perm('auth.change_user'):
+            return Response({'error':'You are not authorized to change users.'}, status='401')
         if not self.validatePatch(request):
             return Response({'error':'Invalid Parameters'}, status='400')
         user = User.objects.get(pk=request.data['id'])
@@ -56,6 +60,8 @@ class Users(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, format=None):
+        if not request.user.has_perm('auth.add_user'):
+            return Response({'error':'You are not authorized to create users.'}, status='401')
         if not self.validatePost(request):
             return Response({'error':'Invalid Parameters'}, status='400')
         serializer = UserSerializerEdit(data=request.data)
@@ -65,7 +71,7 @@ class Users(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
-        if not request.user.has_perm('key.delete_user'):
+        if not request.user.has_perm('auth.delete_user'):
             return Response({'error':'You are not authorized to delete users.'}, status='401')
         if request.user.id == int(request.query_params['id']):
             return Response({'error': 'Users are not authorized to delete their own accounts.'}, status='401')

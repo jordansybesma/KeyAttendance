@@ -43,6 +43,8 @@ class Reports(APIView):
         return validateBool
      
     def get(self, request, vizType):
+        if not request.user.has_perm('key.view_reports'):
+            return Response({'error':'You are not authorized to view reports.'}, status='401')
         if not self.validateGet(request, vizType):
             return Response({'error':'Invalid Parameters'}, status='400')
 

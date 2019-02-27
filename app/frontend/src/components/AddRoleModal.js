@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Modal, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 import { httpPost, domain, protocol } from './Helpers';
+import { Alert, Button, Modal, FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 
 class AddRoleModal extends React.Component {
     
@@ -11,13 +11,17 @@ class AddRoleModal extends React.Component {
             show: false,
             name: '',
             permission_ids: {},
-            checkboxes: []
+            checkboxes: [],
+            error: false,
+            backendError: false,
+            errorMsg: ''
 		}
 		
 		this.cancel = this.cancel.bind(this);
 		this.submit = this.submit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.createCheckboxes = this.createCheckboxes.bind(this);
+        this.validateInput = this.validateInput.bind(this);
     }
     
     componentDidUpdate() {
@@ -48,12 +52,19 @@ class AddRoleModal extends React.Component {
     };
 
 	cancel() {
-        this.setState({name: ''});
+        this.setState({name: '', error: false, backendError: false, errorMsg: ''});
 		this.props.onSubmit();
 	}
 
 	submit() {
         const self = this;
+        self.setState({backendError: false});
+        if (self.validateInput() === 'error') {
+            self.setState({error: true});
+            return;
+        } else {
+            self.setState({error: false});
+        }
         let body = { name: self.state.name };
         let permissions = [];
         const checkboxes = self.state.checkboxes;
@@ -62,11 +73,17 @@ class AddRoleModal extends React.Component {
                 permissions.push(self.state.permission_ids[checkboxes[index].label])
             }
         }
+        if (permissions.length < 1) {
+            self.setState({error: true});
+            return;
+        }
         body["permissions"] = permissions;
         httpPost(`${protocol}://${domain}/api/groups/`, body)
             .then(function (result) {
                 if ('error' in result) {
-                    console.log(result);
+                    result.response.then(function(response) {
+                        self.setState({backendError: true, errorMsg: response.error});
+                    });
                 } else {
                     self.setState({name: ''});
                     self.props.onSubmit(result);
@@ -101,7 +118,23 @@ class AddRoleModal extends React.Component {
             );
     }
 
+    validateInput() {
+		const { name } = this.state;
+        const regex = /^[a-z0-9 .@+\-_]+$/i;
+        if (name.length > 0 && regex.test(name)) {
+            return 'success';
+        } else if (name.length === 0) {
+			return null;
+		} else {
+			return 'error';
+		}
+    }
+
     render() {
+        let errorMsg = "Server error. Please try again.";
+        if (this.state.errorMsg !== '' && this.state.errorMsg !== null) {
+            errorMsg = this.state.errorMsg;
+        }
         return(
             <Modal show={this.props.show}>
 				<Modal.Header>
@@ -110,7 +143,9 @@ class AddRoleModal extends React.Component {
 
 				<Modal.Body>
 					<form>
-						<FormGroup>
+						<FormGroup
+                            validationState={this.validateInput()}
+                        >
 							<ControlLabel>Role Name</ControlLabel>
 							<FormControl
                                 type="text"
@@ -127,6 +162,8 @@ class AddRoleModal extends React.Component {
 				</Modal.Body>
 
 				<Modal.Footer>
+                    {this.state.error && <Alert bsStyle='danger'>Invalid input. Please check your fields and try again.</Alert>}
+                    {this.state.backendError && <Alert bsStyle='danger'>{errorMsg}</Alert>}
 					<Button onClick={this.cancel}>Cancel</Button>
 					<Button onClick={this.submit} bsStyle="primary">Create</Button>
 				</Modal.Footer>

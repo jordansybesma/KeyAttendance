@@ -37,11 +37,15 @@ class Groups(APIView):
         return True
 
     def get(self, request):
+        if not request.user.has_perm('auth.view_user') and not request.user.has_perm('auth.view_group'):
+            return Response({'error':'You are not authorized to view user groups.'}, status='401')
         groups = Group.objects.all()
         serializer = GroupSerializer(groups, many=True)
         return Response(serializer.data, content_type='application/json')
 
     def patch(self, request):
+        if not request.user.has_perm('auth.change_group'):
+            return Response({'error':'You are not authorized to update user groups.'}, status='401')
         group = Group.objects.get(pk=request.data['id'])
         serializer = GroupSerializer(group, data=request.data, partial=True)
         if serializer.is_valid():
@@ -50,6 +54,8 @@ class Groups(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, format=None):
+        if not request.user.has_perm('auth.add_group'):
+            return Response({'error':'You are not authorized to create user groups.'}, status='401')
         serializer = GroupSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -57,9 +63,10 @@ class Groups(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
+        if not request.user.has_perm('auth.delete_group'):
+            return Response({'error':'You are not authorized to delete user groups.'}, status='401')
         if not self.validateDelete(request):
             return Response({'error':'Invalid Parameters'}, status='400')
-
         group_id = request.query_params['id']
         group = Group.objects.get(pk=group_id)
         users = User.objects.filter(groups__in=group_id)

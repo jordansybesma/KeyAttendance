@@ -37,11 +37,11 @@ class StudentFieldCheckbox extends Component {
         let body = {info_id: row.info_id};
         body[self.props.accessor] = !self.state.checked;
         httpPatch(`${protocol}://${domain}/api/student_column/`, body)
-            .then(function (response) {
-                if ('error' in response) {
-                    console.log(response);
+            .then(function (result) {
+                if ('error' in result) {
+                    result.response.then(function(response) {alert(`Error: ${response.error}`)});
                 } else {
-                    const updateCheckbox = () => self.props.CustomFunction(response);
+                    const updateCheckbox = () => self.props.CustomFunction(result);
                     updateCheckbox();
                 }
             });

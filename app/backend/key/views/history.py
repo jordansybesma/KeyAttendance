@@ -54,7 +54,7 @@ class History(APIView):
             student = students.get(pk=item['student_id'])
             student_name = student.first_name + ' ' + student.last_name
             entry['datetime'] = str(item['history_date']).split('.')[0]
-            entry['action'] = self.buildActionString(item['history_type'], 'attendance_item')
+            entry['action'] = self.buildActionString(item['history_type'], 'attendance item')
             entry['values'] = self.buildAttendanceValuesString(item, activity, student_name)
             compiled_history.append(entry)
         return compiled_history
@@ -85,6 +85,8 @@ class History(APIView):
         return compiled_history  
 
     def get(self, request):
+        if not request.user.has_perm('auth.view_user'):
+            return Response({'error':'You are not authorized to view user history.'}, status='401')
         compiled_history = []
         user_id = request.query_params['user_id']
         activities = Activity.objects.all()

@@ -46,6 +46,8 @@ class StudentInfo(APIView):
 
     # Get existing student data
     def get(self, request):
+        if not request.user.has_perm('key.view_studentinfo'):
+            return Response({'error':'You are not authorized to view student profile info.'}, status='401')
         if not self.validateGet(request):
             return Response({'error':'Invalid Parameters'}, status='400')
         
@@ -72,6 +74,8 @@ class StudentInfo(APIView):
       
     # Create a new student
     def post(self, request):
+        if not request.user.has_perm('key.add_studentinfo'):
+            return Response({'error':'You are not authorized to create student profile info.'}, status='401')
         if not self.validatePost(request):
             return Response({'error':'Invalid Paremeters'}, status='400')
         is_many = True if isinstance(request.data, list) else False
@@ -84,6 +88,8 @@ class StudentInfo(APIView):
 
     # Update an existing student
     def patch(self, request):
+        if not request.user.has_perm('key.change_studentinfo'):
+            return Response({'error':'You are not authorized to update student profile info.'}, status='401')
         if not self.validatePatch(request):
             return Response({'error':'Invalid Paremeters'}, status='400')
 

@@ -51,12 +51,12 @@ class Activities extends React.Component {
         let self = this;
         let body = { activity_id1: id1, activity_id2: id2 };
         httpPatch(`${protocol}://${domain}/api/activities/`, body)
-            .then(function (response) {
-                if ('error' in response[0] || 'error' in response[1]) {
-                    console.log(response);
+        .then(function (result) {
+            if ('error' in result) {
+                result.response.then(function(response) {alert(`Error: ${response.error}`)});
                 } else {
-                    let activity1 = response[0];
-                    let activity2 = response[1];
+                    let activity1 = result[0];
+                    let activity2 = result[1];
                     if (activity1 && activity2) {
                         activities = activities.filter(item => item.activity_id !== activity1.activity_id);
                         activities = activities.filter(item => item.activity_id !== activity2.activity_id);

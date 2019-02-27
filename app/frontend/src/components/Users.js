@@ -5,7 +5,7 @@ import ReactCollapsingTable from 'react-collapsing-table';
 import AddUserModal from './AddUserModal';
 import EditUserButton from './EditUserButton';
 import UserHistoryButton from './UserHistoryButton';
-import { httpGet, domain, protocol } from './Helpers';
+import { getPermissions, httpGet, domain, protocol } from './Helpers';
 import UserHistory from './UserHistory';
 
 class Users extends React.Component {
@@ -293,6 +293,18 @@ class Users extends React.Component {
                 <UserHistory closeHistoryView={this.closeHistoryView} history={this.state.selectedUserHistory} username={this.state.selectedUsername}/>
             );
         }
+        const permissions = getPermissions();
+        let buttonToolbar;
+        if (permissions.indexOf('add_user') >= 0) {
+            buttonToolbar = <ButtonToolbar style={{ float: 'right' }}>
+                <Button className={this.state.showingAllUsers ? 'hidden' : ''} bsStyle='link' onClick={this.showAllUsers}>Show All Users</Button>
+                <Button onClick={this.openModal}>New User</Button>
+            </ButtonToolbar>
+        } else {
+            buttonToolbar = <ButtonToolbar style={{ float: 'right' }}>
+                <Button className={this.state.showingAllUsers ? 'hidden' : ''} bsStyle='link' onClick={this.showAllUsers}>Show All Users</Button>
+            </ButtonToolbar>
+        }
         return (
             <div className='content'>
                 <AddUserModal role_ids={this.state.role_ids}
@@ -300,10 +312,7 @@ class Users extends React.Component {
                     onSubmit={this.closeModal} />
                 <h1>User Management</h1>
                 <br />
-                <ButtonToolbar style={{ float: 'right' }}>
-                    <Button className={this.state.showingAllUsers ? 'hidden' : ''} bsStyle='link' onClick={this.showAllUsers}>Show All Users</Button>
-                    <Button onClick={this.openModal}>New User</Button>
-                </ButtonToolbar>
+                {buttonToolbar}
                 <Autocomplete
                     hasUsername={true}
                     suggestions={this.state.suggestionsArray}

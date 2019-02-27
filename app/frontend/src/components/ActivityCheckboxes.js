@@ -12,6 +12,7 @@ class ActivityCheckboxes extends React.Component {
             activities: {},
             studentID: 0,
             error: "",
+            errorMsg: "",
             numChecked: 0,
             date: ''
         }
@@ -77,7 +78,10 @@ class ActivityCheckboxes extends React.Component {
             .then(function(result) {
                 // Update state to refresh checkboxes
                 if ('error' in result) {
-                    self.setState({error: result.error})
+                    const errorCode = result.error;
+                    result.response.then(function(response) {
+                        self.setState({error: errorCode, errorMsg: response.error})
+                    });
                 } else {
                     if (type === 'boolean') {
                         activities[label].value = true;
@@ -87,7 +91,7 @@ class ActivityCheckboxes extends React.Component {
                         activities[label].value = result.num_value;
                     }
                     activities[label].attendanceItemID = result.id;
-                    self.setState({activities: activities, numChecked: numChecked + 1})
+                    self.setState({activities: activities, numChecked: numChecked + 1, error: '', errorMsg: ''})
                 }
             });
         } else {
@@ -98,14 +102,17 @@ class ActivityCheckboxes extends React.Component {
             } else {
                 httpDelete(`${protocol}://${domain}/api/attendance/?key=${attendanceItemID}`).then(function(result) {
                     if ('error' in result) {
-                        self.setState({error: result.error})
+                        const errorCode = result.error;
+                        result.response.then(function (response) {
+                            self.setState({ error: errorCode, errorMsg: response.error })
+                        });
                     } else {
                         if (type === 'boolean') {
                             activities[label].value = false;
                         } else {
                             activities[label].value = '';
                         }
-                        self.setState({activities: activities, numChecked: numChecked - 1})
+                        self.setState({activities: activities, numChecked: numChecked - 1, error: '', errorMsg: ''})
                     }
                 });
             }
@@ -141,12 +148,16 @@ class ActivityCheckboxes extends React.Component {
     };
 
     render() {
+        let errorMsg = "Your changes have not been saved. Please refresh and try again.";
+        if (this.state.errorMsg !== '' && this.state.errorMsg !== null) {
+            errorMsg = this.state.errorMsg;
+        }
         return (
             <span className="container">
                 <span className="row">
                     <span className="col-sm-12">
                         {this.state.numChecked < 2 && <Label bsStyle="warning">At least one box must be checked</Label>}
-                        {this.state.error !== "" && <Label bsStyle="danger">Error {this.state.error}: Your changes have not been saved. Please refresh and try again.</Label>}
+                        {this.state.error !== "" && <Label bsStyle="danger">Error {this.state.error}: {errorMsg} </Label>}
                         {this.createCheckboxes()}
                     </span>
                 </span>

@@ -1,12 +1,15 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import AdminTabs from '../components/AdminTabs';
+import { getPermissions } from '../components/Helpers';
 
 class Admin extends React.Component {
 
     render() {
-        let permissions = window.localStorage.getItem('permissions').split(',')
-        if (permissions.indexOf('view_user') >= 0 || permissions.indexOf('view_group') >= 0) {
+        const permissions = getPermissions();
+        if (permissions.indexOf('view_user') >= 0 || permissions.indexOf('view_group') >= 0 ||
+            permissions.indexOf('change_activity') >= 0 || permissions.indexOf('add_activity') >= 0 || 
+            permissions.indexOf('change_studentcolumn') >= 0 || permissions.indexOf('add_studentcolumn') >= 0) {
             return (
                 <div className='content'>
                     <AdminTabs />

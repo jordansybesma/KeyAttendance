@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Button, ButtonToolbar, Form, FormControl, FormGroup, Label, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Button, Col, Row, ButtonToolbar, Form, FormControl, FormGroup, Label, ListGroup, ListGroupItem } from "react-bootstrap";
 import { Redirect } from 'react-router-dom';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
-import { domain, getEarlierDate, getNextSaturday, getPrevSunday, httpDelete, httpGet, httpPatch, httpPost, protocol } from '../components/Helpers';
+import { dateToString, getPermissions, domain, getEarlierDate, getNextSaturday, getPrevSunday, httpDelete, httpGet, httpPatch, httpPost, protocol } from '../components/Helpers';
 import blankPic from '../images/blank_profile_pic.jpg';
 
 class Students extends Component {
@@ -12,6 +12,9 @@ class Students extends Component {
     super(props);
     this.state = {
       mode: 'search',
+      canViewStudentInfo: false,
+      canViewHeatmap: false,
+      heatMapJson: []
     };
     this.display = this.display.bind(this);
     this.edit = this.edit.bind(this);
@@ -23,9 +26,18 @@ class Students extends Component {
       var studentsJson = await httpGet(`${protocol}://${domain}/api/students/`);
       var suggestionsArray = this.makeSuggestionsArray(studentsJson);
       
-      var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
-      var profileInfo = this.parseCols(studentColumnJson);
-      var profileInfoPrelim = this.parseCols(studentColumnJson);
+      let permissions = getPermissions()
+      let canViewStudentInfo = false;
+      if (permissions.indexOf('view_studentinfo') >= 0) {
+        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
+        var profileInfo = this.parseCols(studentColumnJson);
+        var profileInfoPrelim = this.parseCols(studentColumnJson);
+        canViewStudentInfo = true;
+      }
+      let canViewHeatmap = false;
+      if (permissions.indexOf('view_reports') >= 0) {
+        canViewHeatmap = true;
+      }
 
       this.setState(function (previousState, currentProps) {
         return {
@@ -35,7 +47,8 @@ class Students extends Component {
           profileInfo: profileInfo,
           profileInfoPrelim: profileInfoPrelim,
           id: null,
-
+          canViewStudentInfo: canViewStudentInfo,
+          canViewHeatmap: canViewHeatmap,
           uploadedPic: false
         };
       });
@@ -119,29 +132,31 @@ class Students extends Component {
       state.profileData = studentProfileJson;
       // Deep copy
       state.profileDataPrelim = JSON.parse(JSON.stringify(studentProfileJson));
-      
-      try {
-        const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info?student_id=${state.id}`);
 
-        if (studentInfoJson.length == 0) {
-          var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
-          state.profileInfo = this.parseCols(studentColumnJson);
-          state.profileInfoPrelim = this.parseCols(studentColumnJson);
-          state = this.addTypes(state);
-        } else {
-          var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
-          state.profileInfo = this.parseCols(studentColumnJson);
-          state.profileInfoPrelim = this.parseCols(studentColumnJson);
-          state = this.addTypes(state);
+      if (state.canViewStudentInfo) {
+        try {
+          const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info?student_id=${state.id}`);
 
-          var returnedState = this.parseStudentInfo(state, studentInfoJson);
-          state.profileInfo = returnedState.profileInfo;
-          state.profileInfoPrelim = returnedState.profileInfoPrelim;
+          if (studentInfoJson.length == 0) {
+            var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
+            state.profileInfo = this.parseCols(studentColumnJson);
+            state.profileInfoPrelim = this.parseCols(studentColumnJson);
+            state = this.addTypes(state);
+          } else {
+            var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
+            state.profileInfo = this.parseCols(studentColumnJson);
+            state.profileInfoPrelim = this.parseCols(studentColumnJson);
+            state = this.addTypes(state);
+
+            var returnedState = this.parseStudentInfo(state, studentInfoJson);
+            state.profileInfo = returnedState.profileInfo;
+            state.profileInfoPrelim = returnedState.profileInfoPrelim;
+          }
         }
-      } 
-      catch (e) {
-        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
-        state.profileInfo = this.parseCols(studentColumnJson);
+        catch (e) {
+          var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
+          state.profileInfo = this.parseCols(studentColumnJson);
+        }
       }
 
       var startDate = getEarlierDate(30);
@@ -155,8 +170,10 @@ class Students extends Component {
       var endDateString = "2018-03-03";
       state.endDateString = endDateString;
 
-      const heatMapJson = await httpGet(`${protocol}://${domain}/api/reports/individualHeatmap/?student_id=${state.id}&startdate=${startDateString}&enddate=${endDateString}`);
-      state.heatMapJson = heatMapJson;
+      if (this.state.canViewHeatmap) {
+        const heatMapJson = await httpGet(`${protocol}://${domain}/api/reports/individualHeatmap/?student_id=${state.id}&startdate=${startDateString}&enddate=${endDateString}`);
+        state.heatMapJson = heatMapJson;
+      }
 
       this.setState(function (previousState, currentProps) {
         return state;
@@ -345,6 +362,12 @@ class Students extends Component {
 
   handleSubmit(evt, state) {
     evt.preventDefault();
+    httpPatch(`${protocol}://${domain}/api/students/`, state.profileData)
+      .then(function (result) {
+        if ('error' in result) {
+          result.response.then(function (response) { alert(`Error: ${response.error}`) });
+        }
+      });
     
     // Deep copy
     state.profileInfo = JSON.parse(JSON.stringify(state.profileInfoPrelim));
@@ -358,10 +381,21 @@ class Students extends Component {
       var field = state.profileInfo[field];
       if (field.updated) {
         if (field.studentInfoId) {
-          httpPatch(`${protocol}://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost);
+          httpPatch(`${protocol}://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost)
+            .then(function (result) {
+              if ('error' in result) {
+                result.response.then(function (response) { alert(`Error: ${response.error}`) });
+              }
+            });;
         } else {
-          httpPost(`${protocol}://${domain}/api/student_info/`, field.patchPost);
-          posted = true;
+          httpPost(`${protocol}://${domain}/api/student_info/`, field.patchPost)
+            .then(function (result) {
+              if ('error' in result) {
+                result.response.then(function (response) { alert(`Error: ${response.error}`) });
+              } else {
+                posted = true;
+              }
+            });;
         }
       }
     }
@@ -536,10 +570,11 @@ class Students extends Component {
   }
 
   render() {
-    let permissions = window.localStorage.getItem('permissions').split(',')
+    let permissions = getPermissions()
     if (permissions.indexOf('view_students') < 0) {
       return (<Redirect to='/attendance' />);
     }
+    let heatmap = [];
     if (this.state.mode === 'search') {
       return (
         <div className='content'>
@@ -564,6 +599,12 @@ class Students extends Component {
         pic = this.state.src;
       } else {
         pic = blankPic;
+      }
+      let heatmap = [];
+      if (this.state.canViewHeatmap) {
+        heatmap = <div><h3>Student Attendance</h3>
+          <p>Number of engagements for this individual student in the past month.</p>
+          <Heatmap data={this.formatData(this.state)} heatMapType="individualStudent" /></div>
       }
       return (
         <div className='content'>
@@ -599,10 +640,7 @@ class Students extends Component {
 			  </div>
         	</div>
 		  </div>
-          <h3>Student Attendance</h3>
-          <p>Number of engagements for this individual student in the past month.</p>
-          <Heatmap 
-            data = {this.formatData(this.state)} heatMapType = "individualStudent"/>
+      {heatmap}
 		</div>
       );
     }

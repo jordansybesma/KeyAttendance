@@ -17,7 +17,9 @@ class ShowActivityCheckbox extends Component {
     }
 
     componentDidUpdate() {
-        if (this.props.row.is_showing !== this.state.checked) {
+        if (this.props.row.activity_id !== this.state.row.activity_id) {
+            this.setState({ row: this.props.row })
+        } else if (this.props.row.is_showing !== this.state.checked) {
             this.setState({ checked: this.props.row.is_showing })
         }
     }
@@ -27,11 +29,11 @@ class ShowActivityCheckbox extends Component {
         let { row } = self.state;
         let body = {activity_id: row.activity_id, is_showing: !self.state.checked};
         httpPatch(`${protocol}://${domain}/api/activities/`, body)
-            .then(function (response) {
-                if ('error' in response) {
-                    console.log(response);
+            .then(function (result) {
+                if ('error' in result) {
+                    result.response.then(function(response) {alert(`Error: ${response.error}`)});
                 } else {
-                    const updateCheckbox = () => self.props.CustomFunction(response);
+                    const updateCheckbox = () => self.props.CustomFunction(result);
                     updateCheckbox();
                 }
             });

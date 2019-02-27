@@ -41,6 +41,8 @@ class Students(APIView):
 
     # Get existing student data
     def get(self, request):
+        if not request.user.has_perm('key.view_students') and not request.user.has_perm('key.view_attendanceitems'):
+            return Response({'error':'You are not authorized to view students.'}, status='401')
         if not self.validateGet(request):
             return Response({'error':'Invalid Parameters'}, status='400')
         if 'id' in request.query_params:
@@ -54,12 +56,13 @@ class Students(APIView):
 
     # Create a new student
     def post(self, request):
+        if not request.user.has_perm('key.add_students'):
+            return Response({'error':'You are not authorized to create students.'}, status='401')
         # Note: Until we convert student.id to an autofield/serial, this will require that we create a new student ID for new students.
         # So, for now we'll just assign them the UNIX timestamp, since that should be pretty unique.
         # This approach will break on January 17, 2038, when UNIX timestamps will exceed 32 bits, so we'll probably want to fix this.
         if not 'id' in request.data:
             request.data['id'] = round(time.time())
-
         serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -68,6 +71,8 @@ class Students(APIView):
 
     # Update an existing student
     def patch(self, request):
+        if not request.user.has_perm('key.change_students'):
+            return Response({'error':'You are not authorized to update students.'}, status='401')
         if not self.validatePatch(request):
             return Response({'error':'Invalid Parameters'}, status='400')
 

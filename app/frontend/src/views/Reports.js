@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Button, ButtonToolbar } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 import Heatmap from '../components/Heatmap';
-import { domain, downloadReportsCSV, getEarlierDate, httpGet, protocol } from '../components/Helpers';
+import { domain, downloadReportsCSV, getEarlierDate, getPermissions, httpGet, protocol } from '../components/Helpers';
 import BarChart from './../components/BarChart.js';
 
 class Reports extends Component {
@@ -296,6 +297,10 @@ class Reports extends Component {
 
     render() {
         const buildingCSV = this.state.buildingCSV;
+        const permissions = getPermissions();
+        if (permissions.indexOf('view_reports') < 0) {
+            return (<Redirect to='/attendance'/>);
+        }
         return (
             <div className="container py-4">
                 <h1> Reports </h1>

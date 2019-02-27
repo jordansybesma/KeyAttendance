@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap';
 import { httpDelete, httpPatch, domain, protocol } from './Helpers';
+import { Alert, Button, ControlLabel, FormControl, FormGroup, Modal } from 'react-bootstrap';
 
 class EditRoleModal extends React.Component {
     
@@ -10,7 +10,9 @@ class EditRoleModal extends React.Component {
             show: false,
             row: {},
             permission_ids: {},
-            checkboxes: []
+            checkboxes: [],
+            errorMsg: '',
+            error: false
 		}
         
         this.delete = this.delete.bind(this);
@@ -48,10 +50,11 @@ class EditRoleModal extends React.Component {
         httpDelete(`${protocol}://${domain}/api/groups/?id=${self.state.row.id}`)
         .then(function (result) {
             if ('error' in result) {
-                self.setState({
-                    backendError: true
+                result.response.then(function(response) {
+                    self.setState({error: true, errorMsg: response.error});
                 });
             } else {
+                self.setState({error: false, errorMsg: ''});
                 self.props.onDelete(self.state.row.id);
             }
         });
@@ -60,6 +63,8 @@ class EditRoleModal extends React.Component {
 	cancel() {
         this.setState({
             row: this.props.row,
+            error: false,
+            errorMsg: ''
         });
 		this.props.onSubmit();
 	}
@@ -78,8 +83,11 @@ class EditRoleModal extends React.Component {
         httpPatch(`${protocol}://${domain}/api/groups/`, body)
             .then(function (result) {
                 if ('error' in result) {
-                    console.log(result);
+                    result.response.then(function(response) {
+                        self.setState({error: true, errorMsg: response.error});
+                    });
                 } else {
+                    self.setState({error: false, errorMsg: ''});
                     self.props.onSubmit(result);
                 }
             })
@@ -114,6 +122,10 @@ class EditRoleModal extends React.Component {
     }
 
     render() {
+        let errorMsg = "Server error. Please try again.";
+        if (this.state.errorMsg !== '' && this.state.errorMsg !== null) {
+            errorMsg = this.state.errorMsg;
+        }
         return(
             <Modal show={this.props.show}>
 				<Modal.Header>
@@ -132,6 +144,7 @@ class EditRoleModal extends React.Component {
 				</Modal.Body>
 
 				<Modal.Footer>
+                    {this.state.error && <Alert bsStyle='danger'>{errorMsg}</Alert>}
 					<Button onClick={this.cancel}>Cancel</Button>
 					<Button onClick={this.submit} bsStyle="primary">Save</Button>
                     <Button onClick={() => { if (window.confirm('Are you sure you wish to delete this role?')) this.delete() }}

@@ -16,6 +16,7 @@ class AddUserModal extends React.Component {
             is_active: true,
             error: false,
             backendError: false,
+            errorMsg: '',
             radioOptions: [],
             show: false,
             selectedOption: ''
@@ -105,7 +106,9 @@ class AddUserModal extends React.Component {
         httpPost(`${protocol}://${domain}/api/users/`, body)
             .then(function (result) {
                 if ('error' in result) {
-                    self.setState({backendError: true});
+                    result.response.then(function(response) {
+                        self.setState({backendError: true, errorMsg: response.error});
+                    });
                 } else {
                     self.setState({
                         username: '',
@@ -116,6 +119,7 @@ class AddUserModal extends React.Component {
                         selectedOption: '',
                         is_active: true, 
                         error: false, 
+                        errorMsg: '',
                         backendError: false
                     });
                     self.props.onSubmit(result);
@@ -164,6 +168,10 @@ class AddUserModal extends React.Component {
     }
 
     render() {
+        let errorMsg = "Server error. Please try again.";
+        if (this.state.errorMsg !== '' && this.state.errorMsg !== null) {
+            errorMsg = this.state.errorMsg;
+        }
         return(
             <Modal show={this.props.show}>
 				<Modal.Header>
@@ -236,7 +244,7 @@ class AddUserModal extends React.Component {
 
 				<Modal.Footer>
                     {this.state.error && <Alert bsStyle='danger'>Invalid input. Please check your fields and try again.</Alert>}
-                    {this.state.backendError && <Alert bsStyle='danger'>Server error. Please try again.</Alert>}
+                    {this.state.backendError && <Alert bsStyle='danger'>{errorMsg}</Alert>}
 					<Button onClick={this.cancel}>Cancel</Button>
 					<Button onClick={this.submit} bsStyle="primary">Create</Button>
 				</Modal.Footer>

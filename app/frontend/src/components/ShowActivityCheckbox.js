@@ -17,7 +17,9 @@ class ShowActivityCheckbox extends Component {
     }
 
     componentDidUpdate() {
-        if (this.props.row.is_showing !== this.state.checked) {
+        if (this.props.row.activity_id !== this.state.row.activity_id) {
+            this.setState({ row: this.props.row })
+        } else if (this.props.row.is_showing !== this.state.checked) {
             this.setState({ checked: this.props.row.is_showing })
         }
     }

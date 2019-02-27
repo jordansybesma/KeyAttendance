@@ -10,8 +10,8 @@ import createBrowserHistory from 'history/createBrowserHistory';
 const history = createBrowserHistory();
 
 // For local development
-// const domain = '127.0.0.1:8000'
-// const protocol = 'http'
+//const domain = '127.0.0.1:8000'
+//const protocol = 'http'
 
 // For production server
 const domain = 'app.jordansybesma.com'

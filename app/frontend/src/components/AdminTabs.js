@@ -56,6 +56,11 @@ class AdminTabs extends React.Component {
         counter++;
       }
 
+      tabs.push(<Tab key={counter} eventKey={counter} title="Student Key Management">
+          <StudentKeys />
+        </Tab>)
+        counter++;
+
       return (
         <Tabs
           activeKey={this.state.key}

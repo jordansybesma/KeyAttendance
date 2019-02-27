@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Button, ControlLabel, FormControl, FormGroup, Well } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
-import { domain } from '../components/Helpers';
+import { domain, protocol } from '../components/Helpers';
 
 class Login extends React.Component {
 

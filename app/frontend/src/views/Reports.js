@@ -1,5 +1,8 @@
-import { Component } from 'react';
-import { domain, getEarlierDate, httpGet, protocol } from '../components/Helpers';
+import React, { Component } from 'react';
+import { Button, ButtonToolbar } from 'react-bootstrap';
+import Heatmap from '../components/Heatmap';
+import { domain, downloadReportsCSV, getEarlierDate, httpGet, protocol } from '../components/Helpers';
+import BarChart from './../components/BarChart.js';
 
 class Reports extends Component {
 

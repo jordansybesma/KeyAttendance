@@ -92,7 +92,14 @@ class AddStudentFieldModal extends React.Component {
                             error: true,
                             errorMsg: errorMsg
                         });
-            return;
+                        return;
+                    } else {
+                        result.response.then(function(response) {
+                            self.setState({
+                                error: true,
+                                errorMsg: response.error
+                            });
+                        });
                     }
                 } else {
                     self.setState({

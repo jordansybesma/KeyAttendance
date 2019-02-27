@@ -303,7 +303,6 @@ class Users extends React.Component {
         } else {
             buttonToolbar = <ButtonToolbar style={{ float: 'right' }}>
                 <Button className={this.state.showingAllUsers ? 'hidden' : ''} bsStyle='link' onClick={this.showAllUsers}>Show All Users</Button>
-                <Button onClick={this.openModal}>New User</Button>
             </ButtonToolbar>
         }
         return (

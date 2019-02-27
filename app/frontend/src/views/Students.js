@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
-import { Button, Col, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import { Button, ButtonToolbar, Col, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem, Row } from "react-bootstrap";
 import { httpGet, httpPatch, httpPost, httpDelete } from '../components/Helpers';
 import blankPic from '../images/blank_profile_pic.jpg'
 import { getEarlierDate, getPrevSunday, getNextSaturday, dateToString } from '../components/Helpers';
@@ -246,22 +246,13 @@ class Students extends Component {
   
   delete(evt, state) {
     evt.preventDefault();
-    this.state.profileData = JSON.parse(JSON.stringify(state.profileDataPrelim));
-    console.log(this.state.profileData);
     httpDelete('http://127.0.0.1:8000/api/students/', this.state.profileData);
     
-    var posted = false;
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
-      if (field.updated) {
-        if (field.studentInfoId) {
-          field.patchPost.student_id = this.state.id;
-          httpDelete('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
-        } else {
-          field.patchPost.student_id = this.state.id;
-          httpDelete('http://127.0.0.1:8000/api/student_info/', field.patchPost);
-          posted = true;
-        }
+      console.log(field);
+      if (field.studentInfoId) {
+        httpDelete('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
       }
     }
 
@@ -565,7 +556,7 @@ class Students extends Component {
                   <ListGroupItem>Name: {this.state.profileData.first_name} {this.state.profileData.last_name}</ListGroupItem>
                   {this.renderDisplayInfo(this.state.parsedInfo)}
                 </ListGroup>
-                <Button variant="primary" onClick={this.edit}>
+                <Button variant="btn btn-primary" onClick={this.edit}>
                   Edit
                 </Button>
 			  </div>
@@ -604,9 +595,14 @@ class Students extends Component {
                     {/* </Col> */}
                     {this.renderEditInfo(this.state.parsedInfo)}
                     <br/>
-                    <Button variant="primary" type="submit">Submit</Button>
-                    <Button variant="danger" onClick={this.display}>Cancel</Button>
-                    <Button bsStyle="danger" onClick={evt => { if (window.confirm('Are you sure you wish to delete this user?')) this.delete(evt, this.state) }}>Delete</Button>
+                    <ButtonToolbar>
+                      <Button bsStyle="default" onClick={this.display}>Cancel</Button>
+                      <Button bsStyle="primary" type="submit">Submit</Button>
+                    </ButtonToolbar>
+                    <br />
+                    <ButtonToolbar>
+                      <Button bsStyle="danger" onClick={evt => { if (window.confirm('Are you sure you wish to delete this user?')) this.delete(evt, this.state) }}>Delete</Button>
+                    </ButtonToolbar>
                   </FormGroup>
                 </Form>
               </div>

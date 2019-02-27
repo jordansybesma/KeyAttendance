@@ -264,6 +264,18 @@ class Students extends Component {
         }
       }
     }
+
+    // Ensure that the autocomplete removes the entry
+    var entryFound = false;
+    var entryIndex = 0;
+    while (entryFound === false) {
+      if (state.suggestionsArray[entryIndex].id === state.profileData['id']) {
+        state.suggestionsArray.splice(entryIndex, 1);
+        entryFound = true
+      } else {
+        entryIndex++;
+      }
+    }
     
     this.state.mode = 'search';
     this.setState(function (previousState, currentProps) {

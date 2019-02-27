@@ -10,7 +10,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('key', '0011_merge_20190221_1514'),
     ]
 
     operations = [

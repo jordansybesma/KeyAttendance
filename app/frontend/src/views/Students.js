@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
-import { httpGet, httpPatch, httpPost, domain, getEarlierDate, getPrevSunday, getNextSaturday, dateToString } from '../components/Helpers';
-import { Button, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem} from "react-bootstrap";
+import { Button, ButtonToolbar, Col, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import { httpGet, httpPatch, httpPost, httpDelete, domain, getEarlierDate, getPrevSunday, getNextSaturday, dateToString } from '../components/Helpers';
 import blankPic from '../images/blank_profile_pic.jpg'
 import { Redirect } from 'react-router-dom';
 
@@ -13,6 +13,7 @@ class Students extends Component {
     this.state = {
       mode: 'search',
     };
+    this.display = this.display.bind(this);
     this.edit = this.edit.bind(this);
     this.handler = this.handler.bind(this);
   }
@@ -24,6 +25,7 @@ class Students extends Component {
       
       var studentColumnJson = await httpGet(`https://${domain}/api/student_column/`);
       var profileInfo = this.parseCols(studentColumnJson);
+      var profileInfoPrelim = this.parseCols(studentColumnJson);
 
       this.setState(function (previousState, currentProps) {
         return {
@@ -31,6 +33,7 @@ class Students extends Component {
           suggestionsArray: suggestionsArray,
           studentColumnJson: studentColumnJson,
           profileInfo: profileInfo,
+          profileInfoPrelim: profileInfoPrelim,
           id: null,
 
           uploadedPic: false
@@ -85,8 +88,7 @@ class Students extends Component {
           'bool_value': null,
           'date_value': null,
           'time_value': null,
-          'id': null,
-          'blob_value': null
+          'id': null
         }
       }
     }
@@ -105,7 +107,8 @@ class Students extends Component {
     var preState = {
       mode: 'display',
       id: studentId,
-      profileInfo: this.state.profileInfo
+      profileInfo: this.state.profileInfo,
+      profileInfoPrelim: this.state.profileInfoPrelim
     };
     this.getStudentProfile(preState);
   }
@@ -114,10 +117,27 @@ class Students extends Component {
     try {
       const studentProfileJson = await httpGet(`https://${domain}/api/students/?id=` + state.id);
       state.profileData = studentProfileJson;
+      // Deep copy
+      state.profileDataPrelim = JSON.parse(JSON.stringify(studentProfileJson));
       
       try {
-        const studentInfoJson = await httpGet(`https://${domain}/api/student_info/?student_id=` + state.id);
-        state.profileInfo = this.parseStudentInfo(state, studentInfoJson);
+        const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
+
+        if (studentInfoJson.length == 0) {
+          var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+          state.profileInfo = this.parseCols(studentColumnJson);
+          state.profileInfoPrelim = this.parseCols(studentColumnJson);
+          state = this.addTypes(state);
+        } else {
+          var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+          state.profileInfo = this.parseCols(studentColumnJson);
+          state.profileInfoPrelim = this.parseCols(studentColumnJson);
+          state = this.addTypes(state);
+
+          var returnedState = this.parseStudentInfo(state, studentInfoJson);
+          state.profileInfo = returnedState.profileInfo;
+          state.profileInfoPrelim = returnedState.profileInfoPrelim;
+        }
       } 
       catch (e) {
         var studentColumnJson = await httpGet(`https://${domain}/api/student_column/`);
@@ -149,42 +169,154 @@ class Students extends Component {
 
   async updateStudentInfo() {
     const studentInfoJson = await httpGet(`https://${domain}/api/student_info?student_id=` + this.state.id);
-    var profileInfo = this.parseStudentInfo(this.state, studentInfoJson);
+    var returnedState = this.parseStudentInfo(this.state, studentInfoJson);
 
     this.setState(function (previousState, currentProps) {
       return {
-        profileInfo: profileInfo,
+        profileInfo: returnedState.profileInfo,
+        profileInfoPrelim: returnedState.profileInfoPrelim
       };
     });
+  }
+
+  addTypes(state) {
+    for (var entry in state.profileInfo) {
+      state.profileInfo[entry].patchPost.student_id = state.id;
+      state.profileInfoPrelim[entry].patchPost.student_id = state.id;
+
+      // Ensure all varchar(x) types get caught as str_value
+      var type;
+      if ((/varchar.*/g).test(state.profileInfo[entry].colInfo.type)) {
+        state.profileInfo[entry].type = 'str_value';
+        state.profileInfoPrelim[entry].type = 'str_value';
+      } else {
+        state.profileInfo[entry].type = state.profileInfo[entry].colInfo.type + '_value';
+        state.profileInfoPrelim[entry].type = state.profileInfo[entry].colInfo.type + '_value';
+      }
+    }
+    return state;
   }
 
   parseStudentInfo(state, info) {
     for (var entry in state.profileInfo) {
       state.profileInfo[entry].patchPost.student_id = state.id;
+      state.profileInfoPrelim[entry].patchPost.student_id = state.id;
 
       var type;
-      state.profileInfo[entry].type = state.profileInfo[entry].colInfo.type + '_value';
+      if ((/varchar.*/g).test(state.profileInfo[entry].colInfo.type)) {
+        state.profileInfo[entry].type = 'str_value';
+        state.profileInfoPrelim[entry].type = 'str_value';
+      } else {
+        state.profileInfo[entry].type = state.profileInfo[entry].colInfo.type + '_value';
+        state.profileInfoPrelim[entry].type = state.profileInfo[entry].colInfo.type + '_value';
+      }
     }
 
     for (var item in info) {
       var infoId = info[item].info_id;
       state.profileInfo[infoId - 1].patchPost = info[item];
+      state.profileInfoPrelim[infoId - 1].patchPost = info[item];
+
       state.profileInfo[infoId - 1].studentInfoId = info[item].id;
+      state.profileInfoPrelim[infoId - 1].studentInfoId = info[item].id;
 
       type = state.profileInfo[infoId - 1].type;
       state.profileInfo[infoId - 1].value = info[item][type];
+      state.profileInfoPrelim[infoId - 1].value = info[item][type];
     }
 
-    return state.profileInfo;
+    return state;
+  }
+
+  search() {
+    var preState = {
+      mode: 'search',
+      id: this.state.id,
+      profileInfo: this.state.profileInfo,
+      profileInfoPrelim: this.state.profileInfoPrelim
+    };
+    this.getStudentProfile(preState);
+  }
+
+  display() {
+    var preState = {
+      mode: 'display',
+      id: this.state.id,
+      profileInfo: this.state.profileInfo,
+      profileInfoPrelim: this.state.profileInfoPrelim
+    };
+    this.getStudentProfile(preState);
   }
 
   edit() {
-    this.setState({ mode: 'edit' })
+    this.setState({ mode: 'edit' });
+  }
+  
+  async delete(evt, state) {
+    evt.preventDefault();
+
+    // Ensure we have studentInfoIds from the most recent POSTs
+    var newState = {
+      mode: 'search',
+      id: this.state.id,
+      profileInfo: this.state.profileInfo,
+      profileInfoPrelim: this.state.profileInfoPrelim
+    };
+
+    try {
+      const studentInfoJson = await httpGet('http://127.0.0.1:8000/api/student_info?student_id=' + state.id);
+
+      if (studentInfoJson.length == 0) {
+        var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+        newState.profileInfo = this.parseCols(studentColumnJson);
+        newState = this.addTypes(newState);
+      } else {
+        var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+        newState.profileInfo = this.parseCols(studentColumnJson);
+        newState = this.addTypes(newState);
+
+        var returnednewState = this.parseStudentInfo(newState, studentInfoJson);
+        newState.profileInfo = returnednewState.profileInfo;
+      }
+    } 
+    catch (e) {
+      var studentColumnJson = await httpGet('http://127.0.0.1:8000/api/student_column');
+      newState.profileInfo = this.parseCols(studentColumnJson);
+    }
+
+    httpDelete('http://127.0.0.1:8000/api/students/', state.profileData);
+    
+    for (var field in newState.profileInfo) {
+      var field = newState.profileInfo[field];
+      if (field.studentInfoId) {
+        httpDelete('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
+      } else {
+        console.log(field);
+      }
+    }
+
+    // Ensure that the autocomplete removes the entry
+    var entryFound = false;
+    var entryIndex = 0;
+    while (entryFound === false) {
+      if (state.suggestionsArray[entryIndex].id === state.profileData['id']) {
+        state.suggestionsArray.splice(entryIndex, 1);
+        entryFound = true
+      } else {
+        entryIndex++;
+      }
+    }
+    
+    this.state.mode = 'search';
+    this.setState(function (previousState, currentProps) {
+      return state;
+    });
   }
 
   handleNameChange(evt, state) {
     var changedField = evt.target.id;
-    state.profileData[changedField] = evt.target.value;
+    state.profileDataPrelim[changedField] = evt.target.value;
+    state.profileDataUpdated = true;
     this.setState(function (previousState, currentProps) {
       return state;
     });
@@ -192,19 +324,19 @@ class Students extends Component {
 
   handleInfoChange(evt, state) {
     var changedField = parseInt(evt.target.id);
-
+    
     var newValue = evt.target.value;
-    var type = state.profileInfo[changedField].type;
+    var type = state.profileInfoPrelim[changedField].type;
 
-    state.profileInfo[changedField].updated = true;
+    state.profileInfoPrelim[changedField].updated = true;
 
     // Ensure that empty strings are parsed as null values
     if (newValue === '') {
       newValue = null;
     }
 
-    state.profileInfo[changedField].value = newValue;
-    state.profileInfo[changedField].patchPost[type] = newValue;
+    state.profileInfoPrelim[changedField].value = newValue;
+    state.profileInfoPrelim[changedField].patchPost[type] = newValue;
 
     this.setState(function (previousState, currentProps) {
       return state;
@@ -212,18 +344,23 @@ class Students extends Component {
   }
 
   handleSubmit(evt, state) {
-    evt.preventDefault()
-    httpPatch(`https://${domain}/api/students/`, state.profileData);
+    evt.preventDefault();
     
+    // Deep copy
+    state.profileInfo = JSON.parse(JSON.stringify(state.profileInfoPrelim));
+
+    if (state.profileDataUpdated) {
+      state.profileData = JSON.parse(JSON.stringify(state.profileDataPrelim));
+      httpPatch(`http://${domain}/api/students/`, state.profileData);
+    }
     var posted = false;
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
       if (field.updated) {
         if (field.studentInfoId) {
-          httpPatch(`https://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost);
+          httpPatch(`http://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost);
         } else {
-          console.log(field.patchPost);
-          httpPost(`https://${domain}/api/student_info/`, field.patchPost);
+          httpPost(`http://${domain}/api/student_info/`, field.patchPost);
           posted = true;
         }
       }
@@ -357,21 +494,22 @@ class Students extends Component {
       if (this.state.profileInfo[entry].colInfo.is_showing) {
         info.push(<Label key={entry + 'label'}>{label}</Label>)
 
-        var type;
-        switch (this.state.profileInfo[entry].type) {
-          case 'str_value':
-          type = "text";
-          break;
-          case 'int_value':
-          type = "int";
-          break;
-          case 'date_value':
-          type = "date";
-          break;
-          case 'time_value':
-          type = "time";
-          break;
-        }
+        var type = this.state.profileInfo[entry].colInfo.type;
+        // var type;
+        // switch (this.state.profileInfo[entry].type) {
+        //   case 'str_value':
+        //   type = "text";
+        //   break;
+        //   case 'int_value':
+        //   type = "int";
+        //   break;
+        //   case 'date_value':
+        //   type = "date";
+        //   break;
+        //   case 'time_value':
+        //   type = "time";
+        //   break;
+        // }
         
         info.push(<FormControl key={label} type={type} id={entry} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
         info.push(<br key={entry + 'break'}/>);
@@ -382,8 +520,6 @@ class Students extends Component {
 
   readImage(evt, state) {
     evt.preventDefault();
-
-    console.log(evt.target.files[0]);
 
     var reader = new FileReader();
     reader.onloadend = () => {
@@ -457,7 +593,7 @@ class Students extends Component {
                   <ListGroupItem>Name: {this.state.profileData.first_name} {this.state.profileData.last_name}</ListGroupItem>
                   {this.renderDisplayInfo(this.state.parsedInfo)}
                 </ListGroup>
-                <Button variant="primary" onClick={this.edit}>
+                <Button variant="btn btn-primary" onClick={this.edit}>
                   Edit
                 </Button>
 			  </div>
@@ -498,7 +634,14 @@ class Students extends Component {
                     {/* </Col> */}
                     {this.renderEditInfo(this.state.parsedInfo)}
                     <br/>
-                    <Button variant="primary" type="submit">Submit</Button> 
+                    <ButtonToolbar>
+                      <Button bsStyle="default" onClick={this.display}>Cancel</Button>
+                      <Button bsStyle="primary" type="submit">Submit</Button>
+                    </ButtonToolbar>
+                    <br />
+                    <ButtonToolbar>
+                      <Button bsStyle="danger" onClick={evt => { if (window.confirm('Are you sure you wish to delete this user?')) this.delete(evt, this.state) }}>Delete</Button>
+                    </ButtonToolbar>
                   </FormGroup>
                 </Form>
               </div>

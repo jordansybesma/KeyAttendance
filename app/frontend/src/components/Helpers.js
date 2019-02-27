@@ -100,7 +100,7 @@ function httpDelete(url, body={}) {
 		history.push(`/`)
 		return
 	}
-
+  
 	return fetch(url, {
 		method: "DELETE",
 		headers: {'Content-Type':'application/json', 'Authorization': 'JWT ' + token},

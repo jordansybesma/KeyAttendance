@@ -148,6 +148,9 @@ class EditStudentFields extends React.Component {
                 </ButtonToolbar>
                 <AddStudentFieldModal show={this.state.showModal}
                     onSubmit={this.closeModal} />
+                <br/>
+                <br/>
+                <br/>
                 <ReactCollapsingTable
                         rows = { rows }
                         columns = { columns }

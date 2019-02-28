@@ -42,13 +42,15 @@ class StudentKeySuggestions(APIView):
                 try:
                     # There needs to be a matching student to get suggestions.
                     StudentModel.objects.get(pk=int(request.query_params['id'])) 
-                except Exception as e:
+                except:
                     return False
             else:
                 return False
         return True
 
     def get(self, request, reqType):
+        if not request.user.has_perm('key.change_cityspanstudents'):
+            return Response({'error':'You are not authorized to view student key suggestions.'}, status='401')
         if not self.validateGet(request, reqType):
             return Response({'error':'Invalid Parameters'}, status='400')
 
@@ -66,6 +68,8 @@ class StudentKeySuggestions(APIView):
             return Response({'error':'Not Found'}, status='404')
     
     def patch(self, request, reqType):
+        if not request.user.has_perm('key.change_cityspanstudents'):
+            return Response({'error':'You are not authorized to change student keys.'}, status='401')
         # as it turns out, django doesn't have a great way to bulk patch objects, especially when
         # we're updating based on first and last name instead of the primary key.
         # ...so we have to implement this ourselves
@@ -78,7 +82,7 @@ class StudentKeySuggestions(APIView):
                         match = CitySpanStudents.objects.filter(first_name=obj['first_name']).get(last_name=obj['last_name'])
                         match.student_key = obj['student_key']
                         match.save()
-                    except Exception as e:  # else, create a new cityspanstudent.
+                    except:  # else, create a new cityspanstudent.
                         serializer = CitySpanStudentSerializer(data=obj)
                         if serializer.is_valid():
                             serializer.save()
@@ -88,7 +92,7 @@ class StudentKeySuggestions(APIView):
                 # If we got here, we succesfully updated the database. So we should wipe our existing suggestions as they're out of date.
                 StudentSuggestions.objects.all().delete()
                 return Response(status=status.HTTP_201_CREATED)   
-            except Exception as e:
+            except:
                 return Response({'error':'Invalid Body'}, status='400')
         else: # unknown request
             return Response({'error':'Not Found'}, status='404')

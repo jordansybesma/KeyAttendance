@@ -192,7 +192,7 @@ class Activities extends React.Component {
         const tableCallbacks = { up: this.swapOrder, down: this.swapOrder, is_showing: this.updateCheckbox }
         return (
             <div className="content">
-                <h1>Attendance Activities</h1>
+                <h1>Programming</h1>
                 <ButtonToolbar style={{ float: 'right'}}>
                     <Button onClick={this.openModal}>New Activity</Button>
                 </ButtonToolbar>

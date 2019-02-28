@@ -205,7 +205,7 @@ class Autocomplete extends Component {
           <FormGroup
             controlId="formInlineName"
           >
-            <ControlLabel>Search:</ControlLabel>{' '}
+            <ControlLabel>{this.props.label === undefined ? 'Search:' : this.props.label}</ControlLabel>{' '}
             <FormControl
               autoComplete="off"
               type="text"

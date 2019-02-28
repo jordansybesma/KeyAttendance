@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, ButtonToolbar } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import Heatmap from '../components/Heatmap';
-import { domain, downloadReportsCSV, getEarlierDate, getPermissions, httpGet, protocol } from '../components/Helpers';
+import { domain, downloadReportsCSV, getEarlierDate, dateToString, getNextSaturday, getPrevSunday, getPermissions, httpGet, protocol } from '../components/Helpers';
 import BarChart from './../components/BarChart.js';
 
 class Reports extends Component {
@@ -28,24 +28,24 @@ class Reports extends Component {
       async componentDidMount() {
         try {
           //hardcoded date range for testing
-          var startDateStringWeek = "2018-02-08";
-          var endDateStringWeek = "2018-02-14";
+          //var startDateStringWeek = "2018-02-08";
+          //var endDateStringWeek = "2018-02-14";
           //Make timerange for last 7 days to display for weekly aggregation (broken down by hour of day)
           var today = getEarlierDate(0);
-          //var startDateWeek = getEarlierDate(6);
-          //var startDateStringWeek = dateToString(startDateWeek);
-          //var endDateStringWeek = dateToString(today);
+          var startDateWeek = getEarlierDate(6);
+          var startDateStringWeek = dateToString(startDateWeek);
+          var endDateStringWeek = dateToString(today);
           const byHourJson = await httpGet(`${protocol}://${domain}/api/reports/byHourAttendance/?startdate=${startDateStringWeek}&enddate=${endDateStringWeek}`);
           console.log("By hour:",byHourJson);
           // var byHourJson = await byHourAttendanceData.json();
           //Make timerange for last 365 days, extending back to the preceeding sunday and forward to the following sat to display yearly aggregation (broken down by day)
-         // var startDateYear= getEarlierDate(365);
-         // startDateYear = getPrevSunday(startDateYear);
-          //var startDateStringYear = dateToString(startDateYear);
-         // var endDateYear = getNextSaturday(today);
-          //var endDateStringYear = dateToString(endDateYear);
-          var startDateStringYear = "2018-02-04";
-          var endDateStringYear = "2019-02-09";
+          var startDateYear= getEarlierDate(365);
+          startDateYear = getPrevSunday(startDateYear);
+          var startDateStringYear = dateToString(startDateYear);
+          var endDateYear = getNextSaturday(today);
+          var endDateStringYear = dateToString(endDateYear);
+          //var startDateStringYear = "2018-02-04";
+          //var endDateStringYear = "2019-02-09";
           const byDayJson = await httpGet(`${protocol}://${domain}/api/reports/byDayAttendance/?startdate=${startDateStringYear}&enddate=${endDateStringYear}`);
           // var byDayJson = await byDayAttendanceData.json();
           var dayData = await this.formatDayData(byDayJson, startDateStringYear, endDateStringYear);
@@ -222,18 +222,18 @@ class Reports extends Component {
             var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "time": hourToCompare, "count": 0 };
             //add entry in place if not at end of json OR final date entry has not been added yet/surpassed
             //else add to very end of json
-            if (currIdx !== byHourJson.length - 1 || (this.compareTime(currEntryDate, dateToCompare) && currHour > hourToCompare)){
+            if (currIdx !== byHourJson.length - 1 || (this.compareTime(currEntryDate, dateToCompare))){
               byHourJson.splice(currIdx, 0, dateEntryZeroEngagements);
             } else {
               byHourJson.splice(currIdx+1,0, dateEntryZeroEngagements);
             }
           }
-          //the two date-hour combos are on same day, but different hours so add the missing hour as a dummy entry
+          //the two date-hour combos are on SAME DAY, but different hours so add the missing hour as a dummy entry
           else if(hourToCompare !== currHour){
             var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "time": hourToCompare, "count": 0 };
             //add entry in place if not at end of json OR final date entry has not been added yet/surpassed
             //else add to very end of json
-            if (currIdx !== byHourJson.length - 1 || (this.compareTime(currEntryDate, dateToCompare) && currHour > hourToCompare)){
+            if (currIdx !== byHourJson.length - 1 || currHour > hourToCompare){
               byHourJson.splice(currIdx, 0, dateEntryZeroEngagements);
             } else {
               byHourJson.splice(currIdx+1,0, dateEntryZeroEngagements);
@@ -256,7 +256,7 @@ class Reports extends Component {
             hourToCompare = hourArray[hourToCompareIdx];
           }
         }
-        
+        console.log("by hour json: ", byHourJson);
         //process json into list of lists and store into state for downloading as csv
         var byHourJsonForDownload = [];
         var entryAsList;
@@ -276,12 +276,12 @@ class Reports extends Component {
         for (var i = 0; i < byHourJson.length; i++) {
           currDateObj = new Date(byHourJson[i]['date'].replace(/-/g, '\/'));
           dayOfWeek = strDays[currDateObj.getDay()];
-          hourOfDay = byHourJson[i]['time'].slice(0,2);
+          hourOfDay = byHourJson[i]['time'].slice(0,5);
           mdyArray = byHourJson[i]['date'].split(/\s*\-\s*/g);
           y = mdyArray[0];
           m = mdyArray[1];
           d = mdyArray[2];
-          hourEntry = {"x": hourOfDay.concat(" hrs"), "y": dayOfWeek, "color": byHourJson[i]['count']};
+          hourEntry = {"x": hourOfDay, "y": dayOfWeek, "color": byHourJson[i]['count']};
           processedData.push(hourEntry);
         }
           this.setState(function (previousState, currentProps) {
@@ -292,6 +292,7 @@ class Reports extends Component {
                   byHourJsonForDownload: byHourJsonForDownload
               };
           });
+          console.log("by hour: ", processedData);
         return processedData;
       }
 
@@ -307,10 +308,11 @@ class Reports extends Component {
                 <div className="row">
                     <div className="col-md-8 align-self-center">
                         <h3> Hourly Attendance </h3>
-                        <p> Number of engagements per hour in the past week.</p>
                         <ButtonToolbar style={{ float: 'right'}}>
                     <Button onClick={this.downloadHourlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Hourly'}</Button>
                 </ButtonToolbar>
+                        <p> Number of engagements per hour in the past week from {this.state.startDateStringWeek} to {this.state.endDateStringWeek};</p>
+                        <p>with TODAY as the top row and past days showing below.</p>
                         <Heatmap
                         data = {this.state.byHourJson}
                         heatMapType = "weekly" />
@@ -318,19 +320,20 @@ class Reports extends Component {
                     </div>
                     <div className='col-md-4 align-self-center'>
                         <h3> Daily Attendance </h3>
-                        <p> Number of engagements per day in the past week.</p>
                         <ButtonToolbar style={{ float: 'right'}}>
                     <Button onClick={this.downloadWeeklyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Daily'}</Button>
                 </ButtonToolbar>
-                        <BarChart data = {this.state.byDayJson.slice(0, 7)}/> </div>
+                        <p> Number of engagements per day in the past week to {this.state.endDateStringYear}.</p>
+                        <BarChart data = {this.state.byDayJson.slice(-7)}/> </div>
                     </div>
               <div className="row">
                 <div className="col-md-8">
                     <h3> Annual Daily Attendance </h3>
-                    <p> Number of engagements per day in the past year.</p>
                     <ButtonToolbar style={{ float: 'right'}}>
                           <Button onClick={this.downloadYearlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Annual'}</Button>
                         </ButtonToolbar>
+                    <p> Number of engagements per day in the past year from {this.state.startDateStringYear} to {this.state.endDateStringYear};</p>
+                    <p>with the leftmost column as 52 weeks ago and the rightmost column as the current week.</p>
                   <Heatmap data = {this.state.byDayHeatMap} heatMapType = "annual" />
                 </div>
                  </div>

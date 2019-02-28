@@ -44,7 +44,7 @@ class AdminTabs extends React.Component {
         counter++;
       }
       if (permissions.indexOf('change_activity') >= 0 || permissions.indexOf('add_activity') >= 0) {
-        tabs.push(<Tab key={counter} eventKey={counter} title="Attendance Activities">
+        tabs.push(<Tab key={counter} eventKey={counter} title="Programming">
           <Activities />
         </Tab>)
         counter++;

@@ -203,7 +203,7 @@ class Users extends React.Component {
         httpGet(`${protocol}://${domain}/api/history/?user_id=${userId}`)
             .then(function (result) {
                 if ('error' in result) {
-                    console.log(result);
+                    alert("Error: Unknown server error getting user history.")
                 } else {
                     self.setState({ selectedUserHistory: result, historyView: true, selectedUsername: username});
                 }

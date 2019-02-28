@@ -127,7 +127,7 @@ class AddStudentFieldModal extends React.Component {
         return(
             <Modal show={this.props.show}>
 				<Modal.Header>
-					<Modal.Title>Create New Activity</Modal.Title>
+					<Modal.Title>Create New Student Field</Modal.Title>
 				</Modal.Header>
 
 				<Modal.Body>

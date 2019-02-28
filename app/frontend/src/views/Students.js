@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
 import { Button, ButtonToolbar, Col, Form, FormGroup, FormControl, Label, ListGroup, ListGroupItem, Row } from "react-bootstrap";
-import { httpGet, httpPatch, httpPost, httpDelete } from '../components/Helpers';
+import { httpGet, httpPatch, httpPost, httpPostFile, httpDelete } from '../components/Helpers';
 import blankPic from '../images/blank_profile_pic.jpg'
 import { getEarlierDate, getPrevSunday, getNextSaturday, dateToString } from '../components/Helpers';
 import { Redirect } from 'react-router-dom';
@@ -512,18 +512,21 @@ class Students extends Component {
   readImage(evt, state) {
     evt.preventDefault();
 
-    var reader = new FileReader();
-    reader.onloadend = () => {
-      this.state.profileInfoPrelim[5].updated = true;
-      this.state.profileInfoPrelim[5].patchPost['photo_value'] = reader.result;
-      this.setState(function (previousState, currentProps) {
-        return {
-          src: reader.result,
-          uploadedPic: true
-        };
-      });
-    }
-    reader.readAsDataURL(evt.target.files[0]);
+    console.log(evt.target.files[0].type);
+    httpPostFile('http://127.0.0.1:8000/api/student_info/?id=' + state.id, evt.target.files[0]);
+
+    // var reader = new FileReader();
+    // reader.onloadend = () => {
+    //   this.state.profileInfoPrelim[5].updated = true;
+    //   this.state.profileInfoPrelim[5].patchPost['photo_value'] = reader.result;
+    //   this.setState(function (previousState, currentProps) {
+    //     return {
+    //       src: reader.result,
+    //       uploadedPic: true
+    //     };
+    //   });
+    // }
+    // reader.readAsDataURL(evt.target.files[0]);
   }
 
   render() {

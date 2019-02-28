@@ -36,6 +36,42 @@ function httpPost(url, body={}) {
 	}); 
 }
 
+function httpPostFile(url, file) {
+	const token = window.localStorage.getItem("key_credentials");
+
+	// if we don't have a token, we shouldn't be trying to call this function.
+	if (token === null) {
+		history.push(`/`)
+		return
+	}
+
+	console.log(file);
+	var form = new FormData()
+	var file = {
+		uri: file.uri,
+		type: file.type,
+		name: file.fileName,
+	}
+	form.append('file', file);
+
+	return fetch(url, {
+		method: "POST",
+		headers: {'Authorization': 'JWT ' + token},
+		body: form
+	}).then(response => {
+		if (response.status >= 400) {
+			// Logout if we got a token validation error
+			if (response.status === 403) {
+				logout()
+				history.push(`/`)
+			}
+			return {'error':response.status}
+		} else {
+			return response.json()
+		}
+	}); 
+}
+
 function httpPatch(url, body={}) {
 	const token = window.localStorage.getItem("key_credentials");
 
@@ -296,4 +332,4 @@ function dateToString(date){
     return dateString;
 }
 
-export { downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }
+export { downloadAttendanceCSV, compareActivities, httpPost, httpPostFile, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }

@@ -132,11 +132,10 @@ class Students extends Component {
       state.profileData = studentProfileJson;
       // Deep copy
       state.profileDataPrelim = JSON.parse(JSON.stringify(studentProfileJson));
-
-      if (state.canViewStudentInfo) {
+      if (this.state.canViewStudentInfo) {
         try {
           const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
-
+          console.log(studentInfoJson);
           if (studentInfoJson.length == 0) {
             var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
             state.profileInfo = this.parseCols(studentColumnJson);

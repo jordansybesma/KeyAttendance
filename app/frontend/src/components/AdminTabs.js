@@ -55,12 +55,12 @@ class AdminTabs extends React.Component {
         </Tab>)
         counter++;
       }
-
-      tabs.push(<Tab key={counter} eventKey={counter} title="Student Key Management">
+      if (permissions.indexOf('change_cityspanstudents') >= 0) {
+        tabs.push(<Tab key={counter} eventKey={counter} title="Student Key Management">
           <StudentKeys />
         </Tab>)
         counter++;
-
+      }
       return (
         <Tabs
           activeKey={this.state.key}

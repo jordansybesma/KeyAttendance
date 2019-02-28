@@ -135,15 +135,15 @@ class Students extends Component {
 
       if (state.canViewStudentInfo) {
         try {
-          const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info?student_id=${state.id}`);
+          const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
 
           if (studentInfoJson.length == 0) {
-            var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
+            var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
             state.profileInfo = this.parseCols(studentColumnJson);
             state.profileInfoPrelim = this.parseCols(studentColumnJson);
             state = this.addTypes(state);
           } else {
-            var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
+            var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
             state.profileInfo = this.parseCols(studentColumnJson);
             state.profileInfoPrelim = this.parseCols(studentColumnJson);
             state = this.addTypes(state);
@@ -183,7 +183,7 @@ class Students extends Component {
   }
 
   async updateStudentInfo() {
-    const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info?student_id=${this.state.id}`);
+    const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${this.state.id}`);
     var returnedState = this.parseStudentInfo(this.state, studentInfoJson);
 
     this.setState(function (previousState, currentProps) {

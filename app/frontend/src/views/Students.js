@@ -161,13 +161,11 @@ class Students extends Component {
 
       var startDate = getEarlierDate(30);
       startDate = getPrevSunday(startDate);
-      //var startDateString = dateToString(startDate);
-      var startDateString = "2018-01-28";
+      var startDateString = dateToString(startDate);
       state.startDateString = startDateString;
       var today = getEarlierDate(0);
       var endDate = getNextSaturday(today);
-      //var endDateString = dateToString(endDate);
-      var endDateString = "2018-03-03";
+      var endDateString = dateToString(endDate);
       state.endDateString = endDateString;
 
       if (this.state.canViewHeatmap) {
@@ -281,14 +279,14 @@ class Students extends Component {
     };
 
     try {
-      const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info?student_id=${state.id}`);
+      const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
 
       if (studentInfoJson.length == 0) {
-        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
+        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
         newState.profileInfo = this.parseCols(studentColumnJson);
         newState = this.addTypes(newState);
       } else {
-        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
+        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
         newState.profileInfo = this.parseCols(studentColumnJson);
         newState = this.addTypes(newState);
 
@@ -297,7 +295,7 @@ class Students extends Component {
       }
     } 
     catch (e) {
-      var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
+      var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
       newState.profileInfo = this.parseCols(studentColumnJson);
     }
 
@@ -444,8 +442,6 @@ class Students extends Component {
     var studentId = state.id;
     var startDateString = state.startDateString;
     var endDateString = state.endDateString;
-    // var startDateString = "2018-01-03";
-    //var endDateString = "2018-01-31";
     var startDate = new Date(startDateString.replace(/-/g, '\/'));
     var endDate = new Date(endDateString.replace(/-/g, '\/'));
     var dateToCompare = startDate;

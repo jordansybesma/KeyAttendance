@@ -161,13 +161,13 @@ class Students extends Component {
 
       var startDate = getEarlierDate(30);
       startDate = getPrevSunday(startDate);
-      //var startDateString = dateToString(startDate);
-      var startDateString = "2018-01-28";
+      var startDateString = dateToString(startDate);
+      //var startDateString = "2018-01-28";
       state.startDateString = startDateString;
       var today = getEarlierDate(0);
       var endDate = getNextSaturday(today);
-      //var endDateString = dateToString(endDate);
-      var endDateString = "2018-03-03";
+      var endDateString = dateToString(endDate);
+      //var endDateString = "2018-03-03";
       state.endDateString = endDateString;
 
       if (this.state.canViewHeatmap) {
@@ -604,6 +604,7 @@ class Students extends Component {
       if (this.state.canViewHeatmap) {
         heatmap = <div><h3>Student Attendance</h3>
           <p>Number of engagements for this individual student in the past month.</p>
+          <p>The y-axis represents the week number in the month, with the most recent (the current) week displaying at the bottom.</p>
           <Heatmap data={this.formatData(this.state)} heatMapType="individualStudent" /></div>
       }
       return (

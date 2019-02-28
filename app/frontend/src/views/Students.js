@@ -132,18 +132,17 @@ class Students extends Component {
       state.profileData = studentProfileJson;
       // Deep copy
       state.profileDataPrelim = JSON.parse(JSON.stringify(studentProfileJson));
-
-      if (state.canViewStudentInfo) {
+      if (this.state.canViewStudentInfo) {
         try {
-          const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info?student_id=${state.id}`);
-
+          const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
+          console.log(studentInfoJson);
           if (studentInfoJson.length == 0) {
-            var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
+            var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
             state.profileInfo = this.parseCols(studentColumnJson);
             state.profileInfoPrelim = this.parseCols(studentColumnJson);
             state = this.addTypes(state);
           } else {
-            var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
+            var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
             state.profileInfo = this.parseCols(studentColumnJson);
             state.profileInfoPrelim = this.parseCols(studentColumnJson);
             state = this.addTypes(state);
@@ -185,7 +184,7 @@ class Students extends Component {
   }
 
   async updateStudentInfo() {
-    const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info?student_id=${this.state.id}`);
+    const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${this.state.id}`);
     var returnedState = this.parseStudentInfo(this.state, studentInfoJson);
 
     this.setState(function (previousState, currentProps) {
@@ -281,14 +280,14 @@ class Students extends Component {
     };
 
     try {
-      const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info?student_id=${state.id}`);
+      const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
 
       if (studentInfoJson.length == 0) {
-        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
+        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
         newState.profileInfo = this.parseCols(studentColumnJson);
         newState = this.addTypes(newState);
       } else {
-        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
+        var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
         newState.profileInfo = this.parseCols(studentColumnJson);
         newState = this.addTypes(newState);
 
@@ -297,7 +296,7 @@ class Students extends Component {
       }
     } 
     catch (e) {
-      var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column`);
+      var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
       newState.profileInfo = this.parseCols(studentColumnJson);
     }
 
@@ -444,8 +443,6 @@ class Students extends Component {
     var studentId = state.id;
     var startDateString = state.startDateString;
     var endDateString = state.endDateString;
-    // var startDateString = "2018-01-03";
-    //var endDateString = "2018-01-31";
     var startDate = new Date(startDateString.replace(/-/g, '\/'));
     var endDate = new Date(endDateString.replace(/-/g, '\/'));
     var dateToCompare = startDate;
@@ -605,6 +602,7 @@ class Students extends Component {
         heatmap = <div><h3>Student Attendance</h3>
           <p>Number of engagements for this individual student in the past month.</p>
           <p>The y-axis represents the week number in the month, with the most recent (the current) week displaying at the bottom.</p>
+          <p><b>Note:</b> Data is displayed chronologically, with row 1 representing the oldest week and row 5 representing the current week.</p> 
           <Heatmap data={this.formatData(this.state)} heatMapType="individualStudent" /></div>
       }
       return (

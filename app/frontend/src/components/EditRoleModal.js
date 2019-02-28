@@ -33,6 +33,17 @@ class EditRoleModal extends React.Component {
             const perm_ids = this.props.row.permission_ids;
             for (var index in perm_names) {
                 const perm_name = perm_names[index];
+                if (perm_name.includes('group')) {
+                    perm_name = perm_name.replace('group', 'user role');
+                } else if (perm_name.includes('activity')) {
+                    perm_name = perm_name.replace('activity', 'programming');
+                } else if (perm_name.includes('attendance items')) {
+                    perm_name = perm_name.replace('attendance items', 'attendance entries');
+                } else if (perm_name.includes('student column')) {
+                    perm_name = perm_name.replace('student column', 'student field');
+                } else if (perm_name.includes('city span students')) {
+                    perm_name = perm_name.replace('city span students', 'student keys');
+                }
                 const checked = this.props.row.permissions.indexOf(perm_ids[perm_name]) > -1;
                 checkboxes.push({label: perm_name, checked: checked})
             }

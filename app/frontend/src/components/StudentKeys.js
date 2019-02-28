@@ -57,7 +57,14 @@ class StudentKeys extends React.Component {
             } 
             output.push({first_name: obj["First Name"], last_name: obj["Last Name"], student_key: obj["Student Key"]})
         }
-        httpPatch(`${protocol}://${domain}/api/suggestions/cityspanstudents/`, {"students": output});
+        httpPatch(`${protocol}://${domain}/api/suggestions/cityspanstudents/`, { "students": output })
+            .then(function (result) {
+                if ('error' in result) {
+                    result.response.then(function (response) {
+                        alert(response.error);
+                    });
+                }
+            });
     }
 
     tmpfail(error, file) {

@@ -333,7 +333,7 @@ class Attendance extends React.Component {
             buttonToolbar = <ButtonToolbar style={{ float: 'right' }}>
                 <Button onClick={this.setDateToToday}>Go To Today</Button>
                 <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
-                <Button onClick={this.openModal}>New Student</Button>
+                <Button onClick={this.openModal}>Create New Student</Button>
             </ButtonToolbar>
         } else {
             buttonToolbar = <ButtonToolbar style={{ float: 'right' }}>
@@ -355,6 +355,7 @@ class Attendance extends React.Component {
                     </FormGroup>
                 </Form>
                 <Autocomplete
+                    label={'Check-in Student:'}
 					suggestions={this.state.suggestionsArray}
 					handler={this.addStudent}
 				/>

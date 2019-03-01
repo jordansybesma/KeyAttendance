@@ -3,7 +3,7 @@ import { Button, Col, Row, ButtonToolbar, Form, FormControl, FormGroup, Label, L
 import { Redirect } from 'react-router-dom';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
-import { dateToString, getPermissions, domain, getEarlierDate, getNextSaturday, getPrevSunday, httpDelete, httpGet, httpPatch, httpPost, protocol } from '../components/Helpers';
+import { dateToString, getPermissions, domain, getEarlierDate, getNextSaturday, getPrevSunday, httpDelete, httpGet, httpPatch, httpPost, protocol, httpPostFile } from '../components/Helpers';
 import blankPic from '../images/blank_profile_pic.jpg';
 
 class Students extends Component {
@@ -387,14 +387,27 @@ class Students extends Component {
               }
             });;
         } else {
-          httpPost(`${protocol}://${domain}/api/student_info/`, field.patchPost)
-            .then(function (result) {
-              if ('error' in result) {
-                result.response.then(function (response) { alert(`Error: ${response.error}`) });
-              } else {
-                posted = true;
-              }
-            });;
+            field.patchPost.student_id = state.id;
+            if (field.type == 'text_value') {
+              httpPostFile(`${protocol}://${domain}/api/student_info/`, field.patchPost)
+                .then(function (result) {
+                  if ('error' in result) {
+                    result.response.then(function (response) { alert(`Error: ${response.error}`) });
+                  } else {
+                    posted = true;
+                  }
+                });;
+            }
+            else {
+              httpPost(`${protocol}://${domain}/api/student_info/`, field.patchPost)
+                .then(function (result) {
+                  if ('error' in result) {
+                    result.response.then(function (response) { alert(`Error: ${response.error}`) });
+                  } else {
+                    posted = true;
+                  }
+                });;
+            }
         }
       }
     }
@@ -551,19 +564,26 @@ class Students extends Component {
 
   readImage(evt, state) {
     evt.preventDefault();
+    state.profileInfo = JSON.parse(JSON.stringify(state.profileInfoPrelim));
+    state.profileInfoPrelim[5].value = evt.target.files[0];
+    state.profileInfoPrelim[5].updated = true;
+    state.profileInfoPrelim[5].patchPost.photo_value = evt.target.files[0];
+    this.setState(function () {
+      return state;
+    });
 
-    var reader = new FileReader();
-    reader.onloadend = () => {
-      this.state.profileInfo[5].updated = true;
-      this.state.profileInfo[5].patchPost['blob_value'] = reader.result;
-      this.setState(function (previousState, currentProps) {
-        return {
-          src: reader.result,
-          uploadedPic: true
-        };
-      });
-    }
-    reader.readAsDataURL(evt.target.files[0]);
+    // var reader = new FileReader();
+    // reader.onloadend = () => {
+    //   this.state.profileInfoPrelim[5].updated = true;
+    //   this.state.profileInfoPrelim[5].patchPost['photo_value'] = reader.result;
+    //   this.setState(function (previousState, currentProps) {
+    //     return {
+    //       src: reader.result,
+    //       uploadedPic: true
+    //     };
+    //   });
+    // }
+    // reader.readAsDataURL(evt.target.files[0]);
   }
 
   render() {
@@ -656,9 +676,9 @@ class Students extends Component {
                 />
               </div>
               <div className='col-md-8 top-bottom-padding'>
-                {/* <img id="studentPhoto" src={blankPic} width="196" height="196" /> */}
-                {/* <p> Upload Student Profile Photo </p> */}
-                {/* <input id="upload-button" type="file" accept="image/*" name={this.state.profileInfo[0].patchPost.student_id} onChange={evt => this.readImage(evt, this.state)} /><br /> */}
+                <img id="studentPhoto" src={blankPic} width="196" height="196" />
+                <p> Upload Student Profile Photo </p>
+                <input id="upload-button" type="file" accept="image/*" name={this.state.profileInfo[0].patchPost.student_id} onChange={evt => this.readImage(evt, this.state)} /><br />
                 <Form inline className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
                   <FormGroup>
                     <Label>First Name: </Label>

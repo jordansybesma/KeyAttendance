@@ -79,8 +79,23 @@ class StudentInfo(APIView):
         if not self.validatePost(request):
             return Response({'error':'Invalid Paremeters'}, status='400')
         is_many = True if isinstance(request.data, list) else False
+      
+        if 'file' in request.data:
+          photo = request.data['file']
+          student_id = request.data['student_id']
+          info_id = request.data['info_id']
 
-        serializer = StudentInfoSerializer(data=request.data, many=is_many)
+          data = {
+              'student_id': student_id,
+              'info_id': info_id,
+              'photo_value': photo
+          }
+          
+          serializer = StudentInfoSerializer(data=data)
+          
+        else:
+          serializer = StudentInfoSerializer(data=request.data, many=is_many)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

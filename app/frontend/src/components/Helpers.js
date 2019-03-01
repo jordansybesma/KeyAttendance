@@ -10,12 +10,12 @@ import createBrowserHistory from 'history/createBrowserHistory';
 const history = createBrowserHistory();
 
 // For local development
-// const domain = '127.0.0.1:8000'
-// const protocol = 'http'
+const domain = '127.0.0.1:8000'
+const protocol = 'http'
 
 // For production server
-const domain = 'app.jordansybesma.com'
-const protocol = 'https'
+//const domain = 'app.jordansybesma.com'
+//const protocol = 'https'
 
 function httpPost(url, body={}) {
 	const token = window.localStorage.getItem("key_credentials");
@@ -42,6 +42,38 @@ function httpPost(url, body={}) {
 			return response.json()
 		}
 	}); 
+}
+
+function httpPostFile(url, body={}) {
+    const token = window.localStorage.getItem("key_credentials");
+
+    // if we don't have a token, we shouldn't be trying to call this function.
+    if (token === null) {
+        history.push(`/`)
+        return
+    }
+
+    var form = new FormData()
+    form.append('file', body.photo_value);
+    form.append('student_id', body.student_id);
+    form.append('info_id', body.info_id);
+
+    return fetch(url, {
+        method: "POST",
+        headers: {'Authorization': 'JWT ' + token},
+        body: form
+    }).then(response => {
+        if (response.status >= 400) {
+            // Logout if we got a token validation error
+            if (response.status === 403) {
+                logout()
+                history.push(`/`)
+            }
+            return {'error' : response.status, 'response' : response.json()}
+        } else {
+            return response.json()
+        }
+    });
 }
 
 function httpPatch(url, body={}) {
@@ -333,4 +365,4 @@ function dateToString(date){
     return dateString;
 }
 
-export { getPermissions, protocol, domain, downloadReportsCSV, downloadAttendanceCSV, compareActivities, httpPost, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }
+export { getPermissions, protocol, domain, downloadReportsCSV, downloadAttendanceCSV, compareActivities, httpPost, httpPostFile, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }

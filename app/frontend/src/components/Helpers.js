@@ -105,6 +105,36 @@ function httpPatch(url, body={}) {
 	}); 
 }
 
+function httpPatchFile(url, body={}) {
+	const token = window.localStorage.getItem("key_credentials");
+
+	// if we don't have a token, we shouldn't be trying to call this function.
+	if (token === null) {
+			history.push(`/`)
+			return
+	}
+
+	var form = new FormData()
+	form.append('file', body.photo_value);
+
+	return fetch(url, {
+			method: "PATCH",
+			headers: {'Authorization': 'JWT ' + token},
+			body: form
+	}).then(response => {
+			if (response.status >= 400) {
+					// Logout if we got a token validation error
+					if (response.status === 403) {
+							logout()
+							history.push(`/`)
+					}
+					return {'error' : response.status, 'response' : response.json()}
+			} else {
+					return response.json()
+			}
+	});
+}
+
 function httpGet(url) {
 	const token = window.localStorage.getItem("key_credentials");
 	// if we don't have a token, we shouldn't be trying to call this function.
@@ -365,4 +395,4 @@ function dateToString(date){
     return dateString;
 }
 
-export { getPermissions, protocol, domain, downloadReportsCSV, downloadAttendanceCSV, compareActivities, httpPost, httpPostFile, httpPatch, httpGet, httpDelete, checkCredentials, history, withRole, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }
+export { getPermissions, protocol, domain, downloadReportsCSV, downloadAttendanceCSV, compareActivities, httpPost, httpPostFile, httpPatch, httpPatchFile, httpGet, httpDelete, checkCredentials, history, withRole, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }

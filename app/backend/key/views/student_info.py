@@ -107,10 +107,18 @@ class StudentInfo(APIView):
         if not request.user.has_perm('key.change_studentinfo'):
             return Response({'error':'You are not authorized to update student profile info.'}, status='401')
         if not self.validatePatch(request):
-            return Response({'error':'Invalid Paremeters'}, status='400')
+            return Response({'error':'Invalid Parameters'}, status='400')
 
         obj = StudentInfoModel.objects.get(pk=request.data['id'])
-        serializer = StudentInfoSerializer(obj, data=request.data, partial=True)
+        if 'file' in request.data:
+            photo = request.data['file']
+
+            data = {
+              'photo_value': photo
+            }
+            serializer = StudentInfoSerializer(obj, data=data, partial=True)
+        else:
+            serializer = StudentInfoSerializer(obj, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

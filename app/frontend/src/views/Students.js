@@ -3,7 +3,7 @@ import { Button, Col, Row, ButtonToolbar, Form, FormControl, FormGroup, Label, L
 import { Redirect } from 'react-router-dom';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
-import { dateToString, getPermissions, domain, getEarlierDate, getNextSaturday, getPrevSunday, httpDelete, httpGet, httpPatch, httpPost, protocol, httpPostFile } from '../components/Helpers';
+import { dateToString, getPermissions, domain, getEarlierDate, getNextSaturday, getPrevSunday, httpDelete, httpGet, httpPatch, httpPost, protocol, httpPostFile, httpPatchFile } from '../components/Helpers';
 import blankPic from '../images/blank_profile_pic.jpg';
 
 class Students extends Component {
@@ -379,12 +379,21 @@ class Students extends Component {
       var field = state.profileInfo[field];
       if (field.updated) {
         if (field.studentInfoId) {
-          httpPatch(`${protocol}://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost)
-            .then(function (result) {
-              if ('error' in result) {
-                result.response.then(function (response) { alert(`Error: ${response.error}`) });
-              }
-            });;
+          if (field.colInfo.name == 'photopath') {
+            httpPatchFile(`${protocol}://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost)
+              .then(function (result) {
+                if ('error' in result) {
+                  result.response.then(function (response) { alert(`Error: ${response.error}`) });
+                }
+              });
+          } else {
+            httpPatch(`${protocol}://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost)
+              .then(function (result) {
+                if ('error' in result) {
+                  result.response.then(function (response) { alert(`Error: ${response.error}`) });
+                }
+              });
+          }
         } else {
             field.patchPost.student_id = state.id;
             if (field.colInfo.name == 'photopath') {
@@ -395,7 +404,7 @@ class Students extends Component {
                   } else {
                     posted = true;
                   }
-                });;
+                });
             }
             else {
               httpPost(`${protocol}://${domain}/api/student_info/`, field.patchPost)
@@ -405,7 +414,7 @@ class Students extends Component {
                   } else {
                     posted = true;
                   }
-                });;
+                });
             }
         }
       }

@@ -169,7 +169,7 @@ class AddUserModal extends React.Component {
 
     render() {
         let errorMsg = "Server error. Please try again.";
-        if (this.state.errorMsg !== '' && this.state.errorMsg !== null) {
+        if (this.state.errorMsg !== '' && this.state.errorMsg !== null && this.state.errorMsg !== undefined) {
             errorMsg = this.state.errorMsg;
         }
         return(

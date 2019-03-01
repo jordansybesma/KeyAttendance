@@ -31,18 +31,19 @@ class AddRoleModal extends React.Component {
             const perm_names = Object.keys(perm_ids);
             for (var index in perm_names) {
                 const perm_name = perm_names[index];
-                if (perm_name.includes('group')) {
-                    perm_name = perm_name.replace('group', 'user role');
-                } else if (perm_name.includes('activity')) {
-                    perm_name = perm_name.replace('activity', 'programming');
-                } else if (perm_name.includes('attendance items')) {
-                    perm_name = perm_name.replace('attendance items', 'attendance entries');
-                } else if (perm_name.includes('student column')) {
-                    perm_name = perm_name.replace('student column', 'student field');
-                } else if (perm_name.includes('city span students')) {
-                    perm_name = perm_name.replace('city span students', 'student keys');
+                let displayName = perm_name;
+                if (displayName.includes('group')) {
+                    displayName = displayName.replace('group', 'user role');
+                } else if (displayName.includes('activity')) {
+                    displayName = displayName.replace('activity', 'programming');
+                } else if (displayName.includes('attendance items')) {
+                    displayName = displayName.replace('attendance items', 'attendance entries');
+                } else if (displayName.includes('student column')) {
+                    displayName = displayName.replace('student column', 'student field');
+                } else if (displayName.includes('city span students')) {
+                    displayName = displayName.replace('city span students', 'student keys');
                 }
-                checkboxes.push({label: perm_name, checked: false})
+                checkboxes.push({label: perm_name, checked: false, displayName: displayName})
             }
             this.setState({
                 permission_ids: this.props.permission_ids,
@@ -123,7 +124,7 @@ class AddRoleModal extends React.Component {
                             checked={checkbox.checked}
                             onChange={this.toggleCheckbox.bind(this, index)}
                         />
-                        {checkbox.label}
+                        {checkbox.displayName}
                     </label>
                 </div>
             );
@@ -143,7 +144,7 @@ class AddRoleModal extends React.Component {
 
     render() {
         let errorMsg = "Server error. Please try again.";
-        if (this.state.errorMsg !== '' && this.state.errorMsg !== null) {
+        if (this.state.errorMsg !== '' && this.state.errorMsg !== null && this.state.errorMsg !== undefined) {
             errorMsg = this.state.errorMsg;
         }
         return(

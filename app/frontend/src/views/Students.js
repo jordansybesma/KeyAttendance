@@ -101,6 +101,7 @@ class Students extends Component {
           'bool_value': null,
           'date_value': null,
           'time_value': null,
+          'photo_value': null,
           'id': null
         }
       }
@@ -135,7 +136,6 @@ class Students extends Component {
       if (this.state.canViewStudentInfo) {
         try {
           const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
-          console.log(studentInfoJson);
           if (studentInfoJson.length == 0) {
             var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
             state.profileInfo = this.parseCols(studentColumnJson);
@@ -368,8 +368,7 @@ class Students extends Component {
         }
       });
     
-    // Deep copy
-    state.profileInfo = JSON.parse(JSON.stringify(state.profileInfoPrelim));
+    state.profileInfo = state.profileInfoPrelim;
 
     if (state.profileDataUpdated) {
       state.profileData = JSON.parse(JSON.stringify(state.profileDataPrelim));
@@ -388,7 +387,7 @@ class Students extends Component {
             });;
         } else {
             field.patchPost.student_id = state.id;
-            if (field.type == 'text_value') {
+            if (field.colInfo.name == 'photopath') {
               httpPostFile(`${protocol}://${domain}/api/student_info/`, field.patchPost)
                 .then(function (result) {
                   if ('error' in result) {
@@ -568,7 +567,7 @@ class Students extends Component {
     state.profileInfoPrelim[5].value = evt.target.files[0];
     state.profileInfoPrelim[5].updated = true;
     state.profileInfoPrelim[5].patchPost.photo_value = evt.target.files[0];
-    this.setState(function () {
+    this.setState(function (previousState, currentProps) {
       return state;
     });
 

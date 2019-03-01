@@ -5,10 +5,13 @@ from ..serializers import StudentInfoSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.parsers import JSONParser, FormParser, MultiPartParser, FileUploadParser
 import time
 
 
 class StudentInfo(APIView):
+
+    parser_classes = (JSONParser, FormParser, MultiPartParser, FileUploadParser)
 
     def validateGet(self, request):
         if 'student_id' in request.query_params:
@@ -77,24 +80,22 @@ class StudentInfo(APIView):
         if not request.user.has_perm('key.add_studentinfo'):
             return Response({'error':'You are not authorized to create student profile info.'}, status='401')
         if not self.validatePost(request):
-            return Response({'error':'Invalid Paremeters'}, status='400')
+            return Response({'error':'Invalid Parameters'}, status='400')
         is_many = True if isinstance(request.data, list) else False
       
         if 'file' in request.data:
-          photo = request.data['file']
-          student_id = request.data['student_id']
-          info_id = request.data['info_id']
+            photo = request.data['file']
+            student_id = request.data['student_id']
+            info_id = request.data['info_id']
 
-          data = {
+            data = {
               'student_id': student_id,
               'info_id': info_id,
               'photo_value': photo
-          }
-          
-          serializer = StudentInfoSerializer(data=data)
-          
+            }
+            serializer = StudentInfoSerializer(data=data)
         else:
-          serializer = StudentInfoSerializer(data=request.data, many=is_many)
+            serializer = StudentInfoSerializer(data=request.data, many=is_many)
 
         if serializer.is_valid():
             serializer.save()

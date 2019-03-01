@@ -348,26 +348,37 @@ class Students extends Component {
 
   handleSubmit(evt, state) {
     evt.preventDefault();
-    
+    console.log(state.profileInfoPrelim);
     // Deep copy
-    state.profileInfo = JSON.parse(JSON.stringify(state.profileInfoPrelim));
-
+    state.profileInfo = state.profileInfoPrelim;
     if (state.profileDataUpdated) {
+      console.log("not here tho rite");
       state.profileData = JSON.parse(JSON.stringify(state.profileDataPrelim));
       httpPatch('http://127.0.0.1:8000/api/students/', state.profileData);
     }
+    
+    console.log(state.profileInfo);
     var posted = false;
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
       if (field.updated) {
         if (field.studentInfoId) {
+          console.log(field);
+          console.log(field.patchPost)
           field.patchPost.student_id = state.id;
           httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
         } else {
-          field.patchPost.student_id = state.id;
-          console.log(field.patchPost);
-          httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
-          posted = true;
+            field.patchPost.student_id = state.id;
+            console.log("else");
+            console.log(field);
+            console.log(field.patchPost)
+            if (field.type == 'text_value') {
+              httpPostFile('http://127.0.0.1:8000/api/student_info/', field.patchPost);
+            }
+            else {
+              httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
+            }
+            posted = true;
         }
       }
     }
@@ -392,6 +403,8 @@ class Students extends Component {
         entryIndex++;
       }
     }
+    
+    console.log(state.profileInfo);
 
     state.id = state.profileData.id;
     state.mode = 'display';
@@ -511,9 +524,49 @@ class Students extends Component {
 
   readImage(evt, state) {
     evt.preventDefault();
+    //console.log("made it here?");
+    state.profileInfo = JSON.parse(JSON.stringify(state.profileInfoPrelim));
+    console.log(state.profileInfoPrelim);
+    //console.log(state.profileInfoPrelim[5].value);
+    state.profileInfoPrelim[5].value = evt.target.files[0];
+    state.profileInfoPrelim[5].updated = true;
+    state.profileInfoPrelim[5].patchPost.photo_value = evt.target.files[0];
+    console.log(state.profileInfoPrelim[5].patchPost);
+    //httpPostFile('http://127.0.0.1:8000/api/student_info/', state.profileInfoPrelim[5].patchPost);
+    this.setState(function (previousState, currentProps) {
+      return state;
+    });
+    /*var posted = false;
+    //console.log(this.state.profileInfo);
+    for (var field in this.state.profileInfo) {
+      //console.log("inside");
+      var field = this.state.profileInfo[field];
+      //if (field.updated) {
+        console.log("inside");
+        if (field.studentInfoId) {
+          console.log(field.studentInfoId);
+          console.log(field);
+          field.patchPost.student_id = state.id;
+          field.patchPost.photo_value = evt.target.files[0];
+          httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
+        } else {
+          field.patchPost.student_id = state.id;
+          field.patchPost.photo_value = evt.target.files[0];
+          console.log(field.patchPost);
+          httpPost('http://127.0.0.1:8000/api/student_info/', field.patchPost);
+          posted = true;
+        }
+      //}
+    }
 
-    console.log(evt.target.files[0].type);
-    httpPostFile('http://127.0.0.1:8000/api/student_info/?id=' + state.id, evt.target.files[0]);
+    if (posted) {
+      this.updateStudentInfo();
+    }*/
+    //field.patchPost.student_id = state.id;
+    //field.patchPost.photo_value = evt.target.files[0];
+    //httpPatch('http://127.0.0.1:8000/api/student_info/?id=' + field.studentInfoId, field.patchPost);
+    //console.log(evt.target.files[0].type);
+    //httpPostFile('http://127.0.0.1:8000/api/student_info/?id=' + state.profileData, evt.target.files[0]);
 
     // var reader = new FileReader();
     // reader.onloadend = () => {
@@ -554,10 +607,10 @@ class Students extends Component {
 
     else if (this.state.mode === 'display') {
       var pic;
-      if (this.state.uploadedPic) {
-        pic = this.state.src;
-      } else {
+      if (this.state.profileInfo[0].patchPost.photo_value == null) {
         pic = blankPic;
+      } else {
+        pic = this.state.src;
       }
       return (
         <div className='content'>
@@ -583,6 +636,7 @@ class Students extends Component {
             <div className='row justify-content-start'> 
               <div className='col-md-2 to-front top-bottom-padding'>
                 <img id="studentPhoto" src={pic} width="196" height="196" /><br />
+                
                 <ListGroup>
                   <ListGroupItem>Name: {this.state.profileData.first_name} {this.state.profileData.last_name}</ListGroupItem>
                   {this.renderDisplayInfo(this.state.parsedInfo)}

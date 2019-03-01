@@ -59,33 +59,36 @@ class StudentInfo(APIView):
         # So, for now we'll just assign them the UNIX timestamp, since that should be pretty unique.
         # This approach will break on January 17, 2038, when UNIX timestamps will exceed 32 bits, so we'll probably want to fix this.
 
-        # if not 'student_id' in request.data:
-        #     request.data['student_id'] = round(time.time())
+        #if not 'student_id' in request.data:
+        #    request.data['student_id'] = round(time.time())
+        
+        #for item in request.data:
+        #  if request.data[str(item)] != 'null':
+        #    item = request.data[str(item)]
+        #  else:
+        #    item = None
+        if 'file' in request.data:
+          photo = request.data['file']
+          student_id = request.data['student_id']
+          info_id = request.data['info_id']
 
-        photo = request.data['file']
-        print('PHOTO')
-        print(photo)
+          data = {
+              'student_id': student_id,
+              'info_id': info_id,
+              'photo_value': photo
+          }
 
-        data = {
-            'student_id': None,
-            'info_id': None,
-            'int_value': None,
-            'str_value': None,
-            'bool_value': None,
-            'date_value': None,
-            'time_value': None,
-            'id': None,
-            'photo_value': photo
-        }
+          print('DATA')
+          print(data)
 
-        print('DATA')
-        print(data)
-
-        serializer = StudentInfoSerializer(data=data)
-        print('SERIALIZER')
-        print(serializer)
-        print(serializer.is_valid())
-        print(serializer.errors)
+          serializer = StudentInfoSerializer(data=data)
+          print('SERIALIZER')
+          print(serializer)
+          print(serializer.is_valid())
+          print(serializer.errors)
+          
+        else:
+          serializer = StudentInfoSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()

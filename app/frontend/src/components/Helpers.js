@@ -36,7 +36,7 @@ function httpPost(url, body={}) {
 	}); 
 }
 
-function httpPostFile(url, file) {
+function httpPostFile(url, body={}) {
 	const token = window.localStorage.getItem("key_credentials");
 
 	// if we don't have a token, we shouldn't be trying to call this function.
@@ -45,15 +45,12 @@ function httpPostFile(url, file) {
 		return
 	}
 
-	console.log(file);
+	console.log(body);
 	var form = new FormData()
-	var file = {
-		uri: file.uri,
-		type: file.type,
-		name: file.fileName,
-	}
-	form.append('file', file);
-
+	form.append('file', body.photo_value);
+    form.append('student_id', body.student_id);
+    form.append('info_id', body.info_id);
+    
 	return fetch(url, {
 		method: "POST",
 		headers: {'Authorization': 'JWT ' + token},

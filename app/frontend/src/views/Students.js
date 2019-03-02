@@ -378,6 +378,8 @@ class Students extends Component {
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
       if (field.updated) {
+        console.log("FIELD");
+        console.log(field);
         if (field.studentInfoId) {
           if (field.colInfo.name == 'photopath') {
             httpPatchFile(`${protocol}://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost)
@@ -419,10 +421,14 @@ class Students extends Component {
         }
       }
     }
-
+    console.log(state.profileInfoPrelim);
+    console.log(state.profileInfo);
     if (posted) {
       this.updateStudentInfo();
     }
+    console.log(state.profileInfoPrelim);
+    console.log(state.profileInfo);
+
 
     // Ensure that the autocomplete component has an updated copy of the profile
     var entryFound = false;
@@ -575,6 +581,7 @@ class Students extends Component {
     state.profileInfo = JSON.parse(JSON.stringify(state.profileInfoPrelim));
     state.profileInfoPrelim[5].value = evt.target.files[0];
     state.profileInfoPrelim[5].updated = true;
+    //console.log(state.profileInfoPrelim[5]);
     state.profileInfoPrelim[5].patchPost.photo_value = evt.target.files[0];
     this.setState(function (previousState, currentProps) {
       return state;

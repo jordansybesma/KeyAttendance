@@ -33,37 +33,21 @@ class Reports extends Component {
 
       async componentDidMount() {
         try {
-          //hardcoded date range for testing
-          //var startDateStringWeek = "2018-02-08";
-          //var endDateStringWeek = "2018-02-14";
           //Make timerange for last 7 days to display for weekly aggregation (broken down by hour of day)
           var today = getEarlierDate(0);
           var startDateWeek = getEarlierDate(6);
           var startDateStringWeek = dateToString(startDateWeek);
           var endDateStringWeek = dateToString(today);
           const byHourJson = await httpGet(`${protocol}://${domain}/api/reports/byHourAttendance/?startdate=${startDateStringWeek}&enddate=${endDateStringWeek}`);
-          console.log("By hour:",byHourJson);
-          // var byHourJson = await byHourAttendanceData.json();
           //Make timerange for last 365 days, extending back to the preceeding sunday and forward to the following sat to display yearly aggregation (broken down by day)
           var startDateYear= getEarlierDate(365);
           startDateYear = getPrevSunday(startDateYear);
           var startDateStringYear = dateToString(startDateYear);
           var endDateYear = getNextSaturday(today);
           var endDateStringYear = dateToString(endDateYear);
-          //var startDateStringYear = "2018-02-04";
-          //var endDateStringYear = "2019-02-09";
           const byDayJson = await httpGet(`${protocol}://${domain}/api/reports/byDayAttendance/?startdate=${startDateStringYear}&enddate=${endDateStringYear}`);
-          // var byDayJson = await byDayAttendanceData.json();
-          var dayData = await this.formatDayData(byDayJson, startDateStringYear, endDateStringYear);
-          var hourData = await this.formatHourData(byHourJson, startDateStringWeek, endDateStringWeek);
-
-
-          //Delete this block later, this is just here for testing
-          // var dayData = this.formatDayData(this.state);
-          // console.log("processed day of year data after setting state: ", this.state.byDayJson);
-          // var hourData = this.formatHourData(this.state);
-          // console.log("processed hour of week data: ", hourData);
-
+          await this.formatDayData(byDayJson, startDateStringYear, endDateStringYear);
+          await this.formatHourData(byHourJson, startDateStringWeek, endDateStringWeek);
         } catch (e) {
           console.log(e);
         }
@@ -129,8 +113,8 @@ class Reports extends Component {
         //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
         var startDateString = startDateStringYear;
         var endDateString = endDateStringYear;
-        var startDate = new Date(startDateString.replace(/-/g, '\/'));
-        var endDate = new Date(endDateString.replace(/-/g, '\/'));
+        var startDate = new Date(startDateString.replace(/-/g, '/'));
+        var endDate = new Date(endDateString.replace(/-/g, '/'));
         var dateToCompare = startDate;
         var currEntryDate;
         var currIdx = 0;
@@ -147,7 +131,7 @@ class Reports extends Component {
           if (currIdx > byDayJson.length - 1) {
             currIdx = byDayJson.length - 1;
           }
-          currEntryDate = new Date(byDayJson[currIdx]["date"].replace(/-/g, '\/'));
+          currEntryDate = new Date(byDayJson[currIdx]["date"].replace(/-/g, '/'));
           //identified missing date, so add dummy date entry for missing date
           if (this.sameDay(dateToCompare, currEntryDate) === false) {
             var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "daily_visits": 0 };
@@ -177,18 +161,12 @@ class Reports extends Component {
         var processedDataAnnual = [];
         var dayOfWeek, weekNum, dayEntry, annualHeatMapEntry, dayOfWeekConverted;
         var currDateObj;
-        var mdyArray;
-        var d, m, y;
         var strDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         for (var i = 0; i < byDayJson.length; i++) {
-          currDateObj = new Date(byDayJson[i]['date'].replace(/-/g, '\/'));
+          currDateObj = new Date(byDayJson[i]['date'].replace(/-/g, '/'));
           dayOfWeek = currDateObj.getDay();
           dayOfWeekConverted = strDays[dayOfWeek];
           weekNum = Math.floor(i / 7);
-          mdyArray = byDayJson[i]['date'].split(/\s*\-\s*/g);
-          y = mdyArray[0];
-          m = mdyArray[1];
-          d = mdyArray[2];
           annualHeatMapEntry = {"x": weekNum+1, "y": dayOfWeekConverted, "color": byDayJson[i]['daily_visits']};
           processedDataAnnual.push(annualHeatMapEntry);
           dayEntry = {"y": byDayJson[i]['daily_visits'], "x": dayOfWeekConverted};
@@ -212,8 +190,8 @@ class Reports extends Component {
         //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
         var startDateString = startDateStringWeek;
         var endDateString = endDateStringWeek;
-        var startDate = new Date(startDateString.replace(/-/g, '\/'));
-        var endDate = new Date(endDateString.replace(/-/g, '\/'));
+        var startDate = new Date(startDateString.replace(/-/g, '/'));
+        var endDate = new Date(endDateString.replace(/-/g, '/'));
         var dateToCompare = startDate;
         var currEntryDate;
         var currHour;
@@ -239,7 +217,7 @@ class Reports extends Component {
           if (currIdx > byHourJson.length - 1) {
             currIdx = byHourJson.length - 1;
           }
-          currEntryDate = new Date(byHourJson[currIdx]["date"].replace(/-/g, '\/'));
+          currEntryDate = new Date(byHourJson[currIdx]["date"].replace(/-/g, '/'));
           currHour = byHourJson[currIdx]["time"];
           //identified missing date, so add dummy date entry for missing date
           if (this.sameDay(dateToCompare, currEntryDate) === false) {
@@ -294,17 +272,11 @@ class Reports extends Component {
         var processedData = [];
         var dayOfWeek, hourEntry, hourOfDay;
         var currDateObj;
-        var mdyArray;
-        var d, m, y;
         var strDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         for (var i = 0; i < byHourJson.length; i++) {
-          currDateObj = new Date(byHourJson[i]['date'].replace(/-/g, '\/'));
+          currDateObj = new Date(byHourJson[i]['date'].replace(/-/g, '/'));
           dayOfWeek = strDays[currDateObj.getDay()];
           hourOfDay = byHourJson[i]['time'].slice(0,5);
-          mdyArray = byHourJson[i]['date'].split(/\s*\-\s*/g);
-          y = mdyArray[0];
-          m = mdyArray[1];
-          d = mdyArray[2];
           hourEntry = {"x": hourOfDay, "y": dayOfWeek, "color": byHourJson[i]['count']};
           processedData.push(hourEntry);
         }

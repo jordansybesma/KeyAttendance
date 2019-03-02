@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Col, Row, ButtonToolbar, Form, FormControl, FormGroup, Label, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Button, ButtonToolbar, Form, FormControl, FormGroup, Label, ListGroup, ListGroupItem } from "react-bootstrap";
 import { Redirect } from 'react-router-dom';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
 import { dateToString, getPermissions, domain, getEarlierDate, getNextSaturday, getPrevSunday, httpDelete, httpGet, httpPatch, httpPost, protocol } from '../components/Helpers';
-import blankPic from '../images/blank_profile_pic.jpg';
 
 class Students extends Component {
 
@@ -136,7 +135,7 @@ class Students extends Component {
         try {
           const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
           console.log(studentInfoJson);
-          if (studentInfoJson.length == 0) {
+          if (studentInfoJson.length === 0) {
             var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
             state.profileInfo = this.parseCols(studentColumnJson);
             state.profileInfoPrelim = this.parseCols(studentColumnJson);
@@ -161,12 +160,10 @@ class Students extends Component {
       var startDate = getEarlierDate(30);
       startDate = getPrevSunday(startDate);
       var startDateString = dateToString(startDate);
-      //var startDateString = "2018-01-28";
       state.startDateString = startDateString;
       var today = getEarlierDate(0);
       var endDate = getNextSaturday(today);
       var endDateString = dateToString(endDate);
-      //var endDateString = "2018-03-03";
       state.endDateString = endDateString;
 
       if (this.state.canViewHeatmap) {
@@ -201,7 +198,6 @@ class Students extends Component {
       state.profileInfoPrelim[entry].patchPost.student_id = state.id;
 
       // Ensure all varchar(x) types get caught as str_value
-      var type;
       if ((/varchar.*/g).test(state.profileInfo[entry].colInfo.type)) {
         state.profileInfo[entry].type = 'str_value';
         state.profileInfoPrelim[entry].type = 'str_value';
@@ -282,7 +278,7 @@ class Students extends Component {
     try {
       const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
 
-      if (studentInfoJson.length == 0) {
+      if (studentInfoJson.length === 0) {
         var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
         newState.profileInfo = this.parseCols(studentColumnJson);
         newState = this.addTypes(newState);
@@ -440,11 +436,10 @@ class Students extends Component {
 
   formatData(state) {
     //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
-    var studentId = state.id;
     var startDateString = state.startDateString;
     var endDateString = state.endDateString;
-    var startDate = new Date(startDateString.replace(/-/g, '\/'));
-    var endDate = new Date(endDateString.replace(/-/g, '\/'));
+    var startDate = new Date(startDateString.replace(/-/g, '/'));
+    var endDate = new Date(endDateString.replace(/-/g, '/'));
     var dateToCompare = startDate;
     var currEntryDate;
     var currIdx = 0;
@@ -461,7 +456,7 @@ class Students extends Component {
       if (currIdx > heatMapJson.length - 1) {
         currIdx = heatMapJson.length - 1;
       }
-      currEntryDate = new Date(heatMapJson[currIdx]["date"].replace(/-/g, '\/'));
+      currEntryDate = new Date(heatMapJson[currIdx]["date"].replace(/-/g, '/'));
       //identified missing date, so add dummy date entry for missing date
       if (this.sameDay(dateToCompare, currEntryDate) === false) {
         var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "daily_visits": 0 };
@@ -482,17 +477,11 @@ class Students extends Component {
     var processedData = [];
     var dayOfWeek, weekNum, dayEntry;
     var currDateObj;
-    var mdyArray;
-    var m, d, y;
     var strDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     for (var i = 0; i < heatMapJson.length; i++) {
-      currDateObj = new Date(heatMapJson[i]['date'].replace(/-/g, '\/'));
+      currDateObj = new Date(heatMapJson[i]['date'].replace(/-/g, '/'));
       dayOfWeek = strDays[currDateObj.getDay()];
       weekNum = Math.floor(i / 7);
-      mdyArray = heatMapJson[i]['date'].split(/\s*\-\s*/g);
-      y = mdyArray[0];
-      m = mdyArray[1];
-      d = mdyArray[2];
       dayEntry = { "x": dayOfWeek, "y": (weekNum+1).toString(), "color": heatMapJson[i]['daily_visits']};
       processedData.push(dayEntry);
      }
@@ -506,7 +495,7 @@ class Students extends Component {
     for (var field in fields) {
       if (fields[field].colInfo.is_showing === true) {
         var value = 'N/A';
-        if (fields[field].value !== null && fields[field].value != null != '') {
+        if (fields[field].value !== null && fields[field].value !== null !== '') {
           value = fields[field].value;
         }
         var innerHtml = fields[field].colInfo.name + ': ' + value;
@@ -554,12 +543,14 @@ class Students extends Component {
 
     var reader = new FileReader();
     reader.onloadend = () => {
-      this.state.profileInfo[5].updated = true;
-      this.state.profileInfo[5].patchPost['blob_value'] = reader.result;
+      let {profileInfo} = this.state;
+      profileInfo[5].updated = true;
+      profileInfo[5].patchPost['blob_value'] = reader.result;
       this.setState(function (previousState, currentProps) {
         return {
           src: reader.result,
-          uploadedPic: true
+          uploadedPic: true,
+          profileInfo: profileInfo
         };
       });
     }
@@ -571,7 +562,6 @@ class Students extends Component {
     if (permissions.indexOf('view_students') < 0) {
       return (<Redirect to='/attendance' />);
     }
-    let heatmap = [];
     if (this.state.mode === 'search') {
       return (
         <div className='content'>
@@ -591,12 +581,6 @@ class Students extends Component {
     }
 
     else if (this.state.mode === 'display') {
-      var pic;
-      if (this.state.uploadedPic) {
-        pic = this.state.src;
-      } else {
-        pic = blankPic;
-      }
       let heatmap = [];
       if (this.state.canViewHeatmap) {
         heatmap = <div><h3>Student Attendance</h3>
@@ -677,7 +661,7 @@ class Students extends Component {
                     </ButtonToolbar>
                     <br />
                     <ButtonToolbar>
-                      <Button bsStyle="danger" onClick={evt => { if (window.confirm('Are you sure you wish to delete this user?')) this.delete(evt, this.state) }}>Delete</Button>
+                      <Button bsStyle="danger" onClick={evt => { if (window.confirm('Are you sure you wish to delete this student?')) this.delete(evt, this.state) }}>Delete</Button>
                     </ButtonToolbar>
                   </FormGroup>
                 </Form>

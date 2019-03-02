@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Button, ButtonToolbar } from 'react-bootstrap';
+import { Button, ButtonToolbar, Form, ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import Heatmap from '../components/Heatmap';
-import { domain, downloadReportsCSV, getEarlierDate, dateToString, getNextSaturday, getPrevSunday, getPermissions, httpGet, protocol } from '../components/Helpers';
+import { domain, downloadReportsCSV, getEarlierDate, dateToString, getNextSaturday, getPrevSunday, getPermissions, httpGet, protocol, downloadAttendanceCSV } from '../components/Helpers';
 import BarChart from './../components/BarChart.js';
 
 class Reports extends Component {
@@ -18,11 +18,17 @@ class Reports extends Component {
             byHourJsonForDownload: [],
             byDayJson: [],
             byDayJsonForDownload: [],
-            byDayHeatMap: []
+            byDayHeatMap: [],
+            dateOne: "",
+            dateTwo: "",
+            buildingCSV: false,
         };
         this.downloadHourlyCSV = this.downloadHourlyCSV.bind(this);
         this.downloadWeeklyCSV = this.downloadWeeklyCSV.bind(this);
         this.downloadYearlyCSV = this.downloadYearlyCSV.bind(this);
+        this.updateDateOne = this.updateDateOne.bind(this);
+        this.updateDateTwo = this.updateDateTwo.bind(this);
+        this.downloadCSV = this.downloadCSV.bind(this);
       }
 
       async componentDidMount() {
@@ -62,6 +68,24 @@ class Reports extends Component {
           console.log(e);
         }
       }
+
+      updateDateOne(e) {
+        this.setState({dateOne: e.target.value});
+      }
+
+      updateDateTwo(e) {
+        this.setState({dateTwo: e.target.value});
+      }
+
+      async downloadCSV() {
+          if (this.state.dateOne === "" || this.state.dateTwo === "") {
+            return
+          }
+          this.setState({ buildingCSV: true });
+          await downloadAttendanceCSV(this.state.dateOne, this.state.dateTwo)
+          this.setState({ buildingCSV: false });
+      }
+    
       downloadHourlyCSV() {
         this.setState({ buildingCSV: true });
         var title = "Reports_Hourly_Attendance_".concat(this.state.startDateStringWeek);
@@ -304,41 +328,55 @@ class Reports extends Component {
         }
         return (
             <div className="container py-4">
-                <h1> Reports </h1>
-                <div className="row">
-                    <div className="col-md-8 align-self-center">
-                        <h3> Hourly Attendance </h3>
-                        <ButtonToolbar style={{ float: 'right'}}>
-                    <Button onClick={this.downloadHourlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Hourly'}</Button>
-                </ButtonToolbar>
-                        <p> Number of engagements per hour in the past week from {this.state.startDateStringWeek} to {this.state.endDateStringWeek};</p>
-                        <p>with TODAY as the top row and past days showing below.</p>
-                        <Heatmap
-                        data = {this.state.byHourJson}
-                        heatMapType = "weekly" />
-
-                    </div>
-                    <div className='col-md-4 align-self-center'>
-                        <h3> Daily Attendance </h3>
-                        <ButtonToolbar style={{ float: 'right'}}>
-                    <Button onClick={this.downloadWeeklyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Daily'}</Button>
-                </ButtonToolbar>
-                        <p> Number of engagements per day in the past week to {this.state.endDateStringYear}.</p>
-                        <BarChart data = {this.state.byDayJson.slice(-7)}/> </div>
-                    </div>
+              <h1> Reports </h1>
               <div className="row">
-                <div className="col-md-8">
+                <div className="col-md-8 align-self-center">
+                  <h3> Hourly Attendance </h3>
+                  <ButtonToolbar style={{ float: 'right'}}>
+                  <Button onClick={this.downloadHourlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Hourly'}</Button>
+                  </ButtonToolbar>
+                  <p> Number of engagements per hour in the past week from {this.state.startDateStringWeek} to {this.state.endDateStringWeek};</p>
+                  <p>with TODAY as the top row and past days showing below.</p>
+                  <Heatmap
+                    data = {this.state.byHourJson}
+                    heatMapType = "weekly" />
+                </div>
+                <div className='col-md-4 align-self-center'>
+                  <h3> Daily Attendance </h3>
+                  <ButtonToolbar style={{ float: 'right'}}>
+                  <Button onClick={this.downloadWeeklyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Daily'}</Button>
+                  </ButtonToolbar>
+                  <p> Number of engagements per day in the past week to {this.state.endDateStringYear}.</p>
+                  <BarChart data = {this.state.byDayJson.slice(-7)}/> </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-8">
                     <h3> Annual Daily Attendance </h3>
                     <ButtonToolbar style={{ float: 'right'}}>
-                          <Button onClick={this.downloadYearlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Annual'}</Button>
-                        </ButtonToolbar>
+                    <Button onClick={this.downloadYearlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Annual'}</Button>
+                    </ButtonToolbar>
                     <p> Number of engagements per day in the past year from {this.state.startDateStringYear} to {this.state.endDateStringYear};</p>
                     <p>with the leftmost column as 52 weeks ago and the rightmost column as the current week.</p>
-                  <Heatmap data = {this.state.byDayHeatMap} heatMapType = "annual" />
+                    <Heatmap data = {this.state.byDayHeatMap} heatMapType = "annual" />
+                  </div>
                 </div>
-                 </div>
+                <div className="row">
+                  <div className="col-md-8">
+                    <h3> Multi-Date Attendance Sheet </h3>
+                    <Form inline style={{paddingRight: '5px', paddingLeft: '5px'}}>
+                      <FormGroup>
+                          <ControlLabel>Start Date</ControlLabel>{' '}
+                          <FormControl onChange={this.updateDateOne} value={this.state.dateOne} type="date"/>{'  '}
+                          <ControlLabel>End Date</ControlLabel>{' '}
+                          <FormControl onChange={this.updateDateTwo} value={this.state.dateTwo} type="date"/>{'  '}
+                          <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
+                      </FormGroup>
+                    </Form>
+                    <br/>
+                    <br/>
+                  </div>
+                </div>
             </div>
-
         );
     }
 }

@@ -1,7 +1,7 @@
 from django.core import serializers
 from ..models import AttendanceItems, Students, Activity
 from ..serializers import AttendanceItemSerializer
-from ..helpers import isValidDateTime, isValidTime
+from ..helpers import isValidDateTime, isValidTime, getCurrentDate
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -34,6 +34,7 @@ class Attendance(APIView):
 
     # Validate input for POST request of this endpoint - checks student_id and activity_id are present and valid
     # If timestamps are provided, validates they are in the correct format
+    # Makes sure that a duplicate attendance item doesn't exist.
     def validatePost(self, request):
         if not 'student_id' in request.data or not 'activity_id' in request.data:
             return False
@@ -45,6 +46,12 @@ class Attendance(APIView):
             Activity.objects.get(activity_id=request.data['activity_id'])
         except:
             return False
+        try: 
+            if len(AttendanceItems.objects.filter(activity_id=request.data['activity_id']).filter(date=getCurrentDate()).filter(student_id=request.data['student_id'])) > 0:
+                return False
+        except: 
+            return True
+
         if 'date' in request.data and request.data['date'] != '' and not isValidDateTime(request.data['date']):
             return False
         if 'time' in request.data and request.data['date'] != '' and not isValidTime(request.data['time']):

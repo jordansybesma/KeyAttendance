@@ -34,6 +34,7 @@ class Attendance extends React.Component {
         this.closeModal = this.closeModal.bind(this);
         this.updateDate = this.updateDate.bind(this);
         this.setDateToToday = this.setDateToToday.bind(this);
+        this.refresh = this.refresh.bind(this);
     }
 
     componentDidMount() {
@@ -150,7 +151,10 @@ class Attendance extends React.Component {
         this.setState({ attendance: sheet });
     }
 
-    addStudent(e, studentID) {
+    async addStudent(e, studentID) {
+        // Refresh attendance page.
+        await this.fetchAndBuild();
+
         const { students, attendance, activities, date } = this.state;
         const today = new Date();
         const self = this;
@@ -247,6 +251,10 @@ class Attendance extends React.Component {
         this.setState({showStudentModal: true});
     }
 
+    refresh() {
+        this.fetchAndBuild();
+    }
+
     closeModal(student=null) {
         const { students } = this.state;
         let suggestions = []
@@ -331,12 +339,14 @@ class Attendance extends React.Component {
         let buttonToolbar;
         if (this.state.canCreateStudent) {
             buttonToolbar = <ButtonToolbar style={{ float: 'right' }}>
+                <Button onClick={this.refresh}>Refresh</Button>
                 <Button onClick={this.setDateToToday}>Go To Today</Button>
                 <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
                 <Button onClick={this.openModal}>Create New Student</Button>
             </ButtonToolbar>
         } else {
             buttonToolbar = <ButtonToolbar style={{ float: 'right' }}>
+                <Button onClick={this.refresh}>Refresh</Button>
                 <Button onClick={this.setDateToToday}>Go To Today</Button>
                 <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
             </ButtonToolbar>

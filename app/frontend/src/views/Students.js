@@ -354,13 +354,6 @@ class Students extends Component {
 
   handleSubmit(evt, state) {
     evt.preventDefault();
-    httpPatch(`${protocol}://${domain}/api/students/`, state.profileData)
-      .then(function (result) {
-        if ('error' in result) {
-          result.response.then(function (response) { alert(`Error: ${response.error}`) });
-        }
-      });
-    
     // Deep copy
     state.profileInfo = JSON.parse(JSON.stringify(state.profileInfoPrelim));
 

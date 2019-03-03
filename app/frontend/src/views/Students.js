@@ -583,6 +583,12 @@ class Students extends Component {
             </div>
           </div>
           <br/>
+          <br/>
+          <br/>
+          <br/>
+          <br/>
+          <br/>
+          <br/>
           <div className='container-fluid no-padding'>
             <div className='row justify-content-start'> 
               <div className='col-md-2 to-front top-bottom-padding'>

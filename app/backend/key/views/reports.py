@@ -138,7 +138,7 @@ class Reports(APIView):
         outOfRange = AttendanceItems.objects.filter(date__lt=startdate)
         for item in inRange:
             # Try to find an attendance item outside of range
-            if len(outOfRange.filter(student_id=item.student_id)) == 0:
+            if len(outOfRange.filter(student_id=item.student_id)) == 0 and not item.student_id in newStudentIDs:
                 newStudentIDs.append(item.student_id)
         return Response({"newStudents": newStudentIDs}, content_type='application/json')
     

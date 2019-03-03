@@ -225,8 +225,6 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 		sheet.push(row);
 	}
 
-	console.log("sheet: ", sheet);
-	console.log("columns: ", columns);
 	// Put data in a CSV
 	var papa = require('papaparse') // a strangely named but fairly effective CSV library
 	var csvString = papa.unparse({

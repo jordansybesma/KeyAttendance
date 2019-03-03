@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { Button, ButtonToolbar, Form, ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
+import { Button, ButtonToolbar, Form, ControlLabel, FormControl, FormGroup, Tabs, Tab } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import Heatmap from '../components/Heatmap';
 import { domain, downloadReportsCSV, getEarlierDate, dateToString, getNextSaturday, getPrevSunday, getPermissions, httpGet, protocol, downloadAttendanceCSV } from '../components/Helpers';
 import BarChart from './../components/BarChart.js';
+import AttendanceByProgramReport from '../components/AttendanceByProgramReport';
+import NewStudentsReport from '../components/NewStudentsReport';
+import MilestoneReport from '../components/MilestoneReport';
 
 class Reports extends Component {
 
@@ -22,6 +25,7 @@ class Reports extends Component {
             dateOne: "",
             dateTwo: "",
             buildingCSV: false,
+            tab: 1,
         };
         this.downloadHourlyCSV = this.downloadHourlyCSV.bind(this);
         this.downloadWeeklyCSV = this.downloadWeeklyCSV.bind(this);
@@ -29,6 +33,7 @@ class Reports extends Component {
         this.updateDateOne = this.updateDateOne.bind(this);
         this.updateDateTwo = this.updateDateTwo.bind(this);
         this.downloadCSV = this.downloadCSV.bind(this);
+        this.handleTabSelect = this.handleTabSelect.bind(this);
       }
 
       async componentDidMount() {
@@ -51,6 +56,12 @@ class Reports extends Component {
         } catch (e) {
           console.log(e);
         }
+      }
+
+      
+
+      handleTabSelect(tab) {
+        this.setState({ tab });
       }
 
       updateDateOne(e) {
@@ -102,7 +113,6 @@ class Reports extends Component {
           d1.getMonth() === d2.getMonth() &&
           d1.getDate() === d2.getDate();
       }
-
 
       compareTime(time1, time2) {
         return new Date(time1) > new Date(time2); // true if time1 is later
@@ -296,59 +306,68 @@ class Reports extends Component {
         if (permissions.indexOf('view_reports') < 0) {
             return (<Redirect to='/attendance'/>);
         }
+
         return (
-            <div className="container py-4">
-              <h1> Reports </h1>
-            <div className="row">
-              <div className="col-md-8 align-self-center">
+          <div className="content">
+            <Tabs activeKey={this.state.tab} onSelect={this.handleTabSelect}>
+              <Tab key={1} eventKey={1} title="Hourly Attendance">
                 <h3> Hourly Attendance </h3>
-                <ButtonToolbar style={{ float: 'right' }}>
-                  <Button onClick={this.downloadHourlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Hourly'}</Button>
+                <ButtonToolbar style={{ float: 'right'}}>
+                <Button onClick={this.downloadHourlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Hourly'}</Button>
                 </ButtonToolbar>
-                <p>Number of engagements per hour from <b>{this.state.startDateStringWeek}</b> to <b>{this.state.endDateStringWeek}</b>.</p>
+                <p> Number of engagements per hour in <b>{this.state.startDateStringWeek}</b> to <b>{this.state.endDateStringWeek}</b>.</p>
                 <p><b>Note:</b> Data is displayed chronologically, with the top row representing the oldest day and the bottom row representing the current day.</p>
                 <Heatmap
-                  data={this.state.byHourJson}
-                  heatMapType="weekly" />
-              </div>
-                <div className='col-md-4 align-self-center'>
-                  <h3> Daily Attendance </h3>
-                  <ButtonToolbar style={{ float: 'right'}}>
-                  <Button onClick={this.downloadWeeklyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Daily'}</Button>
-                  </ButtonToolbar>
-                  <p> Number of engagements per day in the past week from <b>{this.state.startDateStringWeek}</b> to <b>{this.state.endDateStringWeek}</b>.</p>
-                  <BarChart data = {this.state.byDayJson.slice(-7)}/> </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-8">
-                    <h3> Annual Daily Attendance </h3>
-                    <ButtonToolbar style={{ float: 'right'}}>
-                    <Button onClick={this.downloadYearlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Annual'}</Button>
-                    </ButtonToolbar>
-                    <p> Number of engagements per day in the past year from <b>{this.state.startDateStringYear}</b> to <b>{this.state.endDateStringYear}</b>.</p>
-                    <p><b>Note:</b> Data is displayed chronologically, with the leftmost column representing the oldest week and the rightmost column representing the current week.</p> 
-                    <Heatmap data = {this.state.byDayHeatMap} heatMapType = "annual" />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-8">
-                    <h3> Multi-Date Attendance Sheet </h3>
-                    <Form inline style={{paddingRight: '5px', paddingLeft: '5px'}}>
-                      <FormGroup>
-                          <ControlLabel>Start Date</ControlLabel>{' '}
-                          <FormControl onChange={this.updateDateOne} value={this.state.dateOne} type="date"/>{'  '}
-                          <ControlLabel>End Date</ControlLabel>{' '}
-                          <FormControl onChange={this.updateDateTwo} value={this.state.dateTwo} type="date"/>{'  '}
-                          <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
-                      </FormGroup>
-                    </Form>
-                    <br/>
-                    <br/>
-                  </div>
-                </div>
-            </div>
+                  data = {this.state.byHourJson}
+                  heatMapType = "weekly" />
+              </Tab>
+              <Tab key={2} eventKey={2} title="Daily Attendance">
+                <h3> Daily Attendance </h3>
+                <ButtonToolbar style={{ float: 'right'}}>
+                <Button onClick={this.downloadWeeklyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Daily'}</Button>
+                </ButtonToolbar>
+                <p> Number of engagements per day in the past week from <b>{this.state.startDateStringWeek}</b> to <b>{this.state.endDateStringWeek}</b>.</p>
+                <BarChart data = {this.state.byDayJson.slice(-7)}/>
+              </Tab>
+              <Tab key={3} eventKey={3} title="Annual Attendance">
+                <h3> Annual Daily Attendance </h3>
+                <ButtonToolbar style={{ float: 'right'}}>
+                <Button onClick={this.downloadYearlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Annual'}</Button>
+                </ButtonToolbar>
+                <p> Number of engagements per day in the past year from <b>{this.state.startDateStringYear}</b> to <b>{this.state.endDateStringYear}</b>.</p>
+                <p><b>Note:</b> Data is displayed chronologically, with the leftmost column representing the oldest week and the rightmost column representing the current week.</p> 
+                <Heatmap data = {this.state.byDayHeatMap} heatMapType = "annual" />
+              </Tab>
+              <Tab key={4} eventKey={4} title="Multi-Date Attendance Sheet">
+                <h3> Download Multi-Date Attendance Sheet </h3>
+                <p>Combines and downloads attendance sheets from multiple dates</p>
+                <Form inline style={{paddingRight: '5px', paddingLeft: '5px'}}>
+                  <FormGroup>
+                    <ControlLabel>Start Date</ControlLabel>{' '}
+                    <FormControl onChange={this.updateDateOne} value={this.state.dateOne} type="date"/>{'  '}
+                    <ControlLabel>End Date</ControlLabel>{' '}
+                    <FormControl onChange={this.updateDateTwo} value={this.state.dateTwo} type="date"/>{'  '}
+                    <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
+                  </FormGroup>
+                </Form>
+              </Tab>
+              <Tab key={5} eventKey={5} title="Attendance By Program">
+                <AttendanceByProgramReport/>
+              </Tab>
+              <Tab key={6} eventKey={6} title="New Students">
+                <NewStudentsReport/>
+              </Tab>
+              <Tab key={7} eventKey={7} title="Attendance Milestones">
+                <MilestoneReport/>
+              </Tab>
+            </Tabs>
+          </div>
         );
     }
 }
+
+// List of students who attended a particular category over a given time span
+// List of students who attended for the first time
+// List of students who have attended the key at least *n* number of times.
 
 export default Reports;

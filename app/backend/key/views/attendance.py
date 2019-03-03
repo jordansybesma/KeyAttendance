@@ -47,7 +47,11 @@ class Attendance(APIView):
         except:
             return False
         try: 
-            if len(AttendanceItems.objects.filter(activity_id=request.data['activity_id']).filter(date=getCurrentDate()).filter(student_id=request.data['student_id'])) > 0:
+            if 'date' in request.data:
+                date = request.data['date']
+            else:
+                date = getCurrentDate()
+            if len(AttendanceItems.objects.filter(activity_id=request.data['activity_id']).filter(date=date).filter(student_id=request.data['student_id'])) > 0:
                 return False
         except: 
             return True

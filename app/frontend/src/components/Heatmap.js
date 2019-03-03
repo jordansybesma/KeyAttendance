@@ -153,7 +153,7 @@ class Heatmap extends Component {
   }
 
   calculateHeatmapColor(maxHeatMapColor){
-    if(maxHeatMapColor==0){
+    if(maxHeatMapColor===0){
       return "#F5FBFD";
     } else {
       return "teal";
@@ -167,7 +167,6 @@ class Heatmap extends Component {
     const minLegendLabel = this.calculateMinDataPoint(data);
     const maxLegendLabel = this.calculateMaxDataPoint(data);
     const maxHeatMapColor = this.calculateHeatmapColor(maxLegendLabel);
-    const heatMapColors = this.colorRange(maxLegendLabel)
     const yArray = this.setYArrayRange(data);
 
 

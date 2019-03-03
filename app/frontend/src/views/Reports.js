@@ -258,7 +258,6 @@ class Reports extends Component {
             hourToCompare = hourArray[hourToCompareIdx];
           }
         }
-        console.log("by hour json: ", byHourJson);
         //process json into list of lists and store into state for downloading as csv
         var byHourJsonForDownload = [];
         var entryAsList;
@@ -288,7 +287,6 @@ class Reports extends Component {
                   byHourJsonForDownload: byHourJsonForDownload
               };
           });
-          console.log("by hour: ", processedData);
         return processedData;
       }
 
@@ -301,24 +299,24 @@ class Reports extends Component {
         return (
             <div className="container py-4">
               <h1> Reports </h1>
-              <div className="row">
-                <div className="col-md-8 align-self-center">
-                  <h3> Hourly Attendance </h3>
-                  <ButtonToolbar style={{ float: 'right'}}>
+            <div className="row">
+              <div className="col-md-8 align-self-center">
+                <h3> Hourly Attendance </h3>
+                <ButtonToolbar style={{ float: 'right' }}>
                   <Button onClick={this.downloadHourlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Hourly'}</Button>
-                  </ButtonToolbar>
-                  <p> Number of engagements per hour in the past week from {this.state.startDateStringWeek} to {this.state.endDateStringWeek};</p>
-                  <p>with TODAY as the top row and past days showing below.</p>
-                  <Heatmap
-                    data = {this.state.byHourJson}
-                    heatMapType = "weekly" />
-                </div>
+                </ButtonToolbar>
+                <p>Number of engagements per hour from <b>{this.state.startDateStringWeek}</b> to <b>{this.state.endDateStringWeek}</b>.</p>
+                <p><b>Note:</b> Data is displayed chronologically, with the top row representing the oldest day and the bottom row representing the current day.</p>
+                <Heatmap
+                  data={this.state.byHourJson}
+                  heatMapType="weekly" />
+              </div>
                 <div className='col-md-4 align-self-center'>
                   <h3> Daily Attendance </h3>
                   <ButtonToolbar style={{ float: 'right'}}>
                   <Button onClick={this.downloadWeeklyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Daily'}</Button>
                   </ButtonToolbar>
-                  <p> Number of engagements per day in the past week to {this.state.endDateStringYear}.</p>
+                  <p> Number of engagements per day in the past week from <b>{this.state.startDateStringWeek}</b> to <b>{this.state.endDateStringWeek}</b>.</p>
                   <BarChart data = {this.state.byDayJson.slice(-7)}/> </div>
                 </div>
                 <div className="row">
@@ -327,8 +325,8 @@ class Reports extends Component {
                     <ButtonToolbar style={{ float: 'right'}}>
                     <Button onClick={this.downloadYearlyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Annual'}</Button>
                     </ButtonToolbar>
-                    <p> Number of engagements per day in the past year from {this.state.startDateStringYear} to {this.state.endDateStringYear};</p>
-                    <p>with the leftmost column as 52 weeks ago and the rightmost column as the current week.</p>
+                    <p> Number of engagements per day in the past year from <b>{this.state.startDateStringYear}</b> to <b>{this.state.endDateStringYear}</b>.</p>
+                    <p><b>Note:</b> Data is displayed chronologically, with the leftmost column representing the oldest week and the rightmost column representing the current week.</p> 
                     <Heatmap data = {this.state.byDayHeatMap} heatMapType = "annual" />
                   </div>
                 </div>

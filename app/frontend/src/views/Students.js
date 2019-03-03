@@ -585,7 +585,6 @@ class Students extends Component {
       if (this.state.canViewHeatmap) {
         heatmap = <div><h3>Student Attendance</h3>
           <p>Number of engagements for this individual student in the past month.</p>
-          <p>The y-axis represents the week number in the month, with the most recent (the current) week displaying at the bottom.</p>
           <p><b>Note:</b> Data is displayed chronologically, with row 1 representing the oldest week and row 5 representing the current week.</p> 
           <Heatmap data={this.formatData(this.state)} heatMapType="individualStudent" /></div>
       }

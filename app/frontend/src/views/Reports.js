@@ -5,6 +5,8 @@ import Heatmap from '../components/Heatmap';
 import { domain, downloadReportsCSV, getEarlierDate, dateToString, getNextSaturday, getPrevSunday, getPermissions, httpGet, protocol, downloadAttendanceCSV } from '../components/Helpers';
 import BarChart from './../components/BarChart.js';
 import AttendanceByProgramReport from '../components/AttendanceByProgramReport';
+import NewStudentsReport from '../components/NewStudentsReport';
+import MilestoneReport from '../components/MilestoneReport';
 
 class Reports extends Component {
 
@@ -307,7 +309,6 @@ class Reports extends Component {
 
         return (
           <div className="content">
-            <h1> Reports </h1>
             <Tabs activeKey={this.state.tab} onSelect={this.handleTabSelect}>
               <Tab key={1} eventKey={1} title="Hourly Attendance">
                 <h3> Hourly Attendance </h3>
@@ -338,8 +339,8 @@ class Reports extends Component {
                 <Heatmap data = {this.state.byDayHeatMap} heatMapType = "annual" />
               </Tab>
               <Tab key={4} eventKey={4} title="Multi-Date Attendance Sheet">
-                <h3> Multi-Date Attendance Sheet </h3>
-                <br/>
+                <h3> Download Multi-Date Attendance Sheet </h3>
+                <p>Combines and downloads attendance sheets from multiple dates</p>
                 <Form inline style={{paddingRight: '5px', paddingLeft: '5px'}}>
                   <FormGroup>
                     <ControlLabel>Start Date</ControlLabel>{' '}
@@ -354,10 +355,10 @@ class Reports extends Component {
                 <AttendanceByProgramReport/>
               </Tab>
               <Tab key={6} eventKey={6} title="New Students">
-                <h3> New Students </h3>
+                <NewStudentsReport/>
               </Tab>
               <Tab key={7} eventKey={7} title="Attendance Milestones">
-                <h3> Attendance Milestones </h3>
+                <MilestoneReport/>
               </Tab>
             </Tabs>
           </div>

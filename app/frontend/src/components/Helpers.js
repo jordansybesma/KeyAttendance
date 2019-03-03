@@ -10,12 +10,12 @@ import createBrowserHistory from 'history/createBrowserHistory';
 const history = createBrowserHistory();
 
 // For local development
-const domain = '127.0.0.1:8000'
-const protocol = 'http'
+// const domain = '127.0.0.1:8000'
+// const protocol = 'http'
 
 // For production server
-// const domain = 'app.jordansybesma.com'
-// const protocol = 'https'
+const domain = 'app.jordansybesma.com'
+const protocol = 'https'
 
 function httpPost(url, body={}) {
 	const token = window.localStorage.getItem("key_credentials");
@@ -225,8 +225,6 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 		sheet.push(row);
 	}
 
-	console.log("sheet: ", sheet);
-	console.log("columns: ", columns);
 	// Put data in a CSV
 	var papa = require('papaparse') // a strangely named but fairly effective CSV library
 	var csvString = papa.unparse({

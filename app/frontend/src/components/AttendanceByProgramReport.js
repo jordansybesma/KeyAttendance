@@ -7,8 +7,9 @@ class AttendanceByProgramReport extends React.Component {
     	super(props);
   
       	this.state = {
-        	activities: [],
-			activityDropdownSelected: "",
+			activities: [],
+			activityName: "",
+			activityNumber: 0,
 			buildingCSV: false,
 			startDate: "",
 			endDate: "",
@@ -21,11 +22,37 @@ class AttendanceByProgramReport extends React.Component {
 	}
 
 	async downloadCSV() {
-		if (this.state.dateOne === "" || this.state.dateTwo === "") {
+		const { startDate, endDate, activityNumber, activityName } = this.state;
+		if (startDate === "" || endDate === "") {
 		  return
 		}
 		this.setState({ buildingCSV: true });
-		await downloadReportsCSV();
+		const sheet = []
+		const columns = ['Date', 'Student Name', 'Student Key']
+		const title = `${activityName}_${startDate}-${endDate}`
+		const items = await httpGet(`${protocol}://${domain}/api/reports/byActivityAttendance/?startdate=${startDate}&enddate=${endDate}&activity=${activityNumber}`)
+		const students = await httpGet(`${protocol}://${domain}/api/students/`)
+		
+		// sheet should look like: 
+		// Date | Student Name | Student Key 
+
+		for (let itemIndex in items) {
+			let studentName = "";
+			let studentKey = "";
+			for (let studentIndex in students) {
+				if (students[studentIndex].id === items[itemIndex].student_id) {
+					studentName = students[studentIndex].first_name + " " + students[studentIndex].last_name
+					studentKey = students[studentIndex].student_key
+				}
+			}
+			let row = []
+			row[0] = items[itemIndex].date;
+			row[1] = studentName
+			row[2] = (studentKey === null ? "N/A" : studentKey)
+			sheet.push(row);
+		}
+
+		await downloadReportsCSV(sheet, columns, title);
 		this.setState({ buildingCSV: false });
 	}
 
@@ -39,11 +66,19 @@ class AttendanceByProgramReport extends React.Component {
 
 	async componentDidMount() {
 		const activities = await httpGet(`${protocol}://${domain}/api/activities/`);
-        this.setState({activities: activities, activityDropdownSelected: activities[0].name});
+        this.setState({activities: activities, activityName: activities[0].name, activityNumber: activities[0].activity_id});
 	}
 
 	handleActivityDropdownSelect(e) {
-    	this.setState({activityDropdownSelected: e.target.value});
+		const { activities } = this.state;
+		let activityName = e.target.value;
+		let activityNumber = 0;
+		for (let key in activities) {
+			if (activities[key].name === activityName) {
+				activityNumber = activities[key].activity_id;
+			}
+		}
+    	this.setState({activityName: activityName, activityNumber: activityNumber});
     }
 	
 	render() {
@@ -52,8 +87,8 @@ class AttendanceByProgramReport extends React.Component {
 
 		return (
 			<div>
-				<h3> Attendance by Program </h3>
-				<br/>
+				<h3> Download Attendance by Program </h3>
+				<p>Downloads a spreadsheet containing all attendance records between two dates for a given program.</p>
                 <Form inline style={{paddingRight: '5px', paddingLeft: '5px'}}>
                   <FormGroup>
                     <ControlLabel>Program: </ControlLabel>{' '}
@@ -62,11 +97,11 @@ class AttendanceByProgramReport extends React.Component {
                       onChange={this.handleActivityDropdownSelect}
                       defaultValue="string"
                     >
-                      {activityList}
+                    	{activityList}
                     </FormControl>{'  '}
-                    <ControlLabel>Start Date</ControlLabel>{' '}
+                    <ControlLabel>Start Date:</ControlLabel>{' '}
                     <FormControl onChange={this.updateStartDate} value={this.state.startDate} type="date"/>{'  '}
-                    <ControlLabel>End Date</ControlLabel>{' '}
+                    <ControlLabel>End Date:</ControlLabel>{' '}
                     <FormControl onChange={this.updateEndDate} value={this.state.endDate} type="date"/>{'  '}
                     <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
                   </FormGroup>

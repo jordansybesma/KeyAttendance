@@ -134,7 +134,6 @@ class Students extends Component {
       if (this.state.canViewStudentInfo) {
         try {
           const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
-          console.log(studentInfoJson);
           if (studentInfoJson.length === 0) {
             var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
             state.profileInfo = this.parseCols(studentColumnJson);
@@ -302,8 +301,6 @@ class Students extends Component {
       var field = newState.profileInfo[field];
       if (field.studentInfoId) {
         httpDelete(`${protocol}://${domain}/api/student_info/?id=${field.studentInfoId}`, field.patchPost);
-      } else {
-        console.log(field);
       }
     }
 
@@ -515,22 +512,6 @@ class Students extends Component {
         info.push(<Label key={entry + 'label'}>{label}</Label>)
 
         var type = this.state.profileInfo[entry].colInfo.type;
-        // var type;
-        // switch (this.state.profileInfo[entry].type) {
-        //   case 'str_value':
-        //   type = "text";
-        //   break;
-        //   case 'int_value':
-        //   type = "int";
-        //   break;
-        //   case 'date_value':
-        //   type = "date";
-        //   break;
-        //   case 'time_value':
-        //   type = "time";
-        //   break;
-        // }
-        
         info.push(<FormControl key={label} type={type} id={entry} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
         info.push(<br key={entry + 'break'}/>);
       }
@@ -602,12 +583,6 @@ class Students extends Component {
             </div>
           </div>
           <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
           <div className='container-fluid no-padding'>
             <div className='row justify-content-start'> 
               <div className='col-md-2 to-front top-bottom-padding'>
@@ -639,24 +614,17 @@ class Students extends Component {
                 />
               </div>
               <div className='col-md-8 top-bottom-padding'>
-                {/* <img id="studentPhoto" src={blankPic} width="196" height="196" /> */}
-                {/* <p> Upload Student Profile Photo </p> */}
-                {/* <input id="upload-button" type="file" accept="image/*" name={this.state.profileInfo[0].patchPost.student_id} onChange={evt => this.readImage(evt, this.state)} /><br /> */}
                 <Form inline className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
                   <FormGroup>
                     <Label>First Name: </Label>
-                    {/* <Col sm="10"> */}
                       <FormControl type="text" id="first_name" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleNameChange(evt, this.state)} /> <br/>
-                    {/* </Col> */}
                     <Label>Last Name: </Label>
-                    {/* <Col sm="10"> */}
                       <FormControl type="text" id="last_name" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleNameChange(evt, this.state)} /> <br/>
-                    {/* </Col> */}
                     {this.renderEditInfo(this.state.parsedInfo)}
                     <br/>
                     <ButtonToolbar>
-                      <Button bsStyle="default" onClick={this.display}>Cancel</Button>
                       <Button bsStyle="primary" type="submit">Submit</Button>
+                      <Button bsStyle="default" onClick={this.display}>Cancel</Button>
                     </ButtonToolbar>
                     <br />
                     <ButtonToolbar>

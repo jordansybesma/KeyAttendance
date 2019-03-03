@@ -1,5 +1,6 @@
 from django.core import serializers
 from ..models import Students as StudentsModel
+from ..models import AttendanceItems, StudentInfo
 from ..serializers import StudentSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -35,8 +36,15 @@ class Students(APIView):
     def delete(self, request):
         if not self.validateDelete(request):
             return Response({'error':'Invalid Parameters'}, status='400')
-        studentItem = StudentsModel.objects.get(pk=request.data['id'])
-        studentItem.delete()
+        id = request.data['id']
+        student = StudentsModel.objects.get(pk=id)
+        attendance_items = AttendanceItems.objects.filter(student_id=id)
+        student_infos = StudentInfo.objects.filter(student_id=id)
+        for attendance_item in attendance_items:
+            attendance_item.delete()
+        for student_info in student_infos:
+            student_info.delete()
+        student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     # Get existing student data

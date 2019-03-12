@@ -295,24 +295,34 @@ class Students extends Component {
       newState.profileInfo = this.parseCols(studentColumnJson);
     }
 
-    httpDelete(`${protocol}://${domain}/api/students/`, state.profileData);
+    let deleted = false;
+    httpDelete(`${protocol}://${domain}/api/students/`, state.profileData)
+      .then(function (result) {
+        if ('error' in result) {
+          result.response.then(function (response) { alert(`Error: ${response.error}`) });
+        } else {
+          deleted = true;
+        }
+      });
     
-    // Ensure that the autocomplete removes the entry
-    var entryFound = false;
-    var entryIndex = 0;
-    while (entryFound === false) {
-      if (state.suggestionsArray[entryIndex].id === state.profileData['id']) {
-        state.suggestionsArray.splice(entryIndex, 1);
-        entryFound = true
-      } else {
-        entryIndex++;
+    if (deleted) {
+      // Ensure that the autocomplete removes the entry
+      var entryFound = false;
+      var entryIndex = 0;
+      while (entryFound === false) {
+        if (state.suggestionsArray[entryIndex].id === state.profileData['id']) {
+          state.suggestionsArray.splice(entryIndex, 1);
+          entryFound = true
+        } else {
+          entryIndex++;
+        }
       }
+      
+      this.state.mode = 'search';
+      this.setState(function (previousState, currentProps) {
+        return state;
+      });
     }
-    
-    this.state.mode = 'search';
-    this.setState(function (previousState, currentProps) {
-      return state;
-    });
   }
 
   handleNameChange(evt, state) {

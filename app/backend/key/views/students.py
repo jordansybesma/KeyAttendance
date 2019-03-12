@@ -34,6 +34,8 @@ class Students(APIView):
         return True
       
     def delete(self, request):
+        if not request.user.has_perm('key.delete_students'):
+            return Response({'error':'You are not authorized to delete students.'}, status='401')
         if not self.validateDelete(request):
             return Response({'error':'Invalid Parameters'}, status='400')
         id = request.data['id']

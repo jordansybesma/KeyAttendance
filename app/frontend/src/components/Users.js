@@ -159,9 +159,11 @@ class Users extends React.Component {
             });
             users.push(newUser);
             showingUsers.push(newUser);
+            this.setState({showUserModal: false, users: users, showingUsers: showingUsers, 
+                showingAllUsers: false, suggestionsArray: suggestionsArray});
+        } else {
+            this.setState({showUserModal: false});
         }
-        this.setState({showUserModal: false, users: users, showingUsers: showingUsers, 
-            showingAllUsers: false, suggestionsArray: suggestionsArray});
     }
 
     checkmark(boolean) {

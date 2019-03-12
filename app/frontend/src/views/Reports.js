@@ -42,12 +42,9 @@ class Reports extends Component {
         try {
           //Make timerange for last 7 days to display for weekly aggregation (broken down by hour of day)
           var today = getEarlierDate(0);
-          console.log(today);
           var startDateWeek = getEarlierDate(6);
           var startDateStringWeek = dateToString(startDateWeek);
-          console.log(startDateStringWeek);
           var endDateStringWeek = dateToString(today);
-          console.log(endDateStringWeek);
           const byHourJson = await httpGet(`${protocol}://${domain}/api/reports/byHourAttendance/?startdate=${startDateStringWeek}&enddate=${endDateStringWeek}`);
           //Make timerange for last 365 days, extending back to the preceeding sunday and forward to the following sat to display yearly aggregation (broken down by day)
           var startDateYear= getEarlierDate(365);
@@ -170,8 +167,6 @@ class Reports extends Component {
         var startPastWeek = startDateWeek;
         startPastWeek.setDate(startPastWeek.getDate()-1);
         var endPastWeek = getEarlierDate(0);
-        console.log(startPastWeek);
-        console.log(endPastWeek);
         for(var i=0; i<byDayJson.length; i++){
           entryAsList = Object.values(byDayJson[i]);
           byDayJsonForDownload.push(entryAsList);

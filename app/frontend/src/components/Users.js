@@ -58,6 +58,8 @@ class Users extends React.Component {
 
     async componentDidUpdate() {
         if (this.props.refreshRoles) {
+            // Re-get users - if a role was deleted, users may have been set to inactive
+            const users = await httpGet(`${protocol}://${domain}/api/users/`);
             const roles = await httpGet(`${protocol}://${domain}/api/groups/`);
             const role_ids = {};
             const role_names = {};
@@ -66,8 +68,11 @@ class Users extends React.Component {
                 role_names[roles[index].id] = roles[index].name;
             }
             this.setState({
+                showingUsers: users,
+                users: users,
                 role_ids: role_ids, 
                 role_names: role_names,
+                showAllUsers: true
             });
             this.props.toggleRefreshRoles(false);
         }
@@ -122,7 +127,7 @@ class Users extends React.Component {
     }
 
     closeModal(user=null) {
-        const { users } = this.state;
+        const { suggestionsArray, users } = this.state;
         let showingUsers = [];
         if (user !== null) {
             let newUser = {
@@ -134,10 +139,29 @@ class Users extends React.Component {
                 'last_login': user.last_login,
                 'is_active': user.is_active
             };
+            let last1;
+            let last2;
+            if (user.last_name.includes(" ")) {
+                let lastNames = user.last_name.split(" ");
+                last1 = lastNames[0];
+                last2 = lastNames[1];
+            }
+            else {
+                last1 = user.last_name;
+                last2 = "";
+            }
+            suggestionsArray.push({
+                firstName: user.first_name,
+                lastName1: last1,
+                lastName2: last2,
+                username: user.username,
+                id: user.id
+            });
             users.push(newUser);
             showingUsers.push(newUser);
         }
-        this.setState({showUserModal: false, users: users, showingUsers: showingUsers, showingAllUsers: false});
+        this.setState({showUserModal: false, users: users, showingUsers: showingUsers, 
+            showingAllUsers: false, suggestionsArray: suggestionsArray});
     }
 
     checkmark(boolean) {
@@ -173,15 +197,17 @@ class Users extends React.Component {
     }
 
     updateRow(user, id = null) {
-        let { users } = this.state;
+        let { users, suggestionsArray } = this.state;
         let showingUsers = [];
         let showingAllUsers = false;
         if (id !== null) {
             users = users.filter(item => item.id !== id);
+            suggestionsArray = suggestionsArray.filter(item => item.id !== id);
             showingAllUsers = true;
             showingUsers = users;
         } else {
             users = users.filter(item => item.id !== user.id);
+            suggestionsArray = suggestionsArray.filter(item => item.id !== user.id);
             let newUser = {
                 'id': user.id,
                 'username': user.username,
@@ -191,10 +217,28 @@ class Users extends React.Component {
                 'last_login': user.last_login,
                 'is_active': user.is_active
             };
+            let last1;
+            let last2;
+            if (user.last_name.includes(" ")) {
+                let lastNames = user.last_name.split(" ");
+                last1 = lastNames[0];
+                last2 = lastNames[1];
+            }
+            else {
+                last1 = user.last_name;
+                last2 = "";
+            }
+            suggestionsArray.push({
+                firstName: user.first_name,
+                lastName1: last1,
+                lastName2: last2,
+                username: user.username,
+                id: user.id
+            });
             users.push(newUser);
             showingUsers.push(newUser)
         }
-        this.setState({ users: users, showingUsers: showingUsers, showingAllUsers: showingAllUsers });
+        this.setState({ users: users, showingUsers: showingUsers, showingAllUsers: showingAllUsers, suggestionsArray: suggestionsArray });
     }
 
     getUserHistory(userId, username) {
@@ -233,7 +277,6 @@ class Users extends React.Component {
         ).sort((a, b) => {
             return a.username.localeCompare(b.username);
         });
-        console.log(rows);
         const columns = [
             {
                 accessor: 'name',

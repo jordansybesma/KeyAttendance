@@ -194,7 +194,6 @@ class Users extends React.Component {
             users.push(newUser);
             showingUsers.push(newUser)
         }
-        this.setState({ users: users });
         this.setState({ users: users, showingUsers: showingUsers, showingAllUsers: showingAllUsers });
     }
 
@@ -234,14 +233,13 @@ class Users extends React.Component {
         ).sort((a, b) => {
             return a.username.localeCompare(b.username);
         });
-
+        console.log(rows);
         const columns = [
             {
                 accessor: 'name',
                 label: 'Name',
                 priorityLevel: 1,
                 position: 1,
-                CustomComponent: UserHistoryButton,
                 minWidth: 100,
                 sortable: true
             },
@@ -285,9 +283,18 @@ class Users extends React.Component {
                 CustomComponent: EditUserButton,
                 minWidth: 50,
                 sortable: false, 
+            },
+            {
+                accessor: 'history',
+                label: '',
+                priorityLevel: 7,
+                position: 7,
+                CustomComponent: UserHistoryButton,
+                minWidth: 50,
+                sortable: false,
             }
         ];
-        const tableCallbacks = { edit: this.updateRow, name: this.getUserHistory }
+        const tableCallbacks = { edit: this.updateRow, history: this.getUserHistory }
         if (this.state.historyView) {
             return (
                 <UserHistory closeHistoryView={this.closeHistoryView} history={this.state.selectedUserHistory} username={this.state.selectedUsername}/>

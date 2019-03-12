@@ -17,6 +17,7 @@ class Reports extends Component {
             endDateStringWeek: "",
             startDateStringYear: "",
             endDateStringYear: "",
+            endDateStringYearMinus6: "",
             byHourJson: [],
             byHourJsonForDownload: [],
             byDayJson: [],
@@ -50,8 +51,10 @@ class Reports extends Component {
           var startDateStringYear = dateToString(startDateYear);
           var endDateYear = getNextSaturday(today);
           var endDateStringYear = dateToString(endDateYear);
+          var endDateYearMinus6 = getPrevSunday(endDateYear);
+          var endDateStringYearMinus6 = dateToString(endDateYearMinus6);
           const byDayJson = await httpGet(`${protocol}://${domain}/api/reports/byDayAttendance/?startdate=${startDateStringYear}&enddate=${endDateStringYear}`);
-          await this.formatDayData(byDayJson, startDateStringYear, endDateStringYear);
+          await this.formatDayData(byDayJson, startDateStringYear, endDateStringYear, endDateStringYearMinus6);
           await this.formatHourData(byHourJson, startDateStringWeek, endDateStringWeek);
         } catch (e) {
           console.log(e);
@@ -92,10 +95,10 @@ class Reports extends Component {
 
       downloadWeeklyCSV() {
         this.setState({ buildingCSV: true });
-        var title = "Reports_Daily_Attendance_".concat(this.state.startDateStringWeek);
+        var title = "Reports_Daily_Attendance_".concat(this.state.byDayJsonForDownload[this.state.byDayJsonForDownload.length-7][0]);
         title = title.concat("_to_");
-        title = title.concat(this.state.endDateStringWeek);
-        downloadReportsCSV(this.state.byDayJsonForDownload.splice(0,7), ["Date","# Engagements"], title);
+        title = title.concat(this.state.byDayJsonForDownload[this.state.byDayJsonForDownload.length-1][0]);
+        downloadReportsCSV(this.state.byDayJsonForDownload.slice(-7), ["Date","# Engagements"], title);
         this.setState({ buildingCSV: false });
       }
 
@@ -119,10 +122,11 @@ class Reports extends Component {
       }
 
       //Format json data from day-of-yr endpoint into format usable by heatmap (and also add missing entries)
-      formatDayData(state, startDateStringYear, endDateStringYear) {
+      formatDayData(state, startDateStringYear, endDateStringYear, endDateStringYearMinus6) {
         //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
         var startDateString = startDateStringYear;
         var endDateString = endDateStringYear;
+        var endDateStringYearMinus6 = endDateStringYearMinus6;
         var startDate = new Date(startDateString.replace(/-/g, '/'));
         var endDate = new Date(endDateString.replace(/-/g, '/'));
         var dateToCompare = startDate;
@@ -165,6 +169,7 @@ class Reports extends Component {
           byDayJsonForDownload.push(entryAsList);
         }
 
+
         //Time to convert updated JSON with missing dates added in into
         //a list called processedData of {"x": integer day of week, "y": integer week # of month, "color": int num engagements per day} objs
         var processedData = [];
@@ -186,6 +191,7 @@ class Reports extends Component {
               return {
                   startDateStringYear: startDateStringYear,
                   endDateStringYear : endDateStringYear,
+                  endDateStringYearMinus6 : endDateStringYearMinus6,
                   byDayJson : processedData,
                   byDayJsonForDownload: byDayJsonForDownload,
                   byDayHeatMap: processedDataAnnual
@@ -208,7 +214,6 @@ class Reports extends Component {
         var currIdx = 0;
         var byHourJson = state;
         var hourArray = ["14:00:00", "15:00:00", "16:00:00", "17:00:00","18:00:00","19:00:00","20:00:00","21:00:00","22:00:00"];
-
         //first filter out any entries that have timestamps outside of key operating hours
         byHourJson = byHourJson.filter(function(entry) {
           var inValidTimeRange = hourArray.includes(entry.time);
@@ -326,7 +331,7 @@ class Reports extends Component {
                 <ButtonToolbar style={{ float: 'right'}}>
                 <Button onClick={this.downloadWeeklyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Daily'}</Button>
                 </ButtonToolbar>
-                <p> Number of engagements per day in the past week from <b>{this.state.startDateStringWeek}</b> to <b>{this.state.endDateStringWeek}</b>.</p>
+                <p> Number of engagements per day in the past week from <b>{this.state.endDateStringYearMinus6}</b> to <b>{this.state.endDateStringYear}</b>.</p>
                 <BarChart data = {this.state.byDayJson.slice(-7)}/>
               </Tab>
               <Tab key={3} eventKey={3} title="Annual Attendance">

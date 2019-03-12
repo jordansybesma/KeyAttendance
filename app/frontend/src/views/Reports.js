@@ -17,11 +17,12 @@ class Reports extends Component {
             endDateStringWeek: "",
             startDateStringYear: "",
             endDateStringYear: "",
-            endDateStringYearMinus6: "",
             byHourJson: [],
             byHourJsonForDownload: [],
             byDayJson: [],
             byDayJsonForDownload: [],
+            byDayInPastWeekJson: [],
+            byDayInPastWeekForDownload : [],
             byDayHeatMap: [],
             dateOne: "",
             dateTwo: "",
@@ -41,9 +42,12 @@ class Reports extends Component {
         try {
           //Make timerange for last 7 days to display for weekly aggregation (broken down by hour of day)
           var today = getEarlierDate(0);
+          console.log(today);
           var startDateWeek = getEarlierDate(6);
           var startDateStringWeek = dateToString(startDateWeek);
+          console.log(startDateStringWeek);
           var endDateStringWeek = dateToString(today);
+          console.log(endDateStringWeek);
           const byHourJson = await httpGet(`${protocol}://${domain}/api/reports/byHourAttendance/?startdate=${startDateStringWeek}&enddate=${endDateStringWeek}`);
           //Make timerange for last 365 days, extending back to the preceeding sunday and forward to the following sat to display yearly aggregation (broken down by day)
           var startDateYear= getEarlierDate(365);
@@ -51,10 +55,8 @@ class Reports extends Component {
           var startDateStringYear = dateToString(startDateYear);
           var endDateYear = getNextSaturday(today);
           var endDateStringYear = dateToString(endDateYear);
-          var endDateYearMinus6 = getPrevSunday(endDateYear);
-          var endDateStringYearMinus6 = dateToString(endDateYearMinus6);
           const byDayJson = await httpGet(`${protocol}://${domain}/api/reports/byDayAttendance/?startdate=${startDateStringYear}&enddate=${endDateStringYear}`);
-          await this.formatDayData(byDayJson, startDateStringYear, endDateStringYear, endDateStringYearMinus6);
+          await this.formatDayData(byDayJson, startDateStringYear, endDateStringYear, startDateWeek);
           await this.formatHourData(byHourJson, startDateStringWeek, endDateStringWeek);
         } catch (e) {
           console.log(e);
@@ -95,10 +97,10 @@ class Reports extends Component {
 
       downloadWeeklyCSV() {
         this.setState({ buildingCSV: true });
-        var title = "Reports_Daily_Attendance_".concat(this.state.byDayJsonForDownload[this.state.byDayJsonForDownload.length-7][0]);
+        var title = "Reports_Daily_Attendance_".concat(this.state.startDateStringWeek);
         title = title.concat("_to_");
-        title = title.concat(this.state.byDayJsonForDownload[this.state.byDayJsonForDownload.length-1][0]);
-        downloadReportsCSV(this.state.byDayJsonForDownload.slice(-7), ["Date","# Engagements"], title);
+        title = title.concat(this.state.endDateStringWeek);
+        downloadReportsCSV(this.state.byDayInPastWeekForDownload, ["Date","# Engagements"], title);
         this.setState({ buildingCSV: false });
       }
 
@@ -122,11 +124,10 @@ class Reports extends Component {
       }
 
       //Format json data from day-of-yr endpoint into format usable by heatmap (and also add missing entries)
-      formatDayData(state, startDateStringYear, endDateStringYear, endDateStringYearMinus6) {
+      formatDayData(state, startDateStringYear, endDateStringYear, startDateWeek) {
         //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
         var startDateString = startDateStringYear;
         var endDateString = endDateStringYear;
-        var endDateStringYearMinus6 = endDateStringYearMinus6;
         var startDate = new Date(startDateString.replace(/-/g, '/'));
         var endDate = new Date(endDateString.replace(/-/g, '/'));
         var dateToCompare = startDate;
@@ -161,12 +162,24 @@ class Reports extends Component {
           currIdx++;
         }
 
-        //process json into list of lists and store into state for downloading as csv
+        //process jsons into lists of lists and store into state for downloading as csv
         var byDayJsonForDownload = [];
+        var byDayInPastWeekForDownload = [];
         var entryAsList;
+        var currDateObj;
+        var startPastWeek = startDateWeek;
+        startPastWeek.setDate(startPastWeek.getDate()-1);
+        var endPastWeek = getEarlierDate(0);
+        console.log(startPastWeek);
+        console.log(endPastWeek);
         for(var i=0; i<byDayJson.length; i++){
           entryAsList = Object.values(byDayJson[i]);
           byDayJsonForDownload.push(entryAsList);
+          //add to daily attendance csv if date is within past week
+          currDateObj = new Date(byDayJson[i]['date'].replace(/-/g, '/'));
+          if(this.compareTime(currDateObj,startPastWeek) && (this.compareTime(currDateObj,endPastWeek) == false) ){
+            byDayInPastWeekForDownload.push(entryAsList);
+          }
         }
 
 
@@ -174,6 +187,7 @@ class Reports extends Component {
         //a list called processedData of {"x": integer day of week, "y": integer week # of month, "color": int num engagements per day} objs
         var processedData = [];
         var processedDataAnnual = [];
+        var byDayInPastWeekJson = [];
         var dayOfWeek, weekNum, dayEntry, annualHeatMapEntry, dayOfWeekConverted;
         var currDateObj;
         var strDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -186,14 +200,19 @@ class Reports extends Component {
           processedDataAnnual.push(annualHeatMapEntry);
           dayEntry = {"y": byDayJson[i]['daily_visits'], "x": dayOfWeekConverted};
           processedData.push(dayEntry);
+          //add to daily attendance dataset if date is within past week
+          if(this.compareTime(currDateObj,startPastWeek) && (this.compareTime(currDateObj,endPastWeek) == false) ){
+            byDayInPastWeekJson.push(dayEntry);
+          }
         }
           this.setState(function (previousState, currentProps) {
               return {
                   startDateStringYear: startDateStringYear,
                   endDateStringYear : endDateStringYear,
-                  endDateStringYearMinus6 : endDateStringYearMinus6,
                   byDayJson : processedData,
+                  byDayInPastWeekJson : byDayInPastWeekJson,
                   byDayJsonForDownload: byDayJsonForDownload,
+                  byDayInPastWeekForDownload : byDayInPastWeekForDownload,
                   byDayHeatMap: processedDataAnnual
 
               };
@@ -331,8 +350,8 @@ class Reports extends Component {
                 <ButtonToolbar style={{ float: 'right'}}>
                 <Button onClick={this.downloadWeeklyCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download Daily'}</Button>
                 </ButtonToolbar>
-                <p> Number of engagements per day in the past week from <b>{this.state.endDateStringYearMinus6}</b> to <b>{this.state.endDateStringYear}</b>.</p>
-                <BarChart data = {this.state.byDayJson.slice(-7)}/>
+                <p> Number of engagements per day in the past week from <b>{this.state.startDateStringWeek}</b> to <b>{this.state.endDateStringWeek}</b>.</p>
+                <BarChart data = {this.state.byDayInPastWeekJson}/>
               </Tab>
               <Tab key={3} eventKey={3} title="Annual Attendance">
                 <h3> Annual Daily Attendance </h3>

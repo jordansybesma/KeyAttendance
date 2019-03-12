@@ -297,13 +297,6 @@ class Students extends Component {
 
     httpDelete(`${protocol}://${domain}/api/students/`, state.profileData);
     
-    for (var field in newState.profileInfo) {
-      var field = newState.profileInfo[field];
-      if (field.studentInfoId) {
-        httpDelete(`${protocol}://${domain}/api/student_info/?id=${field.studentInfoId}`, field.patchPost);
-      }
-    }
-
     // Ensure that the autocomplete removes the entry
     var entryFound = false;
     var entryIndex = 0;

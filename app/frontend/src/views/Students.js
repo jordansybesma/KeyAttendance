@@ -13,6 +13,7 @@ class Students extends Component {
       mode: 'search',
       canViewStudentInfo: false,
       canViewHeatmap: false,
+      canDeleteStudent: false,
       heatMapJson: []
     };
     this.display = this.display.bind(this);
@@ -37,6 +38,10 @@ class Students extends Component {
       if (permissions.indexOf('view_reports') >= 0) {
         canViewHeatmap = true;
       }
+      let canDeleteStudent = false;
+      if (permissions.indexOf('delete_students') >= 0) {
+        canDeleteStudent = true;
+      }
 
       this.setState(function (previousState, currentProps) {
         return {
@@ -48,6 +53,7 @@ class Students extends Component {
           id: null,
           canViewStudentInfo: canViewStudentInfo,
           canViewHeatmap: canViewHeatmap,
+          canDeleteStudent: canDeleteStudent,
           uploadedPic: false
         };
       });
@@ -295,19 +301,10 @@ class Students extends Component {
       newState.profileInfo = this.parseCols(studentColumnJson);
     }
 
-    let deleted = false;
-    httpDelete(`${protocol}://${domain}/api/students/`, state.profileData)
-      .then(function (result) {
-        if ('error' in result) {
-          result.response.then(function (response) { alert(`Error: ${response.error}`) });
-        } else {
-          deleted = true;
-        }
-      });
-    
-    if (deleted) {
-      // Ensure that the autocomplete removes the entry
-      var entryFound = false;
+    httpDelete(`${protocol}://${domain}/api/students/`, state.profileData);
+
+    // Ensure that the autocomplete removes the entry
+    var entryFound = false;
       var entryIndex = 0;
       while (entryFound === false) {
         if (state.suggestionsArray[entryIndex].id === state.profileData['id']) {
@@ -322,7 +319,6 @@ class Students extends Component {
       this.setState(function (previousState, currentProps) {
         return state;
       });
-    }
   }
 
   handleNameChange(evt, state) {
@@ -604,6 +600,12 @@ class Students extends Component {
       );
     }
     else if (this.state.mode === 'edit') {
+      let deleteButton = []
+      if (this.state.canDeleteStudent) {
+        deleteButton = <ButtonToolbar>
+          <Button bsStyle="danger" onClick={evt => { if (window.confirm('Are you sure you wish to delete this student?')) this.delete(evt, this.state) }}>Delete</Button>
+        </ButtonToolbar>
+      }
       return (
         <div className='content'>
           <h1> Student Profile </h1>
@@ -629,9 +631,7 @@ class Students extends Component {
                       <Button bsStyle="default" onClick={this.display}>Cancel</Button>
                     </ButtonToolbar>
                     <br />
-                    <ButtonToolbar>
-                      <Button bsStyle="danger" onClick={evt => { if (window.confirm('Are you sure you wish to delete this student?')) this.delete(evt, this.state) }}>Delete</Button>
-                    </ButtonToolbar>
+                    {deleteButton}
                   </FormGroup>
                 </Form>
               </div>

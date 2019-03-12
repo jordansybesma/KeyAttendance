@@ -11,7 +11,7 @@ class History(APIView):
             try:
                 User.objects.get(pk=request.query_params['user_id'])
                 return True
-            except Exception:
+            except:
                 return False
         return False
 
@@ -97,6 +97,8 @@ class History(APIView):
     def get(self, request):
         if not request.user.has_perm('auth.view_user'):
             return Response({'error':'You are not authorized to view user history.'}, status='401')
+        if not self.validateGet(request):
+            return Response({'error':'Invalid Parameters'}, status='400')
         compiled_history = []
         user_id = request.query_params['user_id']
         activities = Activity.objects.all()

@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group, Permission, User
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from ..serializers import GroupSerializer
+from ..serializers import GroupSerializer, UserSerializer
 
 class Groups(APIView):
 
@@ -69,8 +69,15 @@ class Groups(APIView):
             return Response({'error':'Invalid Parameters'}, status='400')
         group_id = request.query_params['id']
         group = Group.objects.get(pk=group_id)
-        users = User.objects.filter(groups__in=group_id)
-        for user in users:
-            user.groups.remove(group_id)
+        users = User.objects.all()
+        user_serializer = UserSerializer(users, many=True)
+        inactive_users = []
+        for user in user_serializer.data:
+            if int(group_id) in user['groups']:
+                inactive_users.append(user['id'])
+        for user_id in inactive_users:
+            user = users.get(pk=user_id)
+            user.is_active = False
+            user.save()
         group.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

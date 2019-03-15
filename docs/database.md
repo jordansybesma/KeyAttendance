@@ -7,7 +7,6 @@ The database used to store information to the site runs postgresql and is largel
 ## Tables
 
 * activities: Stores activities / programs
-* alerts: Deprecated, inherited from the Key Comps 2017-18 database.
 * auth_group: Stores role IDs and role names
 * auth_group_permissions: Stores permission/role pairs to facilitate dynamic role assignment.
 * auth_permission: Stores permission ids, names, and codenames.

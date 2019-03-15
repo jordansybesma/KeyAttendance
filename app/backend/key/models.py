@@ -24,18 +24,6 @@ class Activity(models.Model):
         managed = True
         db_table = 'activities'
 
-
-class Alert(models.Model):
-    id = models.AutoField(unique=True, primary_key=True)
-    alert = models.TextField(blank=True, null=True)
-    completed = models.BooleanField(blank=True, null=True)
-    student_id = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = True
-        db_table = 'alerts'
-
-
 class AttendanceItems(models.Model):
     student_id = models.IntegerField(blank=True, null=True)
     date = models.DateField(default=getCurrentDate)
@@ -62,28 +50,6 @@ class Reports(models.Model):
     class Meta:
         managed = True
         db_table = 'dailyattendance'
-
-
-class Feedback(models.Model):
-    date = models.DateField(blank=True, null=True)
-    comment = models.CharField(max_length=2000, blank=True, null=True)
-
-    class Meta:
-        managed = True
-        db_table = 'feedback'
-
-
-class OldStudent(models.Model):
-    first_name = models.TextField(blank=True, null=True)
-    last_name = models.TextField(blank=True, null=True)
-    id = models.IntegerField(blank=True, primary_key=True)
-    first_attendance = models.DateField(blank=True, null=True)
-    number_visits = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = True
-        db_table = 'old_students'
-
 
 class StudentColumn(models.Model):
     info_id = models.AutoField(unique=True, primary_key=True)

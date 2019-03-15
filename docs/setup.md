@@ -45,7 +45,7 @@ Now, open up the postgres CLI, and run:
 
 * `CREATE DATABASE keydb`
 
-Close postgres. Now, change directories to make sure you're in `KeyAttendance/app/backend`, and run: 
+Close postgres. Now, change directories to make sure you're in `KeyAttendance/app/backend`, activate your virtual environment, and run: 
 
 * `manage.py migrate`
 * `manage.py createsuperuser`

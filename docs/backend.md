@@ -8,11 +8,11 @@ The back-end of this project is coded in Python, and uses django for serving the
 
 The major files and folders in `/backend/` are:
 
-* `build`: This contains the compiled frontend assets produced by Webpack.
-* `env`: If you're using virtualenv or on the server, this file contains all virtualenv installations and is not tracked through version control.
-* `key`: This contains the bulk of our code, such as migrations, views, helper functions and data management classes.
-* `key_api`: This largely contains configuration code that django uses to run the server.
-* `static`: This contains static resources for the server when hosted on AWS.
+* `/build/`: This contains the compiled frontend assets produced by Webpack.
+* `/env/`: If you're using virtualenv or on the server, this file contains all virtualenv installations and is not tracked through version control.
+* `/key/`: This contains the bulk of our code, such as migrations, views, helper functions and data management classes.
+* `/key_api/`: This largely contains configuration code that django uses to run the server.
+* `/static/`: This contains static resources for the server when hosted on AWS.
 * `key_api_uwsgi.ini`: This contains the configuration for uWSGI on the AWS server.
 * `manage.py`: This is the python file that runs django from the command line.
 * `Pipfile`: This contains the configuration for pipenv
@@ -26,7 +26,7 @@ As Python doesn't have a built-in method for syncing installed packages across v
 
 To run pipenv, cd into `app/backend/` and run `pipenv shell` to run the terminal within the virtual environment. If you're running pipenv for the first time, you'll need to run `pipenv install` to update your local dependencies.
 
-To run virtualenv, cd into `app/backend/` and running `source /env/bin/activate` on a unix machine or `"env/Scripts/activate` on a windows machine to run the terminal within the virtual environment. If you're running virtualenv for the first time, run `virtualenv env` to initialize the virtual environment, then run `pip install -r requirements.txt` to install any packages you have yet to download.
+To run virtualenv, cd into `app/backend/` and running `source /env/bin/activate` on a unix machine or `"env/Scripts/activate"` on a windows machine to run the terminal within the virtual environment. If you're running virtualenv for the first time, run `virtualenv env` to initialize the virtual environment, then run `pip install -r requirements.txt` to install any packages you have yet to download.
 
 ## Django
 
@@ -44,7 +44,10 @@ The live backend is generally secured with HTTPS, meaning it is infeasible to in
 
 We use [JSON Web Tokens](https://jwt.io/) ([RFC-7519](https://tools.ietf.org/html/rfc7519)) to secure our endpoints, making sure that users have to be authorized to access API data. In short, these tokens work as follows:
 
-* The client logs into the server by posting their username and password to 
+* The client logs into the server by posting their username and password to `/api_token_auth/`
+* If the username and password check out, the server sends back a base-64 encoded token. This has three main parts: a header that states that the token implements JWT, a body that stores the permissions and username associated with your login, and a signature produced by the server to verify the authenticity of the token.
+* The client then sends this token to the server every time it wants to access our API to prove that it has access to the resource.
+* Eventually the token will expire. At this point, the server will tell the client that it is unauthorized, and the client will automatically log out.
 
 ## Notable Console Commands
 

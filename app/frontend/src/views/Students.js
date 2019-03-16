@@ -3,8 +3,9 @@ import { Button, Col, Row, ButtonToolbar, Form, FormControl, FormGroup, Label, L
 import { Redirect } from 'react-router-dom';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
-import { dateToString, getPermissions, domain, getEarlierDate, getNextSaturday, getPrevSunday, httpDelete, httpGet, httpPatch, httpPost, protocol, httpPostFile, httpPatchFile } from '../components/Helpers';
+import { dateToString, getPermissions, domain, getEarlierDate, getNextSaturday, getPrevSunday, httpDelete, httpGet, httpPatch, httpPost, protocol, httpPostFile, httpPatchFile, httpGetFile } from '../components/Helpers';
 import blankPic from '../images/blank_profile_pic.jpg';
+//import '../../../backend/profile_photos/IMG_5743.PNG';
 
 class Students extends Component {
 
@@ -49,7 +50,8 @@ class Students extends Component {
           id: null,
           canViewStudentInfo: canViewStudentInfo,
           canViewHeatmap: canViewHeatmap,
-          uploadedPic: false
+          uploadedPic: false,
+          src: null
         };
       });
     } catch (e) {
@@ -131,6 +133,13 @@ class Students extends Component {
     try {
       const studentProfileJson = await httpGet(`${protocol}://${domain}/api/students/?id=` + state.id);
       state.profileData = studentProfileJson;
+      const studentProfileBlob = await httpGetFile(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
+      var objectUrl = URL.createObjectURL(studentProfileBlob);
+      state.src = objectUrl;
+      state.uploadedPic = true;
+      console.log(state.src);
+      //const studentProfileEx = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
+      //console.log(studentProfileEx[0].photo_value);
       // Deep copy
       state.profileDataPrelim = JSON.parse(JSON.stringify(studentProfileJson));
       if (this.state.canViewStudentInfo) {
@@ -421,13 +430,14 @@ class Students extends Component {
         }
       }
     }
-    console.log(state.profileInfoPrelim);
-    console.log(state.profileInfo);
+    
+    //console.log(state.profileInfoPrelim);
+    //console.log(state.profileInfo);
     if (posted) {
       this.updateStudentInfo();
     }
-    console.log(state.profileInfoPrelim);
-    console.log(state.profileInfo);
+    //console.log(state.profileInfoPrelim);
+    //console.log(state.profileInfo);
 
 
     // Ensure that the autocomplete component has an updated copy of the profile
@@ -540,6 +550,7 @@ class Students extends Component {
         info.push(<ListGroupItem key={field}>{innerHtml}</ListGroupItem>);
       }
     }
+    
 
     return info;
   }
@@ -632,6 +643,7 @@ class Students extends Component {
       } else {
         pic = blankPic;
       }
+      console.log(pic);
       let heatmap = [];
       if (this.state.canViewHeatmap) {
         heatmap = <div><h3>Student Attendance</h3>
@@ -663,7 +675,7 @@ class Students extends Component {
           <div className='container-fluid no-padding'>
             <div className='row justify-content-start'> 
               <div className='col-md-2 to-front top-bottom-padding'>
-                {/* <img id="studentPhoto" src={pic} width="196" height="196" /><br /> */}
+                <img id="studentPhoto" src={pic} width="196" height="196" /><br />
                 <ListGroup>
                   <ListGroupItem>Name: {this.state.profileData.first_name} {this.state.profileData.last_name}</ListGroupItem>
                   {this.renderDisplayInfo(this.state.parsedInfo)}

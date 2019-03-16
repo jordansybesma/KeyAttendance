@@ -107,7 +107,7 @@ class StudentInfo(models.Model):
     bool_value = models.BooleanField(blank=True, null=True)
     date_value = models.DateField(blank=True, null=True)
     time_value = models.TimeField(blank=True, null=True)
-    photo_value = models.ImageField(blank=True, null=True, upload_to='profile_photos/')
+    photo_value = models.ImageField(blank=True, null=True, upload_to='media/')
     history = HistoricalRecords()
 
     class Meta:
@@ -118,7 +118,7 @@ class StudentInfo(models.Model):
 class Students(models.Model):
     first_name = models.TextField(blank=True, null=True)
     last_name = models.TextField(blank=True, null=True)
-    id = models.IntegerField(blank=True, primary_key=True)
+    id = models.AutoField(blank=True, primary_key=True)
     student_key = models.TextField(blank=True, null=True)
     history = HistoricalRecords()
     #photo = models.ImageField(blank=True, null=True, upload_to='profile_photos/')

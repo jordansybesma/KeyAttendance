@@ -119,6 +119,7 @@ function httpPatchFile(url, body={}) {
     form.append('student_id', body.student_id);
     form.append('info_id', body.info_id);
     form.append('id', body.id);
+    console.log(body.photo_value);
 
 	return fetch(url, {
 			method: "PATCH",
@@ -133,7 +134,7 @@ function httpPatchFile(url, body={}) {
 					}
 					return {'error' : response.status, 'response' : response.json()}
 			} else {
-					return response.json()
+					return response.blob()
 			}
 	});
 }
@@ -159,6 +160,31 @@ function httpGet(url) {
 			return {'error' : response.status, 'response' : response.json()}
 		} else {
 			return response.json()
+		}
+	}); 
+}
+
+function httpGetFile(url) {
+	const token = window.localStorage.getItem("key_credentials");
+	// if we don't have a token, we shouldn't be trying to call this function.
+	if (token === null) {
+		history.push(`/`)
+		return
+	}
+
+	return fetch(url, {
+		method: "GET",
+		headers: {'Content-Type':'application/json', 'Authorization': 'JWT ' + token},
+	}).then(response => {
+		if (response.status >= 400) {
+			// Logout if we got a token validation error
+			if (response.status === 403) {
+				logout()
+				history.push(`/`)
+			}
+			return {'error' : response.status, 'response' : response.json()}
+		} else {
+			return response.blob()
 		}
 	}); 
 }
@@ -398,4 +424,4 @@ function dateToString(date){
     return dateString;
 }
 
-export { getPermissions, protocol, domain, downloadReportsCSV, downloadAttendanceCSV, compareActivities, httpPost, httpPostFile, httpPatch, httpPatchFile, httpGet, httpDelete, checkCredentials, history, withRole, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }
+export { getPermissions, protocol, domain, downloadReportsCSV, downloadAttendanceCSV, compareActivities, httpPost, httpPostFile, httpPatch, httpPatchFile, httpGet, httpGetFile, httpDelete, checkCredentials, history, withRole, getEarlierDate, getPrevSunday, getNextSaturday, dateToString }

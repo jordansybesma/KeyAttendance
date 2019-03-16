@@ -56,6 +56,11 @@ class StudentInfo(APIView):
         
         info = StudentInfoModel.objects.filter(student_id=request.query_params['student_id'])
         serializer = StudentInfoSerializer(info, many=True)
+        print("INFO")
+        print(info)
+        print("SERIALIZER")
+        print(serializer.data)
+        print(info[0].photo_value)
         
         return Response(serializer.data, content_type='application/json')
       

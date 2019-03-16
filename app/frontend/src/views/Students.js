@@ -133,13 +133,18 @@ class Students extends Component {
     try {
       const studentProfileJson = await httpGet(`${protocol}://${domain}/api/students/?id=` + state.id);
       state.profileData = studentProfileJson;
-      const studentProfileBlob = await httpGetFile(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
-      var objectUrl = URL.createObjectURL(studentProfileBlob);
-      state.src = objectUrl;
-      state.uploadedPic = true;
-      console.log(state.src);
-      //const studentProfileEx = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
-      //console.log(studentProfileEx[0].photo_value);
+      const studentProfileEx = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
+      console.log(studentProfileEx)
+      
+      for (var i in studentProfileEx) {
+        if (studentProfileEx[i].photo_url !== null) {
+          var objectUrl = `${protocol}://${domain}/${studentProfileEx[i].photo_url}`;
+          console.log(objectUrl);
+          this.setState({src: objectUrl, uploadedPic: true});
+          console.log(this.state.src);
+        }
+      }
+      
       // Deep copy
       state.profileDataPrelim = JSON.parse(JSON.stringify(studentProfileJson));
       if (this.state.canViewStudentInfo) {
@@ -387,8 +392,8 @@ class Students extends Component {
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
       if (field.updated) {
-        console.log("FIELD");
-        console.log(field);
+        //console.log("FIELD");
+        //console.log(field);
         if (field.studentInfoId) {
           if (field.colInfo.name == 'photopath') {
             httpPatchFile(`${protocol}://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost)

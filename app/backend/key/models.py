@@ -107,7 +107,8 @@ class StudentInfo(models.Model):
     bool_value = models.BooleanField(blank=True, null=True)
     date_value = models.DateField(blank=True, null=True)
     time_value = models.TimeField(blank=True, null=True)
-    photo_value = models.ImageField(blank=True, null=True, upload_to='media/')
+    photo_value = models.ImageField(blank=True, null=True, upload_to='profile_pictures/')
+    photo_url = models.TextField(blank=True, null=True)
     history = HistoricalRecords()
 
     class Meta:

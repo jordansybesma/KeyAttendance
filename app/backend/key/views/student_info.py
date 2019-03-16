@@ -56,11 +56,6 @@ class StudentInfo(APIView):
         
         info = StudentInfoModel.objects.filter(student_id=request.query_params['student_id'])
         serializer = StudentInfoSerializer(info, many=True)
-        print("INFO")
-        print(info)
-        print("SERIALIZER")
-        print(serializer.data)
-        print(info[0].photo_value)
         
         return Response(serializer.data, content_type='application/json')
       
@@ -103,8 +98,12 @@ class StudentInfo(APIView):
             serializer = StudentInfoSerializer(data=request.data, many=is_many)
 
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            model = serializer.save()
+            model.photo_url = model.photo_value.url
+            model.save()
+            returnSerializer = StudentInfoSerializer(model)
+            
+            return Response(returnSerializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Update an existing student
@@ -132,6 +131,10 @@ class StudentInfo(APIView):
         else:
             serializer = StudentInfoSerializer(obj, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            model = serializer.save()
+            model.photo_url = model.photo_value.url
+            model.save()
+            returnSerializer = StudentInfoSerializer(model)
+            
+            return Response(returnSerializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

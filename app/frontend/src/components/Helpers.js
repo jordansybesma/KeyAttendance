@@ -119,7 +119,6 @@ function httpPatchFile(url, body={}) {
     form.append('student_id', body.student_id);
     form.append('info_id', body.info_id);
     form.append('id', body.id);
-    console.log(body.photo_value);
 
 	return fetch(url, {
 			method: "PATCH",

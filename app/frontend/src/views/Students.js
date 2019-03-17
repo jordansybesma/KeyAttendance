@@ -51,7 +51,8 @@ class Students extends Component {
           canViewStudentInfo: canViewStudentInfo,
           canViewHeatmap: canViewHeatmap,
           uploadedPic: false,
-          src: null
+          src: null,
+          picUpdated: false
         };
       });
     } catch (e) {
@@ -134,16 +135,17 @@ class Students extends Component {
       const studentProfileJson = await httpGet(`${protocol}://${domain}/api/students/?id=` + state.id);
       state.profileData = studentProfileJson;
       const studentProfileEx = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
-      console.log(studentProfileEx)
       
       for (var i in studentProfileEx) {
-        if (studentProfileEx[i].photo_url !== null) {
+        console.log(this.state.picUpdated);
+        if (studentProfileEx[i].photo_url !== null && this.state.picUpdated == false) {
           var objectUrl = `${protocol}://${domain}/${studentProfileEx[i].photo_url}`;
-          console.log(objectUrl);
           this.setState({src: objectUrl, uploadedPic: true});
-          console.log(this.state.src);
+          console.log("src");
+          console.log(state.src);
         }
       }
+      this.setState({picUpdated: false});
       
       // Deep copy
       state.profileDataPrelim = JSON.parse(JSON.stringify(studentProfileJson));
@@ -392,8 +394,6 @@ class Students extends Component {
     for (var field in state.profileInfo) {
       var field = state.profileInfo[field];
       if (field.updated) {
-        //console.log("FIELD");
-        //console.log(field);
         if (field.studentInfoId) {
           if (field.colInfo.name == 'photopath') {
             httpPatchFile(`${protocol}://${domain}/api/student_info/?id=` + field.studentInfoId, field.patchPost)
@@ -436,13 +436,9 @@ class Students extends Component {
       }
     }
     
-    //console.log(state.profileInfoPrelim);
-    //console.log(state.profileInfo);
     if (posted) {
       this.updateStudentInfo();
     }
-    //console.log(state.profileInfoPrelim);
-    //console.log(state.profileInfo);
 
 
     // Ensure that the autocomplete component has an updated copy of the profile
@@ -461,9 +457,13 @@ class Students extends Component {
         entryIndex++;
       }
     }
-
+    
+    // Get studentinfoid
+    this.getStudentProfile(state);
+    this.renderDisplayInfo(this.state.profileInfo);
     state.id = state.profileData.id;
     state.mode = 'display';
+
 
     this.setState(function (previousState, currentProps) {
       return state;
@@ -591,30 +591,30 @@ class Students extends Component {
     }
     return info;
   }
+                  
+  getPic = () => {
+        console.log("here");
+        var pic;
+        if (this.state.uploadedPic) {
+          pic = this.state.src;
+        } else {
+          pic = blankPic;
+        }
+        console.log(pic);
+        return pic;
+  }
 
   readImage(evt, state) {
     evt.preventDefault();
+    this.setState({picUpdated: false});
     state.profileInfo = JSON.parse(JSON.stringify(state.profileInfoPrelim));
     state.profileInfoPrelim[5].value = evt.target.files[0];
     state.profileInfoPrelim[5].updated = true;
-    //console.log(state.profileInfoPrelim[5]);
     state.profileInfoPrelim[5].patchPost.photo_value = evt.target.files[0];
     this.setState(function (previousState, currentProps) {
       return state;
     });
 
-    // var reader = new FileReader();
-    // reader.onloadend = () => {
-    //   this.state.profileInfoPrelim[5].updated = true;
-    //   this.state.profileInfoPrelim[5].patchPost['photo_value'] = reader.result;
-    //   this.setState(function (previousState, currentProps) {
-    //     return {
-    //       src: reader.result,
-    //       uploadedPic: true
-    //     };
-    //   });
-    // }
-    // reader.readAsDataURL(evt.target.files[0]);
   }
 
   render() {
@@ -642,13 +642,6 @@ class Students extends Component {
     }
 
     else if (this.state.mode === 'display') {
-      var pic;
-      if (this.state.uploadedPic) {
-        pic = this.state.src;
-      } else {
-        pic = blankPic;
-      }
-      console.log(pic);
       let heatmap = [];
       if (this.state.canViewHeatmap) {
         heatmap = <div><h3>Student Attendance</h3>
@@ -668,19 +661,8 @@ class Students extends Component {
                   handler={this.handler}
                 />
               </div>
-            </div>
-          </div>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <div className='container-fluid no-padding'>
-            <div className='row justify-content-start'> 
-              <div className='col-md-2 to-front top-bottom-padding'>
-                <img id="studentPhoto" src={pic} width="196" height="196" /><br />
+              <div className='col-md-8 top-bottom-padding'>
+                <img id="studentPhoto" src={this.getPic(this.state.parsedInfo)} width="196" height="196" /><br />
                 <ListGroup>
                   <ListGroupItem>Name: {this.state.profileData.first_name} {this.state.profileData.last_name}</ListGroupItem>
                   {this.renderDisplayInfo(this.state.parsedInfo)}
@@ -708,7 +690,7 @@ class Students extends Component {
                 />
               </div>
               <div className='col-md-8 top-bottom-padding'>
-                <img id="studentPhoto" src={blankPic} width="196" height="196" />
+                <img id="studentPhoto" src={this.getPic(this.state.parsedInfo)} width="196" height="196" />
                 <p> Upload Student Profile Photo </p>
                 <input id="upload-button" type="file" accept="image/*" name={this.state.profileInfo[0].patchPost.student_id} onChange={evt => this.readImage(evt, this.state)} /><br />
                 <Form inline className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>

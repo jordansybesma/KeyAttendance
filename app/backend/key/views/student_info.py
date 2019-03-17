@@ -93,19 +93,22 @@ class StudentInfo(APIView):
               'info_id': info_id,
               'photo_value': photo
             }
-            serializer = StudentInfoSerializer(data=data)
-        else:
-            serializer = StudentInfoSerializer(data=request.data, many=is_many)
-
-        if serializer.is_valid():
-            model = serializer.save()
-            model.photo_url = model.photo_value.url
-            model.save()
-            returnSerializer = StudentInfoSerializer(model)
+            serializer = StudentInfoSerializer(data=data, partial=True, many=is_many)
+            if serializer.is_valid():
+              model = serializer.save()
+              model.photo_url = model.photo_value.url
+              model.save()
+              returnSerializer = StudentInfoSerializer(model)
             
-            return Response(returnSerializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+              return Response(returnSerializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            serializer = StudentInfoSerializer(data=request.data, partial=True, many=is_many)
+            print(serializer)
+            if serializer.is_valid():
+              serializer.save()
+              return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     # Update an existing student
     def patch(self, request):
         if not request.user.has_perm('key.change_studentinfo'):
@@ -128,13 +131,17 @@ class StudentInfo(APIView):
               'id': id_
             }
             serializer = StudentInfoSerializer(obj, data=data, partial=True)
+            if serializer.is_valid():
+              model = serializer.save()
+              model.photo_url = model.photo_value.url
+              model.save()
+              returnSerializer = StudentInfoSerializer(model)
+            
+              return Response(returnSerializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             serializer = StudentInfoSerializer(obj, data=request.data, partial=True)
-        if serializer.is_valid():
-            model = serializer.save()
-            model.photo_url = model.photo_value.url
-            model.save()
-            returnSerializer = StudentInfoSerializer(model)
-            
-            return Response(returnSerializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            if serializer.is_valid():
+              serializer.save()
+              return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

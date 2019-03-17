@@ -10,6 +10,8 @@ import MilestoneReport from '../components/MilestoneReport';
 
 class Reports extends Component {
 
+    
+    //Initialize state vars that will be reused thru various functions in this component!
     constructor(props) {
         super(props);
         this.state = {
@@ -29,6 +31,7 @@ class Reports extends Component {
             buildingCSV: false,
             tab: 1,
         };
+        //Initialize vars to handle download csv buttons
         this.downloadHourlyCSV = this.downloadHourlyCSV.bind(this);
         this.downloadWeeklyCSV = this.downloadWeeklyCSV.bind(this);
         this.downloadYearlyCSV = this.downloadYearlyCSV.bind(this);
@@ -40,19 +43,21 @@ class Reports extends Component {
 
       async componentDidMount() {
         try {
-          //Make timerange for last 7 days to display for weekly aggregation (broken down by hour of day)
+          //Set time range for weekly report (broken down by hour) as the past 7 days
           var today = getEarlierDate(0);
           var startDateWeek = getEarlierDate(6);
           var startDateStringWeek = dateToString(startDateWeek);
           var endDateStringWeek = dateToString(today);
           const byHourJson = await httpGet(`${protocol}://${domain}/api/reports/byHourAttendance/?startdate=${startDateStringWeek}&enddate=${endDateStringWeek}`);
-          //Make timerange for last 365 days, extending back to the preceeding sunday and forward to the following sat to display yearly aggregation (broken down by day)
+          //Set time range for annual report as the last 365 days, 
+          //extending back to the preceeding sunday and forward to the following saturday
           var startDateYear= getEarlierDate(365);
           startDateYear = getPrevSunday(startDateYear);
           var startDateStringYear = dateToString(startDateYear);
           var endDateYear = getNextSaturday(today);
           var endDateStringYear = dateToString(endDateYear);
           const byDayJson = await httpGet(`${protocol}://${domain}/api/reports/byDayAttendance/?startdate=${startDateStringYear}&enddate=${endDateStringYear}`);
+          //Call helper funcs to format the datasets broken down by day and hour
           await this.formatDayData(byDayJson, startDateStringYear, endDateStringYear, startDateWeek);
           await this.formatHourData(byHourJson, startDateStringWeek, endDateStringWeek);
         } catch (e) {
@@ -60,8 +65,7 @@ class Reports extends Component {
         }
       }
 
-      
-
+      //Series of functions to handle download csv buttons
       handleTabSelect(tab) {
         this.setState({ tab });
       }
@@ -110,28 +114,31 @@ class Reports extends Component {
         this.setState({ buildingCSV: false });
       }
 
+      //Given two JS Date objects, returns True if the two Dates represent the same day; False otherwise
       sameDay(d1, d2) {
         return d1.getFullYear() === d2.getFullYear() &&
           d1.getMonth() === d2.getMonth() &&
           d1.getDate() === d2.getDate();
       }
 
+      //Given two JS Date objects, returns True if first Date (time1) is later
       compareTime(time1, time2) {
-        return new Date(time1) > new Date(time2); // true if time1 is later
+        return new Date(time1) > new Date(time2);
       }
 
-      //Format json data from day-of-yr endpoint into format usable by heatmap (and also add missing entries)
+      //Format json data from day-of-yr API return into format usable by heatmap (and also add missing entries)
       formatDayData(state, startDateStringYear, endDateStringYear, startDateWeek) {
         //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
         var startDateString = startDateStringYear;
         var endDateString = endDateStringYear;
+        //Convert timerange to JS Date objects
         var startDate = new Date(startDateString.replace(/-/g, '/'));
         var endDate = new Date(endDateString.replace(/-/g, '/'));
         var dateToCompare = startDate;
         var currEntryDate;
         var currIdx = 0;
         var byDayJson = state;
-
+        //If the JSON is empty, add in a dummy entry to initialize formatting
         if(byDayJson.length === 0){
           var firstEntry = {"date": startDateString, "daily_visits": 0}
           byDayJson.push(firstEntry);
@@ -177,7 +184,6 @@ class Reports extends Component {
           }
         }
 
-
         //Time to convert updated JSON with missing dates added in into
         //a list called processedData of {"x": integer day of week, "y": integer week # of month, "color": int num engagements per day} objs
         var processedData = [];
@@ -200,6 +206,7 @@ class Reports extends Component {
             byDayInPastWeekJson.push(dayEntry);
           }
         }
+          //Set state so these vars can be used elsewhere!
           this.setState(function (previousState, currentProps) {
               return {
                   startDateStringYear: startDateStringYear,
@@ -215,11 +222,12 @@ class Reports extends Component {
         return processedData;
       }
 
-      //Format json data from hour-of-week endpoint into format usable by heatmap (and also add missing entries)
+      //Format json data from hour-of-week API return into format usable by heatmap (and also add missing entries)
       formatHourData(state, startDateStringWeek, endDateStringWeek) {
         //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
         var startDateString = startDateStringWeek;
         var endDateString = endDateStringWeek;
+        //Convert time range to JS Date objects
         var startDate = new Date(startDateString.replace(/-/g, '/'));
         var endDate = new Date(endDateString.replace(/-/g, '/'));
         var dateToCompare = startDate;
@@ -227,6 +235,7 @@ class Reports extends Component {
         var currHour;
         var currIdx = 0;
         var byHourJson = state;
+        //!!!Set the Key's range of operating hours here!!!!
         var hourArray = ["14:00:00", "15:00:00", "16:00:00", "17:00:00","18:00:00","19:00:00","20:00:00","21:00:00","22:00:00"];
         //first filter out any entries that have timestamps outside of key operating hours
         byHourJson = byHourJson.filter(function(entry) {
@@ -235,7 +244,7 @@ class Reports extends Component {
          });
         var hourToCompareIdx= 0;
         var hourToCompare = hourArray[0];
-
+        //If JSON is empty, add in dummy entry to initialize formatting
         if(byHourJson.length === 0){
           var firstEntry = {"date": startDateString, "time": hourArray[0], "count": 0};
           byHourJson.push(firstEntry);
@@ -308,6 +317,7 @@ class Reports extends Component {
           hourEntry = {"x": hourOfDay, "y": dayOfWeek, "color": byHourJson[i]['count']};
           processedData.push(hourEntry);
         }
+          //Set state so these vars can be used elsewhere!
           this.setState(function (previousState, currentProps) {
               return {
                   startDateStringWeek: startDateStringWeek,

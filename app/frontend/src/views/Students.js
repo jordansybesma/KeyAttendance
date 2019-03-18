@@ -569,21 +569,6 @@ class Students extends Component {
         info.push(<Label key={entry + 'label'}>{label}</Label>)
 
         var type = this.state.profileInfo[entry].colInfo.type;
-        // var type;
-        // switch (this.state.profileInfo[entry].type) {
-        //   case 'str_value':
-        //   type = "text";
-        //   break;
-        //   case 'int_value':
-        //   type = "int";
-        //   break;
-        //   case 'date_value':
-        //   type = "date";
-        //   break;
-        //   case 'time_value':
-        //   type = "time";
-        //   break;
-        // }
         
         info.push(<FormControl key={label} type={type} id={entry} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
         info.push(<br key={entry + 'break'}/>);
@@ -593,14 +578,12 @@ class Students extends Component {
   }
                   
   getPic = () => {
-        console.log("here");
         var pic;
         if (this.state.uploadedPic) {
           pic = this.state.src;
         } else {
           pic = blankPic;
         }
-        console.log(pic);
         return pic;
   }
 

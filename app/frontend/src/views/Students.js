@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Col, Row, ButtonToolbar, Form, FormControl, FormGroup, Label, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Button, ButtonToolbar, Form, FormControl, FormGroup, Label, ListGroup, ListGroupItem } from "react-bootstrap";
 import { Redirect } from 'react-router-dom';
 import Autocomplete from '../components/Autocomplete';
 import Heatmap from '../components/Heatmap';
 import { dateToString, getPermissions, domain, getEarlierDate, getNextSaturday, getPrevSunday, httpDelete, httpGet, httpPatch, httpPost, protocol, httpPostFile, httpPatchFile, httpGetFile } from '../components/Helpers';
 import blankPic from '../images/blank_profile_pic.jpg';
-//import '../../../backend/profile_photos/IMG_5743.PNG';
+
 
 class Students extends Component {
 
@@ -15,6 +15,7 @@ class Students extends Component {
       mode: 'search',
       canViewStudentInfo: false,
       canViewHeatmap: false,
+      canDeleteStudent: false,
       heatMapJson: []
     };
     this.display = this.display.bind(this);
@@ -39,6 +40,10 @@ class Students extends Component {
       if (permissions.indexOf('view_reports') >= 0) {
         canViewHeatmap = true;
       }
+      let canDeleteStudent = false;
+      if (permissions.indexOf('delete_students') >= 0) {
+        canDeleteStudent = true;
+      }
 
       this.setState(function (previousState, currentProps) {
         return {
@@ -52,7 +57,8 @@ class Students extends Component {
           canViewHeatmap: canViewHeatmap,
           uploadedPic: false,
           src: null,
-          picUpdated: false
+          picUpdated: false,
+          canDeleteStudent: canDeleteStudent
         };
       });
     } catch (e) {
@@ -152,7 +158,7 @@ class Students extends Component {
       if (this.state.canViewStudentInfo) {
         try {
           const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
-          if (studentInfoJson.length == 0) {
+          if (studentInfoJson.length === 0) {
             var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
             state.profileInfo = this.parseCols(studentColumnJson);
             state.profileInfoPrelim = this.parseCols(studentColumnJson);
@@ -177,12 +183,10 @@ class Students extends Component {
       var startDate = getEarlierDate(30);
       startDate = getPrevSunday(startDate);
       var startDateString = dateToString(startDate);
-      //var startDateString = "2018-01-28";
       state.startDateString = startDateString;
       var today = getEarlierDate(0);
       var endDate = getNextSaturday(today);
       var endDateString = dateToString(endDate);
-      //var endDateString = "2018-03-03";
       state.endDateString = endDateString;
 
       if (this.state.canViewHeatmap) {
@@ -217,7 +221,6 @@ class Students extends Component {
       state.profileInfoPrelim[entry].patchPost.student_id = state.id;
 
       // Ensure all varchar(x) types get caught as str_value
-      var type;
       if ((/varchar.*/g).test(state.profileInfo[entry].colInfo.type)) {
         state.profileInfo[entry].type = 'str_value';
         state.profileInfoPrelim[entry].type = 'str_value';
@@ -298,7 +301,7 @@ class Students extends Component {
     try {
       const studentInfoJson = await httpGet(`${protocol}://${domain}/api/student_info/?student_id=${state.id}`);
 
-      if (studentInfoJson.length == 0) {
+      if (studentInfoJson.length === 0) {
         var studentColumnJson = await httpGet(`${protocol}://${domain}/api/student_column/`);
         newState.profileInfo = this.parseCols(studentColumnJson);
         newState = this.addTypes(newState);
@@ -317,32 +320,23 @@ class Students extends Component {
     }
 
     httpDelete(`${protocol}://${domain}/api/students/`, state.profileData);
-    
-    for (var field in newState.profileInfo) {
-      var field = newState.profileInfo[field];
-      if (field.studentInfoId) {
-        httpDelete(`${protocol}://${domain}/api/student_info/?id=${field.studentInfoId}`, field.patchPost);
-      } else {
-        console.log(field);
-      }
-    }
 
     // Ensure that the autocomplete removes the entry
     var entryFound = false;
-    var entryIndex = 0;
-    while (entryFound === false) {
-      if (state.suggestionsArray[entryIndex].id === state.profileData['id']) {
-        state.suggestionsArray.splice(entryIndex, 1);
-        entryFound = true
-      } else {
-        entryIndex++;
+      var entryIndex = 0;
+      while (entryFound === false) {
+        if (state.suggestionsArray[entryIndex].id === state.profileData['id']) {
+          state.suggestionsArray.splice(entryIndex, 1);
+          entryFound = true
+        } else {
+          entryIndex++;
+        }
       }
-    }
-    
-    this.state.mode = 'search';
-    this.setState(function (previousState, currentProps) {
-      return state;
-    });
+      
+      this.state.mode = 'search';
+      this.setState(function (previousState, currentProps) {
+        return state;
+      });
   }
 
   handleNameChange(evt, state) {
@@ -482,11 +476,10 @@ class Students extends Component {
 
   formatData(state) {
     //replace hyphens in date string with slashes b/c javascript Date object requires this (weird)
-    var studentId = state.id;
     var startDateString = state.startDateString;
     var endDateString = state.endDateString;
-    var startDate = new Date(startDateString.replace(/-/g, '\/'));
-    var endDate = new Date(endDateString.replace(/-/g, '\/'));
+    var startDate = new Date(startDateString.replace(/-/g, '/'));
+    var endDate = new Date(endDateString.replace(/-/g, '/'));
     var dateToCompare = startDate;
     var currEntryDate;
     var currIdx = 0;
@@ -503,7 +496,7 @@ class Students extends Component {
       if (currIdx > heatMapJson.length - 1) {
         currIdx = heatMapJson.length - 1;
       }
-      currEntryDate = new Date(heatMapJson[currIdx]["date"].replace(/-/g, '\/'));
+      currEntryDate = new Date(heatMapJson[currIdx]["date"].replace(/-/g, '/'));
       //identified missing date, so add dummy date entry for missing date
       if (this.sameDay(dateToCompare, currEntryDate) === false) {
         var dateEntryZeroEngagements = { "date": dateToCompare.toISOString().slice(0, 10), "daily_visits": 0 };
@@ -524,17 +517,11 @@ class Students extends Component {
     var processedData = [];
     var dayOfWeek, weekNum, dayEntry;
     var currDateObj;
-    var mdyArray;
-    var m, d, y;
     var strDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     for (var i = 0; i < heatMapJson.length; i++) {
-      currDateObj = new Date(heatMapJson[i]['date'].replace(/-/g, '\/'));
+      currDateObj = new Date(heatMapJson[i]['date'].replace(/-/g, '/'));
       dayOfWeek = strDays[currDateObj.getDay()];
       weekNum = Math.floor(i / 7);
-      mdyArray = heatMapJson[i]['date'].split(/\s*\-\s*/g);
-      y = mdyArray[0];
-      m = mdyArray[1];
-      d = mdyArray[2];
       dayEntry = { "x": dayOfWeek, "y": (weekNum+1).toString(), "color": heatMapJson[i]['daily_visits']};
       processedData.push(dayEntry);
      }
@@ -548,7 +535,7 @@ class Students extends Component {
     for (var field in fields) {
       if (fields[field].colInfo.is_showing === true) {
         var value = 'N/A';
-        if (fields[field].value !== null && fields[field].value != null != '') {
+        if (fields[field].value !== null && fields[field].value !== null !== '') {
           value = fields[field].value;
         }
         var innerHtml = fields[field].colInfo.name + ': ' + value;
@@ -569,7 +556,6 @@ class Students extends Component {
         info.push(<Label key={entry + 'label'}>{label}</Label>)
 
         var type = this.state.profileInfo[entry].colInfo.type;
-        
         info.push(<FormControl key={label} type={type} id={entry} defaultValue={this.state.profileInfo[entry].value} onChange={evt => this.handleInfoChange(evt, this.state)} />);
         info.push(<br key={entry + 'break'}/>);
       }
@@ -597,7 +583,6 @@ class Students extends Component {
     this.setState(function (previousState, currentProps) {
       return state;
     });
-
   }
 
   render() {
@@ -605,7 +590,6 @@ class Students extends Component {
     if (permissions.indexOf('view_students') < 0) {
       return (<Redirect to='/attendance' />);
     }
-    let heatmap = [];
     if (this.state.mode === 'search') {
       return (
         <div className='content'>
@@ -629,7 +613,6 @@ class Students extends Component {
       if (this.state.canViewHeatmap) {
         heatmap = <div><h3>Student Attendance</h3>
           <p>Number of engagements for this individual student in the past month.</p>
-          <p>The y-axis represents the week number in the month, with the most recent (the current) week displaying at the bottom.</p>
           <p><b>Note:</b> Data is displayed chronologically, with row 1 representing the oldest week and row 5 representing the current week.</p> 
           <Heatmap data={this.formatData(this.state)} heatMapType="individualStudent" /></div>
       }
@@ -661,6 +644,12 @@ class Students extends Component {
       );
     }
     else if (this.state.mode === 'edit') {
+      let deleteButton = []
+      if (this.state.canDeleteStudent) {
+        deleteButton = <ButtonToolbar>
+          <Button bsStyle="danger" onClick={evt => { if (window.confirm('Are you sure you wish to delete this student?')) this.delete(evt, this.state) }}>Delete</Button>
+        </ButtonToolbar>
+      }
       return (
         <div className='content'>
           <h1> Student Profile </h1>
@@ -679,23 +668,17 @@ class Students extends Component {
                 <Form inline className='col-md-8 top-bottom-padding' onSubmit={evt => this.handleSubmit(evt, this.state)}>
                   <FormGroup>
                     <Label>First Name: </Label>
-                    {/* <Col sm="10"> */}
                       <FormControl type="text" id="first_name" defaultValue={this.state.profileData.first_name} onChange={evt => this.handleNameChange(evt, this.state)} /> <br/>
-                    {/* </Col> */}
                     <Label>Last Name: </Label>
-                    {/* <Col sm="10"> */}
                       <FormControl type="text" id="last_name" defaultValue={this.state.profileData.last_name} onChange={evt => this.handleNameChange(evt, this.state)} /> <br/>
-                    {/* </Col> */}
                     {this.renderEditInfo(this.state.parsedInfo)}
                     <br/>
                     <ButtonToolbar>
-                      <Button bsStyle="default" onClick={this.display}>Cancel</Button>
                       <Button bsStyle="primary" type="submit">Submit</Button>
+                      <Button bsStyle="default" onClick={this.display}>Cancel</Button>
                     </ButtonToolbar>
                     <br />
-                    <ButtonToolbar>
-                      <Button bsStyle="danger" onClick={evt => { if (window.confirm('Are you sure you wish to delete this user?')) this.delete(evt, this.state) }}>Delete</Button>
-                    </ButtonToolbar>
+                    {deleteButton}
                   </FormGroup>
                 </Form>
               </div>

@@ -11,7 +11,7 @@ class History(APIView):
             try:
                 User.objects.get(pk=request.query_params['user_id'])
                 return True
-            except Exception:
+            except:
                 return False
         return False
 
@@ -37,7 +37,7 @@ class History(APIView):
 
     def buildStudentInfoValuesString(self, item, column, student_name):
         info_value = ' | Field: {} | Value: '.format(column.name)
-        if column.type == 'str':
+        if column.type == 'str' or 'varchar' in column.type:
             info_value += str(item['str_value'])
         elif column.type == 'int':
             info_value += str(item['int_value'])
@@ -51,8 +51,13 @@ class History(APIView):
         for item in history.values():
             entry = {}
             activity = activities.get(pk=item['activity_id'])
-            student = students.get(pk=item['student_id'])
-            student_name = student.first_name + ' ' + student.last_name
+            try:
+                student = students.get(pk=item['student_id'])
+                student_name = student.first_name + ' ' + student.last_name
+            except:
+                #student has been deleted, so get name from history
+                student_history = Students.history.all().filter(id=item['student_id']).order_by('-history_date').first()
+                student_name = student_history.first_name + ' ' + student_history.last_name
             entry['datetime'] = str(item['history_date']).split('.')[0]
             entry['action'] = self.buildActionString(item['history_type'], 'attendance item')
             entry['values'] = self.buildAttendanceValuesString(item, activity, student_name)
@@ -76,8 +81,13 @@ class History(APIView):
         for item in history.values():
             entry = {}
             column = student_columns.get(info_id=item['info_id'])
-            student = students.get(pk=item['student_id'])
-            student_name = student.first_name + ' ' + student.last_name
+            try:
+                student = students.get(pk=item['student_id'])
+                student_name = student.first_name + ' ' + student.last_name
+            except:
+                #student has been deleted, so get name from history
+                student_history = Students.history.all().filter(id=item['student_id']).order_by('-history_date').first()
+                student_name = student_history.first_name + ' ' + student_history.last_name
             entry['datetime'] = str(item['history_date']).split('.')[0]
             entry['action'] = self.buildActionString(item['history_type'], 'student profile info')
             entry['values'] = self.buildStudentInfoValuesString(item, column, student_name)
@@ -87,6 +97,8 @@ class History(APIView):
     def get(self, request):
         if not request.user.has_perm('auth.view_user'):
             return Response({'error':'You are not authorized to view user history.'}, status='401')
+        if not self.validateGet(request):
+            return Response({'error':'Invalid Parameters'}, status='400')
         compiled_history = []
         user_id = request.query_params['user_id']
         activities = Activity.objects.all()

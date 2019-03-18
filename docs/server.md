@@ -46,7 +46,6 @@ The server is secured using HTTPS / TLS for all incoming requests and outgoing d
 * `/tmp/keyattendance.log` is where all output produced by uWSGI and Django are logged. Look here if you run into any unexpected 500 errors on the server.
 * `app/backend/key_api_uwsgi.ini` is the configuration file for uWSGI.
 * `app/backend/key_api.sock` is the unix socket file used for communication between uWSGI and nginx.
-* `app/backend/requirements.txt` contains the names and versions of the packages required by the project to faciliate installation.
 
 ### Django
 
@@ -59,6 +58,10 @@ The database server used in this project runs postgresql. It can be directly acc
 ### virtualenv
 
 Virtualenv creates a new installation of python and the necessary libraries for a given project, ensuring that changes in packages can be easily tracked and updated through version control tools for team projects. The server uses it for keeping track of python packages as uWSGI is designed to work with it.
+
+#### Important Files
+
+* `app/backend/requirements.txt` contains the names and versions of the packages required by the project to faciliate installation.
 
 ### systemd
 
@@ -75,4 +78,4 @@ Certbot is a program used to obtain and renew TLS certificates through letsencry
 #### Important Files
 
 * `/etc/letsencrypt/live/sitename/fullchain.pem`: the TLS certificate
-* `/etc/letsencrypt/live/sitename/fullchain.pem`: the TLS certificate key
+* `/etc/letsencrypt/live/sitename/privkey.pem`: the TLS certificate key

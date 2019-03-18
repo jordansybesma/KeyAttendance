@@ -129,6 +129,8 @@ class AddStudentModal extends React.Component {
 				case 'date':
 					type = "date";
 					break;
+				default:
+					break;
 			}
 			info.push(<div  key={field.info_id}><ControlLabel>{fieldName}</ControlLabel><FormControl value={this.state.studentInfo[fieldName]} name={fieldName} type={type} onChange={this.handleInfoChange} /><br/></div>);
 		}

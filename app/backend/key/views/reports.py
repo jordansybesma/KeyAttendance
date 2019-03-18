@@ -1,6 +1,6 @@
 from django.core import serializers
 from ..models import Reports as ReportsModel
-from ..models import AttendanceItems as AttendanceModel
+from ..models import AttendanceItems, Activity
 from ..serializers import ReportSerializer, AttendanceItemSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -39,7 +39,28 @@ class Reports(APIView):
             if 'startdate' in request.query_params and 'enddate' in request.query_params:
                 if isValidDateTime(request.query_params['startdate']) and isValidDateTime(request.query_params['enddate']):
                     validateBool = True
- 
+        elif(vizType == "byActivityAttendance"):
+            if "startdate" in request.query_params and "enddate" in request.query_params and "activity" in request.query_params:
+                if isValidDateTime(request.query_params['startdate']) and isValidDateTime(request.query_params['enddate']):
+                    try:
+                        Activity.objects.get(activity_id = request.query_params['activity'])
+                        validateBool = True
+                    except:
+                        validateBool = False
+        elif(vizType == "newStudents"):
+            if "startdate" in request.query_params and "enddate" in request.query_params:
+                if isValidDateTime(request.query_params['startdate']) and isValidDateTime(request.query_params['enddate']):
+                    validateBool = True
+
+        elif(vizType == "milestones"):
+            if "startdate" in request.query_params and "enddate" in request.query_params and "milestone" in request.query_params:
+                if isValidDateTime(request.query_params['startdate']) and isValidDateTime(request.query_params['enddate']):
+                    try:
+                        x = int(request.query_params['milestone'])
+                        validateBool = True
+                    except:
+                        validateBool = False
+                
         return validateBool
      
     def get(self, request, vizType):
@@ -73,7 +94,59 @@ class Reports(APIView):
             startdate = request.query_params['startdate']
             enddate = request.query_params['enddate']
             return self.retrieveAttendanceDataInDateRange(startdate, enddate)
-            
+
+        elif (vizType == "byActivityAttendance"):
+            startdate = request.query_params['startdate']
+            enddate = request.query_params['enddate']
+            activity = request.query_params['activity']
+            return self.retrieveAttendanceByActivity(startdate, enddate, activity)
+
+        elif (vizType == "newStudents"):
+            startdate = request.query_params['startdate']
+            enddate = request.query_params['enddate']
+            return self.retrieveNewStudentIDs(startdate, enddate)
+
+        elif (vizType == "milestones"):
+            startdate = request.query_params['startdate']
+            enddate = request.query_params['enddate']
+            milestone = request.query_params['milestone']
+            return self.retrieveAttendanceMilestones(startdate, enddate, milestone)
+
+    # Get students who attended the key for the nth time between startdate and enddate
+    def retrieveAttendanceMilestones(self, startdate, enddate, milestone):
+        milestoneStudentIDs = []
+        counts = {}
+        inRange = AttendanceItems.objects.filter(activity_id=7).filter(date__range=[startdate, enddate])
+        outOfRange = AttendanceItems.objects.filter(activity_id=7).filter(date__lt=startdate)
+        for item in inRange:
+            if counts.get(item.student_id, None) == None:
+                outRangeCount = len(outOfRange.filter(student_id = item.student_id))
+                counts[item.student_id] = {'inRange': 1, 'outRange': outRangeCount}
+            else:
+                counts[item.student_id]['inRange'] += 1
+        
+        for k,v in counts.items():
+            if int(milestone) > v['outRange'] and int(milestone) <= v['outRange'] + v['inRange']:
+                milestoneStudentIDs.append(k)
+
+        return Response({"milestoneStudents": milestoneStudentIDs}, content_type='application/json')
+
+    # Get students who attended the key for the first time within range
+    def retrieveNewStudentIDs(self, startdate, enddate):
+        newStudentIDs = []
+        inRange = AttendanceItems.objects.filter(date__range=[startdate, enddate])
+        outOfRange = AttendanceItems.objects.filter(date__lt=startdate)
+        for item in inRange:
+            # Try to find an attendance item outside of range
+            if len(outOfRange.filter(student_id=item.student_id)) == 0 and not item.student_id in newStudentIDs:
+                newStudentIDs.append(item.student_id)
+        return Response({"newStudents": newStudentIDs}, content_type='application/json')
+    
+    # Get attendance items with a given activity_id within a given date range, return to client
+    def retrieveAttendanceByActivity(self, startdate, enddate, activity):
+        items = AttendanceItems.objects.filter(activity_id=activity).filter(date__range=[startdate, enddate])
+        serializer = AttendanceItemSerializer(items, many=True)
+        return Response(serializer.data, content_type='application/json')
 
     # Query databases for data pertaining to a particular student's attendance heatmap
     # Could possibly use attendance model + view here ... instead of reports model

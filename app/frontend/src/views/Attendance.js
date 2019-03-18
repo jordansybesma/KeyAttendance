@@ -24,7 +24,8 @@ class Attendance extends React.Component {
             showStudentModal: false,
             date: '',
             prevDate: '',
-            canCreateStudent: false
+            canCreateStudent: false,
+            mobile: false,
         }
 
         this.downloadCSV = this.downloadCSV.bind(this);
@@ -34,10 +35,11 @@ class Attendance extends React.Component {
         this.closeModal = this.closeModal.bind(this);
         this.updateDate = this.updateDate.bind(this);
         this.setDateToToday = this.setDateToToday.bind(this);
+        this.refresh = this.refresh.bind(this);
     }
 
     componentDidMount() {
-        this.setState({date: this.getCurrentDate()})
+        this.setState({date: this.getCurrentDate(), mobile: (window.innerWidth < 768)})
     }
 
     componentDidUpdate() {
@@ -89,6 +91,7 @@ class Attendance extends React.Component {
     buildSheet() {
         const { activities, attendanceItems, students } = this.state;
         // Combine attendance items. Need to sort by student id.
+        console.log(attendanceItems);
         var entries = {};
         for (var i = 0; i < attendanceItems.length; i++) {
             if (attendanceItems[i].activity_id === -1) {
@@ -105,6 +108,7 @@ class Attendance extends React.Component {
             }
             entries[`${attendanceItems[i].student_id}`][attendanceItems[i].activity_id] = {'value':value, 'itemID':attendanceItems[i].id};
         }
+        console.log(entries);
 
         // Build table of the form [{name, activity1, ... , activityn, time}]
         var sheet = [];
@@ -150,7 +154,10 @@ class Attendance extends React.Component {
         this.setState({ attendance: sheet });
     }
 
-    addStudent(e, studentID) {
+    async addStudent(e, studentID) {
+        // Refresh attendance page.
+        await this.fetchAndBuild();
+
         const { students, attendance, activities, date } = this.state;
         const today = new Date();
         const self = this;
@@ -247,6 +254,10 @@ class Attendance extends React.Component {
         this.setState({showStudentModal: true});
     }
 
+    refresh() {
+        this.fetchAndBuild();
+    }
+
     closeModal(student=null) {
         const { students } = this.state;
         let suggestions = []
@@ -275,6 +286,7 @@ class Attendance extends React.Component {
         if (permissions.indexOf('view_attendanceitems') < 0) {
             return (<Redirect to='/notfound'/>);
         }
+        console.log(this.state.attendance);
         const rows = this.state.attendance.map(item =>
             (
                {
@@ -331,14 +343,16 @@ class Attendance extends React.Component {
         let buttonToolbar;
         if (this.state.canCreateStudent) {
             buttonToolbar = <ButtonToolbar style={{ float: 'right' }}>
-                <Button onClick={this.setDateToToday}>Go To Today</Button>
-                <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
+                <Button onClick={this.refresh}>Refresh</Button>
+                {!this.state.mobile && <Button onClick={this.setDateToToday}>Go To Today</Button>}
+                {!this.state.mobile && <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>}
                 <Button onClick={this.openModal}>Create New Student</Button>
             </ButtonToolbar>
         } else {
             buttonToolbar = <ButtonToolbar style={{ float: 'right' }}>
-                <Button onClick={this.setDateToToday}>Go To Today</Button>
-                <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>
+                <Button onClick={this.refresh}>Refresh</Button>
+                {!this.state.mobile && <Button onClick={this.setDateToToday}>Go To Today</Button>}
+                {!this.state.mobile && <Button onClick={this.downloadCSV} disabled={buildingCSV}>{buildingCSV ? 'Downloading...' : 'Download'}</Button>}
             </ButtonToolbar>
         }
 
@@ -348,12 +362,12 @@ class Attendance extends React.Component {
                 <h1>Attendance for {this.state.date}</h1>
                 <br/>
                 {buttonToolbar}
-                <Form inline style={{ float: 'right', paddingRight: '5px', paddingLeft: '5px'}}>
+                {!this.state.mobile && <Form inline style={{ float: 'right', paddingRight: '5px', paddingLeft: '5px'}}>
                     <FormGroup>
                         <ControlLabel>Date:</ControlLabel>{' '}
                         <FormControl onChange={this.updateDate} value={this.state.date} type="date"/>
                     </FormGroup>
-                </Form>
+                </Form>}
                 <Autocomplete
                     label={'Check-in Student:'}
 					suggestions={this.state.suggestionsArray}

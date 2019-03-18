@@ -17,6 +17,7 @@ const protocol = 'http'
 //const domain = 'app.jordansybesma.com'
 //const protocol = 'https'
 
+
 function httpPost(url, body={}) {
 	const token = window.localStorage.getItem("key_credentials");
 
@@ -315,8 +316,6 @@ async function downloadAttendanceCSV(startDate, endDate=null) {
 		sheet.push(row);
 	}
 
-	console.log("sheet: ", sheet);
-	console.log("columns: ", columns);
 	// Put data in a CSV
 	var papa = require('papaparse') // a strangely named but fairly effective CSV library
 	var csvString = papa.unparse({

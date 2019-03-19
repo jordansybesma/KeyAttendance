@@ -162,7 +162,10 @@ class Students extends Component {
         }
       }
 
-      var startDate = getEarlierDate(30);
+      //get heatmap data for past 28 days (past 4 wks) up to the previous sunday ("the starting sunday")
+      // to the saturday which ends this current week (i.e. "the ending saturday")
+      //this ensures we are always getting exactly 5 weeks worth of data
+      var startDate = getEarlierDate(28);
       startDate = getPrevSunday(startDate);
       var startDateString = dateToString(startDate);
       state.startDateString = startDateString;
@@ -430,6 +433,8 @@ class Students extends Component {
     var startDate = new Date(startDateString.replace(/-/g, '/'));
     var endDate = new Date(endDateString.replace(/-/g, '/'));
     var dateToCompare = startDate;
+    //console.log("start date :", startDateString);
+    //console.log("end date :", endDateString);
     var currEntryDate;
     var currIdx = 0;
     var heatMapJson = this.state.heatMapJson;
@@ -463,6 +468,7 @@ class Students extends Component {
   
       //Time to convert updated JSON with missing dates added in into
     //a list called processedData of {"x": integer day of week, "y": integer week # of month, "color": int num engagements per day} objs
+    //console.log("unproc json: ", heatMapJson);
     var processedData = [];
     var dayOfWeek, weekNum, dayEntry;
     var currDateObj;
@@ -474,6 +480,7 @@ class Students extends Component {
       dayEntry = { "x": dayOfWeek, "y": (weekNum+1).toString(), "color": heatMapJson[i]['daily_visits']};
       processedData.push(dayEntry);
      }
+     //console.log("processed: ", processedData);
      return processedData;
    }
 

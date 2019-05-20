@@ -8,6 +8,7 @@ The server used to host this site is an AWS EC2 virtual machine running ubuntu 1
 
 First, make sure that the branch you want to pull to the server is prepared. Such branches must:
 
+* have the correct domain and protocol specified in `/frontend/src/components/Helpers.js`. Production builds need to have `domain` set to `keyattendance.com` and `protocol` set to `https`. This ensures that the live website won't attempt to make requests to a local server instead of the one running in the cloud.
 * have an updated `/backend/build` folder. This contains the compiled, minified version of the javascript front end that Webpack outputs. If this is not up to date, no front-end changes will be present in the updated app. To update the build folder, first delete the old build folder. Then change directories to `/frontend/`, and run `npm run build`. This may take a while, but will generate a new build folder in the `/frontend/` directory. Finally, move this new folder into `/backend/`.
 * have functional migrations. Make sure that any new migrations work (for example, don't attempt to create new primary keys before removing the old primary key).
 * have any new packages reflected in `backend/requirements.txt`. To update this file properly, activate virtualenv then run `pip freeze > requirements.txt`.

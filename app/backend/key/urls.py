@@ -1,5 +1,7 @@
 from django.urls import path, re_path
 from key.views import attendance, students, activities, users, studentkeysuggestions, misc, reports, groups, permissions, student_info, student_column, history
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('activities/', activities.Activities.as_view()),
@@ -15,3 +17,6 @@ urlpatterns = [
     #above regex maps to: /api/reports/vizType/?arg1=blah&arg2=blah
     re_path(r'^suggestions/(?P<reqType>\w*)/$', studentkeysuggestions.StudentKeySuggestions.as_view())
 ]
+
+if settings.DEBUG:
+  urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

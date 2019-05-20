@@ -23,10 +23,12 @@ class StudentInfoSerializer(serializers.ModelSerializer):
             'bool_value',
             'date_value',
             'time_value',
-            'id'
+            'id',
+            'photo_value',
+            'photo_url'
         )
         model = StudentInfo
-        
+      
 class StudentColumnSerializer(serializers.ModelSerializer):
     class Meta:
         fields = (

@@ -1,10 +1,14 @@
 # Key Comps 2018-19
 
+## About
+
+This repository contains a web application that was designed to help a youth center collect, access, analyze and export data about attendance and activity participation. The application back end runs on a cloud-based ubuntu server using the Django Python library and a PostgreSQL database, and the front end was created using the React.js framework. The final product is an efficient, responsive website that significantly enhanced the capacity of the youth center to accomplish tasks.
+
 ## Running the application
 
 The folder "app" contains a django app (located in `/backend`) and a react frontend (located in `/frontend`).
 
-To start up the backend locally, you'll first need to install "pipenv" or "virtualenv". If you're using pipenv, cd into `app/backend/` and run `pipenv install` to update your packages, `pipenv shell` to open a terminal within the virtual environment, and finally `manage.py runserver` to run the backend. Leave this terminal window open, as it is now running the backend. If you're using virtualenv for the first time, cd into `/app/backend/` and run `virtualenv env` to initialize the virtual environment. For all further uses of virtualenv, first activate virtualenv by running `source /env/bin/activate` on a unix machine or `"env/Scripts/activate` on a windows machine, then run `pip install -r requirements.txt` to install any packages you have yet to download, and finally `manage.py runserver` to run the backend.
+To start up the backend locally, you'll first need to install "virtualenv". If you're using virtualenv for the first time, cd into `/app/backend/` and run `virtualenv env` to initialize the virtual environment. For all further uses of virtualenv, first activate virtualenv by running `source /env/bin/activate` on a unix machine or `"env/Scripts/activate` on a windows machine, then run `pip install -r requirements.txt` to install any packages you have yet to download, and finally `manage.py runserver` to run the backend.
 
 To run the frontend, you'll need to install Node. In a new terminal window, cd into `app/frontend/`, run `npm install` to update your javascript dependencies, then `npm start` to run the development server. This should automatically open `localhost:3000` in your browser, and will automatically update for any changes you make in your local javascript files.
 
